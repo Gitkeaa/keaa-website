@@ -46,15 +46,37 @@ export default function MegaMenu({ open, onClose }) {
           aria-label="Explore everything at KEAA"
         >
           {/* Very light atmosphere */}
-          <div className="pointer-events-none fixed inset-0">
+          <div className="pointer-events-none fixed inset-0 overflow-hidden">
             <div className="absolute -right-32 -top-32 h-[26rem] w-[26rem] rounded-full bg-gold-300/15 blur-[120px]" />
+            {/* Large faint KEAA cube watermark */}
+            <svg
+              viewBox="0 0 100 100"
+              className="absolute -right-24 top-1/2 h-[36rem] w-[36rem] -translate-y-1/2 opacity-[0.05]"
+              aria-hidden="true"
+            >
+              <defs>
+                <mask id="menu-cube-mask">
+                  <rect x="0" y="0" width="100" height="100" fill="white" />
+                  <line x1="50" y1="50" x2="5" y2="50" stroke="black" strokeWidth="5.5" strokeLinecap="butt" />
+                  <line x1="50" y1="50" x2="73" y2="10" stroke="black" strokeWidth="5.5" strokeLinecap="butt" />
+                  <line x1="50" y1="50" x2="73" y2="90" stroke="black" strokeWidth="5.5" strokeLinecap="butt" />
+                </mask>
+              </defs>
+              <g mask="url(#menu-cube-mask)">
+                <polygon points="10,50 30,15.36 70,15.36 50,50" fill="#79c7f9" />
+                <polygon points="10,50 50,50 70,84.64 30,84.64" fill="#2b84da" />
+                <polygon points="50,50 70,15.36 90,50 70,84.64" fill="#2065be" />
+              </g>
+            </svg>
           </div>
 
           <div className="relative">
             {/* Sticky header */}
             <div className="sticky top-0 z-10 border-b border-navy-100 bg-surface/80 backdrop-blur-md">
               <div className="container-page flex items-center justify-between py-4">
-                <Logo />
+                <button onClick={() => handleNavigate('/')} aria-label="Go to home page">
+                  <Logo />
+                </button>
                 <button
                   onClick={onClose}
                   className="group flex items-center gap-2 rounded-full border border-navy-200 bg-white px-4 py-2 text-sm font-medium text-navy-700 transition-all hover:border-gold-400 hover:text-navy-900 hover:shadow-sm"
@@ -171,26 +193,23 @@ export default function MegaMenu({ open, onClose }) {
 
               {/* Quick access sub-row */}
               <div className="border-t border-navy-100">
-                <div className="container-page flex flex-wrap items-center justify-between gap-4 py-4">
-                  <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-                    <span className="text-xs font-semibold uppercase tracking-widest text-ink/40">
-                      Quick Access
-                    </span>
-                    {downloadResources.slice(0, 3).map((d) => (
-                      <button
-                        key={d.title}
-                        onClick={() => handleNavigate('/downloads')}
-                        className="group inline-flex items-center gap-1 text-xs text-ink/60 transition-colors hover:text-gold-600"
-                      >
-                        {d.title}
-                        <ArrowUpRight className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
-                      </button>
-                    ))}
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-ink/40">
-                    <Globe2 className="h-3.5 w-3.5 text-gold-500" />
-                    Our Global Presence: India · Netherlands · UAE · Saudi Arabia · Qatar
-                  </div>
+                <div className="container-page flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-4">
+                  <span className="text-xs font-semibold uppercase tracking-widest text-ink/40">
+                    Quick Access
+                  </span>
+                  {downloadResources.slice(0, 3).map((d) => (
+                    <a
+                      key={d.title}
+                      href={d.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={onClose}
+                      className="group inline-flex items-center gap-1.5 font-display text-sm font-semibold text-navy-700 transition-colors hover:text-gold-600"
+                    >
+                      {d.title}
+                      <ArrowUpRight className="h-4 w-4 text-gold-500 opacity-0 transition-opacity group-hover:opacity-100" />
+                    </a>
+                  ))}
                 </div>
               </div>
             </div>

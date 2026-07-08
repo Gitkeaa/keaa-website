@@ -1,4 +1,4 @@
-import { Download, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Eye, ShieldCheck, ArrowRight } from 'lucide-react';
 import PageHero from '../components/ui/PageHero';
 import SectionHeading from '../components/ui/SectionHeading';
 import Button from '../components/ui/Button';
@@ -11,28 +11,28 @@ import useSEO from '../hooks/useSEO';
 const certificateGallery = [
   {
     img: '/images/cert-iso-9001.jpg',
-    pdf: '/certificates/iso-9001.pdf',
+    pdf: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/kishlay_keaa-international_net/IQBJ8OQ9vlisTJ2EnnjnGupzATxZYTkywg65byuOluSY8_8?e=NafAor',
     title: 'ISO 9001:2015',
     body: 'Quality Management System — TÜV Rheinland',
     desc: 'Certifies our quality management system for the manufacture of sheet-metal and fabricated components — scaffolding, framework, garden hardware and livestock products.',
   },
   {
     img: '/images/cert-iso-14001.jpg',
-    pdf: '/certificates/iso-14001.pdf',
+    pdf: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/kishlay_keaa-international_net/IQA3pZsk1pEOTbTpln7ZlmjoASEre9vcBu2CXEXV6101wjI?e=c4bZzp',
     title: 'ISO 14001:2015',
     body: 'Environmental Management System — TÜV Rheinland',
     desc: 'Certifies an environmental management system that ensures responsible, low-impact and sustainable manufacturing across all operations.',
   },
   {
     img: '/images/cert-iso-45001.jpg',
-    pdf: '/certificates/iso-45001.pdf',
+    pdf: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/kishlay_keaa-international_net/IQBpky6VQzFDTor6HAYdGISEAQN3GFRK3Of1Nv5xnxdECzM?e=Vop8VV',
     title: 'ISO 45001:2018',
     body: 'Occupational Health & Safety — TÜV Rheinland',
     desc: 'Certifies an occupational health & safety management system that protects our workforce and maintains a safe production environment.',
   },
   {
     img: '/images/cert-zed-silver.jpg',
-    pdf: '/certificates/zed-silver.pdf',
+    pdf: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/kishlay_keaa-international_net/IQBs4gX-CO0HQa6WWvJWgG91AfTlazL_SdfGdN8r7TN6hcE?e=sVZfkf',
     title: 'ZED Silver',
     body: 'MSME Sustainable (ZED) — Govt. of India',
     desc: 'Zero Defect Zero Effect (ZED) Silver certification under the Government of India MSME Sustainable scheme, recognising quality-driven and eco-conscious manufacturing.',
@@ -92,7 +92,7 @@ export default function Certifications() {
                     rel="noopener noreferrer"
                     className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-navy-700 transition-colors hover:text-gold-600"
                   >
-                    <Download className="h-4 w-4" /> View Certificate (PDF)
+                    <Eye className="h-4 w-4" /> View Certificate (PDF)
                   </a>
                 </div>
               </div>

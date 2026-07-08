@@ -66,21 +66,25 @@ export const company = {
       name: 'ISO 9001:2015',
       body: 'TÜV Rheinland',
       note: 'Quality Management System for the manufacture of sheet-metal and fabricated components — scaffolding, framework, garden hardware and livestock products.',
+      pdf: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/kishlay_keaa-international_net/IQBJ8OQ9vlisTJ2EnnjnGupzATxZYTkywg65byuOluSY8_8?e=NafAor',
     },
     {
       name: 'ISO 14001:2015',
       body: 'TÜV Rheinland',
       note: 'Environmental Management System ensuring responsible, low-impact and sustainable manufacturing across all operations.',
+      pdf: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/kishlay_keaa-international_net/IQA3pZsk1pEOTbTpln7ZlmjoASEre9vcBu2CXEXV6101wjI?e=c4bZzp',
     },
     {
       name: 'ISO 45001:2018',
       body: 'TÜV Rheinland',
       note: 'Occupational Health & Safety Management System protecting our workforce and maintaining a safe production environment.',
+      pdf: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/kishlay_keaa-international_net/IQBpky6VQzFDTor6HAYdGISEAQN3GFRK3Of1Nv5xnxdECzM?e=Vop8VV',
     },
     {
       name: 'ZED Silver',
       body: 'MSME Sustainable (ZED), Govt. of India',
       note: 'Zero Defect Zero Effect (ZED) Silver certification recognising quality-driven and eco-conscious manufacturing.',
+      pdf: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/kishlay_keaa-international_net/IQBs4gX-CO0HQa6WWvJWgG91AfTlazL_SdfGdN8r7TN6hcE?e=sVZfkf',
     },
   ],
 
@@ -155,7 +159,7 @@ export const leadership = [
   },
   {
     name: 'Mandeep Singh',
-    role: 'General Manager',
+    role: 'General Manager Operations',
     bio: 'Coordinates manufacturing operations, shop floor efficiency, and supply chain logistics.',
     photo: '/images/mandeep-singh.jpg',
     linkedin: 'https://www.linkedin.com/in/mandeep-singh-dhanda-473319229',
@@ -177,23 +181,35 @@ export const leadership = [
   },
 ];
 
-export const cmdMessage = {
-  name: 'Raveesh Moudgil',
-  role: 'Chief Managing Director, KEAA International Pvt. Ltd.',
+export const chairmanMessage = {
+  name: 'Om Parkash Sharma',
+  role: 'Chairman, KEAA International Pvt. Ltd.',
   message:
-    'At Keaa International, our vision is to engineer safety and reliability into every scaffolding and formwork solution we deliver. Over the past two decades, our commitment to quality, innovation, and international standards has made us a trusted global partner. We continue to invest in advanced technology and our people to support the world\'s infrastructure with integrity.',
-  linkedin: 'https://www.linkedin.com/in/raveesh-moudgil-b0618642/',
-  whatsapp: 'https://wa.me/919876701926',
+    'For over two decades, KEAA International has grown on a foundation of quality, integrity and trust — from a focused manufacturing vision to a name relied upon across 42+ countries. I am deeply proud of the people and partnerships behind this journey, and remain committed to building solutions that make the world safer and stronger for generations to come.',
+  photo: '/images/chairman.jpg',
 };
 
-export const mdMessage = {
-  name: 'Sumit Moudgil',
-  role: 'Managing Director, KEAA International Pvt. Ltd.',
-  message:
-    'Our focus at Keaa International is on manufacturing excellence and operational efficiency. By leveraging state-of-the-art machinery and certified processes at our Ludhiana plants, we ensure that every product meets the most stringent international quality benchmarks. We are dedicated to providing customized, high-performing solutions that drive value for our clients globally.',
-  linkedin: 'https://www.linkedin.com/in/sumit-moudgil',
-  whatsapp: 'https://wa.me/919872984707',
-};
+// Managing Directors — shown together on the About page under one heading.
+export const managingDirectors = [
+  {
+    name: 'Sumit Moudgil',
+    role: 'Managing Director, KEAA International Pvt. Ltd.',
+    message:
+      'Our focus at Keaa International is on manufacturing excellence and operational efficiency. By leveraging state-of-the-art machinery and certified processes at our Ludhiana plants, we ensure that every product meets the most stringent international quality benchmarks. We are dedicated to providing customized, high-performing solutions that drive value for our clients globally.',
+    photo: '/images/sumit-moudgil.jpg',
+    linkedin: 'https://www.linkedin.com/in/sumit-moudgil',
+    whatsapp: 'https://wa.me/919872984707',
+  },
+  {
+    name: 'Raveesh Moudgil',
+    role: 'Managing Director, KEAA International Pvt. Ltd.',
+    message:
+      'At Keaa International, our vision is to engineer safety and reliability into every scaffolding and formwork solution we deliver. Over the past two decades, our commitment to quality, innovation, and international standards has made us a trusted global partner. We continue to invest in advanced technology and our people to support the world\'s infrastructure with integrity.',
+    photo: '/images/raveesh-moudgil.jpg',
+    linkedin: 'https://www.linkedin.com/in/raveesh-moudgil-b0618642/',
+    whatsapp: 'https://wa.me/919876701926',
+  },
+];
 
 export const countries = [
   { name: 'India', flag: '🇮🇳' },
