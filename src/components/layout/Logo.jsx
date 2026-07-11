@@ -3,7 +3,7 @@ export default function Logo({ light = false, className = '' }) {
   const subColor = light ? 'text-white/60' : 'text-slate-450';
 
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
+    <div className={`flex items-center gap-3 text-left ${className}`}>
       {/* Exact 3D Cube Icon matching the user's logo with transparent gaps */}
       <svg viewBox="0 0 100 100" className="h-10 w-10 flex-shrink-0" aria-hidden="true">
         <defs>

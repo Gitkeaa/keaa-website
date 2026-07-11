@@ -1,9 +1,3 @@
-// Premium photography curated from Unsplash (unsplash.com/license — free for
-// commercial use, no attribution required). Organised by theme so any page
-// can pull a relevant, high-quality image. All URLs use Unsplash's dynamic
-// resizing params; swap any entry for an official KEAA photo later by simply
-// replacing the URL string — no layout changes required.
-
 const u = (id, w = 1920, q = 80) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=${q}`;
 

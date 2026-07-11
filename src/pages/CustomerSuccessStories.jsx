@@ -37,11 +37,11 @@ export default function CustomerSuccessStories() {
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {testimonials.map((t) => (
               <div key={t.name} className="rounded-xl border border-navy-100 p-6 shadow-card">
-                <Quote className="h-5 w-5 text-gold-500" />
+                <Quote className="h-5 w-5 text-primary-dark" />
                 <p className="mt-3 text-sm leading-relaxed text-ink/70">&ldquo;{t.quote}&rdquo;</p>
                 <div className="mt-4 flex gap-0.5">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-3.5 w-3.5 fill-gold-400 text-gold-400" />
+                    <Star key={i} className="h-3.5 w-3.5 fill-accent text-accent" />
                   ))}
                 </div>
                 <p className="mt-3 font-display text-sm font-semibold text-navy-800">{t.name}</p>

@@ -1,10 +1,17 @@
 import { useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Send, ArrowRight, Zap, Headset, Globe2, Linkedin, Facebook, Instagram, Youtube, MessageCircle } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { MapPin, Phone, Mail, Clock, Send, ArrowRight, Zap, Headset, Globe2, Linkedin, Facebook, Instagram, Youtube, MessageCircle, ChevronDown } from 'lucide-react';
 import PageHero from '../components/ui/PageHero';
+import FeatureStrip from '../components/FeatureStrip';
 import Button from '../components/ui/Button';
+import CountrySelect from '../components/ui/CountrySelect';
+import PhoneField from '../components/ui/PhoneField';
+import EmailField from '../components/ui/EmailField';
+import WordLimitTextarea from '../components/ui/WordLimitTextarea';
 import ImagePlaceholder from '../components/ui/ImagePlaceholder';
 import Reveal from '../components/ui/Reveal';
 import { company } from '../data/company';
+import { defaultCountry } from '../data/countriesData';
 import { img } from '../data/images';
 import useSEO from '../hooks/useSEO';
 
@@ -52,6 +59,11 @@ export default function Contact() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [showConsult, setShowConsult] = useState(false);
+  const [country, setCountry] = useState(defaultCountry);
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [message, setMessage] = useState('');
   const landlineNumbers = Array.isArray(company.landline) ? company.landline : [company.landline];
 
   const handleSubmit = (e) => {
@@ -74,12 +86,12 @@ export default function Contact() {
         <div className="container-page grid gap-10 lg:grid-cols-[340px_1fr]">
           {/* GET IN TOUCH */}
           <Reveal className="space-y-5">
-            <span className="eyebrow">
-              <span className="h-px w-5 bg-current" /> Get in Touch
+            <span className="eyebrow text-primary-darker">
+              Get in Touch
             </span>
             <div className="rounded-2xl border border-navy-100 p-6 shadow-card">
               <div className="flex gap-3">
-                <MapPin className="h-5 w-5 flex-shrink-0 text-gold-500" />
+                <MapPin className="h-5 w-5 flex-shrink-0 text-primary-dark" />
                 <div>
                   <h4 className="font-display text-sm font-semibold text-navy-800">
                     {company.manufacturing.label}
@@ -92,7 +104,7 @@ export default function Contact() {
                 </div>
               </div>
               <div className="mt-5 flex gap-3">
-                <Phone className="h-5 w-5 flex-shrink-0 text-gold-500" />
+                <Phone className="h-5 w-5 flex-shrink-0 text-primary-dark" />
                 <div>
                   <h4 className="font-display text-sm font-semibold text-navy-800">Phone</h4>
                   {company.phones.map((p) => (
@@ -113,7 +125,7 @@ export default function Contact() {
                 </div>
               </div>
               <div className="mt-5 flex gap-3">
-                <Mail className="h-5 w-5 flex-shrink-0 text-gold-500" />
+                <Mail className="h-5 w-5 flex-shrink-0 text-primary-dark" />
                 <div>
                   <h4 className="font-display text-sm font-semibold text-navy-800">Email</h4>
                   {company.emails.map((e) => (
@@ -126,7 +138,7 @@ export default function Contact() {
                 </div>
               </div>
               <div className="mt-5 flex gap-3">
-                <Clock className="h-5 w-5 flex-shrink-0 text-gold-500" />
+                <Clock className="h-5 w-5 flex-shrink-0 text-primary-dark" />
                 <div>
                   <h4 className="font-display text-sm font-semibold text-navy-800">Business Hours</h4>
                   <p className="text-sm text-ink/60">Monday – Saturday</p>
@@ -148,8 +160,54 @@ export default function Contact() {
           </Reveal>
 
           {/* FORM */}
-          <Reveal delay={0.1} className="rounded-2xl border border-navy-100 p-7 shadow-card">
-            <h3 className="font-display text-lg font-semibold text-navy-800">Send Us a Message</h3>
+          <Reveal delay={0.1} className="relative rounded-2xl border border-navy-100 p-7 shadow-card">
+            <div className="flex items-center gap-3.5">
+              <motion.button
+                type="button"
+                onClick={() => setShowConsult((v) => !v)}
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
+                aria-expanded={showConsult}
+                aria-label="Toggle consultation details"
+                className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary-dark text-white shadow-lg shadow-primary/30 transition-transform hover:scale-105"
+              >
+                <Headset className="h-6 w-6" />
+              </motion.button>
+              <div>
+                <h3 className="font-display text-xl font-bold text-navy-800">Send Us a Message</h3>
+                <button
+                  type="button"
+                  onClick={() => setShowConsult((v) => !v)}
+                  aria-expanded={showConsult}
+                  className="mt-0.5 inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-primary-darker transition-colors hover:text-primary-deep"
+                >
+                  Request a Consultation
+                  <ChevronDown
+                    className={`h-3.5 w-3.5 transition-transform duration-300 ${showConsult ? 'rotate-180' : ''}`}
+                  />
+                </button>
+              </div>
+            </div>
+
+            <AnimatePresence initial={false}>
+              {showConsult && (
+                <motion.div
+                  key="consult"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                  className="overflow-hidden"
+                >
+                  <p className="mt-4 rounded-xl border border-primary/20 bg-primary/[0.05] p-4 text-sm leading-relaxed text-ink/70">
+                    Planning your next construction or industrial project? Tell us about your
+                    requirements, and our specialists will recommend the right products, pricing, and
+                    manufacturing solutions tailored to your business. From initial inquiry to final
+                    delivery, we&rsquo;re committed to supporting your success.
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {submitted ? (
               <div className="mt-8 rounded-xl bg-navy-50 p-8 text-center">
@@ -162,20 +220,25 @@ export default function Contact() {
               <form onSubmit={handleSubmit} className="mt-6 grid gap-5 sm:grid-cols-2">
                 <Field label="Your Name" id="name" required />
                 <Field label="Company Name" id="company" />
-                <Field label="Email Address" id="email" type="email" required />
-                <Field label="Phone Number" id="phone" type="tel" />
-                <Field label="Subject" id="subject" className="sm:col-span-2" required />
-                <div className="sm:col-span-2">
-                  <label htmlFor="message" className="text-sm font-medium text-navy-800">
-                    Message <span className="text-red-500">*</span>
-                  </label>
-                  <textarea
-                    id="message"
-                    required
-                    rows={5}
-                    className="mt-1.5 w-full rounded-md border border-navy-100 px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-gold-400"
-                  />
-                </div>
+                <EmailField value={email} onChange={setEmail} required />
+                <CountrySelect value={country} onChange={setCountry} required />
+                <PhoneField country={country} value={phone} onChange={setPhone} />
+                <Field
+                  label="Subject"
+                  id="subject"
+                  required
+                  placeholder="e.g. Bulk order inquiry for Cuplock scaffolding"
+                />
+                <WordLimitTextarea
+                  className="sm:col-span-2"
+                  id="message"
+                  label="Message"
+                  value={message}
+                  onChange={setMessage}
+                  required
+                  maxWords={250}
+                  placeholder="Tell us how we can help — product, quantity, timeline, destination…"
+                />
                 <div className="sm:col-span-2">
                   <Button type="submit" icon={Send}>
                     Send Message
@@ -191,8 +254,8 @@ export default function Contact() {
       <section className="bg-navy-50 overflow-hidden">
         <div className="container-page grid items-center gap-8 py-12 lg:grid-cols-[1fr_300px]">
           <Reveal>
-            <span className="eyebrow">
-              <span className="h-px w-5 bg-current" /> Request a Quote
+            <span className="eyebrow text-primary-darker">
+              Request a Quote
             </span>
             <h3 className="mt-2 font-display text-xl font-semibold text-navy-800">
               Share your requirements and our team will get back to you with the best solution.
@@ -211,8 +274,8 @@ export default function Contact() {
       <section className="section-pad">
         <div className="container-page">
           <Reveal>
-            <span className="eyebrow">
-              <span className="h-px w-5 bg-current" /> Our Location
+            <span className="eyebrow text-primary-darker">
+              Our Location
             </span>
             <h3 className="mt-2 font-display text-xl font-semibold text-navy-800">
               {company.manufacturing.line1}, {company.manufacturing.line2}
@@ -234,11 +297,11 @@ export default function Contact() {
       <section className="section-pad bg-navy-50">
         <div className="container-page">
           <Reveal>
-            <span className="eyebrow">
-              <span className="h-px w-5 bg-current" /> Book Your Ride
+            <span className="eyebrow text-primary-darker">
+              Book Your Ride
             </span>
             <h3 className="mt-2 font-display text-xl font-semibold text-navy-800">
-              Get to KEAA International — Dehlon Road, Ludhiana
+              Get to KEAA International — Dehlon Road, Ludhiana, Pujab-India
             </h3>
             <p className="mt-1 text-sm text-ink/55">
               Click any app below — destination is pre-filled with our factory location.
@@ -291,8 +354,8 @@ export default function Contact() {
       <section className="section-pad">
         <div className="container-page">
           <Reveal>
-            <span className="eyebrow">
-              <span className="h-px w-5 bg-current" /> Follow Us
+            <span className="eyebrow text-primary-darker">
+              Follow Us
             </span>
             <h3 className="mt-2 font-display text-xl font-semibold text-navy-800">Find Us on Social Media</h3>
           </Reveal>
@@ -316,33 +379,17 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* HELP STRIP */}
-      <section className="bg-navy-900">
-        <div className="container-page grid gap-8 py-12 sm:grid-cols-[1fr_auto] sm:items-center">
-          <div>
-            <h3 className="font-display text-2xl font-bold text-white">We&rsquo;re Here to Help You.</h3>
-            <p className="mt-1 text-white/60">Reach out to us today!</p>
-          </div>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {helpStrip.map((h) => (
-              <div key={h.title} className="flex items-center gap-3">
-                <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-gold-400">
-                  <h.icon className="h-5 w-5" />
-                </span>
-                <div>
-                  <p className="text-sm font-semibold text-white">{h.title}</p>
-                  <p className="text-xs text-white/55">{h.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* HELP STRIP. Last section before the footer, so it keeps the photograph.
+          Entities like `&rsquo;` only decode in JSX text, not in a string prop. */}
+      <FeatureStrip
+        lead={{ title: 'We’re Here', accent: 'to Help You.', desc: 'Reach out to us today!' }}
+        items={helpStrip}
+      />
     </>
   );
 }
 
-function Field({ label, id, type = 'text', required = false, className = '' }) {
+function Field({ label, id, type = 'text', required = false, className = '', placeholder = '' }) {
   return (
     <div className={className}>
       <label htmlFor={id} className="text-sm font-medium text-navy-800">
@@ -352,7 +399,8 @@ function Field({ label, id, type = 'text', required = false, className = '' }) {
         id={id}
         type={type}
         required={required}
-        className="mt-1.5 w-full rounded-md border border-navy-100 px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-gold-400"
+        placeholder={placeholder}
+        className="mt-1.5 w-full rounded-md border border-navy-100 px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-primary"
       />
     </div>
   );

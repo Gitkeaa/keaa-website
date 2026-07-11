@@ -1,43 +1,10 @@
 import { Eye, ShieldCheck, ArrowRight } from 'lucide-react';
 import PageHero from '../components/ui/PageHero';
 import SectionHeading from '../components/ui/SectionHeading';
-import Button from '../components/ui/Button';
 import { company } from '../data/company';
 import { img } from '../data/images';
 import useSEO from '../hooks/useSEO';
-
-// The four independently-audited certificates, shown as framed images with a
-// link to the full PDF (files live in public/images and public/certificates).
-const certificateGallery = [
-  {
-    img: '/images/cert-iso-9001.jpg',
-    pdf: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/kishlay_keaa-international_net/IQBJ8OQ9vlisTJ2EnnjnGupzATxZYTkywg65byuOluSY8_8?e=NafAor',
-    title: 'ISO 9001:2015',
-    body: 'Quality Management System — TÜV Rheinland',
-    desc: 'Certifies our quality management system for the manufacture of sheet-metal and fabricated components — scaffolding, framework, garden hardware and livestock products.',
-  },
-  {
-    img: '/images/cert-iso-14001.jpg',
-    pdf: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/kishlay_keaa-international_net/IQA3pZsk1pEOTbTpln7ZlmjoASEre9vcBu2CXEXV6101wjI?e=c4bZzp',
-    title: 'ISO 14001:2015',
-    body: 'Environmental Management System — TÜV Rheinland',
-    desc: 'Certifies an environmental management system that ensures responsible, low-impact and sustainable manufacturing across all operations.',
-  },
-  {
-    img: '/images/cert-iso-45001.jpg',
-    pdf: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/kishlay_keaa-international_net/IQBpky6VQzFDTor6HAYdGISEAQN3GFRK3Of1Nv5xnxdECzM?e=Vop8VV',
-    title: 'ISO 45001:2018',
-    body: 'Occupational Health & Safety — TÜV Rheinland',
-    desc: 'Certifies an occupational health & safety management system that protects our workforce and maintains a safe production environment.',
-  },
-  {
-    img: '/images/cert-zed-silver.jpg',
-    pdf: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/kishlay_keaa-international_net/IQBs4gX-CO0HQa6WWvJWgG91AfTlazL_SdfGdN8r7TN6hcE?e=sVZfkf',
-    title: 'ZED Silver',
-    body: 'MSME Sustainable (ZED) — Govt. of India',
-    desc: 'Zero Defect Zero Effect (ZED) Silver certification under the Government of India MSME Sustainable scheme, recognising quality-driven and eco-conscious manufacturing.',
-  },
-];
+import CtaBand from '../components/CtaBand';
 
 export default function Certifications() {
   useSEO({
@@ -66,33 +33,35 @@ export default function Certifications() {
           />
 
           <div className="mt-12 grid gap-6 sm:grid-cols-2">
-            {certificateGallery.map((c) => (
+            {company.certifications.map((c) => (
               <div
-                key={c.title}
+                key={c.name}
                 className="group flex flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
               >
                 <div className="overflow-hidden border-b border-navy-100 bg-navy-50/40 p-4">
                   <img
-                    src={c.img}
-                    alt={`${c.title} certificate — KEAA International`}
+                    src={c.image}
+                    alt={`${c.name} certificate — KEAA International`}
                     loading="lazy"
                     className="mx-auto max-h-[440px] w-auto object-contain transition-transform duration-500 group-hover:scale-[1.02]"
                   />
                 </div>
                 <div className="flex flex-1 flex-col p-5">
                   <div className="flex items-center gap-2">
-                    <ShieldCheck className="h-5 w-5 flex-shrink-0 text-gold-500" />
-                    <h3 className="font-display text-lg font-semibold text-navy-800">{c.title}</h3>
+                    <ShieldCheck className="h-5 w-5 flex-shrink-0 text-primary-dark" />
+                    <h3 className="font-display text-lg font-semibold text-navy-800">{c.name}</h3>
                   </div>
-                  <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-gold-600">{c.body}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-ink/60">{c.desc}</p>
+                  <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-primary-darker">
+                    {c.scope} — {c.body}
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-ink/60">{c.note}</p>
                   <a
-                    href={c.pdf}
+                    href={c.image}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-navy-700 transition-colors hover:text-gold-600"
+                    className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-navy-700 transition-colors hover:text-primary-deep"
                   >
-                    <Eye className="h-4 w-4" /> View Certificate (PDF)
+                    <Eye className="h-4 w-4" /> View Certificate
                   </a>
                 </div>
               </div>
@@ -104,8 +73,8 @@ export default function Certifications() {
       <section className="section-pad bg-navy-50">
         <div className="container-page grid gap-10 lg:grid-cols-2">
           <div>
-            <span className="eyebrow">
-              <span className="h-px w-5 bg-current" /> In-House Testing
+            <span className="eyebrow text-primary-darker">
+              In-House Testing
             </span>
             <h3 className="mt-2 font-display text-xl font-semibold text-navy-800">
               Tested Before It Leaves Our Facility
@@ -113,8 +82,8 @@ export default function Certifications() {
             <p className="mt-3 text-sm leading-relaxed text-ink/65">{company.facilities.testing}.</p>
           </div>
           <div>
-            <span className="eyebrow">
-              <span className="h-px w-5 bg-current" /> Certified Workforce
+            <span className="eyebrow text-primary-darker">
+              Certified Workforce
             </span>
             <h3 className="mt-2 font-display text-xl font-semibold text-navy-800">
               Certified Welders, Verified Process
@@ -124,17 +93,12 @@ export default function Certifications() {
         </div>
       </section>
 
-      <section className="bg-navy-900">
-        <div className="container-page flex flex-col items-center justify-between gap-6 py-12 sm:flex-row">
-          <div>
-            <h3 className="font-display text-2xl font-bold text-white">Need a Specific Compliance Document?</h3>
-            <p className="mt-1 text-white/60">We&rsquo;re happy to share full certification packs for your project or tender.</p>
-          </div>
-          <Button to="/contact" icon={ArrowRight} className="flex-shrink-0">
-            Contact Our Team
-          </Button>
-        </div>
-      </section>
+      <CtaBand
+        title="Need a Specific"
+        accent="Compliance Document?"
+        desc="We&rsquo;re happy to share full certification packs for your project or tender."
+        cta={{ label: 'Contact Our Team', to: '/contact', icon: ArrowRight }}
+      />
     </>
   );
 }

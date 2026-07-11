@@ -3,7 +3,7 @@ export default function Stat({ icon: Icon, value, label, light = true, className
     <div className={`flex items-center gap-3 ${className}`}>
       {Icon && (
         <Icon
-          className={`h-6 w-6 flex-shrink-0 ${light ? 'text-gold-400' : 'text-gold-500'}`}
+          className={`h-6 w-6 flex-shrink-0 ${light ? 'text-primary-light' : 'text-primary-dark'}`}
           strokeWidth={1.75}
         />
       )}

@@ -1,4 +1,3 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
 import {
   Globe2,
   Factory,
@@ -8,12 +7,8 @@ import {
   Settings2,
   Headphones,
   ArrowRight,
-  Download,
   Quote,
   Award,
-  ChevronDown,
-  Play,
-  ExternalLink,
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import SectionHeading from '../components/ui/SectionHeading';
@@ -22,19 +17,15 @@ import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import AnimatedCounter from '../components/ui/AnimatedCounter';
 import Reveal, { StaggerGroup, StaggerItem } from '../components/ui/Reveal';
-import { staggerParent, staggerChild } from '../lib/motionVariants';
+// BRANDING EXPERIMENT: swap this import + the <HomeHeroBrandTest /> usage below to
+// restore the original hero. Nothing else on the page depends on it.
+import HomeHeroBrandTest from '../components/home/HomeHeroBrandTest';
+import CoreSolutions from '../components/home/CoreSolutions';
+import CtaBand from '../components/CtaBand';
 import useSEO from '../hooks/useSEO';
 import { company, chairmanMessage } from '../data/company';
-import { productCategories, categoryImages } from '../data/products';
-import { featuredProjects, droneFilmUrl } from '../data/content';
+import { featuredProjects } from '../data/content';
 import { img } from '../data/images';
-
-const heroStats = [
-  { value: '20+', label: 'Years of Experience' },
-  { value: '42+', label: 'Countries Exported' },
-  { value: '5', label: 'Manufacturing Facilities' },
-  { value: '100+', label: 'Product Range' },
-];
 
 const whyChoose = [
   { icon: ShieldCheck, title: 'Premium Quality', desc: 'International quality standards & strict quality control.' },
@@ -71,8 +62,10 @@ const certificationCards = [
   {
     name: 'SLV Mannheim',
     body: 'Germany EN 1090',
+    // `amber-650` is not on the scale, so the class never compiled and the mark inherited
+    // whatever colour surrounded it.
     logo: (
-      <svg viewBox="0 0 100 100" className="h-7 w-7 text-amber-650">
+      <svg viewBox="0 0 100 100" className="h-7 w-7 text-amber-600">
         <polygon points="50,10 85,25 85,65 50,90 15,65 15,25" fill="none" stroke="currentColor" strokeWidth="8" />
         <path d="M35,45 L50,30 L65,45 M50,30 L50,70" fill="none" stroke="currentColor" strokeWidth="8" strokeLinecap="round" />
         <text x="50" y="80" fontFamily="sans-serif" fontSize="11" fontWeight="bold" textAnchor="middle" fill="currentColor">SLV</text>
@@ -142,108 +135,11 @@ export default function Home() {
     description:
       'ISO 9001:2015 certified manufacturer and exporter of scaffolding systems, formwork accessories, safety products, livestock housing solutions and garden hardware. Exporting to 42+ countries since 2003.',
   });
-  const { scrollY } = useScroll();
-  const heroParallaxY = useTransform(scrollY, [0, 800], [0, 160]);
 
   return (
     <>
-      {/* HERO */}
-      <section className="relative flex min-h-[640px] items-center overflow-hidden bg-navy-950 text-white sm:min-h-[720px] lg:min-h-[820px] xl:min-h-[880px]">
-        <motion.div
-          initial={{ scale: 1.12, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
-          style={{ y: heroParallaxY }}
-          className="absolute inset-0"
-        >
-          <img
-            src={img.heroScaffoldTower}
-            alt="Scaffolding and formwork at a construction site"
-            className="h-[120%] w-full object-cover"
-          />
-        </motion.div>
-        <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/80 to-navy-950/40" />
-        <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-navy-950/30" />
-        <div className="absolute inset-0 bg-spec-grid bg-[size:42px_42px] opacity-[0.08]" />
-        <div className="absolute -right-32 top-10 h-96 w-96 rounded-full bg-gold-500/10 blur-3xl" />
-
-        <div className="container-page relative w-full py-20 sm:py-24">
-          <motion.div initial="hidden" animate="show" variants={staggerParent} className="max-w-xl">
-            <motion.span variants={staggerChild} className="eyebrow text-gold-400">
-              <span className="h-px w-5 bg-current" /> ISO 9001:2015 Certified Manufacturer &amp; Exporter
-            </motion.span>
-            <h1 className="mt-5 font-display text-4xl font-bold leading-[1.08] sm:text-5xl lg:text-6xl xl:text-7xl">
-              <motion.span variants={staggerChild} className="block">
-                Engineering Reliable
-              </motion.span>
-              <motion.span variants={staggerChild} className="block text-gold-400">
-                Scaffolding &amp; Formwork
-              </motion.span>
-              <motion.span variants={staggerChild} className="block">
-                Solutions
-              </motion.span>
-            </h1>
-            <motion.p variants={staggerChild} className="mt-6 max-w-lg text-base text-white/75 sm:text-lg">
-              {company.name} is a leading manufacturer and exporter delivering world-class
-              scaffolding systems, formwork accessories, safety products, livestock housing
-              solutions and garden hardware to over 42 countries.
-            </motion.p>
-            <motion.div variants={staggerChild} className="mt-9 flex flex-wrap items-center gap-4">
-              {/* Watch film — sits in a glass chip so it pairs cleanly with the button beside it */}
-              <a
-                href={droneFilmUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center gap-3 rounded-xl border border-white/15 bg-white/5 py-1.5 pl-1.5 pr-5 text-left backdrop-blur-sm transition-colors hover:border-gold-400/50 hover:bg-white/10"
-                aria-label="Watch the KEAA drone film (opens in a new tab)"
-              >
-                <span className="relative flex h-11 w-11 shrink-0 items-center justify-center">
-                  {/* soft pulse */}
-                  <span
-                    className="absolute inset-0 rounded-full bg-gold-500/25 animate-ping motion-reduce:animate-none"
-                    style={{ animationDuration: '2.8s' }}
-                  />
-                  {/* gold play disc */}
-                  <span className="relative flex h-11 w-11 items-center justify-center rounded-full bg-gold-500 text-navy-900 shadow-md shadow-gold-500/30 transition-transform duration-200 group-hover:scale-105">
-                    <Play className="h-[18px] w-[18px] translate-x-[1px] fill-current" />
-                  </span>
-                </span>
-                <span className="leading-tight">
-                  <span className="flex items-center gap-1.5 text-sm font-semibold text-white transition-colors group-hover:text-gold-300">
-                    Watch the drone film
-                    <ExternalLink className="h-3.5 w-3.5 opacity-60" />
-                  </span>
-                  <span className="mt-0.5 block text-xs text-white/55">A bird&rsquo;s-eye view of KEAA</span>
-                </span>
-              </a>
-              <Button to="/downloads" variant="outline" size="lg" icon={Download}>
-                Download Catalog
-              </Button>
-            </motion.div>
-          </motion.div>
-        </div>
-
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute bottom-24 left-1/2 hidden -translate-x-1/2 text-white/40 sm:block"
-        >
-          <ChevronDown className="h-5 w-5" />
-        </motion.div>
-
-        <div className="relative mt-auto border-t border-white/10 bg-navy-950/70 backdrop-blur-sm">
-          <div className="container-page grid grid-cols-2 gap-6 py-7 sm:grid-cols-4">
-            {heroStats.map((s) => (
-              <div key={s.label}>
-                <div className="font-display text-2xl font-bold text-white sm:text-3xl">
-                  <AnimatedCounter value={s.value} />
-                </div>
-                <div className="text-xs text-white/55">{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* HERO — branding experiment. Revert: restore the original <section> from git. */}
+      <HomeHeroBrandTest />
 
       {/* CERTIFICATION MARQUEE */}
       <div className="overflow-hidden border-y border-navy-100 bg-navy-50/40 py-6">
@@ -251,7 +147,7 @@ export default function Home() {
           {[...certificationCards, ...certificationCards].map((c, i) => (
             <div
               key={i}
-              className="flex items-center gap-4 rounded-xl border border-navy-100 bg-white px-5 py-3 shadow-[0_2px_8px_rgba(10,35,66,0.03)] transition-all hover:border-gold-400/40 hover:shadow-[0_4px_12px_rgba(10,35,66,0.06)]"
+              className="flex items-center gap-4 rounded-xl border border-navy-100 bg-white px-5 py-3 shadow-[0_2px_8px_rgba(10,35,66,0.03)] transition-all hover:border-primary/40 hover:shadow-[0_4px_12px_rgba(10,35,66,0.06)]"
             >
               <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-navy-50/50">
                 {c.logo}
@@ -265,55 +161,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* WHO WE ARE / OVERVIEW */}
-      <section className="section-pad bg-navy-50">
-        <div className="container-page">
-          <Reveal>
-            <SectionHeading
-              eyebrow="Who We Are"
-              title={
-                <>
-                  Engineering Excellence.{' '}
-                  <span className="text-gold-500">Building Global Trust.</span>
-                </>
-              }
-              desc="KEAA International is a leading manufacturer and exporter of scaffolding systems, formwork accessories, safety products and industrial solutions, delivering engineering excellence to more than 42 countries with precision, quality and reliability."
-            />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* PRODUCT CATEGORIES */}
-      <section className="section-pad">
-        <div className="container-page">
-          <Reveal>
-            <SectionHeading
-              eyebrow="Our Product Categories"
-              title="Wide Range of Quality Products"
-              desc="Five specialised product lines, engineered and certified for global construction, agriculture and outdoor markets."
-            />
-          </Reveal>
-          <StaggerGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-            {productCategories.map((cat, i) => (
-              <StaggerItem key={cat.slug}>
-                <Card className="flex h-full flex-col p-5">
-                  <ImagePlaceholder
-                    src={categoryImages[cat.slug]}
-                    label={cat.name}
-                    ratio="aspect-square"
-                    tone={i % 2 ? 'light' : 'navy'}
-                  />
-                  <h3 className="mt-4 font-display text-base font-semibold text-navy-800">{cat.name}</h3>
-                  <p className="mt-1.5 flex-1 text-sm text-ink/60">{cat.short}</p>
-                  <Button to={`/products#${cat.slug}`} variant="ghost" size="sm" icon={ArrowRight} className="mt-4 !px-0">
-                    View Products
-                  </Button>
-                </Card>
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
-        </div>
-      </section>
+      {/* WHO WE ARE + PRODUCT CATEGORIES — merged into one band. */}
+      <CoreSolutions />
 
       {/* WHY CHOOSE KEAA */}
       <section className="section-pad bg-navy-50">
@@ -321,6 +170,7 @@ export default function Home() {
           <Reveal>
             <SectionHeading
               eyebrow="Why Choose KEAA"
+              line={false}
               title="Built on Quality. Driven by Trust."
               desc="Two decades of in-house manufacturing, certification and export discipline behind every shipment."
             />
@@ -358,8 +208,8 @@ export default function Home() {
             </div>
           </Reveal>
           <Reveal delay={0.1}>
-            <span className="eyebrow">
-              <span className="h-px w-5 bg-current" /> Message from Chairman, keaa international Pvt. Ltd.
+            <span className="eyebrow text-primary-darker">
+              Message from Chairman, keaa international Pvt. Ltd.
             </span>
             <h2 className="mt-3 font-display text-3xl font-bold text-navy-800">A Legacy of Trust &amp; Quality</h2>
             <p className="mt-4 text-ink/70 leading-relaxed">{chairmanMessage.message}</p>
@@ -390,8 +240,8 @@ export default function Home() {
             />
           </Reveal>
           <Reveal delay={0.1} className="lg:order-1">
-            <span className="eyebrow">
-              <span className="h-px w-5 bg-current" /> Manufacturing Excellence
+            <span className="eyebrow text-primary-darker">
+              Manufacturing Excellence
             </span>
             <h2 className="mt-3 font-display text-3xl font-bold text-navy-800">
               Advanced Manufacturing, Strong Production Capability
@@ -404,7 +254,7 @@ export default function Home() {
                 'Large production capacity to meet global demand',
               ].map((li) => (
                 <li key={li} className="flex gap-2.5">
-                  <ShieldCheck className="h-5 w-5 flex-shrink-0 text-gold-500" />
+                  <ShieldCheck className="h-5 w-5 flex-shrink-0 text-primary-dark" />
                   {li}
                 </li>
               ))}
@@ -420,7 +270,7 @@ export default function Home() {
       <section className="section-pad overflow-hidden">
         <div className="container-page">
           <Reveal>
-            <SectionHeading eyebrow="Global Presence" title="Proudly Exporting Worldwide" />
+            <SectionHeading eyebrow="Global Presence" line={false} title="Proudly Exporting Worldwide" />
           </Reveal>
           <Reveal delay={0.1} className="mt-10 grid items-center gap-10 lg:grid-cols-[1fr_280px]">
             <ImagePlaceholder
@@ -455,7 +305,7 @@ export default function Home() {
       <section className="section-pad bg-navy-50">
         <div className="container-page">
           <Reveal>
-            <SectionHeading eyebrow="Featured Projects" title="Trusted by Clients Worldwide" />
+            <SectionHeading eyebrow="Featured Projects" line={false} title="Trusted by Clients Worldwide" />
           </Reveal>
           <StaggerGroup className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {featuredProjects.slice(0, 4).map((p, i) => (
@@ -484,8 +334,8 @@ export default function Home() {
         <div className="container-page grid gap-8 lg:grid-cols-2">
           {/* Global presence */}
           <Reveal className="group flex flex-col rounded-2xl border border-navy-100 bg-white p-8 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover">
-            <span className="eyebrow">
-              <span className="h-px w-5 bg-current" /> Global Presence
+            <span className="eyebrow text-primary-darker">
+              Global Presence
             </span>
             <h3 className="mt-2 font-display text-2xl font-bold text-navy-800">Serving Customers Worldwide</h3>
             <p className="mt-2 text-sm leading-relaxed text-ink/60">
@@ -501,7 +351,7 @@ export default function Home() {
             </div>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="inline-flex items-center gap-2 text-xs font-semibold text-navy-800">
-                <Globe2 className="h-4 w-4 text-gold-600" /> 42+ Countries Served
+                <Globe2 className="h-4 w-4 text-primary-darker" /> 42+ Countries Served
               </span>
               <Button to="/about" variant="ghost" size="sm" icon={ArrowRight} className="!px-0">
                 View Our Global Presence
@@ -511,11 +361,11 @@ export default function Home() {
 
           {/* Certifications */}
           <Reveal delay={0.1} className="flex flex-col rounded-2xl border border-navy-100 bg-white p-8 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover">
-            <span className="eyebrow">
-              <span className="h-px w-5 bg-current" /> Certifications
+            <span className="eyebrow text-primary-darker">
+              Certifications
             </span>
             <h3 className="mt-2 font-display text-2xl font-bold text-navy-800">
-              Certified for Quality. <span className="text-gold-500">Committed to Excellence.</span>
+              Certified for Quality. <span className="text-primary-dark">Committed to Excellence.</span>
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-ink/60">
               Independently audited and certified by TÜV Rheinland and the Government of India.
@@ -524,12 +374,12 @@ export default function Home() {
               {company.certifications.map((c) => (
                 <a
                   key={c.name}
-                  href={c.pdf}
+                  href={c.image}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-2.5 rounded-xl border border-navy-100 bg-white px-4 py-3 shadow-sm transition-all hover:-translate-y-0.5 hover:border-gold-300 hover:shadow-card"
+                  className="group flex items-center gap-2.5 rounded-xl border border-navy-100 bg-white px-4 py-3 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-card"
                 >
-                  <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-navy-50 text-gold-500 transition-colors group-hover:bg-gold-50">
+                  <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-navy-50 text-primary-dark transition-colors group-hover:bg-primary/[0.08]">
                     <ShieldCheck className="h-5 w-5" />
                   </span>
                   <span className="min-w-0">
@@ -547,23 +397,7 @@ export default function Home() {
       </section>
 
       {/* FINAL CTA */}
-      <section className="relative overflow-hidden bg-navy-900">
-        <div className="absolute inset-0 opacity-20">
-          <img src={img.scaffoldCrane} alt="" className="h-full w-full object-cover" />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-r from-navy-900 via-navy-900/95 to-navy-900/80" />
-        <div className="container-page relative flex flex-col items-center justify-between gap-6 py-14 sm:flex-row">
-          <div>
-            <h3 className="font-display text-2xl font-bold text-white">
-              Looking for Reliable Scaffolding &amp; Formwork Solutions?
-            </h3>
-            <p className="mt-1 text-white/60">Get in touch with our team for the best solutions for your project.</p>
-          </div>
-          <Button to="/rfq" icon={ArrowRight} className="flex-shrink-0">
-            Request a Quote
-          </Button>
-        </div>
-      </section>
+      <CtaBand />
     </>
   );
 }

@@ -1,6 +1,12 @@
+/**
+ * `tone="gold"` is kept as a key because a dozen call sites pass it, but the tone itself
+ * is now brand blue: its label had already moved to `primary-darker`, and leaving the
+ * cream `gold-50` surface behind it made the badge read as two different brands. The
+ * label measures 6.0:1 on this tint.
+ */
 export default function Badge({ children, tone = 'gold', className = '' }) {
   const tones = {
-    gold: 'bg-gold-50 text-gold-700 border-gold-200',
+    gold: 'bg-primary/[0.08] text-primary-darker border-primary/25',
     navy: 'bg-navy-50 text-navy-700 border-navy-100',
     white: 'bg-white/10 text-white border-white/20',
   };

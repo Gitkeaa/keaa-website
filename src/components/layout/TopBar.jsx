@@ -11,18 +11,18 @@ export default function TopBar() {
         </p>
         <div className="flex items-center gap-5 flex-shrink-0 pl-6">
           <span className="flex items-center gap-1.5">
-            <Globe2 className="h-3.5 w-3.5 text-gold-400" />
+            <Globe2 className="h-3.5 w-3.5 text-primary-light" />
             Exporting to 42+ Countries
           </span>
           <a href={`tel:${company.phones[0]}`} className="flex items-center gap-1.5 hover:text-white">
-            <Phone className="h-3.5 w-3.5 text-gold-400" />
+            <Phone className="h-3.5 w-3.5 text-primary-light" />
             {company.phones[0]}
           </a>
           <a href={`mailto:${company.emails[0]}`} className="flex items-center gap-1.5 hover:text-white">
-            <Mail className="h-3.5 w-3.5 text-gold-400" />
+            <Mail className="h-3.5 w-3.5 text-primary-light" />
             {company.emails[0]}
           </a>
-          <a href={company.social.linkedin} className="hover:text-gold-400" aria-label="LinkedIn">
+          <a href={company.social.linkedin} className="hover:text-primary-light" aria-label="LinkedIn">
             <Linkedin className="h-3.5 w-3.5" />
           </a>
         </div>

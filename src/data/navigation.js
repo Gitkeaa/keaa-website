@@ -2,7 +2,6 @@ import {
   Download,
   ShieldCheck,
   Star,
-  ShoppingCart,
   Briefcase,
   FileText,
 } from 'lucide-react';
@@ -20,7 +19,7 @@ export const megaMenuItems = [
   {
     n: 1,
     title: 'Downloads Center',
-    desc: 'Brochures, catalogues, datasheets, installation guides and more.',
+    desc: 'Access all essential KEAA resources in one place, including company brochures, product catalogues, technical datasheets, certifications, presentations, and installation guides to support your projects and purchasing decisions.',
     to: '/downloads',
     icon: Download,
     color: 'bg-sky-500',
@@ -28,7 +27,7 @@ export const megaMenuItems = [
   {
     n: 2,
     title: 'Certifications & Compliance',
-    desc: 'ISO, CE, EU compliance, quality standards and test reports.',
+    desc: "Explore our internationally recognized certifications, quality standards, compliance documents, and test reports that demonstrate KEAA's commitment to safety, precision manufacturing, and global regulatory requirements.",
     to: '/certifications',
     icon: ShieldCheck,
     color: 'bg-emerald-500',
@@ -36,23 +35,15 @@ export const megaMenuItems = [
   {
     n: 4,
     title: 'Customer Success Stories',
-    desc: 'Real reviews, testimonials and case studies from our customers.',
+    desc: "Discover how contractors, distributors, and industrial partners worldwide have successfully completed projects using KEAA's reliable engineering solutions through real customer testimonials and project case studies.",
     to: '/success-stories',
     icon: Star,
     color: 'bg-amber-500',
   },
   {
-    n: 5,
-    title: 'Buy Online',
-    desc: 'Purchase our products through trusted global marketplaces.',
-    to: '/buy-online',
-    icon: ShoppingCart,
-    color: 'bg-rose-500',
-  },
-  {
     n: 8,
     title: 'Careers',
-    desc: 'Join our team and build your career with KEAA International.',
+    desc: "Join a team driven by innovation, engineering excellence, and continuous growth. Explore exciting career opportunities and become part of KEAA's journey in building world-class manufacturing solutions.",
     to: '/careers',
     icon: Briefcase,
     color: 'bg-green-600',
@@ -60,7 +51,7 @@ export const megaMenuItems = [
   {
     n: 9,
     title: 'Request for Quotation',
-    desc: 'Quick RFQ, bulk order, OEM manufacturing and export inquiries.',
+    desc: 'Submit your project requirements to receive a customized quotation, competitive factory pricing, OEM manufacturing support, and expert recommendations tailored to your business and project needs.',
     to: '/rfq',
     icon: FileText,
     color: 'bg-pink-600',

@@ -2,6 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================================
+   KEAA design tokens — the single source of truth for colour.
+   Change a value here and it propagates through Tailwind (see tailwind.config.js,
+   which maps each token to a utility) and through any inline style that reads the
+   variable. Values are space-separated RGB channels, not hex, so Tailwind's opacity
+   modifiers work: `bg-primary/20` compiles to `rgb(var(--color-primary) / 0.2)`.
+
+   Three rules are load-bearing and were derived by measurement, not taste:
+
+     1. `primary` (#3A86C6) is an ACCENT. White text on it measures 3.89:1 and fails
+        WCAG AA, and so does it as text on white. Use it for borders, rings, icon
+        strokes and the focus outline. Never as a button fill or as body-size text.
+     2. `primary-dark` (#2F74B8) is the blue that carries white text (4.87:1) and the
+        blue that reads as text on white (4.87:1). Buttons, headings, links on light.
+     3. `primary-deep` (#1A4F8F) exists for small blue text on the hero's translucent
+        scrim, where `primary-dark` drops to 2.82:1. Do not collapse it into the others.
+
+   `accent` is gold and is 1.93:1 on white. It may only appear on `surface-deep`.
+   ========================================================================== */
+:root {
+  /* Brand blues */
+  --color-primary-glow: 121 199 249; /* #79C7F9  decorative only (logo light face) */
+  --color-primary-light: 140 205 243; /* #8CCDF3  links + text on the navy ground */
+  --color-primary: 58 134 198; /* #3A86C6  accent: borders, rings, icons, focus */
+  --color-primary-dark: 47 116 184; /* #2F74B8  fills with white text, text on light */
+  --color-primary-darker: 39 99 159; /* #27639F  hover / pressed */
+  --color-primary-deep: 26 79 143; /* #1A4F8F  small blue text on light */
+
+  /* Gold. Badges on dark surfaces only. */
+  --color-accent: 231 179 33; /* #E7B321 */
+
+  /* Surfaces */
+  --color-surface: 245 249 253; /* #F5F9FD  page ground */
+  --color-surface-raised: 255 255 255; /* #FFFFFF  cards */
+  --color-surface-bright: 251 252 254; /* #FBFCFE  hero stage + scrim */
+  --color-surface-tint: 242 247 253; /* #F2F7FD  hero base band */
+  --color-surface-deep: 7 20 38; /* #071426  footer ground */
+  --color-surface-deep-raised: 14 39 66; /* #0E2742  raised on the footer ground */
+
+  /* Lines */
+  --color-border: 216 234 246; /* #D8EAF6 */
+
+  /* Text */
+  --color-text: 10 35 66; /* #0A2342  headings */
+  --color-text-body: 30 41 59; /* #1E293B  body copy */
+  --color-text-strong: 51 65 85; /* #334155  small emphasised copy */
+  --color-text-muted: 71 85 105; /* #475569  labels, captions */
+
+  /* Photographic grading — the hero's colour blend, its base shadow and its sun bloom. */
+  --color-photo-tint-top: 154 214 252; /* #9AD6FC */
+  --color-photo-tint-mid: 58 134 198; /* = primary */
+  --color-photo-tint-base: 47 116 184; /* = primary-dark */
+  --color-photo-shade: 6 26 52; /* #061A34 */
+  --color-photo-bloom: 214 236 255; /* #D6ECFF */
+}
+
 html,
 body {
   width: 100%;
@@ -51,21 +107,32 @@ main {
   .container-page {
     @apply max-w-7xl mx-auto px-5 sm:px-8 lg:px-10;
   }
+  /**
+   * `.eyebrow` deliberately owns no colour. It used to (`text-gold-600`, then
+   * `text-primary-darker`), and because a component-level override like
+   * `text-primary-light` is a utility of the same specificity, whichever rule Tailwind
+   * emitted last won. On dark sections the eyebrow silently stayed dark — 3.19:1 on
+   * navy-950. Every call site now states its own colour:
+   *   light surface -> text-primary-darker    dark surface -> text-primary-light
+   */
   .eyebrow {
-    @apply inline-flex items-center gap-2 text-xs font-mono font-medium tracking-[0.18em] uppercase text-gold-600;
+    @apply inline-flex items-center gap-2 text-xs font-mono font-medium tracking-[0.18em] uppercase;
   }
   .section-pad {
     @apply py-16 sm:py-20 lg:py-24;
   }
 }
 
-/* Visible keyboard focus for accessibility */
+/* Visible keyboard focus. Brand blue, not the old gold: #F5B400 measures 1.84:1 against
+   a white page and WCAG 2.2 asks a focus indicator for 3:1. `primary` gives 3.89:1 on
+   white and 4.75:1 on the navy footer. The 2px offset keeps the ring on the page rather
+   than on top of a blue button, where it would disappear. */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 2px solid #F5B400;
+  outline: 2px solid rgb(var(--color-primary));
   outline-offset: 2px;
 }
 

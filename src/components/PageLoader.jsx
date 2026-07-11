@@ -334,7 +334,7 @@ export default function PageLoader({ onComplete }) {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: 'easeOut', delay: 0.15 }}
-          className="mt-8 font-display text-lg font-bold uppercase leading-snug tracking-[0.14em] text-gold-400 sm:text-xl"
+          className="mt-8 font-display text-lg font-bold uppercase leading-snug tracking-[0.14em] text-primary-light sm:text-xl"
         >
           Building Connections.
           <br />
@@ -350,7 +350,7 @@ export default function PageLoader({ onComplete }) {
         >
           {stats.map(({ value, label, icon: Icon }) => (
             <div key={label} className="flex items-center gap-3 px-5 py-3.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-gold-500/30 bg-gold-500/10 text-gold-400">
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-primary/40 bg-primary/10 text-primary-light">
                 <Icon className="h-4 w-4" strokeWidth={1.8} />
               </span>
               <div className="text-left">
@@ -387,7 +387,7 @@ export default function PageLoader({ onComplete }) {
                 />
               </div>
             </div>
-            <span className="min-w-[3rem] text-right font-display text-sm font-semibold tabular-nums text-gold-400">
+            <span className="min-w-[3rem] text-right font-display text-sm font-semibold tabular-nums text-primary-light">
               {pct}%
             </span>
           </div>

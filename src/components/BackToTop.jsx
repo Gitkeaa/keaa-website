@@ -31,7 +31,7 @@ export default function BackToTop() {
           whileTap={{ scale: 0.94 }}
           onClick={scrollTop}
           aria-label="Back to top"
-          className="fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-navy-800 text-gold-400 shadow-lg"
+          className="fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-navy-800 text-primary-light shadow-lg"
         >
           <svg className="absolute inset-0 -rotate-90" viewBox="0 0 48 48">
             <circle cx="24" cy="24" r="21" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="2" />
@@ -40,7 +40,7 @@ export default function BackToTop() {
               cy="24"
               r="21"
               fill="none"
-              stroke="#F5B400"
+              stroke="#8CCDF3"
               strokeWidth="2"
               strokeLinecap="round"
               style={{ pathLength: progress }}

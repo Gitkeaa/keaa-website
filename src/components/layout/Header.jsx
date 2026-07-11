@@ -67,7 +67,7 @@ export default function Header({ onOpenMegaMenu, onOpenDrawer }) {
                 key={item.to}
                 to={item.to}
                 className={({ isActive }) =>
-                  `relative text-sm font-medium transition-colors after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:bg-gold-500 after:transition-all ${
+                  `relative text-sm font-medium transition-colors after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:bg-primary-dark after:transition-all ${
                     isActive
                       ? 'text-navy-800 after:w-full'
                       : 'text-ink/70 after:w-0 hover:text-navy-800 hover:after:w-full'

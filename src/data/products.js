@@ -8,7 +8,7 @@ export const productCategories = [
   {
     slug: 'scaffolding-systems',
     name: 'Scaffolding Systems',
-    brochureUrl: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/kishlay_keaa-international_net/IQDrlCW9_78jTbaxSmZFAXVFAQSkhKUTANw7Jq1pdWmfvSE?e=dASYwX',
+    brochureUrl: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/web_support_keaa-international_net/IQDrlCW9_78jTbaxSmZFAXVFAUp5tsZGw32rbgfqVylfnaA?e=iznXeZ',
     short: 'A complete range of scaffolding products designed for safety, strength and easy installation.',
     bullets: ['Cuplock Scaffolding System', 'Ringlock Scaffolding System', 'H-Frame & Walk-Through Frame', 'HK System Scaffolds', 'Scaffolding Pipes & Fittings'],
     standard: 'Hot dip galvanized as per DIN EN 1461',
@@ -65,7 +65,7 @@ export const productCategories = [
   {
     slug: 'formwork-accessories',
     name: 'Formwork Accessories',
-    brochureUrl: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/kishlay_keaa-international_net/IQDrlCW9_78jTbaxSmZFAXVFAQSkhKUTANw7Jq1pdWmfvSE?e=dASYwX',
+    brochureUrl: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/web_support_keaa-international_net/IQDrlCW9_78jTbaxSmZFAXVFAUp5tsZGw32rbgfqVylfnaA?e=iznXeZ',
     short: 'High-quality formwork components for construction projects that ensure efficiency and durability.',
     bullets: ['Slab Formwork Props', 'Wall Formwork Accessories', 'Column Formwork Accessories', 'Beam Formwork Accessories', 'Formwork Clamps'],
     standard: 'Pre-galvanized / hot dip galvanized as per DIN 1461',
@@ -122,7 +122,7 @@ export const productCategories = [
   {
     slug: 'livestock-housing-solutions',
     name: 'Livestock Housing Solutions',
-    brochureUrl: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/kishlay_keaa-international_net/IQAE1nDX1LiORZ7UEr7sRjleAdYIXywvMCAQ5nc4CJn_swE?e=Y3nKaA',
+    brochureUrl: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/web_support_keaa-international_net/IQAE1nDX1LiORZ7UEr7sRjleARl-qf2YieMmzVUTsdis4qI?e=s1QADa',
     short: 'Innovative and durable hot-dip galvanized solutions for modern livestock farming and management.',
     bullets: ['Cattle Shed Structures', 'Cow Safety Headlocks', 'Panels & Gates', 'Feeders & Troughs', 'Sheep Handling Equipment'],
     standard: 'Hot dip galvanized as per DIN 1461',
@@ -162,7 +162,7 @@ export const productCategories = [
   {
     slug: 'garden-hardware',
     name: 'Garden Hardware',
-    brochureUrl: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/kishlay_keaa-international_net/IQDZg2UkpJN-RaIAwbR0rsxeAdG_K_o0bs7OdFkVftP2DS0?e=HLEUDc',
+    brochureUrl: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/web_support_keaa-international_net/IQDZg2UkpJN-RaIAwbR0rsxeATkSWko0PsjqrFR1SWLZMWc?e=DPhLYa',
     short: 'Durable and practical garden hardware products for outdoor structures and timber connections.',
     bullets: ['Wood Connectors', 'Post Holders', 'Hinges & Latches', 'Gate Hardware', 'Pergola & Swing Connectors'],
     standard: 'S250GD + Z275 per DIN EN 10346 · CE marked',

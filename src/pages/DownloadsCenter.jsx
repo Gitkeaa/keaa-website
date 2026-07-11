@@ -5,6 +5,7 @@ import Button from '../components/ui/Button';
 import { downloadResources } from '../data/content';
 import { img } from '../data/images';
 import useSEO from '../hooks/useSEO';
+import CtaBand from '../components/CtaBand';
 
 export default function DownloadsCenter() {
   useSEO({
@@ -62,17 +63,12 @@ export default function DownloadsCenter() {
         </div>
       </section>
 
-      <section className="bg-navy-900">
-        <div className="container-page flex flex-col items-center justify-between gap-6 py-12 sm:flex-row">
-          <div>
-            <h3 className="font-display text-2xl font-bold text-white">Can&rsquo;t find what you need?</h3>
-            <p className="mt-1 text-white/60">Reach out and we&rsquo;ll send the right document directly to you.</p>
-          </div>
-          <Button to="/contact" icon={ArrowRight} className="flex-shrink-0">
-            Contact Our Team
-          </Button>
-        </div>
-      </section>
+      <CtaBand
+        title="Can&rsquo;t Find"
+        accent="What You Need?"
+        desc="Reach out and we&rsquo;ll send the right document directly to you."
+        cta={{ label: 'Contact Our Team', to: '/contact', icon: ArrowRight }}
+      />
     </>
   );
 }

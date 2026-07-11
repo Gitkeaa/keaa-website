@@ -20,6 +20,7 @@ import {
 } from '../data/content';
 import { img } from '../data/images';
 import useSEO from '../hooks/useSEO';
+import CtaBand from '../components/CtaBand';
 
 const projectFilters = ['All Projects', 'Infrastructure', 'Industrial', 'Commercial', 'Residential', 'International'];
 
@@ -170,10 +171,10 @@ export default function ProjectsGallery() {
               <span className="absolute inset-0 flex items-center justify-center">
                 <span className="relative flex h-16 w-16 items-center justify-center">
                   <span
-                    className="absolute inset-0 rounded-full bg-gold-500/30 animate-ping motion-reduce:animate-none"
+                    className="absolute inset-0 rounded-full bg-primary/30 animate-ping motion-reduce:animate-none"
                     style={{ animationDuration: '2.8s' }}
                   />
-                  <span className="relative flex h-16 w-16 items-center justify-center rounded-full bg-gold-500 text-navy-900 shadow-lg shadow-gold-500/40 transition-transform duration-300 group-hover:scale-110">
+                  <span className="relative flex h-16 w-16 items-center justify-center rounded-full bg-primary-dark text-white shadow-lg shadow-primary/40 transition-transform duration-300 group-hover:scale-110">
                     <Play className="h-6 w-6 translate-x-[2px] fill-current" />
                   </span>
                 </span>
@@ -210,7 +211,7 @@ export default function ProjectsGallery() {
                   <span className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/20 to-transparent" />
                   {/* centre play button */}
                   <span className="absolute inset-0 flex items-center justify-center">
-                    <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-gold-500 text-navy-900 shadow-lg shadow-gold-500/40 transition-transform duration-300 group-hover:scale-110">
+                    <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-primary-dark text-white shadow-lg shadow-primary/40 transition-transform duration-300 group-hover:scale-110">
                       <Play className="h-5 w-5 translate-x-[2px] fill-current" />
                     </span>
                   </span>
@@ -226,17 +227,12 @@ export default function ProjectsGallery() {
       </section>
 
       {/* FINAL CTA */}
-      <section className="bg-navy-900">
-        <div className="container-page flex flex-col items-center justify-between gap-6 py-12 sm:flex-row">
-          <div>
-            <h3 className="font-display text-2xl font-bold text-white">Have a Project in Mind?</h3>
-            <p className="mt-1 text-white/60">Let&rsquo;s build something great together.</p>
-          </div>
-          <Button to="/rfq" icon={FileText} className="flex-shrink-0">
-            Request a Quote
-          </Button>
-        </div>
-      </section>
+      <CtaBand
+        title="Have a Project"
+        accent="in Mind?"
+        desc="Let&rsquo;s build something great together."
+        cta={{ label: 'Request a Quote', to: '/rfq', icon: FileText }}
+      />
     </>
   );
 }

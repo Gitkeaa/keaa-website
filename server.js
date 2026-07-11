@@ -59,7 +59,6 @@ function buildKnowledgeBase(data) {
     testimonials,
     featuredProjects,
     careers,
-    marketplaces,
     downloadResources,
   } = data;
 
@@ -105,9 +104,6 @@ ${list(leadership, (l) => `- ${l.name} — ${l.role}`)}
 OPEN CAREERS:
 ${list(careers, (c) => `- ${c.title} — ${c.location} (${c.type})`)}
 
-WHERE TO BUY (online marketplaces):
-${list(marketplaces, (m) => `- ${m.name}: ${m.desc}`)}
-
 DOWNLOADABLE RESOURCES:
 ${list(downloadResources, (d) => `- ${d.title} (${d.type}, ${d.size})`)}
 
@@ -142,7 +138,6 @@ async function loadKnowledge(reason = 'startup') {
       testimonials: contentMod.testimonials,
       featuredProjects: contentMod.featuredProjects,
       careers: contentMod.careers,
-      marketplaces: contentMod.marketplaces,
       downloadResources: contentMod.downloadResources,
     });
 

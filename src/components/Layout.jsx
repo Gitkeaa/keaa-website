@@ -30,7 +30,7 @@ export default function Layout() {
     <div className="flex min-h-screen flex-col">
       <motion.div
         style={{ scaleX }}
-        className="fixed left-0 right-0 top-0 z-[100] h-[3px] origin-left bg-gold-500"
+        className="fixed left-0 right-0 top-0 z-[100] h-[3px] origin-left bg-primary-dark"
       />
       <ScrollToTop />
       <Header onOpenMegaMenu={() => setMegaOpen(true)} onOpenDrawer={() => setDrawerOpen(true)} />

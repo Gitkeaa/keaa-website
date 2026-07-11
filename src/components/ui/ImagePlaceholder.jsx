@@ -14,15 +14,18 @@ export default function ImagePlaceholder({
   tone = 'navy',
   ratio = 'aspect-[4/3]',
   src,
+  srcSet,
+  sizes,
   alt,
   overlay = false,
   zoom = true,
+  caption,
 }) {
   const [loaded, setLoaded] = useState(false);
   const tones = {
     navy: 'from-navy-800 via-navy-700 to-navy-600',
     light: 'from-navy-100 via-navy-50 to-white',
-    gold: 'from-gold-600 via-gold-500 to-gold-400',
+    gold: 'from-primary-darker via-primary to-primary-light',
   };
 
   const textTone = tone === 'light' ? 'text-navy-400' : 'text-white/70';
@@ -33,6 +36,8 @@ export default function ImagePlaceholder({
         {!loaded && <div className="absolute inset-0 animate-pulse bg-navy-100" />}
         <img
           src={src}
+          srcSet={srcSet}
+          sizes={sizes}
           alt={alt || label || ''}
           loading="lazy"
           onLoad={() => setLoaded(true)}
@@ -62,6 +67,11 @@ export default function ImagePlaceholder({
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-4 text-center">
         <Icon className={`h-7 w-7 ${textTone}`} strokeWidth={1.5} />
         {label && <span className={`text-xs font-medium leading-tight ${textTone}`}>{label}</span>}
+        {caption && (
+          <span className={`text-[10px] font-medium uppercase tracking-wide ${textTone} opacity-70`}>
+            {caption}
+          </span>
+        )}
       </div>
     </div>
   );

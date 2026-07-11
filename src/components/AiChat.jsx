@@ -221,7 +221,7 @@ export default function AiChat() {
           <button
             onClick={() => setIsOpen(false)}
             aria-label="Close KEAA assistant"
-            className="relative flex h-14 w-14 items-center justify-center rounded-full border border-gold-500/70 bg-navy-900 text-gold-400 shadow-xl transition-transform hover:scale-105"
+            className="relative flex h-14 w-14 items-center justify-center rounded-full border border-primary/60 bg-navy-900 text-primary-light shadow-xl transition-transform hover:scale-105"
           >
             <X size={24} />
           </button>
@@ -230,7 +230,7 @@ export default function AiChat() {
             {/* "Ask keaa" label */}
             <div className="relative rounded-full bg-navy-800 px-3.5 py-2 shadow-lg">
               <span className="text-sm font-semibold tracking-wide text-white">
-                Ask <span className="text-gold-400">keaa</span>
+                Ask <span className="text-primary-light">keaa</span>
               </span>
               {/* pointer toward the button */}
               <span className="absolute -right-1 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rotate-45 bg-navy-800" />
@@ -248,20 +248,20 @@ export default function AiChat() {
                 style={{
                   animationDuration: '4s',
                   background:
-                    'conic-gradient(from 0deg, transparent 0deg, rgba(245,180,0,0.12) 130deg, #F5B400 300deg, #FFCF52 345deg, transparent 360deg)',
+                    'conic-gradient(from 0deg, transparent 0deg, rgba(58,134,198,0.12) 130deg, #3A86C6 300deg, #8CCDF3 345deg, transparent 360deg)',
                 }}
               />
               {/* pulsing halo */}
               <span
-                className="absolute inset-0 rounded-full bg-gold-500/30 animate-ping motion-reduce:animate-none"
+                className="absolute inset-0 rounded-full bg-primary/30 animate-ping motion-reduce:animate-none"
                 style={{ animationDuration: '2.6s' }}
               />
               {/* navy circle with robot */}
-              <span className="absolute inset-0 flex items-center justify-center rounded-full border border-gold-500/70 bg-navy-900 shadow-xl">
-                <Bot className="h-7 w-7 text-gold-400" />
+              <span className="absolute inset-0 flex items-center justify-center rounded-full border border-primary/60 bg-navy-900 shadow-xl">
+                <Bot className="h-7 w-7 text-primary-light" />
               </span>
               {/* notification badge */}
-              <span className="absolute -right-0.5 -top-0.5 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-gold-500 text-[11px] font-bold text-navy-900 ring-2 ring-white">
+              <span className="absolute -right-0.5 -top-0.5 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-primary-dark text-[11px] font-bold text-white ring-2 ring-white">
                 1
               </span>
             </button>
