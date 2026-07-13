@@ -5,7 +5,11 @@ import TopBar from './TopBar';
 import Logo from './Logo';
 import Button from '../ui/Button';
 import { mainNav } from '../../data/navigation';
-import { productCategories } from '../../data/products';
+// Derived from the catalogue itself, so the menu can never drift from the pages that
+// actually exist. The legacy `productCategories` list still names lines (Safety Products,
+// Formwork Accessories) that have no catalogue page, and linked to `/products#anchor`
+// hashes that the router's scroll-to-top swallowed.
+import { getAllCategories } from '../../data/productHelpers';
 
 export default function Header({ onOpenMegaMenu, onOpenDrawer }) {
   const [scrolled, setScrolled] = useState(false);
@@ -49,13 +53,14 @@ export default function Header({ onOpenMegaMenu, onOpenDrawer }) {
                 {productsOpen && (
                   <div className="absolute left-1/2 top-full w-72 -translate-x-1/2 pt-3">
                     <div className="rounded-xl border border-navy-100 bg-white p-2 shadow-cardHover">
-                      {productCategories.map((cat) => (
+                      {getAllCategories().map((cat) => (
                         <Link
                           key={cat.slug}
-                          to={`/products#${cat.slug}`}
-                          className="block rounded-lg px-3.5 py-2.5 text-sm text-ink/80 hover:bg-navy-50 hover:text-navy-800"
+                          to={`/products/${cat.slug}`}
+                          className="flex items-center justify-between gap-3 rounded-lg px-3.5 py-2.5 text-sm text-ink/80 hover:bg-navy-50 hover:text-navy-800"
                         >
                           {cat.name}
+                          <span className="text-xs text-ink/40">{cat.count}</span>
                         </Link>
                       ))}
                     </div>

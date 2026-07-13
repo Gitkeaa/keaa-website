@@ -5,7 +5,7 @@ import { X, FileText, ChevronRight } from 'lucide-react';
 import Logo from './Logo';
 import Button from '../ui/Button';
 import { mainNav, megaMenuItems } from '../../data/navigation';
-import { productCategories } from '../../data/products';
+import { getAllCategories } from '../../data/productHelpers';
 
 export default function MobileDrawer({ open, onClose }) {
   const location = useLocation();
@@ -88,10 +88,10 @@ export default function MobileDrawer({ open, onClose }) {
                 <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-ink/40">
                   Product Categories
                 </p>
-                {productCategories.map((cat) => (
+                {getAllCategories().map((cat) => (
                   <Link
                     key={cat.slug}
-                    to={`/products#${cat.slug}`}
+                    to={`/products/${cat.slug}`}
                     className="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-ink/70 hover:bg-navy-50"
                   >
                     {cat.name}

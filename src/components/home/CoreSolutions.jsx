@@ -2,26 +2,27 @@ import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   Layers,
-  Wrench,
-  HardHat,
   Warehouse,
-  TreePine,
+  Hammer,
   Globe2,
   ArrowRight,
   CheckCircle2,
 } from 'lucide-react';
 import Button from '../ui/Button';
-import { productCategories, categoryImages } from '../../data/products';
+import { getAllCategories } from '../../data/productHelpers';
 
 /**
  * The Home page's "Who We Are" and "Our Product Categories" sections, merged into one
- * band: the overview copy sits beside the lead category, and the remaining four run
- * underneath.
+ * band: the overview copy sits beside the lead category, and the rest run underneath.
  *
  * Notes worth keeping:
  *
- *  - The first category in `productCategories` is the featured one. Reorder the data and
- *    this follows; nothing here hardcodes "scaffolding-systems".
+ *  - Categories come from the catalogue itself, so these cards can only ever link to
+ *    pages that exist. They used to come from the legacy 5-category list, which named
+ *    lines with no catalogue page and linked to `/products#anchor` hashes the router's
+ *    scroll-to-top swallowed.
+ *  - The first category is the featured one. Reorder the data and this follows; nothing
+ *    here hardcodes a slug.
  *  - The overlay card on the featured photo is the only dark surface in the section. It
  *    sits over sky, so the navy is held at 92% -- at 85% a bright frame lifted the
  *    composite enough to drop the secondary line under AA.
@@ -29,13 +30,8 @@ import { productCategories, categoryImages } from '../../data/products';
  *    strips break their lines the same way.
  */
 
-const CATEGORY_ICONS = {
-  'scaffolding-systems': Layers,
-  'formwork-accessories': Wrench,
-  'safety-products': HardHat,
-  'livestock-housing-solutions': Warehouse,
-  'garden-hardware': TreePine,
-};
+// categoryMeta names its icon as a string; map it to the component here.
+const CATEGORY_ICONS = { Layers, Warehouse, Hammer };
 
 const PROMISES = [
   'Premium Quality\nAssured',
@@ -69,8 +65,8 @@ function Swoosh() {
 
 export default function CoreSolutions() {
   const reduce = useReducedMotion();
-  const [featured, ...rest] = productCategories;
-  const FeaturedIcon = CATEGORY_ICONS[featured.slug];
+  const [featured, ...rest] = getAllCategories();
+  const FeaturedIcon = CATEGORY_ICONS[featured.icon] || Layers;
 
   const rise = (delay = 0) => ({
     initial: reduce ? false : { opacity: 0, y: 24 },
@@ -111,7 +107,7 @@ export default function CoreSolutions() {
           <motion.div {...rise(0.1)} className="relative">
             <div className="relative overflow-hidden rounded-2xl shadow-[0_1px_2px_-1px_rgb(var(--color-text)_/_0.08),0_32px_72px_-40px_rgb(var(--color-text)_/_0.45)] ring-1 ring-border">
               <img
-                src={categoryImages[featured.slug]}
+                src={featured.heroImage}
                 alt={featured.name}
                 loading="lazy"
                 className="aspect-[16/10] w-full object-cover"
@@ -137,7 +133,7 @@ export default function CoreSolutions() {
 
               {/* Lead category, laid over the photo */}
               <Link
-                to={`/products#${featured.slug}`}
+                to={`/products/${featured.slug}`}
                 className="group absolute inset-x-3 bottom-3 flex items-center gap-4 rounded-xl bg-surface-deep/[0.92] p-4 ring-1 ring-white/10 backdrop-blur-sm transition-colors hover:bg-surface-deep sm:inset-x-4 sm:bottom-4 sm:gap-5 sm:p-5"
               >
                 {/* Solid blue chip, white glyph — same blue as the arrow disc beside it. */}
@@ -163,13 +159,13 @@ export default function CoreSolutions() {
         </div>
 
         {/* The remaining categories */}
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-6 sm:grid-cols-2">
           {rest.map((cat, i) => {
-            const Icon = CATEGORY_ICONS[cat.slug];
+            const Icon = CATEGORY_ICONS[cat.icon] || Layers;
             return (
               <motion.div key={cat.slug} {...rise(0.06 * i)} className="h-full">
                 <Link
-                  to={`/products#${cat.slug}`}
+                  to={`/products/${cat.slug}`}
                   className="group flex h-full flex-col overflow-hidden rounded-2xl bg-surface-raised shadow-[0_1px_2px_-1px_rgb(var(--color-text)_/_0.06),0_20px_44px_-32px_rgb(var(--color-text)_/_0.35)] ring-1 ring-border transition-all duration-300 hover:-translate-y-1 hover:ring-primary/40"
                 >
                   {/* The zoom needs a clip; the icon chip must escape it. Two boxes, so
@@ -177,7 +173,7 @@ export default function CoreSolutions() {
                   <div className="relative">
                     <div className="overflow-hidden">
                       <img
-                        src={categoryImages[cat.slug]}
+                        src={cat.heroImage}
                         alt={cat.name}
                         loading="lazy"
                         className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-105"

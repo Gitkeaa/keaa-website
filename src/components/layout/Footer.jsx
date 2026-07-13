@@ -21,7 +21,7 @@ import {
 import Logo from './Logo';
 import { company } from '../../data/company';
 import { footerLinks } from '../../data/navigation';
-import { productCategories } from '../../data/products';
+import { getAllCategories } from '../../data/productHelpers';
 
 /**
  * Footer — deep navy card on a light page, over the supplied blueprint artwork.
@@ -166,8 +166,8 @@ export default function Footer() {
           <div>
             <ColumnHeading>Products</ColumnHeading>
             <ul className="mt-5 space-y-3 text-sm">
-              {productCategories.map((c) => (
-                <NavLinkRow key={c.slug} to={`/products#${c.slug}`}>
+              {getAllCategories().map((c) => (
+                <NavLinkRow key={c.slug} to={`/products/${c.slug}`}>
                   {c.name}
                 </NavLinkRow>
               ))}
