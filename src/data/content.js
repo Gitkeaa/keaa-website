@@ -268,7 +268,7 @@ export const downloadResources = [
     url: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/web_support_keaa-international_net/IQAE1nDX1LiORZ7UEr7sRjleARl-qf2YieMmzVUTsdis4qI?e=s1QADa',
   },
   {
-    title: 'Wood Connectors Catalogue',
+    title: 'Wood Connectors / Garden Hardware Catalogue',
     type: 'PDF',
     url: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/web_support_keaa-international_net/IQDZg2UkpJN-RaIAwbR0rsxeATkSWko0PsjqrFR1SWLZMWc?e=DPhLYa',
   },

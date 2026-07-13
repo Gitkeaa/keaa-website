@@ -22,6 +22,23 @@ export const slugify = (str) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '');
 
+/**
+ * Category URLs are derived from the display name, so renaming a category would normally
+ * change its route and orphan its `categoryMeta` entry. This pins the slug instead: the
+ * "Wood Connectors / Garden Hardware" line keeps the short, already-published
+ * `/products/wood-connectors` URL.
+ *
+ * Idempotent — passing either the display name or the slug returns the slug.
+ */
+const CATEGORY_SLUG_OVERRIDES = {
+  'wood-connectors-garden-hardware': 'wood-connectors',
+};
+
+export const catSlugOf = (nameOrSlug) => {
+  const s = slugify(nameOrSlug);
+  return CATEGORY_SLUG_OVERRIDES[s] || s;
+};
+
 const specText = (p) =>
   `${p.description || ''} ${(p.specs || []).map((s) => `${s.label} ${s.value}`).join(' ')}`;
 
@@ -76,7 +93,7 @@ export const products = productsRaw.map((p) => ({
   hasDetails: hasDetails(p),
   diameter: deriveDiameter(p),
   finish: deriveFinish(p),
-  catSlug: slugify(p.category),
+  catSlug: catSlugOf(p.category),
   subSlug: slugify(p.subcategory),
 }));
 
@@ -178,19 +195,19 @@ export function getAllCategories() {
 
 /** One category (by slug or display name), or undefined. */
 export function getCategory(categorySlugOrName) {
-  const s = slugify(categorySlugOrName);
+  const s = catSlugOf(categorySlugOrName);
   return getAllCategories().find((c) => c.slug === s);
 }
 
 /** Products in a category (accepts slug or display name). */
 export function getProductsByCategory(category) {
-  const s = slugify(category);
+  const s = catSlugOf(category);
   return products.filter((p) => p.catSlug === s);
 }
 
 /** Products in a subcategory (both args accept slug or display name). */
 export function getProductsBySubcategory(category, subcategory) {
-  const cs = slugify(category);
+  const cs = catSlugOf(category);
   const ss = slugify(subcategory);
   return products.filter((p) => p.catSlug === cs && p.subSlug === ss);
 }
