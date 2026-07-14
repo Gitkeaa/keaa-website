@@ -1,16 +1,14 @@
 import { motion } from 'framer-motion';
 
-export default function Card({ children, className = '', hover = true, as: Tag = 'div', ...rest }) {
-  const MotionTag = motion[Tag] || motion.div;
-
+export default function Card({ children, className = '', ...rest }) {
   return (
-    <MotionTag
+    <motion.div
       className={`rounded-xl border border-navy-100 bg-white shadow-card ${className}`}
-      whileHover={hover ? { y: -6, boxShadow: '0 16px 36px -10px rgba(10,35,66,0.22)' } : undefined}
+      whileHover={{ y: -6, boxShadow: '0 16px 36px -10px rgba(10,35,66,0.22)' }}
       transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
       {...rest}
     >
       {children}
-    </MotionTag>
+    </motion.div>
   );
 }

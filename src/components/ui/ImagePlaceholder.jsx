@@ -25,7 +25,6 @@ export default function ImagePlaceholder({
   const tones = {
     navy: 'from-navy-800 via-navy-700 to-navy-600',
     light: 'from-navy-100 via-navy-50 to-white',
-    gold: 'from-primary-darker via-primary to-primary-light',
   };
 
   const textTone = tone === 'light' ? 'text-navy-400' : 'text-white/70';

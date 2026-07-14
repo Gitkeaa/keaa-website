@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
@@ -91,21 +90,10 @@ export default {
         card: '0 1px 2px rgba(10,35,66,0.04), 0 8px 24px -8px rgba(10,35,66,0.12)',
         cardHover: '0 4px 8px rgba(10,35,66,0.06), 0 16px 36px -10px rgba(10,35,66,0.18)',
       },
-      backgroundImage: {
-        'diagonal-steel':
-          'linear-gradient(135deg, #0A2342 0%, #0F3666 45%, #0A2342 100%)',
-        'spec-grid':
-          'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)',
-      },
       animation: {
-        'fade-up': 'fadeUp 0.6s ease-out forwards',
         marquee: 'marquee 28s linear infinite',
       },
       keyframes: {
-        fadeUp: {
-          '0%': { opacity: 0, transform: 'translateY(16px)' },
-          '100%': { opacity: 1, transform: 'translateY(0)' },
-        },
         marquee: {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },

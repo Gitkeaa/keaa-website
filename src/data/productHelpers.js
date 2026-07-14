@@ -9,7 +9,7 @@
  * plus filter facets (getFacets/applyFilters) and small derivations (Ø diameter,
  * finish, a rough product "type") pulled out of the specs/description text.
  *
- * Products are enriched ONCE at module load — each gets image/hasImage/hasDetails,
+ * Products are enriched ONCE at module load — each gets image/hasImage,
  * catSlug/subSlug and the derived facet fields — so components never re-parse.
  */
 import productsRaw from './products.json';
@@ -83,14 +83,12 @@ export function classifyType(name = '') {
 }
 
 const firstImage = (p) => (p.cloudinaryImages && p.cloudinaryImages[0]) || null;
-const hasDetails = (p) => Boolean((p.specs && p.specs.length) || (p.description || '').trim());
 
 /** Every product, enriched once with derived fields the UI consumes. */
 export const products = productsRaw.map((p) => ({
   ...p,
   image: firstImage(p),
   hasImage: Boolean(firstImage(p)),
-  hasDetails: hasDetails(p),
   diameter: deriveDiameter(p),
   finish: deriveFinish(p),
   catSlug: catSlugOf(p.category),

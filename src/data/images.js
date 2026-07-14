@@ -51,17 +51,3 @@ export const img = {
   woodenFenceSky: u('photo-1621673610286-a6b5e788ab82'),
   woodenStructureSky: u('photo-1676802540678-2dceb1820113'),
 };
-
-// Convenience: portrait/square crops for cards where a taller frame suits the
-// layout better than the default landscape crop.
-const us = (id, w = 1200, h = 1200, q = 80) =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&h=${h}&q=${q}`;
-
-export const imgSquare = {
-  scaffoldWorker1: us('photo-1603239564387-c5b5ea6f635e'),
-  metalPour: us('photo-1697281679213-fcab27e10ad4'),
-  cattleHerdBarn: us('photo-1636998980792-63f27ddea4e3'),
-  woodenFrameBrown: us('photo-1563874093519-ca5eda5cd776'),
-  containersStacked: us('photo-1678182451047-196f22a4143e'),
-  welderFactory: us('photo-1714504904786-b6732390b206'),
-};

@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useInView, animate } from 'framer-motion';
 
+const DURATION = 1.4;
+
 /**
  * Animates a number counting up from 0 to `value` when scrolled into view.
- * Accepts a `value` like 30 and optional `prefix`/`suffix` (e.g. suffix="+").
  * Non-numeric characters in the passed value are preserved as a static
  * suffix automatically if `value` is given as a string like "30+".
  */
-export default function AnimatedCounter({ value, prefix = '', suffix = '', duration = 1.4, className = '' }) {
+export default function AnimatedCounter({ value, className = '' }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-40px' });
   const [display, setDisplay] = useState(0);
@@ -28,29 +29,21 @@ export default function AnimatedCounter({ value, prefix = '', suffix = '', durat
   useEffect(() => {
     if (!inView || !countable) return;
     const controls = animate(0, numeric, {
-      duration,
+      duration: DURATION,
       ease: [0.22, 1, 0.36, 1],
       onUpdate: (v) => setDisplay(v),
     });
     return () => controls.stop();
-  }, [inView, numeric, duration, countable]);
+  }, [inView, numeric, countable]);
 
   if (!countable) {
-    return (
-      <span className={className}>
-        {prefix}
-        {value}
-        {suffix}
-      </span>
-    );
+    return <span className={className}>{value}</span>;
   }
 
   return (
     <motion.span ref={ref} className={className}>
-      {prefix}
       {decimals > 0 ? display.toFixed(decimals) : Math.round(display).toLocaleString()}
       {trailing}
-      {suffix}
     </motion.span>
   );
 }

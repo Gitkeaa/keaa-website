@@ -37,14 +37,9 @@ const variants = {
     shadow-[0_1px_0_0_rgba(255,255,255,0.10)_inset,0_8px_18px_-8px_rgb(var(--color-surface-deep)_/_0.55)]
     hover:shadow-[0_1px_0_0_rgba(255,255,255,0.14)_inset,0_16px_30px_-12px_rgb(var(--color-surface-deep)_/_0.65)]`,
 
-  // For dark backgrounds (hero overlays). Stays white so it reads there.
-  outline: `text-white border border-white/40 hover:border-white/70 hover:bg-white/10`,
-
   // The secondary button: white, blue border, blue text; the fill sweeps in on hover.
   // Note there is no `hover:text-white` here — the white label is a separate clipped
   // layer (see `wipe` below), so no glyph is ever the same colour as what is behind it.
-  // `bg-surface-raised`, not `bg-white`: index.css ships `.dark .bg-white { !important }`
-  // and would invert this button the moment a visitor flips the theme.
   outlineNavy: `text-primary-dark bg-surface-raised border border-primary/55
     hover:border-primary-dark
     shadow-[0_1px_2px_0_rgb(var(--color-surface-deep)_/_0.05)] hover:shadow-[0_12px_26px_-14px_rgb(var(--color-surface-deep)_/_0.35)]`,
@@ -70,7 +65,6 @@ export default function Button({
   variant = 'primary',
   size = 'md',
   icon: Icon,
-  iconPosition = 'right',
   className = '',
   type = 'button',
   ...rest
@@ -100,18 +94,13 @@ export default function Button({
   );
 
   const iconEl = Icon && (
-    <Icon
-      className={`h-4 w-4 transition-transform duration-300 ease-out ${
-        iconPosition === 'right' ? 'group-hover:translate-x-1' : 'group-hover:-translate-x-1'
-      } motion-reduce:transform-none`}
-    />
+    <Icon className="h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-1 motion-reduce:transform-none" />
   );
 
   const label = (
     <>
-      {iconPosition === 'left' && iconEl}
       <span>{children}</span>
-      {iconPosition === 'right' && iconEl}
+      {iconEl}
     </>
   );
 

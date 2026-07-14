@@ -1,30 +1,14 @@
-import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { NavLink, Link, useLocation } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { X, FileText, ChevronRight } from 'lucide-react';
 import Logo from './Logo';
 import Button from '../ui/Button';
 import { mainNav, megaMenuItems } from '../../data/navigation';
 import { getAllCategories } from '../../data/productHelpers';
 
+// Closing on route change is owned by Layout, which closes this drawer and the mega
+// menu together (see Layout.jsx). Do not re-implement it here.
 export default function MobileDrawer({ open, onClose }) {
-  const location = useLocation();
-  const prevLocationRef = useRef(`${location.pathname}${location.search}${location.hash}`);
-
-  useEffect(() => {
-    const currentLocation = `${location.pathname}${location.search}${location.hash}`;
-
-    if (!open) {
-      prevLocationRef.current = currentLocation;
-      return;
-    }
-
-    if (currentLocation !== prevLocationRef.current) {
-      onClose();
-      prevLocationRef.current = currentLocation;
-    }
-  }, [location.pathname, location.search, location.hash, onClose, open]);
-
   return (
     <AnimatePresence initial={false}>
       {open && (

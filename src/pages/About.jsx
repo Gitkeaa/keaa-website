@@ -1,4 +1,4 @@
-import { Building2, Target, Eye, Gem, Globe2, ShieldCheck, ArrowRight, Quote, Linkedin, MessageCircle, CheckCircle2 } from 'lucide-react';
+import { Building2, Target, Eye, Gem, Globe2, ShieldCheck, ArrowRight, Linkedin, MessageCircle, CheckCircle2 } from 'lucide-react';
 import PageHero from '../components/ui/PageHero';
 import SectionHeading from '../components/ui/SectionHeading';
 import ImagePlaceholder from '../components/ui/ImagePlaceholder';

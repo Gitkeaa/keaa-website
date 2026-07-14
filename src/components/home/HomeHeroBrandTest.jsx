@@ -33,9 +33,8 @@ import { droneFilmUrl, heroFilms } from '../../data/content';
  *  4. The stat card's glass is capped at 85% white. Below 82% its labels fall under
  *     4.5:1 against a dark photo pixel. `backdrop-blur` does not count toward contrast.
  *
- * Isolated by contract: no shared tokens, no shared component edits. index.css ships
- * `.dark .bg-white { ... !important }` and useTheme really toggles `.dark`, so every
- * bright surface here is arbitrary hex, out of that rule's reach.
+ * Isolated by contract: no shared tokens, no shared component edits — every bright
+ * surface here is arbitrary hex rather than a shared utility.
  */
 
 /**

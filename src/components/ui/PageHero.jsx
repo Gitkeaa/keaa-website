@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
-import { ChevronRight, Pause, Play, Volume2, VolumeX } from 'lucide-react';
+import { useRef } from 'react';
+import { ChevronRight } from 'lucide-react';
 import AnimatedCounter from './AnimatedCounter';
 
 /**
@@ -24,31 +24,18 @@ import AnimatedCounter from './AnimatedCounter';
  *  3. Every page image is graded to the brand blue. The stock photos are warm — orange
  *     steel, amber dusk — and the `color` blend rewrites hue while keeping luminance,
  *     so eight different pages read as one brand.
- *
- *  4. `video` is optional and takes the photograph's place. It must be a file this site
- *     serves. The SharePoint share link cannot be used: it answers `text/html`, not video
- *     bytes, and sends `X-Frame-Options: SAMEORIGIN` with
- *     `frame-ancestors 'self' teams.microsoft.com …`, so it can be neither played by a
- *     <video> nor framed. If the file 404s the hero silently falls back to `image`.
  */
 
 const EASE = [0.22, 1, 0.36, 1];
 
 /**
- * The grade follows the source, exactly as the homepage hero does.
- *
  * The stock photographs are warm — orange steel, amber dusk — the literal complement of
- * the brand blue, so they need desaturating hard and re-hueing to read as one brand. The
- * KEAA film is already cool and correctly exposed; grading it that hard drains it to a
- * flat blue wash. It only needs a nudge.
+ * the brand blue, so they need desaturating hard and re-hueing to read as one brand.
  *
  * Changing these is safe for contrast. `mix-blend-mode: color` rewrites hue and leaves
  * luminance alone, and the scrim below is solved against a pure-black backdrop anyway.
  */
-const GRADE = {
-  photo: { filter: 'saturate(0.4) contrast(1.2) brightness(0.99)', tint: 0.55 },
-  video: { filter: 'saturate(0.88) contrast(1.05) brightness(1.02)', tint: 0.14 },
-};
+const GRADE = { filter: 'saturate(0.4) contrast(1.2) brightness(0.99)', tint: 0.55 };
 
 /**
  * Left-anchored, like the homepage hero, rather than `.container-page` — which centres a
@@ -61,46 +48,14 @@ const GRADE = {
  */
 const GUTTER = 'w-full px-5 sm:px-8 lg:pl-12 lg:pr-10 xl:pl-16 2xl:pl-24';
 
-/** Glass control chip. Sits over the photo, so it carries its own opaque-ish surface. */
-function MediaButton({ onClick, label, pressed, children }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      aria-pressed={pressed}
-      className="flex h-9 w-9 items-center justify-center rounded-full border border-primary-dark/25 bg-white/80 text-primary-dark shadow-[0_2px_8px_-4px_rgb(var(--color-text)_/_0.2)] backdrop-blur-sm transition-colors hover:border-primary-dark/55 hover:bg-white"
-    >
-      {children}
-    </button>
-  );
-}
-
-export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], stats = [], image, video, poster }) {
+export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], stats = [], image }) {
   const ref = useRef(null);
-  const videoRef = useRef(null);
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const drift = useTransform(scrollYProgress, [0, 1], [0, 60]);
   const parallax = reduce ? 0 : drift;
 
-  // A missing or undecodable file drops back to the photograph rather than to a black box.
-  const [videoBroken, setVideoBroken] = useState(false);
-  const showVideo = Boolean(video) && !videoBroken;
-
-  // Autoplay only ever works muted, and never under prefers-reduced-motion.
-  const [muted, setMuted] = useState(true);
-  const [playing, setPlaying] = useState(!reduce);
-  const media = showVideo || image;
-  const grade = showVideo ? GRADE.video : GRADE.photo;
-
-  useEffect(() => {
-    const el = videoRef.current;
-    if (!el) return;
-    el.muted = muted;
-    if (playing) el.play().catch(() => setPlaying(false));
-    else el.pause();
-  }, [muted, playing, showVideo]);
+  const media = image;
 
   return (
     <section
@@ -117,32 +72,12 @@ export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], st
             className="absolute -top-[8%] left-0 right-0 h-[116%]"
           >
             {/* No opacity animation: this is the page's largest paint. */}
-            {showVideo ? (
-              <video
-                ref={videoRef}
-                src={video}
-                /* A frame from the film itself. Falling back to `image` shows a photo of a
-                   different building for the first few hundred milliseconds. */
-                poster={poster ?? image}
-                autoPlay={!reduce}
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-hidden
-                tabIndex={-1}
-                onError={() => setVideoBroken(true)}
-                className="h-full w-full object-cover object-[55%_40%]"
-                style={{ filter: grade.filter }}
-              />
-            ) : (
-              <img
-                src={image}
-                alt=""
-                className="h-full w-full object-cover object-[55%_40%]"
-                style={{ filter: grade.filter }}
-              />
-            )}
+            <img
+              src={image}
+              alt=""
+              className="h-full w-full object-cover object-[55%_40%]"
+              style={{ filter: GRADE.filter }}
+            />
             <div
               aria-hidden
               className="pointer-events-none absolute inset-0"
@@ -150,32 +85,10 @@ export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], st
                 background:
                   'linear-gradient(175deg, rgb(var(--color-photo-tint-top)) 0%, rgb(var(--color-photo-tint-mid)) 58%, rgb(var(--color-photo-tint-base)) 100%)',
                 mixBlendMode: 'color',
-                opacity: grade.tint,
+                opacity: GRADE.tint,
               }}
             />
           </motion.div>
-        </div>
-      )}
-
-      {/* Top-right, not bottom-right: AiChat and BackToTop are both `fixed bottom-6
-          right-6`, so on a short window the hero's own bottom-right corner lands under
-          them and these controls become unclickable. */}
-      {showVideo && (
-        <div className="absolute right-4 top-4 z-20 flex items-center gap-2 sm:right-5 sm:top-5">
-          <MediaButton
-            onClick={() => setPlaying((p) => !p)}
-            label={playing ? 'Pause the background film' : 'Play the background film'}
-            pressed={!playing}
-          >
-            {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 translate-x-[1px]" />}
-          </MediaButton>
-          <MediaButton
-            onClick={() => setMuted((m) => !m)}
-            label={muted ? 'Unmute the background film' : 'Mute the background film'}
-            pressed={muted}
-          >
-            {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-          </MediaButton>
         </div>
       )}
 

@@ -5,29 +5,18 @@ import { motion } from 'framer-motion';
  * it enters the viewport (whileInView + viewport.once) so it never re-fires
  * on scroll-back, keeping the page calm rather than jittery.
  */
-export default function Reveal({
-  children,
-  delay = 0,
-  y = 24,
-  x = 0,
-  duration = 0.6,
-  className = '',
-  as: Tag = 'div',
-  ...rest
-}) {
-  const MotionTag = motion[Tag] || motion.div;
-
+export default function Reveal({ children, delay = 0, y = 24, x = 0, className = '', ...rest }) {
   return (
-    <MotionTag
+    <motion.div
       initial={{ opacity: 0, y, x }}
       whileInView={{ opacity: 1, y: 0, x: 0 }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}
       {...rest}
     >
       {children}
-    </MotionTag>
+    </motion.div>
   );
 }
 

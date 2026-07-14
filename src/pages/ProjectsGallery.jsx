@@ -7,7 +7,6 @@ import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import Reveal, { StaggerGroup, StaggerItem } from '../components/ui/Reveal';
-import AnimatedCounter from '../components/ui/AnimatedCounter';
 import {
   featuredProjects,
   featuredProjectImages,

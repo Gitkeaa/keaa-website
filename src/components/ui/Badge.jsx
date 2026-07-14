@@ -8,7 +8,6 @@ export default function Badge({ children, tone = 'gold', className = '' }) {
   const tones = {
     gold: 'bg-primary/[0.08] text-primary-darker border-primary/25',
     navy: 'bg-navy-50 text-navy-700 border-navy-100',
-    white: 'bg-white/10 text-white border-white/20',
   };
   return (
     <span

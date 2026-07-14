@@ -1,6 +1,7 @@
 export default function Logo({ light = false, className = '' }) {
   const textColor = light ? 'text-white' : 'text-navy-950';
-  const subColor = light ? 'text-white/60' : 'text-slate-450';
+  // The non-light colour is carried by the inline style below, not a class.
+  const subColor = light ? 'text-white/60' : '';
 
   return (
     <div className={`flex items-center gap-3 text-left ${className}`}>

@@ -3,7 +3,6 @@ import {
   Cog,
   ShieldCheck,
   TrendingUp,
-  ArrowRight,
   FileText,
   CheckCircle2,
 } from 'lucide-react';

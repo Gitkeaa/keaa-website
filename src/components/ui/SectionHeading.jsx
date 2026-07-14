@@ -4,17 +4,14 @@ export default function SectionHeading({
   desc,
   align = 'center',
   light = false,
-  line = false,
   className = '',
 }) {
-  const alignment =
-    align === 'center' ? 'text-center mx-auto' : align === 'right' ? 'text-right ml-auto' : 'text-left';
+  const alignment = align === 'center' ? 'text-center mx-auto' : 'text-left';
 
   return (
     <div className={`max-w-2xl ${alignment} ${className}`}>
       {eyebrow && (
         <span className={`eyebrow ${light ? 'text-primary-light' : 'text-primary-darker'}`}>
-          {line && <span className="h-px w-5 bg-current" />}
           {eyebrow}
         </span>
       )}

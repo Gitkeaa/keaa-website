@@ -7,8 +7,6 @@ import {
   Settings2,
   Headphones,
   ArrowRight,
-  Quote,
-  Award,
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import SectionHeading from '../components/ui/SectionHeading';
@@ -170,7 +168,6 @@ export default function Home() {
           <Reveal>
             <SectionHeading
               eyebrow="Why Choose KEAA"
-              line={false}
               title="Built on Quality. Driven by Trust."
               desc="Two decades of in-house manufacturing, certification and export discipline behind every shipment."
             />
@@ -270,7 +267,7 @@ export default function Home() {
       <section className="section-pad overflow-hidden">
         <div className="container-page">
           <Reveal>
-            <SectionHeading eyebrow="Global Presence" line={false} title="Proudly Exporting Worldwide" />
+            <SectionHeading eyebrow="Global Presence" title="Proudly Exporting Worldwide" />
           </Reveal>
           <Reveal delay={0.1} className="mt-10 grid items-center gap-10 lg:grid-cols-[1fr_280px]">
             <ImagePlaceholder
@@ -305,7 +302,7 @@ export default function Home() {
       <section className="section-pad bg-navy-50">
         <div className="container-page">
           <Reveal>
-            <SectionHeading eyebrow="Featured Projects" line={false} title="Trusted by Clients Worldwide" />
+            <SectionHeading eyebrow="Featured Projects" title="Trusted by Clients Worldwide" />
           </Reveal>
           <StaggerGroup className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {featuredProjects.slice(0, 4).map((p, i) => (

@@ -114,13 +114,6 @@ export const galleryImages = {
   12: img.scaffoldLadder,
 };
 
-export const videoLibrary = [
-  { title: 'Company Overview', duration: '3:25', category: 'Corporate Videos' },
-  { title: 'Factory Tour', duration: '5:48', category: 'Factory Tour' },
-  { title: 'Scaffolding Systems in Action', duration: '2:49', category: 'Product Videos' },
-  { title: 'Formwork Solutions Explained', duration: '2:41', category: 'Product Videos' },
-];
-
 /**
  * The hero background films, delivered from Cloudinary — nothing is stored in the repo.
  *
@@ -187,32 +180,6 @@ export const naymoFilmUrl =
 export const raasFilmUrl =
   'https://itkeaainternational-my.sharepoint.com/:v:/g/personal/web_support_keaa-international_net/IQCZZvmPtHSfSaEXtfyRk8DdAfOtL-WxCApdaOWCI_eUQxQ?e=zA7o3g&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D';
 
-export const marketInsights = [
-  {
-    date: 'June 2026',
-    title: 'Global Scaffolding Market to Reach $9.7 Billion by 2030',
-    summary:
-      'Rising infrastructure spending across the Gulf and South Asia continues to push demand for system scaffolding and engineered formwork solutions.',
-  },
-  {
-    date: 'May 2026',
-    title: 'E-commerce in Construction: Trends and Opportunities',
-    summary:
-      'B2B marketplaces are reshaping how contractors source scaffolding and formwork components, favouring suppliers with verified certifications.',
-  },
-  {
-    date: 'April 2026',
-    title: 'Export Opportunities for Indian Manufacturers',
-    summary:
-      'Government incentives and AEO status are helping certified Indian exporters compete on lead time and compliance in EU and GCC markets.',
-  },
-  {
-    date: 'March 2026',
-    title: 'Rising Demand for Safety Products Worldwide',
-    summary:
-      'Stricter working-at-height regulations are driving global demand for certified harnesses, guard rails and fall-protection systems.',
-  },
-];
 
 // Career openings. To open or close a role, just switch its `status`:
 //   'open'   → "Apply Now" opens the application form

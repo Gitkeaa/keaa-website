@@ -2,8 +2,6 @@
 // catalogues: Scaffolding & Formworks, Livestock Housing Solutions, and the
 // 2024 Garden Hardware catalogue.
 
-import { img } from './images.js';
-
 export const productCategories = [
   {
     slug: 'scaffolding-systems',
@@ -209,21 +207,3 @@ export const bestSellers = [
   { name: 'Sheep Race (ART 425011)', category: 'Livestock Housing Solutions' },
 ];
 
-// Premium curated photography (see src/data/images.js), mapped by category slug.
-export const categoryImages = {
-  'scaffolding-systems': img.heroScaffoldTower,
-  'formwork-accessories': img.steelFrame,
-  'safety-products': img.grinderMetal,
-  'livestock-housing-solutions': img.cattleHerdBarn,
-  'garden-hardware': img.woodenFrameSky,
-};
-
-// Parallel array to bestSellers above — index-matched.
-export const bestSellerImages = [
-  img.scaffoldFrame,
-  img.metalPour,
-  img.grinderMetal,
-  img.cattleHerdBarn,
-  img.woodenFrameBrown,
-  img.cattleGrazing,
-];
