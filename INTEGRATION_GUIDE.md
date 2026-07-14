@@ -1,206 +1,139 @@
-# Claude AI Integration Guide
+# AI Chat Integration Guide
 
-This guide walks you through setting up the Claude AI chatbot for your KEAA International website.
+How the KEAA chat widget works, and how to run it.
 
-## What's Been Added
+> **Note:** an earlier version of this guide documented **Anthropic Claude** — the API key,
+> the SDK, the console URL, the troubleshooting steps, all of it. That was wrong. This
+> project has never used Anthropic: `server.js` runs **Google Gemini** via
+> `@google/generative-ai`, and `@anthropic-ai/sdk` is not in the lockfile. Following the
+> old guide produced a dead chat widget. This document describes what the code does.
 
-- **AI Chat Component** (`src/components/AiChat.jsx`) - A beautiful chat widget that appears on every page
-- **Backend Server** (`server.js`) - Express.js server that communicates with Claude API
-- **Environment Configuration** (`.env`) - For storing your Claude API key
+## Architecture
 
-## Setup Instructions
+| Piece | File | Role |
+| --- | --- | --- |
+| Chat widget | `src/components/AiChat.jsx` | Floating button + panel. `POST`s to `/api/chat`. Renders replies with `react-markdown`. |
+| API server | `server.js` | Express on port 3001. Holds the Gemini key, builds the knowledge base, calls the model. |
+| Dev proxy | `vite.config.js` | Forwards `/api` → `localhost:3001`. **Dev only.** |
+| Knowledge base | `src/data/*.js` | `server.js` reads `company.js`, `products.js` and `content.js` and folds them into the system prompt. |
 
-### 1. Get Your Claude API Key
+The browser never sees the API key. Nothing in `src/` reads `import.meta.env`, so there is
+no client-side environment surface at all.
 
-1. Visit [https://console.anthropic.com](https://console.anthropic.com)
-2. Sign up or log in to your Anthropic account
-3. Go to the **API Keys** section
-4. Click "Create Key" and copy it
+## Setup
 
-### 2. Configure Environment Variables
+### 1. Get a Gemini API key
 
-1. Open the `.env` file in the root directory
-2. Replace `your-api-key-here` with your actual Claude API key:
-   ```
-   ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxxxxxxxxxxxxxxx
-   PORT=3001
-   ```
+Visit <https://aistudio.google.com/app/apikey> and create one.
 
-### 3. Install Backend Dependencies
+### 2. Configure the environment
 
 ```bash
-npm install
+cp .env.example .env
 ```
 
-This installs:
-- `express` - Web server framework
-- `cors` - Cross-origin resource sharing
-- `dotenv` - Environment variable management
-- `concurrently` - Run multiple processes simultaneously
-- `@anthropic-ai/sdk` - Claude AI SDK (already installed)
+Then set:
 
-### 4. Start Development Mode
+```
+GEMINI_API_KEY=your-actual-key
+# GEMINI_MODEL=gemini-2.5-flash-lite   # optional — overrides the default model chain
+# PORT=3001                            # optional
+```
 
-You now have two options:
+`.env` is gitignored. Never commit it.
 
-**Option A: Run both servers together (recommended)**
+### 3. Run both processes
+
 ```bash
-npm run dev:all
-```
-This starts:
-- Vite development server (port 5173) - your React app
-- Express API server (port 3001) - Claude backend
-
-**Option B: Run servers separately in different terminals**
-
-Terminal 1:
-```bash
-npm run dev
+npm run dev:all     # Vite (5173) + API server (3001) together
 ```
 
-Terminal 2:
-```bash
-npm run dev:server
+Or separately: `npm run dev` and `npm run dev:server`.
+
+Open <http://localhost:5173>, click the chat button, and ask something like
+*"What scaffolding products do you make?"*
+
+**Requires Node.js 20.11+.** `server.js` uses `import.meta.dirname`, which does not exist
+on Node 18 or 20.10 — the server throws at boot on those versions.
+
+## How the knowledge base works
+
+`loadKnowledge()` in `server.js` imports `src/data/company.js`, `src/data/products.js` and
+`src/data/content.js`, renders them into a text block, and appends it to the system prompt.
+A file watcher re-runs this whenever those files change, so content edits take effect
+**without a restart**.
+
+⚠️ **The bot's catalogue is not the website's catalogue.** The knowledge base comes from
+`src/data/products.js` — a 5-category marketing taxonomy (Scaffolding Systems, Formwork
+Accessories, Safety Products, Livestock Housing, Wood Connectors) with curated item codes.
+The catalogue *pages* come from `src/data/products.json` — a 3-category scrape of 355 real
+products that contains **no PPE at all**. So the bot can describe safety harnesses the
+catalogue has no page for, and cannot cite the 355 real item codes the catalogue does have.
+Neither source is complete. Resolve this before relying on the bot's product answers.
+
+## The API
+
+### `POST /api/chat`
+
+```json
+{
+  "message": "Do you export to the UAE?",
+  "conversationHistory": [
+    { "role": "user", "content": "Hi" },
+    { "role": "assistant", "content": "Hello! How can I help?" }
+  ]
+}
 ```
 
-### 5. Test the Integration
+- Success → `200 { "reply": "..." }`
+- Failure → `503` / `429` / `500` with `{ "error": "<human-readable message>" }`
 
-1. Open http://localhost:5173 in your browser
-2. Look for the blue chat button in the bottom-right corner
-3. Click it to open the chat
-4. Type a message like "Tell me about KEAA products"
-5. Claude should respond with company information
+`server.js` walks a chain of models (`MODEL_CHAIN`) and retries on transient upstream
+errors, so one request can produce more than one call to Google.
 
-## How It Works
+### `GET /health`
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│ Browser (React Frontend)                                     │
-│ ┌───────────────────────────────────────────────────────┐   │
-│ │ AiChat Component                                       │   │
-│ │ - Beautiful chat UI                                   │   │
-│ │ - Sends messages to /api/chat                         │   │
-│ └───────────────────────────────────────────────────────┘   │
-└─────────────────────────┬───────────────────────────────────┘
-                          │ HTTP Request
-                          ▼
-┌─────────────────────────────────────────────────────────────┐
-│ Vite Dev Server (Port 5173)                                 │
-│ - Proxies /api/* requests to Express backend                │
-└─────────────────────────┬───────────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────────┐
-│ Express API Server (Port 3001) - server.js                  │
-│ ┌───────────────────────────────────────────────────────┐   │
-│ │ POST /api/chat                                        │   │
-│ │ - Receives user message                              │   │
-│ │ - Sends to Claude API with company context           │   │
-│ │ - Returns AI response                                │   │
-│ └───────────────────────────────────────────────────────┘   │
-└─────────────────────────┬───────────────────────────────────┘
-                          │ HTTPS
-                          ▼
-┌─────────────────────────────────────────────────────────────┐
-│ Anthropic Claude API                                        │
-│ - Processes message with company knowledge                  │
-│ - Returns generated response                                │
-└─────────────────────────────────────────────────────────────┘
-```
+Returns `200` unconditionally. **It does not check the API key** — the server starts and
+logs green with a missing or invalid `GEMINI_API_KEY`, and you only find out when a chat
+request fails.
 
-## Customization
+## Deploying
 
-### Modify Chat Appearance
+There is **no deployment configuration in this repository** — no `vercel.json`, no
+`netlify.toml`, no Dockerfile — and `server.js` serves no static files. The front end and
+the API are never wired together anywhere. Consequences:
 
-Edit `src/components/AiChat.jsx` to change:
-- Colors and styling (look for Tailwind classes)
-- Chat widget position (bottom-right by default)
-- Welcome message
+- The Vite `/api` proxy **does not survive `npm run build`**. It is a dev-server feature.
+- A plain static deploy of `dist/` gives you a chat widget that calls `/api/chat` and gets
+  the SPA's own HTML back.
 
-### Customize AI Behavior
+To ship it, pick one:
 
-Edit the `SYSTEM_PROMPT` in `server.js` to:
-- Add new company information
-- Change the assistant's personality
-- Add new capabilities
+1. **Same origin** — have the host rewrite `/api/*` to the Express process, or add
+   `express.static('dist')` plus an SPA fallback to `server.js`.
+2. **Separate origin** — deploy `server.js` on its own host, add a `VITE_API_BASE`
+   variable, and have `AiChat.jsx` use it instead of a bare relative path. This also means
+   configuring CORS properly rather than leaving it open.
 
-Example:
-```javascript
-const SYSTEM_PROMPT = `You are a helpful AI assistant for KEAA International...`;
-```
+## Before this goes to production
 
-### Change Port Numbers
+`server.js` is currently a **wide-open, unauthenticated proxy to KEAA's paid Gemini key**:
 
-Edit `.env`:
-```
-PORT=3001  # Change this to use a different port for the API server
-```
+- `app.use(cors())` — every origin allowed.
+- No authentication, no rate limiting, no CAPTCHA.
+- No cap on message length beyond body-parser's implicit ~100 kb default.
+- `conversationHistory` is taken from the client, and any non-`user` role is coerced into a
+  model turn — so a caller can forge the assistant's own prior replies.
+- Upstream Google error text is reflected back to the caller in a `details` field.
+
+Anyone who finds the endpoint can run up your Gemini bill. Lock this down before exposing
+it publicly.
 
 ## Troubleshooting
 
-### "Failed to get response" or connection errors
-- Make sure the Express server is running (`npm run dev:server`)
-- Check that port 3001 is not in use
-- Verify the proxy configuration in `vite.config.js`
-
-### Claude API errors
-- Verify your `ANTHROPIC_API_KEY` in `.env`
-- Make sure you have API credits: https://console.anthropic.com/account/billing/overview
-- Check the API key hasn't expired
-
-### Chat not appearing
-- Hard refresh the page (Ctrl+Shift+R or Cmd+Shift+R)
-- Check browser console for errors (F12)
-- Verify `AiChat` is imported and used in `src/App.jsx`
-
-## Production Deployment
-
-When deploying to production:
-
-1. **Backend Setup** - Host the Express server
-   - Use a service like Railway, Render, or Heroku
-   - Set environment variables (ANTHROPIC_API_KEY)
-   - Update frontend API calls to your backend URL
-
-2. **Frontend Setup** - Build and deploy React
-   ```bash
-   npm run build
-   ```
-   - Deploy the `dist/` folder to Vercel, Netlify, etc.
-
-3. **API Proxy** - Update Vite config for production:
-   ```javascript
-   // In vite.config.js or via environment
-   server: {
-     proxy: {
-       '/api': 'https://your-backend-url.com'
-     }
-   }
-   ```
-
-## File Structure
-
-```
-keaa-website final/
-├── src/
-│   ├── components/
-│   │   └── AiChat.jsx          # Chat widget component
-│   └── App.jsx                 # Updated with AiChat import
-├── server.js                   # Express backend with Claude
-├── .env                        # Your API key (keep secret!)
-├── .env.example                # Template for .env
-├── vite.config.js              # Updated with API proxy
-└── package.json                # Updated with new dependencies
-```
-
-## Support
-
-For issues with:
-- **Claude API**: https://console.anthropic.com/docs
-- **Vite**: https://vitejs.dev/guide/
-- **React**: https://react.dev/
-- **Express**: https://expressjs.com/
-
----
-
-Happy chatting! 🚀
+| Symptom | Cause |
+| --- | --- |
+| Server exits at boot with a `dirname` `TypeError` | Node < 20.11. Upgrade. |
+| Chat says the assistant is unavailable | `GEMINI_API_KEY` missing or invalid. `/health` still returns OK — check the server logs. |
+| Chat works in dev, dead in production | The Vite `/api` proxy is dev-only. See **Deploying**. |
+| Bot describes products with no catalogue page | Known. See **How the knowledge base works**. |

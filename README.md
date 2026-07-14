@@ -1,89 +1,123 @@
 # KEAA International — Website
 
-A premium, animation-rich React website for **KEAA International Pvt. Ltd.**
-— manufacturer & exporter of scaffolding systems, formwork accessories, safety
-products, livestock housing solutions and garden hardware.
+A React website for **KEAA International Pvt. Ltd.** — manufacturer & exporter of
+scaffolding systems, formwork accessories, safety products, livestock housing
+solutions and garden hardware.
 
-Built with **React 18 + Vite + Tailwind CSS + Framer Motion + React Router**.
+Built with **React 18 + Vite 5 + Tailwind CSS 3 + Framer Motion + React Router 6**.
+The AI chat widget is backed by a small **Express + Google Gemini** server (`server.js`).
 
 ## Getting Started
 
+**Requires Node.js 20.11 or newer.** `server.js` uses `import.meta.dirname`, which does
+not exist on Node 18 or on Node 20.10 and below — the API server throws at boot on those
+versions. The front end alone will build on 18, but the chat will not run.
+
 ```bash
 npm install
-npm run dev      # starts the dev server at http://localhost:5173
-npm run build    # production build to /dist
-npm run preview  # preview the production build locally
+
+npm run dev         # front end only, http://localhost:5173
+npm run dev:server  # API server only, http://localhost:3001
+npm run dev:all     # both together (this is the one you usually want)
+
+npm run build       # production build to /dist
+npm run preview     # serve the production build locally
 ```
 
-Requires Node.js 18+. (`node_modules` isn't included — install on a machine
-with internet access.)
+The chat widget calls `/api/chat`, which the Vite dev server proxies to `localhost:3001`
+(see `vite.config.js`). **That proxy is dev-only** — it does not survive `npm run build`,
+so a production deployment must route `/api/*` to the Express process itself.
 
-## What's New in This Revision
+### Environment
 
-- **Premium photography** — every hero, category card, and gallery tile now
-  uses high-resolution (1920px+) real photography sourced from Unsplash
-  (free license, commercial use, no attribution required — see
-  `src/data/images.js`). The old low-resolution catalogue-screenshot images
-  have been removed.
-- **Animation system** — a small set of reusable motion primitives:
-  - `src/components/ui/Reveal.jsx` — scroll-triggered fade/slide-up wrapper
-    (`<Reveal>`, plus `<StaggerGroup>`/`<StaggerItem>` for sequenced reveals)
-  - `src/components/ui/AnimatedCounter.jsx` — count-up stat numbers on scroll
-  - `Button` and `Card` now use Framer Motion for hover lift, tap feedback,
-    and animated icons
-  - `PageHero` supports an optional full-bleed background photo with a subtle
-    entrance zoom, so every inner page can have its own visual identity
-- **Real embedded map** on the Contact page (Google Maps iframe) instead of a
-  static placeholder.
-- Every category in Products now has real photography (including Safety
-  Products, previously a placeholder).
+Copy `.env.example` to `.env` and fill it in:
 
-## Content Notes
+| Variable | Required | Notes |
+| --- | --- | --- |
+| `GEMINI_API_KEY` | yes | Google Gemini key. Get one at <https://aistudio.google.com/app/apikey>. Read only by `server.js`; it is never exposed to the browser. |
+| `GEMINI_MODEL` | no | Overrides the primary model. Defaults to the chain in `server.js`. |
+| `PORT` | no | API server port. Defaults to `3001`. |
 
-Company information, certifications, and product item codes/specs are sourced
-from KEAA's own corporate catalogues, so they reflect the real business. A few
-things to finish before launch:
-
-- **Photography** — current images are high-quality *stock* photography
-  standing in for official KEAA photos (per the brief: "use any suitable
-  high-quality images... until the client provides official media"). Swap
-  any entry in `src/data/images.js` for a real KEAA photo by changing the URL
-  string — no layout changes needed anywhere in the app.
-- **Certificates** — the two images on `/certifications` (`cert-iso9001.jpg`,
-  `cert-aeo.jpg` in `public/images/`) are real scanned KEAA certificates, kept
-  deliberately as authentic documents rather than stock substitutes.
-- **Forms** (Contact, RFQ, newsletter) are functional on the front end but
-  not wired to a backend — connect to your preferred form handler.
-- **Videos** are placeholders with a play button; wire up real video hosting
-  (YouTube embed, Vimeo, or self-hosted) when available.
-- Double-check phone numbers, emails and the Ludhiana plant address against
-  your latest letterhead before publishing.
+There is no client-side env surface: nothing in `src/` reads `import.meta.env`, so no key
+can leak into the bundle.
 
 ## Project Structure
 
 ```
 src/
 ├── components/
-│   ├── layout/        Header, TopBar, MegaMenu, MobileDrawer, Footer, Logo
-│   ├── ui/             Button, Card, Badge, Stat, SectionHeading, PageHero,
-│   │                   ImagePlaceholder, Reveal, AnimatedCounter
+│   ├── layout/          Header, TopBar, MegaMenu, MobileDrawer, Footer, Logo
+│   ├── ui/              Button, Card, Badge, SectionHeading, PageHero, Reveal,
+│   │                    AnimatedCounter, ImagePlaceholder, BrandTexture,
+│   │                    CountrySelect, EmailField, PhoneField, WordLimitTextarea
+│   ├── home/            HomeHeroBrandTest (the live homepage hero), CoreSolutions,
+│   │                    HeroMediaNav
+│   ├── products/        ProductCard, CatalogSidebar, CatalogHelpBand
 │   ├── Layout.jsx       Page shell (header + outlet + footer + overlays)
-│   └── ScrollToTop.jsx  Scrolls to top / anchor on route change
-├── data/                Company info, products, navigation, content, images
-├── pages/               One file per route
+│   ├── PageLoader.jsx   Intro splash — an overlay, not a gate (see below)
+│   └── AiChat.jsx       Chat widget; talks to server.js
+├── data/                Company info, catalogue, navigation, content, images
+├── hooks/               useSEO, useSplash
+├── pages/               One file per route (15 pages, 17 routes)
 ├── App.jsx              Route definitions
 ├── main.jsx             App entry point
-└── index.css            Tailwind layers + base styles
+└── index.css            Design tokens (:root) + Tailwind layers
+
+scripts/gen-categories.mjs   Regenerates src/data/categories.json from products.json
+server.js                    Express + Gemini API for the chat widget
 ```
 
-## Notes on Tech Choices
+## Things worth knowing before you change anything
 
-The brief referenced Shadcn UI; this build uses small hand-written Tailwind +
-Framer Motion components (`src/components/ui/*`) instead, to keep the
-dependency list minimal while still delivering rich hover/scroll
-micro-interactions. You can layer in `shadcn/ui` later with
-`npx shadcn@latest init` if you'd like its CLI-driven component library too.
+**The design tokens are load-bearing.** `src/index.css` defines the colour system in
+`:root` and `tailwind.config.js` only maps it onto utilities. The comment block above
+`:root` explains three rules that were derived by measuring contrast, not by taste —
+read it before touching a colour. `src/components/ui/Button.jsx` carries the same
+warning with the measured ratios.
 
-Respects `prefers-reduced-motion` globally (see `src/index.css`) — visitors
-who've asked their OS for reduced motion get instant transitions instead of
-animations.
+**The catalogue is deliberately kept out of the entry chunk.** `src/data/products.json`
+is 355 products (~181 KB). The site chrome only needs the category tree, so that is
+precomputed into `src/data/categories.json` (~3.7 KB) by `scripts/gen-categories.mjs`,
+which runs automatically on `npm run build`. Header, Footer, MobileDrawer and
+CoreSolutions import `src/data/categories.js`; **anything that imports
+`src/data/productHelpers.js` pulls in the whole catalogue**, so keep that to product
+pages. Run `npm run gen:categories` by hand after editing `products.json`.
+
+**The splash screen is an overlay, not a gate.** The route tree mounts immediately
+underneath it, so page content and the LCP image exist in the DOM from the first frame
+(a crawler always has empty `sessionStorage` and would otherwise see only a loading
+animation). Because `IntersectionObserver` ignores occlusion, entrance animations would
+otherwise fire behind the splash and be spent before anyone saw them — `src/hooks/useSplash.jsx`
+holds them until it lifts.
+
+## Known gaps
+
+These are real and deliberate, not oversights — they are tracked, not fixed:
+
+- **The three forms do not submit.** Contact, Request-a-Quotation and the job
+  application all call `e.preventDefault()` and show a success panel without sending
+  anything. There is no form backend yet. (There is no newsletter form, despite what
+  the privacy policy says.)
+- **The chat is not deployable as-is.** `AiChat` calls a relative `/api/chat` that only
+  resolves through the Vite dev proxy, and the repo contains no host config that routes
+  it to the Express process in production.
+- **`/api/chat` is unauthenticated.** `server.js` uses a wide-open CORS policy with no
+  rate limit and no auth, on KEAA's own Gemini key.
+- **The chatbot and the catalogue disagree.** `server.js` builds its knowledge base from
+  `src/data/products.js` (5 marketing categories, including a Safety Products line with
+  real item codes), while the catalogue pages come from `src/data/products.json`
+  (3 categories, 355 products, no PPE). Neither source is complete. Resolve this before
+  trusting the bot's product answers.
+- **`prefers-reduced-motion` is only half-honoured.** `src/index.css` neutralises CSS
+  animation, but nearly all motion here is Framer Motion, which animates via JS and is
+  untouched by that rule. Only some components call `useReducedMotion()`.
+- **There are no tests and no CI.**
+
+## Photography
+
+Most imagery is high-quality *stock* photography standing in for official KEAA photos —
+swap any entry in `src/data/images.js` for a real URL and nothing else needs to change.
+The exceptions are real KEAA assets in `public/images/`: the leadership portraits and the
+scanned certificates (`cert-iso-9001.jpg`, `cert-iso-14001.jpg`, `cert-iso-45001.jpg`,
+`cert-zed-silver.jpg`). Product photography comes from Cloudinary via
+`src/data/cloudinary.js`.
