@@ -4,7 +4,7 @@ import { X, FileText, ChevronRight } from 'lucide-react';
 import Logo from './Logo';
 import Button from '../ui/Button';
 import { mainNav, megaMenuItems } from '../../data/navigation';
-import { getAllCategories } from '../../data/productHelpers';
+import { getAllCategories } from '../../data/categories';
 
 // Closing on route change is owned by Layout, which closes this drawer and the mega
 // menu together (see Layout.jsx). Do not re-implement it here.

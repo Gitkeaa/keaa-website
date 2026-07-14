@@ -1,0 +1,163 @@
+[
+  {
+    "name": "Scaffolding & Formworks",
+    "slug": "scaffolding-formworks",
+    "count": 182,
+    "subcategories": [
+      {
+        "name": "System Scaffolds-Ringlock",
+        "slug": "system-scaffolds-ringlock",
+        "count": 12
+      },
+      {
+        "name": "System Scaffolds - HK",
+        "slug": "system-scaffolds-hk",
+        "count": 8
+      },
+      {
+        "name": "System Scaffold-Cuplock",
+        "slug": "system-scaffold-cuplock",
+        "count": 9
+      },
+      {
+        "name": "Load Bearing System-Shoring Tower",
+        "slug": "load-bearing-system-shoring-tower",
+        "count": 7
+      },
+      {
+        "name": "Accessories Jacks & Nuts",
+        "slug": "accessories-jacks-nuts",
+        "count": 11
+      },
+      {
+        "name": "Access Scaffold-American Frame",
+        "slug": "access-scaffold-american-frame",
+        "count": 17
+      },
+      {
+        "name": "Slab Formwork System-Props",
+        "slug": "slab-formwork-system-props",
+        "count": 13
+      },
+      {
+        "name": "Slab Formwork System-Fork Heads",
+        "slug": "slab-formwork-system-fork-heads",
+        "count": 11
+      },
+      {
+        "name": "System Slab Formwork-Tripods",
+        "slug": "system-slab-formwork-tripods",
+        "count": 7
+      },
+      {
+        "name": "Formwork-Accessories",
+        "slug": "formwork-accessories",
+        "count": 20
+      },
+      {
+        "name": "Wall Formwork Systems-Clamps & Panels",
+        "slug": "wall-formwork-systems-clamps-panels",
+        "count": 12
+      },
+      {
+        "name": "Scaffold Tube Fitting-European",
+        "slug": "scaffold-tube-fitting-european",
+        "count": 18
+      },
+      {
+        "name": "Scaffold Tube Fitting-British & American",
+        "slug": "scaffold-tube-fitting-british-american",
+        "count": 11
+      },
+      {
+        "name": "Security Systems-Guard Rails & Railing Posts",
+        "slug": "security-systems-guard-rails-railing-posts",
+        "count": 13
+      },
+      {
+        "name": "Trestles & Barriers",
+        "slug": "trestles-barriers",
+        "count": 4
+      },
+      {
+        "name": "Access Scaffold-Euro Frame",
+        "slug": "access-scaffold-euro-frame",
+        "count": 9
+      }
+    ]
+  },
+  {
+    "name": "Livestock Housing Solutions",
+    "slug": "livestock-housing-solutions",
+    "count": 112,
+    "subcategories": [
+      {
+        "name": "Cattle",
+        "slug": "cattle",
+        "count": 52
+      },
+      {
+        "name": "Sheep",
+        "slug": "sheep",
+        "count": 15
+      },
+      {
+        "name": "Field Gates",
+        "slug": "field-gates",
+        "count": 23
+      },
+      {
+        "name": "Calves",
+        "slug": "calves",
+        "count": 3
+      },
+      {
+        "name": "Pigs",
+        "slug": "pigs",
+        "count": 13
+      },
+      {
+        "name": "Horse",
+        "slug": "horse",
+        "count": 6
+      }
+    ]
+  },
+  {
+    "name": "Wood Connectors / Garden Hardware",
+    "slug": "wood-connectors",
+    "count": 61,
+    "subcategories": [
+      {
+        "name": "Indoor Wood Connectors",
+        "slug": "indoor-wood-connectors",
+        "count": 14
+      },
+      {
+        "name": "Post Supports",
+        "slug": "post-supports",
+        "count": 12
+      },
+      {
+        "name": "Pole Anchors & Ground Plates",
+        "slug": "pole-anchors-ground-plates",
+        "count": 12
+      },
+      {
+        "name": "Post Caps",
+        "slug": "post-caps",
+        "count": 3
+      },
+      {
+        "name": "Miscellaneous Products",
+        "slug": "miscellaneous-products",
+        "count": 6
+      },
+      {
+        "name": "Adjustable Post Supports",
+        "slug": "adjustable-post-supports",
+        "count": 14
+      }
+    ]
+  }
+]

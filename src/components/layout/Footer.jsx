@@ -21,7 +21,7 @@ import {
 import Logo from './Logo';
 import { company } from '../../data/company';
 import { footerLinks } from '../../data/navigation';
-import { getAllCategories } from '../../data/productHelpers';
+import { getAllCategories } from '../../data/categories';
 
 /**
  * Footer — deep navy card on a light page, over the supplied blueprint artwork.

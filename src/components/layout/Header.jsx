@@ -9,7 +9,7 @@ import { mainNav } from '../../data/navigation';
 // actually exist. The legacy `productCategories` list still names lines (Safety Products,
 // Formwork Accessories) that have no catalogue page, and linked to `/products#anchor`
 // hashes that the router's scroll-to-top swallowed.
-import { getAllCategories } from '../../data/productHelpers';
+import { getAllCategories } from '../../data/categories';
 
 export default function Header({ onOpenMegaMenu, onOpenDrawer }) {
   const [scrolled, setScrolled] = useState(false);

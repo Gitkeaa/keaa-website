@@ -4,40 +4,31 @@
  * the source site had it, a description).
  *
  * This module owns every read of that JSON so the pages stay declarative:
- *   getAllCategories() / getProductsByCategory() / getProductsBySubcategory()
+ *   getProductsByCategory() / getProductsBySubcategory()
  *   getProductById() / getRelatedProducts()
  * plus filter facets (getFacets/applyFilters) and small derivations (Ø diameter,
  * finish, a rough product "type") pulled out of the specs/description text.
  *
  * Products are enriched ONCE at module load — each gets image/hasImage,
  * catSlug/subSlug and the derived facet fields — so components never re-parse.
+ *
+ * IMPORTANT: importing this module pulls in the whole 181 KB catalogue. The category
+ * tree lives in ./categories.js precisely so the site chrome can render the nav without
+ * paying for it — do not "simplify" the chrome back onto this module. The category
+ * helpers below are re-exported only so existing product-page imports keep working.
  */
 import productsRaw from './products.json';
-import { img } from './images.js';
 import { cldImage, cldSrcSet } from './cloudinary.js';
+import { slugify, catSlugOf } from './categories.js';
 
-export const slugify = (str) =>
-  String(str)
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '');
-
-/**
- * Category URLs are derived from the display name, so renaming a category would normally
- * change its route and orphan its `categoryMeta` entry. This pins the slug instead: the
- * "Wood Connectors / Garden Hardware" line keeps the short, already-published
- * `/products/wood-connectors` URL.
- *
- * Idempotent — passing either the display name or the slug returns the slug.
- */
-const CATEGORY_SLUG_OVERRIDES = {
-  'wood-connectors-garden-hardware': 'wood-connectors',
-};
-
-export const catSlugOf = (nameOrSlug) => {
-  const s = slugify(nameOrSlug);
-  return CATEGORY_SLUG_OVERRIDES[s] || s;
-};
+export {
+  slugify,
+  catSlugOf,
+  categoryMeta,
+  getAllCategories,
+  getCategory,
+  TOTAL_PRODUCTS,
+} from './categories.js';
 
 const specText = (p) =>
   `${p.description || ''} ${(p.specs || []).map((s) => `${s.label} ${s.value}`).join(' ')}`;
@@ -116,85 +107,6 @@ export function productImage(product, opts = {}) {
 export function productSrcSet(product, widths) {
   const pid = publicIdFromCloudinaryUrl(product && product.image);
   return pid ? cldSrcSet(pid, widths) : undefined;
-}
-
-/* ------------------------------------------------------------------ *
- *  Category presentation metadata (hero image, blurb, icon, badges).
- *  Keyed by category slug. Everything else (subcategories, counts) is
- *  derived from the data so it never drifts out of sync.
- * ------------------------------------------------------------------ */
-export const categoryMeta = {
-  'scaffolding-formworks': {
-    icon: 'Layers',
-    heroImage: img.scaffoldFrame,
-    short:
-      'A complete range of modular scaffolding, formwork systems and fittings — engineered for safety, strength and fast installation.',
-    standard: 'Hot Dip Galvanized as per DIN EN 1461',
-    badges: [
-      { icon: 'ShieldCheck', title: 'High Strength', sub: 'Tested & Certified' },
-      { icon: 'Wrench', title: 'Easy Assembly', sub: 'Quick & Secure' },
-      { icon: 'Droplets', title: 'Corrosion Resistant', sub: 'Hot Dip Galvanized' },
-      { icon: 'Globe', title: 'Global Standards', sub: 'EN 12810 | EN 12811' },
-    ],
-  },
-  'livestock-housing-solutions': {
-    icon: 'Warehouse',
-    heroImage: img.cattleHerdBarn || img.cowsInBarn,
-    short:
-      'Robust cattle, sheep, pig and horse housing systems, field gates and feeders — built from heavy-gauge galvanized steel for years of service.',
-    standard: 'Hot Dip Galvanized — heavy-gauge steel',
-    badges: [
-      { icon: 'ShieldCheck', title: 'Durable Build', sub: 'Heavy-Gauge Steel' },
-      { icon: 'Heart', title: 'Animal Safe', sub: 'Smooth Welded Finish' },
-      { icon: 'CloudRain', title: 'Weather Resistant', sub: 'Galvanized Coating' },
-      { icon: 'Blocks', title: 'Modular', sub: 'Fast Field Install' },
-    ],
-  },
-  'wood-connectors': {
-    icon: 'Hammer',
-    heroImage: img.woodenFrameSky,
-    short:
-      'Structural timber connectors, post supports and ground anchors for decks, pergolas, fencing and joinery — precision-formed and corrosion-protected.',
-    standard: 'Hot Dip Galvanized / structural grade steel',
-    badges: [
-      { icon: 'Gauge', title: 'Load Rated', sub: 'Structural Grade' },
-      { icon: 'Droplets', title: 'Corrosion Resistant', sub: 'Hot Dip Galvanized' },
-      { icon: 'Ruler', title: 'Precision Fit', sub: 'CNC Formed' },
-      { icon: 'Shuffle', title: 'Versatile', sub: 'Indoor & Outdoor' },
-    ],
-  },
-};
-
-/**
- * All categories with their subcategories and live counts, merged with the
- * presentation metadata above. Order follows first appearance in the data.
- */
-export function getAllCategories() {
-  const map = new Map();
-  for (const p of products) {
-    if (!map.has(p.catSlug)) {
-      map.set(p.catSlug, { name: p.category, slug: p.catSlug, count: 0, subs: new Map() });
-    }
-    const c = map.get(p.catSlug);
-    c.count++;
-    if (!c.subs.has(p.subSlug)) {
-      c.subs.set(p.subSlug, { name: p.subcategory, slug: p.subSlug, count: 0 });
-    }
-    c.subs.get(p.subSlug).count++;
-  }
-  return [...map.values()].map((c) => ({
-    name: c.name,
-    slug: c.slug,
-    count: c.count,
-    subcategories: [...c.subs.values()],
-    ...(categoryMeta[c.slug] || {}),
-  }));
-}
-
-/** One category (by slug or display name), or undefined. */
-export function getCategory(categorySlugOrName) {
-  const s = catSlugOf(categorySlugOrName);
-  return getAllCategories().find((c) => c.slug === s);
 }
 
 /** Products in a category (accepts slug or display name). */
@@ -283,5 +195,3 @@ export const SORTS = {
   'name-desc': { label: 'Product Name (Z–A)', fn: (a, b) => b.name.localeCompare(a.name) },
   'code-asc': { label: 'Item Code (A–Z)', fn: (a, b) => (a.itemCode || '').localeCompare(b.itemCode || '') },
 };
-
-export const TOTAL_PRODUCTS = products.length;

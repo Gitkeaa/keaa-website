@@ -9,7 +9,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import Button from '../ui/Button';
-import { getAllCategories } from '../../data/productHelpers';
+import { getAllCategories } from '../../data/categories';
 import useSplashDone from '../../hooks/useSplash';
 
 /**

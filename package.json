@@ -7,6 +7,8 @@
     "dev": "vite",
     "dev:server": "node server.js",
     "dev:all": "concurrently \"npm run dev\" \"npm run dev:server\"",
+    "gen:categories": "node scripts/gen-categories.mjs",
+    "prebuild": "node scripts/gen-categories.mjs",
     "build": "vite build",
     "preview": "vite preview"
   },
