@@ -7,7 +7,7 @@ import CountrySelect from '../components/ui/CountrySelect';
 import PhoneField from '../components/ui/PhoneField';
 import EmailField from '../components/ui/EmailField';
 import WordLimitTextarea from '../components/ui/WordLimitTextarea';
-import { productCategories } from '../data/products';
+import { getAllProductLines } from '../data/productLines';
 import { defaultCountry } from '../data/countriesData';
 import { img } from '../data/images';
 import useSEO from '../hooks/useSEO';
@@ -46,6 +46,18 @@ const formIntros = {
     ],
   },
 };
+
+/**
+ * The quote form offers every line KEAA sells — which is NOT the nav's list.
+ *
+ * Safety Products has no catalogue page yet (no photography), but it is a real line and
+ * the top bar advertises it on every page. Drop it from this dropdown and those leads
+ * simply stop arriving. Scaffolding and formwork are one line, not two — the old list
+ * split them, which is why it offered five options for four lines.
+ *
+ * See src/data/enquiryLines.js.
+ */
+const productLines = getAllProductLines();
 
 export default function RequestQuotation() {
   useSEO({
@@ -181,7 +193,7 @@ export default function RequestQuotation() {
                     id="product"
                     className="mt-1.5 w-full rounded-md border border-navy-100 px-3.5 py-2.5 text-sm outline-none focus:border-primary"
                   >
-                    {productCategories.map((c) => (
+                    {productLines.map((c) => (
                       <option key={c.slug}>{c.name}</option>
                     ))}
                   </select>

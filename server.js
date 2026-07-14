@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
-import { watch } from 'node:fs';
+import { readFileSync, watch } from 'node:fs';
 import path from 'node:path';
 
 // The bot is "trained" on the website's own data files (src/data/*.js). Those
@@ -48,21 +48,50 @@ Guidelines:
 6. Use the KNOWLEDGE BASE below as your source of truth for products, item codes, projects, certifications, careers and resources. Do not invent product codes, prices or specs that are not listed.
 7. FORMATTING: Reply in clean, well-structured Markdown so it is easy to scan. Start with a one-line summary sentence. For any list of 3+ items, use hyphen "-" bullet points (each on its own line), and put a blank line before the list. Use **bold** only for key terms or category names. Keep paragraphs to 1-2 sentences. Never cram a list into a single paragraph.`;
 
-// Turn the structured site data into a compact text knowledge base for the model.
-function buildKnowledgeBase(data) {
-  const {
-    company,
-    leadership,
-    countries,
-    productCategories,
-    bestSellers,
-    testimonials,
-    featuredProjects,
-    careers,
-    downloadResources,
-  } = data;
+/**
+ * KEAA has TWO product sources and they are complementary, not duplicates. The bot needs
+ * both, and it needs to know which is which:
+ *
+ *   products.json  355 browsable products, each with a real catalogue page the bot can
+ *                  send a customer to. No size ranges. Contains NO safety/PPE at all.
+ *
+ *   products.js    60 curated item codes from KEAA's printed catalogues, WITH size ranges.
+ *                  Only 16 of those 60 also appear in products.json — the other 44 exist
+ *                  nowhere else. This is also the only place Safety Products lives.
+ *
+ * Feeding the bot only products.js (which is what it used to do) meant it answered from a
+ * 5-category marketing taxonomy that does not match the website, could not name any of the
+ * 355 real products, and pointed people at /products/safety-products, which 404s.
+ *
+ * Feeding it only products.json would be worse: it would start telling customers KEAA does
+ * not sell safety harnesses — a line the top bar advertises on every page.
+ */
+function renderCatalogue(catalogue) {
+  const byCat = new Map();
+  for (const p of catalogue) {
+    if (!byCat.has(p.category)) byCat.set(p.category, new Map());
+    const subs = byCat.get(p.category);
+    if (!subs.has(p.subcategory)) subs.set(p.subcategory, []);
+    subs.get(p.subcategory).push(p);
+  }
+  return [...byCat.entries()]
+    .map(([cat, subs]) => {
+      const body = [...subs.entries()]
+        .map(([sub, items]) => {
+          const lines = items
+            .map((p) => `      - ${p.itemCode ? `${p.itemCode} — ` : ''}${p.name}`)
+            .join('\n');
+          return `    • ${sub} (${items.length})\n${lines}`;
+        })
+        .join('\n');
+      return `- ${cat} (${[...subs.values()].reduce((n, i) => n + i.length, 0)} products — has a catalogue page)\n${body}`;
+    })
+    .join('\n\n');
+}
 
-  const products = productCategories
+/** The curated item codes + size ranges from KEAA's own printed catalogues. */
+function renderItemCodes(productCategories, enquiryOnlySlugs) {
+  return productCategories
     .map((cat) => {
       const families = (cat.families || [])
         .map((f) => {
@@ -75,17 +104,48 @@ function buildKnowledgeBase(data) {
           return `    • ${f.title}${f.spec ? `\n      Spec: ${f.spec}` : ''}${items ? `\n${items}` : ''}`;
         })
         .join('\n');
-      return `- ${cat.name}: ${cat.short}\n    Highlights: ${cat.bullets.join(', ')}\n    Standard: ${cat.standard}\n${families}`;
+      const flag = enquiryOnlySlugs.includes(cat.slug)
+        ? ' [NO CATALOGUE PAGE YET — we manufacture and quote for this; send the customer to the RFQ form, never to a product URL]'
+        : '';
+      return `- ${cat.name}${flag}: ${cat.short}\n    Highlights: ${cat.bullets.join(', ')}\n    Standard: ${cat.standard}\n${families}`;
     })
     .join('\n\n');
+}
+
+// Turn the structured site data into a compact text knowledge base for the model.
+function buildKnowledgeBase(data) {
+  const {
+    company,
+    leadership,
+    countries,
+    catalogue,
+    productCategories,
+    enquiryOnlySlugs,
+    bestSellers,
+    testimonials,
+    featuredProjects,
+    careers,
+    downloadResources,
+  } = data;
 
   const list = (arr, fn) => arr.map(fn).join('\n');
 
   return `
 === KEAA KNOWLEDGE BASE (authoritative — answer from this) ===
 
-PRODUCT CATALOGUE:
-${products}
+HOW TO USE THE TWO PRODUCT SECTIONS BELOW:
+- BROWSABLE CATALOGUE is every product with a page on the website. When a customer asks
+  what we make, answer from here, and you may point them at the category page.
+- ITEM CODE & SIZE REFERENCE comes from KEAA's printed catalogues. Use it when a customer
+  asks for an item code or a size range. Some of these have no page on the website.
+- Safety Products is real and we sell it, but it has no catalogue page yet. Never claim we
+  do not make it, and never link to a product page for it — route the customer to the RFQ.
+
+BROWSABLE CATALOGUE (${catalogue.length} products on the website):
+${renderCatalogue(catalogue)}
+
+ITEM CODE & SIZE REFERENCE (from KEAA's printed catalogues):
+${renderItemCodes(productCategories, enquiryOnlySlugs)}
 
 BEST SELLERS:
 ${list(bestSellers, (b) => `- ${b.name} (${b.category})`)}
@@ -123,17 +183,24 @@ async function loadKnowledge(reason = 'startup') {
     // Cache-bust the import so Node re-reads the file from disk instead of using
     // its module cache — that is what lets edits show up without a restart.
     const bust = `?v=${Date.now()}`;
-    const [companyMod, productsMod, contentMod] = await Promise.all([
+    const [companyMod, productsMod, contentMod, enquiryMod] = await Promise.all([
       import('./src/data/company.js' + bust),
       import('./src/data/products.js' + bust),
       import('./src/data/content.js' + bust),
+      import('./src/data/enquiryLines.js' + bust),
     ]);
+
+    // Read the catalogue with fs rather than `import`: Node refuses a JSON module without
+    // an import attribute, and readFileSync gives us the cache-busting for free anyway.
+    const catalogue = JSON.parse(readFileSync(path.join(DATA_DIR, 'products.json'), 'utf8'));
 
     const knowledge = buildKnowledgeBase({
       company: companyMod.company,
       leadership: companyMod.leadership,
       countries: companyMod.countries,
+      catalogue,
       productCategories: productsMod.productCategories,
+      enquiryOnlySlugs: enquiryMod.enquiryOnlyLines.map((l) => l.slug),
       bestSellers: productsMod.bestSellers,
       testimonials: contentMod.testimonials,
       featuredProjects: contentMod.featuredProjects,
@@ -155,7 +222,8 @@ function watchDataFiles() {
   let timer = null;
   try {
     watch(DATA_DIR, (event, filename) => {
-      if (!filename || !filename.endsWith('.js')) return;
+      // products.json is part of the knowledge base too, so watch it as well.
+      if (!filename || !(filename.endsWith('.js') || filename.endsWith('.json'))) return;
       clearTimeout(timer);
       timer = setTimeout(() => loadKnowledge(`data change: ${filename}`), 250);
     });
