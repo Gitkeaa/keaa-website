@@ -201,7 +201,7 @@ export const managingDirectors = [
     role: 'Managing Director, KEAA International Pvt. Ltd.',
     message:
       'Our focus at Keaa International is on manufacturing excellence and operational efficiency. By leveraging state-of-the-art machinery and certified processes at our Ludhiana plants, we ensure that every product meets the most stringent international quality benchmarks. We are dedicated to providing customized, high-performing solutions that drive value for our clients globally.',
-    photo: '/images/sumit.png',
+    photo: '/images/sumit.jpg',
     linkedin: 'https://www.linkedin.com/in/sumit-moudgil',
     whatsapp: 'https://wa.me/919872984707',
   },
