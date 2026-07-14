@@ -7,6 +7,7 @@ import MegaMenu from './layout/MegaMenu';
 import MobileDrawer from './layout/MobileDrawer';
 import ScrollToTop from './ScrollToTop';
 import BackToTop from './BackToTop';
+import useSplashDone from '../hooks/useSplash';
 
 export default function Layout() {
   const [megaOpen, setMegaOpen] = useState(false);
@@ -14,6 +15,7 @@ export default function Layout() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
   const location = useLocation();
+  const splashDone = useSplashDone();
 
   useEffect(() => {
     document.body.style.overflow = megaOpen || drawerOpen ? 'hidden' : '';
@@ -39,7 +41,7 @@ export default function Layout() {
           <motion.div
             key={location.pathname}
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            animate={splashDone ? { opacity: 1 } : undefined}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: 'easeInOut' }}
           >

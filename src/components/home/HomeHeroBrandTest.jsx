@@ -5,6 +5,7 @@ import { Play, ExternalLink, Download, Award, Globe2, Factory, Package } from 'l
 import AnimatedCounter from '../ui/AnimatedCounter';
 import HeroMediaNav from './HeroMediaNav';
 import { droneFilmUrl, heroFilms } from '../../data/content';
+import useSplashDone from '../../hooks/useSplash';
 
 /**
  * HOMEPAGE HERO — bright split, brand-blue.
@@ -147,6 +148,7 @@ function useMinWidth(query) {
 
 export default function HomeHeroBrandTest() {
   const reduce = useReducedMotion();
+  const splashDone = useSplashDone();
   const isDesktop = useMinWidth('(min-width: 1024px)');
   const stageRef = useRef(null);
   const videoRefs = useRef({});
@@ -316,7 +318,7 @@ export default function HomeHeroBrandTest() {
           <motion.div
             variants={parent}
             initial={reduce ? false : 'hidden'}
-            animate="show"
+            animate={splashDone ? 'show' : undefined}
             /* Capped so no glyph crosses ~42% of the viewport, which is where the tower's
                dark edge begins (measured from hero.jpg). Everything left of that sits on
                sky, so the scrim barely has to work. Widen this and the scrim must grow. */
@@ -408,7 +410,7 @@ export default function HomeHeroBrandTest() {
             <motion.div style={{ y: parallax }} className="absolute -top-[9%] left-0 right-0 h-[118%]">
               <motion.div
                 initial={{ scale: reduce ? 1 : 1.07 }}
-                animate={{ scale: 1 }}
+                animate={splashDone ? { scale: 1 } : undefined}
                 transition={{ duration: 1.6, ease: EASE }}
                 className="h-full w-full"
               >
@@ -551,7 +553,7 @@ export default function HomeHeroBrandTest() {
       <div className={`${GUTTER} relative z-20 -mt-20 pb-14 sm:-mt-24 sm:pb-16`}>
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={splashDone ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 0.7, delay: 0.55, ease: EASE }}
         >
           <motion.div

@@ -3,6 +3,7 @@ import { Headset, Clock, ShieldCheck, Award, ArrowRight } from 'lucide-react';
 import Button from './ui/Button';
 import BrandTexture from './ui/BrandTexture';
 import { company } from '../data/company';
+import useSplashDone from '../hooks/useSplash';
 
 /**
  * The closing call-to-action, sitting between the last page section and the footer.
@@ -35,6 +36,7 @@ export default function CtaBand({
   showPhone = true,
 }) {
   const reduce = useReducedMotion();
+  const splashDone = useSplashDone();
   const phone = company.phones[0];
   const CtaIcon = cta.icon ?? ArrowRight;
 
@@ -47,7 +49,7 @@ export default function CtaBand({
       <div className="relative z-10 mx-auto w-full max-w-[1720px] px-4 sm:px-6 lg:px-12 xl:px-20">
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          whileInView={splashDone ? { opacity: 1, y: 0 } : undefined}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.6, ease: EASE }}
           className="flex flex-col gap-6 rounded-2xl bg-surface-raised p-5 shadow-[0_1px_2px_-1px_rgb(var(--color-text)_/_0.08),0_28px_64px_-34px_rgb(var(--color-text)_/_0.35)] ring-1 ring-border sm:rounded-3xl sm:p-6 lg:flex-row lg:items-stretch lg:gap-0 lg:p-7"

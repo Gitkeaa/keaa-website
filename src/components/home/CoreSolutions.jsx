@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import Button from '../ui/Button';
 import { getAllCategories } from '../../data/productHelpers';
+import useSplashDone from '../../hooks/useSplash';
 
 /**
  * The Home page's "Who We Are" and "Our Product Categories" sections, merged into one
@@ -65,12 +66,13 @@ function Swoosh() {
 
 export default function CoreSolutions() {
   const reduce = useReducedMotion();
+  const splashDone = useSplashDone();
   const [featured, ...rest] = getAllCategories();
   const FeaturedIcon = CATEGORY_ICONS[featured.icon] || Layers;
 
   const rise = (delay = 0) => ({
     initial: reduce ? false : { opacity: 0, y: 24 },
-    whileInView: { opacity: 1, y: 0 },
+    whileInView: splashDone ? { opacity: 1, y: 0 } : undefined,
     viewport: { once: true, margin: '-80px' },
     transition: { duration: 0.6, delay, ease: EASE },
   });

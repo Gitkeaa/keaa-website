@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import BrandTexture from './ui/BrandTexture';
+import useSplashDone from '../hooks/useSplash';
 
 /**
  * A row of supporting promises -- Products' perks, Contact's help strip -- rendered as a
@@ -20,6 +21,7 @@ const EASE = [0.22, 1, 0.36, 1];
 
 export default function FeatureStrip({ items, lead, photo = true, className = '' }) {
   const reduce = useReducedMotion();
+  const splashDone = useSplashDone();
 
   return (
     <section className={`relative isolate overflow-hidden bg-surface py-10 sm:py-12 ${className}`}>
@@ -29,7 +31,7 @@ export default function FeatureStrip({ items, lead, photo = true, className = ''
       <div className="relative z-10 mx-auto w-full max-w-[1720px] px-4 sm:px-6 lg:px-12 xl:px-20">
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          whileInView={splashDone ? { opacity: 1, y: 0 } : undefined}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.6, ease: EASE }}
           className={`gap-8 rounded-2xl bg-surface-raised p-6 shadow-[0_1px_2px_-1px_rgb(var(--color-text)_/_0.08),0_28px_64px_-34px_rgb(var(--color-text)_/_0.35)] ring-1 ring-border sm:rounded-3xl sm:p-7 ${

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useInView, animate } from 'framer-motion';
+import useSplashDone from '../../hooks/useSplash';
 
 const DURATION = 1.4;
 
@@ -10,7 +11,9 @@ const DURATION = 1.4;
  */
 export default function AnimatedCounter({ value, className = '' }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-40px' });
+  const splashDone = useSplashDone();
+  // Hold at 0 behind the splash, otherwise the count-up is spent before anyone sees it.
+  const inView = useInView(ref, { once: true, margin: '-40px' }) && splashDone;
   const [display, setDisplay] = useState(0);
 
   // Split numeric part from any trailing characters (e.g. "30+" -> 30, "+")

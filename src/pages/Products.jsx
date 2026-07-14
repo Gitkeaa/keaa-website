@@ -19,6 +19,7 @@ import ProductCard from '../components/products/ProductCard';
 import { getAllCategories, getProductsByCategory, TOTAL_PRODUCTS } from '../data/productHelpers';
 import { img } from '../data/images';
 import useSEO from '../hooks/useSEO';
+import useSplashDone from '../hooks/useSplash';
 
 const CATEGORY_ICONS = { Layers, Warehouse, Hammer };
 
@@ -35,6 +36,7 @@ const featured = getAllCategories()
 
 export default function Products() {
   const categories = getAllCategories();
+  const splashDone = useSplashDone();
 
   useSEO({
     title: 'Products',
@@ -71,7 +73,7 @@ export default function Products() {
                 <motion.div
                   key={cat.slug}
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  animate={splashDone ? { opacity: 1, y: 0 } : undefined}
                   transition={{ duration: 0.4, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <Link

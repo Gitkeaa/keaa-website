@@ -3,6 +3,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { useRef } from 'react';
 import { ChevronRight } from 'lucide-react';
 import AnimatedCounter from './AnimatedCounter';
+import useSplashDone from '../../hooks/useSplash';
 
 /**
  * The interior-page hero, rebuilt to match the homepage: a light stage with the
@@ -54,6 +55,7 @@ export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], st
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const drift = useTransform(scrollYProgress, [0, 1], [0, 60]);
   const parallax = reduce ? 0 : drift;
+  const splashDone = useSplashDone();
 
   const media = image;
 
@@ -66,7 +68,7 @@ export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], st
         <div className="absolute inset-0 z-0" style={{ isolation: 'isolate' }}>
           <motion.div
             initial={{ scale: reduce ? 1 : 1.06 }}
-            animate={{ scale: 1 }}
+            animate={splashDone ? { scale: 1 } : undefined}
             transition={{ duration: 1.4, ease: EASE }}
             style={{ y: parallax }}
             className="absolute -top-[8%] left-0 right-0 h-[116%]"
@@ -157,7 +159,7 @@ export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], st
 
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={splashDone ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 0.6, ease: EASE }}
         >
           {eyebrow && <span className="eyebrow text-primary-darker">{eyebrow}</span>}
