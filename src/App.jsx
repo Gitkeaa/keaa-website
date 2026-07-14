@@ -7,19 +7,6 @@ import AiChat from './components/AiChat';
 import FloatingPromos from './components/FloatingPromos';
 import { SplashProvider } from './hooks/useSplash';
 
-/**
- * TEMPORARY A/B TOGGLE — delete this once the variant is chosen.
- *
- *   true  (variant B) entrance animations wait for the splash to finish, then play.
- *                     A first-time visitor sees exactly what they see today.
- *   false (variant A) entrance animations run behind the splash, so the page is already
- *                     settled when the splash lifts.
- *
- * Both variants mount the routes at t=0 — the crawler and LCP fix is identical either way.
- * This only decides whether the entrance choreography is preserved or consumed.
- */
-const GATE_ANIMATIONS_UNTIL_SPLASH_DONE = true;
-
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Products = lazy(() => import('./pages/Products'));
@@ -75,7 +62,10 @@ export default function App() {
     };
   }, [showLoader]);
 
-  const splashDone = GATE_ANIMATIONS_UNTIL_SPLASH_DONE ? !showLoader : true;
+  // Entrance animations hold until the splash lifts, then play. See hooks/useSplash for
+  // why: IntersectionObserver ignores occlusion, so without this they would fire at t=0
+  // behind the overlay and be spent before anyone saw them.
+  const splashDone = !showLoader;
 
   return (
     <BrowserRouter>
