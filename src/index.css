@@ -57,7 +57,12 @@
   --color-photo-shade: 6 26 52; /* #061A34 */
   --color-photo-bloom: 214 236 255; /* #D6ECFF */
 }
-
+.container-page {
+  padding-left: 20px !important;
+  padding-right: 20px!important;
+  margin-left: 20px !important;
+  margin-right: 20px !important;
+}
 html,
 body {
   width: 100%;
@@ -105,7 +110,7 @@ main {
     font-family: 'JetBrains Mono', monospace;
   }
   .container-page {
-    @apply max-w-7xl mx-auto px-5 sm:px-8 lg:px-10;
+    /* @apply max-w-7xl mx-auto px-5 sm:px-8 lg:px-10; */
   }
   /**
    * `.eyebrow` deliberately owns no colour. It used to (`text-gold-600`, then
