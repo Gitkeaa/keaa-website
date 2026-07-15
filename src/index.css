@@ -57,12 +57,53 @@
   --color-photo-shade: 6 26 52; /* #061A34 */
   --color-photo-bloom: 214 236 255; /* #D6ECFF */
 }
-.container-page {
-  padding-left: 20px !important;
-  padding-right: 20px!important;
-  margin-left: 20px !important;
-  margin-right: 20px !important;
+/* ============================================================================
+   Layout width system. Two independent axes:
+
+     SECTION WIDTH — three tiers (content / wide / full). Each is fluid up to a
+       ceiling and centred, with a gutter that scales with the viewport. The
+       order is always content < wide < full, so sections never drift wider or
+       narrower than each other by accident.
+
+     PROSE WIDTH — capped separately at --w-prose (~70ch), applied via
+       `max-w-measure`, so body copy stays readable no matter how wide its
+       section is. A section can be full-bleed while its text stays a column.
+
+   Below ~1440px no ceiling engages — the page is pure fluid gutter — so phones,
+   tablets and small laptops are effectively untouched. The tiers only diverge
+   on desktop and ultra-wide.
+   ========================================================================== */
+:root {
+  --gutter: clamp(20px, 4vw, 72px); /* 20px on phones -> 72px on ultra-wide */
+  --w-content: 1760px; /* standard content sections */
+  --w-wide: 2040px; /* feature / CTA bands, showcase grids */
+  --w-prose: 70ch; /* body-copy readability cap */
+  --w-form: 46rem; /* form field blocks */
 }
+
+@layer components {
+  /* `.container-page` is the canonical name for the content tier, kept so every
+     existing section inherits the tier with no edit. `.container-content` is an
+     explicit alias for new code. */
+  .container-page,
+  .container-content {
+    width: 100%;
+    max-width: var(--w-content);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  .container-wide {
+    width: 100%;
+    max-width: var(--w-wide);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  .container-full {
+    width: 100%;
+    padding-inline: var(--gutter);
+  }
+}
+
 html,
 body {
   width: 100%;

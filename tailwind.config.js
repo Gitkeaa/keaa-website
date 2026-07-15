@@ -86,6 +86,14 @@ export default {
         body: ['"Inter"', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
       },
+      // Layout width tokens. Values live in :root (src/index.css) so the CSS
+      // container tiers and these utilities share one source of truth.
+      maxWidth: {
+        content: 'var(--w-content)',
+        wide: 'var(--w-wide)',
+        measure: 'var(--w-prose)',
+        form: 'var(--w-form)',
+      },
       boxShadow: {
         card: '0 1px 2px rgba(10,35,66,0.04), 0 8px 24px -8px rgba(10,35,66,0.12)',
         cardHover: '0 4px 8px rgba(10,35,66,0.06), 0 16px 36px -10px rgba(10,35,66,0.18)',
