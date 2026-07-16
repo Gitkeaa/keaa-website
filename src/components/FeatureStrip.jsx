@@ -27,8 +27,8 @@ export default function FeatureStrip({ items, lead, photo = true, className = ''
     <section className={`relative isolate overflow-hidden bg-surface py-10 sm:py-12 ${className}`}>
       <BrandTexture photo={photo} />
 
-      {/* Matches CtaBand's gutter, not `.container-page`, so the two cards line up. */}
-      <div className="relative z-10 mx-auto w-full max-w-[1720px] px-4 sm:px-6 lg:px-12 xl:px-20">
+      {/* Wide tier (2040), shared with CtaBand so the two cards line up. */}
+      <div className="container-wide relative z-10">
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 20 }}
           whileInView={splashDone ? { opacity: 1, y: 0 } : undefined}

@@ -111,16 +111,18 @@ const SLIDES = [
 const EASE = [0.22, 1, 0.36, 1];
 
 /**
- * The hero is left-anchored rather than using `.container-page`, which centres a
- * max-w-7xl column and therefore pushes the copy ~355px in on a 1920px screen. Note
- * this deliberately breaks alignment with the header logo and every section below,
- * which all still centre — that is the trade the left-anchored look costs.
+ * The hero rides the FULL tier: edge-to-edge, no width cap, with the shared responsive
+ * gutter (`.container-full` → padding-inline: var(--gutter)). It stays visually
+ * left-anchored because the copy itself is capped at max-w-[34rem] and sits on the left —
+ * so this deliberately breaks alignment with the centred content sections below, which is
+ * the trade the left-anchored look has always cost.
  *
- * Moving the copy left also shortens its right edge as a percentage of the viewport,
- * which only ever *increases* the scrim coverage behind it. Safe direction; the
- * contrast solve still holds.
+ * The tokenised gutter (≤72px) insets the copy slightly LEFT of the old hand-tuned
+ * `2xl:pl-24` (96px). That is the safe direction: moving the copy left only shortens its
+ * right edge as a percentage of the viewport, which increases the scrim coverage behind
+ * it, so the contrast solve still holds.
  */
-const GUTTER = 'w-full px-5 sm:px-8 lg:pl-12 lg:pr-10 xl:pl-16 2xl:pl-24';
+const GUTTER = 'container-full';
 
 const stats = [
   { value: '20+', label: 'Years of\nExperience', Icon: Award },

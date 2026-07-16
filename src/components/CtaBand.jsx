@@ -43,10 +43,9 @@ export default function CtaBand({
   return (
     <section className="relative isolate overflow-hidden bg-surface pb-5 pt-10 sm:pt-12">
       <BrandTexture />
-      {/* Not `.container-page`: that centres a max-w-7xl column, which leaves ~355px of
-          air either side at 1920 while the footer card below sits 16px from the edge.
-          A wide, lightly-inset card reads as the same object family as the footer. */}
-      <div className="relative z-10 mx-auto w-full max-w-[1720px] px-4 sm:px-6 lg:px-12 xl:px-20">
+      {/* Wide tier (2040): the closing CTA sits wider than the centred content column, as
+          an accent band should, and shares the tier with FeatureStrip so they line up. */}
+      <div className="container-wide relative z-10">
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 24 }}
           whileInView={splashDone ? { opacity: 1, y: 0 } : undefined}

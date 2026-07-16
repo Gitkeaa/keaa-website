@@ -39,15 +39,16 @@ const EASE = [0.22, 1, 0.36, 1];
 const GRADE = { filter: 'saturate(0.4) contrast(1.2) brightness(0.99)', tint: 0.55 };
 
 /**
- * Left-anchored, like the homepage hero, rather than `.container-page` — which centres a
- * max-w-7xl column and pushes the copy ~355px in on a 1920px screen.
+ * Rides the FULL tier like the homepage hero: edge-to-edge, no width cap, with the shared
+ * responsive gutter (`.container-full` → padding-inline: var(--gutter)). It reads as
+ * left-anchored because the copy is capped at max-w-[34rem] on the left, so it
+ * deliberately breaks alignment with the centred sections below.
  *
- * This deliberately breaks alignment with the sections below, which all still centre.
- * That is the trade the left-anchored look costs, and the homepage already pays it.
- * Moving the copy left only shortens its right edge as a percentage of the viewport,
- * which increases scrim coverage behind it — a safe direction for the contrast solve.
+ * Moving the copy left (the tokenised gutter is ≤72px vs the old 96px) only shortens its
+ * right edge as a percentage of the viewport, which increases scrim coverage behind it —
+ * a safe direction for the contrast solve.
  */
-const GUTTER = 'w-full px-5 sm:px-8 lg:pl-12 lg:pr-10 xl:pl-16 2xl:pl-24';
+const GUTTER = 'container-full';
 
 export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], stats = [], image }) {
   const ref = useRef(null);
