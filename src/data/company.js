@@ -216,6 +216,12 @@ export const managingDirectors = [
   },
 ];
 
+// Website credit — single source of truth for the footer line and the AI assistant.
+export const developer = {
+  name: 'Kishlay Raj',
+  linkedin: 'https://www.linkedin.com/in/kishlay258/',
+};
+
 export const countries = [
   { name: 'India', flag: '🇮🇳' },
   { name: 'Netherlands', flag: '🇳🇱' },

@@ -19,7 +19,7 @@ import {
   Handshake,
 } from 'lucide-react';
 import Logo from './Logo';
-import { company } from '../../data/company';
+import { company, developer } from '../../data/company';
 import { footerLinks } from '../../data/navigation';
 import { getAllCategories } from '../../data/categories';
 
@@ -110,9 +110,10 @@ export default function Footer() {
   const backToTop = () =>
     window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
 
+  // Flush, square footer (no rounded "floating card" curve or inset) on every page.
   return (
-    <footer className="bg-surface px-3 pb-3 sm:px-4 sm:pb-4">
-      <div className="relative isolate overflow-hidden rounded-2xl bg-surface-deep text-white/70 sm:rounded-3xl">
+    <footer className="bg-surface">
+      <div className="relative isolate overflow-hidden bg-surface-deep text-white/70">
         {/* The supplied artwork, and the scrim that keeps text over it legible. */}
         <div
           aria-hidden
@@ -260,7 +261,15 @@ export default function Footer() {
             </p>
 
             <p className="order-3 text-center lg:order-2">
-              Designed &amp; Developed by <span className="font-semibold text-white/75">Kishlay Raj</span>
+              Designed &amp; Developed by{' '}
+              <a
+                href={developer.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-white/75 transition-colors duration-200 hover:text-primary-light"
+              >
+                {developer.name}
+              </a>
             </p>
 
             <div className="order-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 lg:order-3">
