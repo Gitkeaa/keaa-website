@@ -171,7 +171,7 @@ export const heroFilms = [
 // be embedded inline, so the play buttons open it in a new browser tab. The link
 // must be shared as "Anyone with the link — view".
 export const droneFilmUrl =
-  'https://itkeaainternational-my.sharepoint.com/:v:/g/personal/web_support_keaa-international_net/IQDm1CX67h50RL_3WVI0XCz_ARLdLPLGNnMQDX8Qkuqnezk?e=U2f3k3&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D';
+  'https://itkeaainternational-my.sharepoint.com/:v:/g/personal/web_support_keaa-international_net/IQCQ7svJva9fSY0zDyJRkUK6AdswuPrVXTGZfV_wV2Idkzg?e=GYIsMu&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D';
 
 // Product / brand films shown in Projects & Gallery, below the featured factory
 // film. Each opens the SharePoint video in a new tab. Update links here.
