@@ -22,7 +22,7 @@ export default function ProductCard({ product }) {
   return (
     <Link
       to={`/product/${product.id}`}
-      className="group flex h-full flex-col overflow-hidden rounded-xl border border-navy-100 bg-white shadow-card outline-none transition-shadow duration-300 hover:shadow-cardHover focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+      className="group flex h-full flex-col overflow-hidden rounded-xl border border-black bg-white shadow-card outline-none transition-shadow duration-300 hover:shadow-cardHover focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
     >
       <div className="relative overflow-hidden bg-navy-50">
         <ImagePlaceholder

@@ -114,7 +114,7 @@ export default function MegaMenu({ open, onClose }) {
                     key={item.to}
                     variants={cardVariant}
                     onClick={() => handleNavigate(item.to)}
-                    className="group relative flex flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white p-6 text-left shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-cardHover"
+                    className="group relative flex flex-col overflow-hidden rounded-2xl border border-black bg-white p-6 text-left shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-cardHover"
                   >
                     {/* accent bar that draws in on hover */}
                     <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-primary-light to-primary transition-transform duration-300 group-hover:scale-x-100" />

@@ -65,7 +65,7 @@ export default function CountrySelect({ value, onChange, id = 'country', label =
       </button>
 
       {open && (
-        <div className="absolute z-50 mt-1.5 w-full overflow-hidden rounded-xl border border-navy-100 bg-white shadow-cardHover">
+        <div className="absolute z-50 mt-1.5 w-full overflow-hidden rounded-xl border border-black bg-white shadow-cardHover">
           <div className="relative border-b border-navy-100 p-2">
             <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/40" />
             <input

@@ -108,7 +108,7 @@ export default function FloatingPromos() {
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             onMouseEnter={clearTimers}
             onMouseLeave={() => startHide(2000)}
-            className="pointer-events-auto relative flex h-[192px] flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white/95 p-4 shadow-2xl shadow-navy-950/10 backdrop-blur-sm"
+            className="pointer-events-auto relative flex h-[192px] flex-col overflow-hidden rounded-2xl border border-black bg-white/95 p-4 shadow-2xl shadow-navy-950/10 backdrop-blur-sm"
             role="status"
             aria-live="polite"
           >

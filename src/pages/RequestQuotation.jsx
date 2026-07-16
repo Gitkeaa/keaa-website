@@ -87,7 +87,7 @@ export default function RequestQuotation() {
 
       <section className="section-pad">
         <div className="container-page grid gap-10 lg:grid-cols-[1fr_320px]">
-          <div className="rounded-2xl border border-navy-100 p-7 shadow-card">
+          <div className="rounded-2xl border border-black p-7 shadow-card">
             <div className="flex flex-wrap gap-2 border-b border-navy-100 pb-5">
               {tabs.map((t) => (
                 <button
@@ -246,7 +246,7 @@ export default function RequestQuotation() {
                 </li>
               </ol>
             </div>
-            <div className="rounded-2xl border border-navy-100 p-6 shadow-card">
+            <div className="rounded-2xl border border-black p-6 shadow-card">
               <h4 className="font-display text-sm font-semibold text-navy-800">Prefer to Talk?</h4>
               <p className="mt-2 text-sm text-ink/60">Call or email our export team directly.</p>
               <p className="mt-3 text-sm font-medium text-navy-700">+91 98767 01926</p>

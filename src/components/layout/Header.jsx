@@ -52,7 +52,7 @@ export default function Header({ onOpenMegaMenu, onOpenDrawer }) {
                 </NavLink>
                 {productsOpen && (
                   <div className="absolute left-1/2 top-full w-72 -translate-x-1/2 pt-3">
-                    <div className="rounded-xl border border-navy-100 bg-white p-2 shadow-cardHover">
+                    <div className="rounded-xl border border-black bg-white p-2 shadow-cardHover">
                       {getAllCategories().map((cat) => (
                         <Link
                           key={cat.slug}

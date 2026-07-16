@@ -49,7 +49,7 @@ export default function EmailField({
       />
 
       {suggestions.length > 0 && (
-        <ul className="absolute z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-xl border border-navy-100 bg-white py-1 shadow-cardHover">
+        <ul className="absolute z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-xl border border-black bg-white py-1 shadow-cardHover">
           {suggestions.map((s) => (
             <li key={s}>
               <button

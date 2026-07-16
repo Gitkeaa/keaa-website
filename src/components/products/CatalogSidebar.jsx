@@ -47,7 +47,7 @@ export default function CatalogSidebar({
       </div>
 
       {/* Subcategory nav */}
-      <nav className="mt-4 overflow-hidden rounded-xl border border-navy-100 bg-white shadow-card">
+      <nav className="mt-4 overflow-hidden rounded-xl border border-black bg-white shadow-card">
         <ul className="divide-y divide-navy-50">
           <SubItem to={subLink()} active={!activeSubSlug} label="All Products" count={category.count} />
           {category.subcategories.map((s) => (
@@ -64,7 +64,7 @@ export default function CatalogSidebar({
 
       {/* Filters */}
       {facets.length > 0 && (
-        <div className="mt-4 rounded-xl border border-navy-100 bg-white p-5 shadow-card">
+        <div className="mt-4 rounded-xl border border-black bg-white p-5 shadow-card">
           <div className="flex items-center justify-between">
             <p className="flex items-center gap-2 font-display text-sm font-semibold text-navy-800">
               <SlidersHorizontal className="h-4 w-4 text-primary" />
