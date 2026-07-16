@@ -189,6 +189,34 @@ export function applyFilters(list, active) {
   );
 }
 
+/**
+ * Free-text product search over a list. Every whitespace-separated term must match (AND),
+ * so "48 coupler" narrows to real catalogue items rather than fuzzy-guessing. Each term is
+ * tested against the product's name, item code, subcategory and the derived
+ * type/finish/diameter, plus the description + spec text — so the results are always actual
+ * products from the catalogue. An empty query returns the list untouched.
+ */
+export function searchProducts(list, query) {
+  const q = String(query || '').trim().toLowerCase();
+  if (!q) return list;
+  const terms = q.split(/\s+/);
+  return list.filter((p) => {
+    const haystack = [
+      p.name,
+      p.itemCode,
+      p.subcategory,
+      p.finish,
+      p.diameter,
+      classifyType(p.name),
+      specText(p),
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
+    return terms.every((t) => haystack.includes(t));
+  });
+}
+
 /** Sort helpers used by the catalog toolbar. */
 export const SORTS = {
   'name-asc': { label: 'Product Name (A–Z)', fn: (a, b) => a.name.localeCompare(b.name) },

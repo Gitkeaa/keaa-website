@@ -15,7 +15,7 @@ import ImagePlaceholder from '../components/ui/ImagePlaceholder';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import ProductCard from '../components/products/ProductCard';
-import CatalogHelpBand from '../components/products/CatalogHelpBand';
+import CtaBand from '../components/CtaBand';
 import useSEO from '../hooks/useSEO';
 import { getProductById, getRelatedProducts, publicIdFromCloudinaryUrl } from '../data/productHelpers';
 import { cldImage } from '../data/cloudinary';
@@ -88,7 +88,7 @@ export default function ProductDetail() {
           <div className="mt-6 grid gap-8 lg:grid-cols-2 lg:gap-12">
             {/* Gallery */}
             <div>
-              <div className="overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-card">
+              <div className="overflow-hidden rounded-2xl border border-black bg-white shadow-card">
                 <ImagePlaceholder
                   src={mainSrc}
                   label={product.name}
@@ -143,7 +143,7 @@ export default function ProductDetail() {
               {/* Key facts */}
               <dl className="mt-6 grid grid-cols-2 gap-4">
                 {facts.map((f) => (
-                  <div key={f.label} className="rounded-xl border border-navy-100 bg-white p-3.5 shadow-card">
+                  <div key={f.label} className="rounded-xl border border-black bg-white p-3.5 shadow-card">
                     <dt className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-text-muted">
                       <f.icon className="h-3.5 w-3.5 text-primary" /> {f.label}
                     </dt>
@@ -164,7 +164,7 @@ export default function ProductDetail() {
           <div className="mt-12">
             <h2 className="font-display text-xl font-bold text-navy-800">Specifications</h2>
             {hasSpecs ? (
-              <div className="mt-4 overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-card">
+              <div className="mt-4 overflow-hidden rounded-2xl border border-black bg-white shadow-card">
                 <table className="w-full text-left text-sm">
                   <tbody className="divide-y divide-navy-50">
                     {product.specs.map((s, i) => (
@@ -206,7 +206,12 @@ export default function ProductDetail() {
         </div>
       </section>
 
-      <CatalogHelpBand />
+      <CtaBand
+        title="Interested in This"
+        accent="Product?"
+        desc="Request a quote or talk to our team about specifications, pricing and bulk orders."
+        cta={{ label: 'Request a Quote', to: '/rfq', icon: ArrowRight }}
+      />
     </>
   );
 }

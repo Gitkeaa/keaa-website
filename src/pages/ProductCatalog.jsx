@@ -19,11 +19,12 @@ import {
   ArrowRight,
   Download,
   PackageSearch,
+  Search,
   X,
 } from 'lucide-react';
 import CatalogSidebar from '../components/products/CatalogSidebar';
 import ProductCard from '../components/products/ProductCard';
-import CatalogHelpBand from '../components/products/CatalogHelpBand';
+import CtaBand from '../components/CtaBand';
 import ImagePlaceholder from '../components/ui/ImagePlaceholder';
 import Button from '../components/ui/Button';
 import useSEO from '../hooks/useSEO';
@@ -33,6 +34,7 @@ import {
   getProductsBySubcategory,
   getFacets,
   applyFilters,
+  searchProducts,
   productImage,
   SORTS,
 } from '../data/productHelpers';
@@ -50,6 +52,7 @@ export default function ProductCatalog() {
   const category = useMemo(() => getCategory(categorySlug), [categorySlug]);
 
   const [activeFilters, setActiveFilters] = useState({});
+  const [query, setQuery] = useState('');
   const [sort, setSort] = useState('name-asc');
   const [perPage, setPerPage] = useState(20);
   const [page, setPage] = useState(1);
@@ -67,6 +70,7 @@ export default function ProductCatalog() {
   if (routeKey !== prevKey) {
     setPrevKey(routeKey);
     setActiveFilters({});
+    setQuery('');
     setPage(1);
     setTab('gallery');
     setMobileNavOpen(false);
@@ -82,10 +86,11 @@ export default function ProductCatalog() {
   const facets = useMemo(() => getFacets(baseList), [baseList]);
 
   const visible = useMemo(() => {
-    const filtered = applyFilters(baseList, activeFilters);
+    const searched = searchProducts(baseList, query);
+    const filtered = applyFilters(searched, activeFilters);
     const sorted = [...filtered].sort(SORTS[sort].fn);
     return sorted;
-  }, [baseList, activeFilters, sort]);
+  }, [baseList, query, activeFilters, sort]);
 
   const activeFilterCount = Object.values(activeFilters).reduce((n, s) => n + (s?.size || 0), 0);
 
@@ -137,6 +142,10 @@ export default function ProductCatalog() {
   };
   const onClearFilters = () => {
     setActiveFilters({});
+    setPage(1);
+  };
+  const onSearch = (q) => {
+    setQuery(q);
     setPage(1);
   };
 
@@ -258,6 +267,9 @@ export default function ProductCatalog() {
                 <GalleryTab
                   visible={visible}
                   pageItems={pageItems}
+                  query={query}
+                  onSearch={onSearch}
+                  searchScope={activeSub ? activeSub.name : category.name}
                   view={view}
                   setView={setView}
                   sort={sort}
@@ -280,14 +292,19 @@ export default function ProductCatalog() {
         </div>
       </section>
 
-      <CatalogHelpBand />
+      <CtaBand
+        title="Need Help Choosing"
+        accent="the Right Product?"
+        desc="Our experts are here to help you find the best solution for your project."
+        cta={{ label: 'Request a Quote', to: '/rfq', icon: ArrowRight }}
+      />
     </>
   );
 }
 
 /* ---------------------------------- Gallery ---------------------------------- */
 function GalleryTab({
-  visible, pageItems, view, setView, sort, setSort, perPage, setPerPage, perPageOptions,
+  visible, pageItems, query, onSearch, searchScope, view, setView, sort, setSort, perPage, setPerPage, perPageOptions,
   start, currentPage, totalPages, goToPage, activeFilterCount, onClearFilters,
 }) {
   const from = visible.length === 0 ? 0 : start + 1;
@@ -295,11 +312,37 @@ function GalleryTab({
 
   return (
     <div className="mt-6">
+      {/* Search — scoped to the products on this page, matched against the live catalogue */}
+      <div className="relative mb-4">
+        <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" aria-hidden="true" />
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => onSearch(e.target.value)}
+          placeholder={`Search ${searchScope}…`}
+          aria-label={`Search products in ${searchScope}`}
+          className="w-full rounded-xl border border-navy-200 bg-white py-2.5 pl-10 pr-10 text-sm text-navy-800 outline-none transition-colors placeholder:text-text-muted focus:border-primary focus:ring-2 focus:ring-primary/20"
+        />
+        {query && (
+          <button
+            type="button"
+            onClick={() => onSearch('')}
+            aria-label="Clear search"
+            className="absolute right-2.5 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-navy-50 hover:text-navy-800"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+
       {/* Toolbar */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-text-muted">
           Showing <span className="font-semibold text-navy-800">{from}–{to}</span> of{' '}
           <span className="font-semibold text-navy-800">{visible.length}</span> products
+          {query && (
+            <> for &ldquo;<span className="font-semibold text-navy-800">{query}</span>&rdquo;</>
+          )}
         </p>
         <div className="flex items-center gap-3">
           <label className="flex items-center gap-2 text-xs text-text-muted">
@@ -325,11 +368,25 @@ function GalleryTab({
       {visible.length === 0 ? (
         <div className="mt-10 flex flex-col items-center rounded-2xl border border-dashed border-navy-200 bg-navy-50/40 py-14 text-center">
           <PackageSearch className="h-8 w-8 text-ink/35" />
-          <p className="mt-3 font-display text-base font-semibold text-navy-800">No products match these filters</p>
-          {activeFilterCount > 0 && (
-            <button onClick={onClearFilters} className="mt-4 rounded-lg bg-navy-800 px-4 py-2 text-sm font-semibold text-white hover:bg-navy-900">
-              Clear filters
-            </button>
+          <p className="mt-3 font-display text-base font-semibold text-navy-800">
+            {query ? <>No products match &ldquo;{query}&rdquo;</> : 'No products match these filters'}
+          </p>
+          <p className="mt-1 text-sm text-text-muted">
+            {query ? 'Try a different term, or clear the search.' : 'Try removing a filter to see more products.'}
+          </p>
+          {(query || activeFilterCount > 0) && (
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+              {query && (
+                <button onClick={() => onSearch('')} className="rounded-lg bg-navy-800 px-4 py-2 text-sm font-semibold text-white hover:bg-navy-900">
+                  Clear search
+                </button>
+              )}
+              {activeFilterCount > 0 && (
+                <button onClick={onClearFilters} className="rounded-lg border border-navy-200 bg-white px-4 py-2 text-sm font-semibold text-navy-800 hover:bg-navy-50">
+                  Clear filters
+                </button>
+              )}
+            </div>
           )}
         </div>
       ) : view === 'grid' ? (
@@ -382,7 +439,7 @@ function ProductRow({ product }) {
   return (
     <Link
       to={`/product/${product.id}`}
-      className="group flex items-center gap-4 rounded-xl border border-navy-100 bg-white p-3 shadow-card transition-shadow hover:shadow-cardHover"
+      className="group flex items-center gap-4 rounded-xl border border-black bg-white p-3 shadow-card transition-shadow hover:shadow-cardHover"
     >
       <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg">
         <ImagePlaceholder src={src} label={product.name} alt={product.name} tone="light" ratio="aspect-square" className="!rounded-none" zoom={false} caption={src ? undefined : 'Soon'} />
@@ -472,7 +529,7 @@ function PageBtn({ disabled, onClick, label, children }) {
 function OverviewTab({ category }) {
   return (
     <div className="mt-6">
-      <div className="rounded-2xl border border-navy-100 bg-white p-6 shadow-card">
+      <div className="rounded-2xl border border-black bg-white p-6 shadow-card">
         <p className="text-sm leading-relaxed text-ink/70">{category.short}</p>
         {category.standard && (
           <p className="mt-3 inline-block rounded-full border border-navy-100 bg-navy-50 px-4 py-1.5 font-mono text-xs text-navy-700">
@@ -486,7 +543,7 @@ function OverviewTab({ category }) {
           <Link
             key={s.slug}
             to={`/products/${category.slug}/${s.slug}`}
-            className="group flex items-center justify-between rounded-xl border border-navy-100 bg-white px-4 py-3.5 shadow-card transition-shadow hover:shadow-cardHover"
+            className="group flex items-center justify-between rounded-xl border border-black bg-white px-4 py-3.5 shadow-card transition-shadow hover:shadow-cardHover"
           >
             <span className="text-sm font-medium text-navy-800 group-hover:text-primary-dark">{s.name}</span>
             <span className="flex items-center gap-1 text-xs text-text-muted">
@@ -504,7 +561,7 @@ function OverviewTab({ category }) {
 function DownloadsTab() {
   return (
     <div className="mt-6">
-      <div className="flex flex-col items-start gap-4 rounded-2xl border border-navy-100 bg-white p-6 shadow-card sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col items-start gap-4 rounded-2xl border border-black bg-white p-6 shadow-card sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-3">
           <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary-dark">
             <Download className="h-5 w-5" />
