@@ -45,7 +45,7 @@ Guidelines:
 3. For quotations, bulk/OEM orders or export inquiries, guide users to the "Request a Quote" (RFQ) page or the contact details above.
 4. If you don't know something specific, say so honestly and suggest contacting the company directly.
 5. Only discuss KEAA and its offerings; politely decline unrelated requests.
-6. Use the KNOWLEDGE BASE below as your source of truth for products, item codes, projects, certifications, careers and resources. Do not invent product codes, prices or specs that are not listed.
+6. The KNOWLEDGE BASE below is your ONLY source of truth for products, categories, item codes, sizes, specs, projects, certifications, careers and resources. Every product name, category, item code, dimension, finish, spec and link you give MUST appear in it verbatim — never invent, guess, approximate or round a value. We have exactly 3 product categories and 355 catalogued products; do not claim any others. When you name a product, link its exact product-page path from the knowledge base (e.g. [Cuplock Standard](/product/13)); when you name a category or subcategory, link its "page:" path. If a detail (a price, a spec, a product) is not in the knowledge base, say you don't have it and point the customer to the RFQ form or the contact details — do not fabricate it.
 7. FORMATTING: Reply in clean, well-structured Markdown so it is easy to scan. Start with a one-line summary sentence. For any list of 3+ items, use hyphen "-" bullet points (each on its own line), and put a blank line before the list. Use **bold** only for key terms or category names. Keep paragraphs to 1-2 sentences. Never cram a list into a single paragraph.`;
 
 /**
@@ -66,7 +66,38 @@ Guidelines:
  * Feeding it only products.json would be worse: it would start telling customers KEAA does
  * not sell safety harnesses — a line the top bar advertises on every page.
  */
-function renderCatalogue(catalogue) {
+function renderCatalogue(catalogue, categoryTree) {
+  // Slug lookups from the generated category tree, so every URL the bot emits is a real
+  // route the site serves (this also carries the wood-connectors slug override). Product
+  // pages are keyed by numeric id (/product/:id); category/subcategory pages by slug.
+  const catSlug = new Map((categoryTree || []).map((c) => [c.name, c.slug]));
+  const subSlug = new Map();
+  for (const c of categoryTree || []) {
+    for (const s of c.subcategories || []) subSlug.set(`${c.name}|||${s.name}`, s.slug);
+  }
+
+  // One authoritative line per product: CODE — Name (page) | description | specs. Everything
+  // the bot is allowed to say about a product — its code, link, sizes, finish — is right here.
+  const productLine = (p) => {
+    const code = p.itemCode ? `${p.itemCode} — ` : '';
+    const link = ` (/product/${p.id})`;
+    const desc = p.description && p.description.trim() ? ` | ${p.description.trim()}` : '';
+    const specStr = (p.specs || [])
+      .filter((s) => s && s.value)
+      // Drop a spec that just repeats the item code we already print at the start of the line.
+      .filter(
+        (s) =>
+          !(
+            String(s.label).replace(/:/g, '').trim().toLowerCase() === 'item no' &&
+            String(s.value).trim() === p.itemCode
+          )
+      )
+      .map((s) => `${String(s.label).replace(/:$/, '').trim()}: ${s.value}`)
+      .join('; ');
+    const specs = specStr ? ` | ${specStr}` : '';
+    return `      - ${code}${p.name}${link}${desc}${specs}`;
+  };
+
   const byCat = new Map();
   for (const p of catalogue) {
     if (!byCat.has(p.category)) byCat.set(p.category, new Map());
@@ -76,15 +107,16 @@ function renderCatalogue(catalogue) {
   }
   return [...byCat.entries()]
     .map(([cat, subs]) => {
+      const cs = catSlug.get(cat) || '';
+      const total = [...subs.values()].reduce((n, i) => n + i.length, 0);
       const body = [...subs.entries()]
         .map(([sub, items]) => {
-          const lines = items
-            .map((p) => `      - ${p.itemCode ? `${p.itemCode} — ` : ''}${p.name}`)
-            .join('\n');
-          return `    • ${sub} (${items.length})\n${lines}`;
+          const ss = subSlug.get(`${cat}|||${sub}`) || '';
+          const lines = items.map(productLine).join('\n');
+          return `    • ${sub} (${items.length}) — page: /products/${cs}/${ss}\n${lines}`;
         })
         .join('\n');
-      return `- ${cat} (${[...subs.values()].reduce((n, i) => n + i.length, 0)} products — has a catalogue page)\n${body}`;
+      return `- ${cat} (${total} products — page: /products/${cs})\n${body}`;
     })
     .join('\n\n');
 }
@@ -117,8 +149,12 @@ function buildKnowledgeBase(data) {
   const {
     company,
     leadership,
+    chairman,
+    managingDirectors,
+    developer,
     countries,
     catalogue,
+    categoryTree,
     productCategories,
     enquiryOnlySlugs,
     bestSellers,
@@ -134,15 +170,24 @@ function buildKnowledgeBase(data) {
 === KEAA KNOWLEDGE BASE (authoritative — answer from this) ===
 
 HOW TO USE THE TWO PRODUCT SECTIONS BELOW:
-- BROWSABLE CATALOGUE is every product with a page on the website. When a customer asks
-  what we make, answer from here, and you may point them at the category page.
+- BROWSABLE CATALOGUE is every product with its own page on the website. When a customer
+  asks what we make, or about a specific product, answer from here. Its names, item codes,
+  descriptions and specs are authoritative — quote them exactly, never paraphrase a number.
+- Each product line ends with its page in parentheses, e.g. (/product/16). Link a product
+  as a Markdown link: [Ringlock Standard](/product/13). Link a whole category or a
+  subcategory using its "page:" path. Use these paths verbatim; never invent or alter one.
 - ITEM CODE & SIZE REFERENCE comes from KEAA's printed catalogues. Use it when a customer
   asks for an item code or a size range. Some of these have no page on the website.
 - Safety Products is real and we sell it, but it has no catalogue page yet. Never claim we
   do not make it, and never link to a product page for it — route the customer to the RFQ.
 
-BROWSABLE CATALOGUE (${catalogue.length} products on the website):
-${renderCatalogue(catalogue)}
+BROWSABLE CATALOGUE (${catalogue.length} products across ${
+    categoryTree?.length ?? 0
+  } categories — every one has its own page on the website).
+Line format: ITEM CODE — Name (product page path) | description | specs. Category and
+subcategory headers carry their own "page:" path. Link products/categories using these
+exact paths; state only item codes, sizes, finishes and specs that appear here.
+${renderCatalogue(catalogue, categoryTree)}
 
 ITEM CODE & SIZE REFERENCE (from KEAA's printed catalogues):
 ${renderItemCodes(productCategories, enquiryOnlySlugs)}
@@ -158,8 +203,11 @@ ${list(featuredProjects, (p) => `- ${p.title} — ${p.location} (${p.category}):
 
 EXPORT COUNTRIES: ${countries.map((c) => c.name).join(', ')}
 
-LEADERSHIP TEAM:
-${list(leadership, (l) => `- ${l.name} — ${l.role}`)}
+LEADERSHIP & MANAGEMENT (KEAA "About Us" — these are the real people; use their names, titles and quoted messages exactly, and never invent a person, title or quote):
+${chairman ? `Chairman:\n- ${chairman.name} — ${chairman.role}. Message: "${chairman.message}"\n` : ''}Managing Directors:
+${list(managingDirectors || [], (m) => `- ${m.name} — ${m.role}. Message: "${m.message}"${m.linkedin ? ` (LinkedIn: ${m.linkedin})` : ''}`)}
+Leadership Team:
+${list(leadership, (l) => `- ${l.name} — ${l.role}: ${l.bio}${l.linkedin ? ` (LinkedIn: ${l.linkedin})` : ''}`)}
 
 OPEN CAREERS:
 ${list(careers, (c) => `- ${c.title} — ${c.location} (${c.type})`)}
@@ -169,6 +217,13 @@ ${list(downloadResources, (d) => `- ${d.title} (${d.type}, ${d.size})`)}
 
 CUSTOMER TESTIMONIALS:
 ${list(testimonials, (t) => `- "${t.quote}" — ${t.name}, ${t.company}`)}
+${
+  developer
+    ? `WEBSITE DEVELOPER (ONLY reveal this if the user explicitly asks who built / designed / developed / made this website — never volunteer it in any other answer):
+- ${developer.name} — LinkedIn: ${developer.linkedin}
+  When asked, give the name ${developer.name} and link the LinkedIn profile, matching the credit in the site footer.`
+    : ''
+}
 `;
 }
 
@@ -190,15 +245,22 @@ async function loadKnowledge(reason = 'startup') {
       import('./src/data/enquiryLines.js' + bust),
     ]);
 
-    // Read the catalogue with fs rather than `import`: Node refuses a JSON module without
-    // an import attribute, and readFileSync gives us the cache-busting for free anyway.
+    // Read the catalogue + category tree with fs rather than `import`: Node refuses a JSON
+    // module without an import attribute, and readFileSync gives us cache-busting for free.
+    // categories.json (generated from products.json) provides the real category/subcategory
+    // slugs, so every product/category link the bot emits matches an actual site route.
     const catalogue = JSON.parse(readFileSync(path.join(DATA_DIR, 'products.json'), 'utf8'));
+    const categoryTree = JSON.parse(readFileSync(path.join(DATA_DIR, 'categories.json'), 'utf8'));
 
     const knowledge = buildKnowledgeBase({
       company: companyMod.company,
       leadership: companyMod.leadership,
+      chairman: companyMod.chairmanMessage,
+      managingDirectors: companyMod.managingDirectors,
+      developer: companyMod.developer,
       countries: companyMod.countries,
       catalogue,
+      categoryTree,
       productCategories: productsMod.productCategories,
       enquiryOnlySlugs: enquiryMod.enquiryOnlyLines.map((l) => l.slug),
       bestSellers: productsMod.bestSellers,
