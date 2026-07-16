@@ -4,7 +4,6 @@ import Layout from './components/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
 import PageLoader from './components/PageLoader';
 import AiChat from './components/AiChat';
-import FloatingPromos from './components/FloatingPromos';
 import { SplashProvider } from './hooks/useSplash';
 
 const Home = lazy(() => import('./pages/Home'));
@@ -98,7 +97,10 @@ export default function App() {
         </Suspense>
         {showLoader && <PageLoader onComplete={() => setShowLoader(false)} />}
         <AiChat />
-        <FloatingPromos />
+        {/* Certification "Globally Certified" pop-up (FloatingPromos) is temporarily
+            disabled site-wide, to be reintroduced later with a refreshed design.
+            The component still lives in components/FloatingPromos.jsx — re-add
+            <FloatingPromos /> here to bring it back. */}
         </SplashProvider>
       </ErrorBoundary>
     </BrowserRouter>
