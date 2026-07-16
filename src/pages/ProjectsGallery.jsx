@@ -108,7 +108,7 @@ export default function ProjectsGallery() {
       </section>
 
       {/* GALLERY */}
-      <section className="section-pad bg-navy-50">
+      <section className="section-pad">
         <div className="container-page">
           <Reveal>
             <SectionHeading align="left" eyebrow="Gallery" title="Factory, Product & Project Gallery" className="!mx-0" />

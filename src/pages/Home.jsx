@@ -140,12 +140,12 @@ export default function Home() {
       <HomeHeroBrandTest />
 
       {/* CERTIFICATION MARQUEE */}
-      <div className="overflow-hidden border-y border-navy-100 bg-navy-50/40 py-6">
+      <div className="overflow-hidden border-y border-navy-100 py-6">
         <div className="flex w-max animate-marquee gap-6">
           {[...certificationCards, ...certificationCards].map((c, i) => (
             <div
               key={i}
-              className="flex items-center gap-4 rounded-xl border border-navy-100 bg-white px-5 py-3 shadow-[0_2px_8px_rgba(10,35,66,0.03)] transition-all hover:border-primary/40 hover:shadow-[0_4px_12px_rgba(10,35,66,0.06)]"
+              className="flex items-center gap-4 rounded-xl border border-black bg-white px-5 py-3 shadow-[0_2px_8px_rgba(10,35,66,0.03)] transition-all hover:border-primary/40 hover:shadow-[0_4px_12px_rgba(10,35,66,0.06)]"
             >
               <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-navy-50/50">
                 {c.logo}
@@ -163,7 +163,7 @@ export default function Home() {
       <CoreSolutions />
 
       {/* WHY CHOOSE KEAA */}
-      <section className="section-pad bg-navy-50">
+      <section className="section-pad">
         <div className="container-page">
           <Reveal>
             <SectionHeading
@@ -193,7 +193,7 @@ export default function Home() {
       <section className="section-pad overflow-hidden">
         <div className="container-page grid items-center gap-10 lg:grid-cols-[340px_1fr]">
           <Reveal x={-20} y={0}>
-            <div className="group rounded-2xl border border-navy-100 bg-white p-2 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-cardHover">
+            <div className="group rounded-2xl border border-black bg-white p-2 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-cardHover">
               <div className="overflow-hidden rounded-xl">
                 <img
                   src={chairmanMessage.photo}
@@ -225,7 +225,7 @@ export default function Home() {
       </section>
 
       {/* MANUFACTURING EXCELLENCE */}
-      <section className="section-pad bg-navy-50 overflow-hidden">
+      <section className="section-pad overflow-hidden">
         <div className="container-page grid items-center gap-10 lg:grid-cols-2">
           <Reveal className="lg:order-2">
             <ImagePlaceholder
@@ -299,7 +299,7 @@ export default function Home() {
       </section>
 
       {/* FEATURED PROJECTS */}
-      <section className="section-pad bg-navy-50">
+      <section className="section-pad">
         <div className="container-page">
           <Reveal>
             <SectionHeading eyebrow="Featured Projects" title="Trusted by Clients Worldwide" />
@@ -330,7 +330,7 @@ export default function Home() {
       <section className="section-pad">
         <div className="container-page grid gap-8 lg:grid-cols-2">
           {/* Global presence */}
-          <Reveal className="group flex flex-col rounded-2xl border border-navy-100 bg-white p-8 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover">
+          <Reveal className="group flex flex-col rounded-2xl border border-black bg-white p-8 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover">
             <span className="eyebrow text-primary-darker">
               Global Presence
             </span>
@@ -357,7 +357,7 @@ export default function Home() {
           </Reveal>
 
           {/* Certifications */}
-          <Reveal delay={0.1} className="flex flex-col rounded-2xl border border-navy-100 bg-white p-8 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover">
+          <Reveal delay={0.1} className="flex flex-col rounded-2xl border border-black bg-white p-8 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover">
             <span className="eyebrow text-primary-darker">
               Certifications
             </span>
@@ -374,7 +374,7 @@ export default function Home() {
                   href={c.image}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-2.5 rounded-xl border border-navy-100 bg-white px-4 py-3 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-card"
+                  className="group flex items-center gap-2.5 rounded-xl border border-black bg-white px-4 py-3 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-card"
                 >
                   <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-navy-50 text-primary-dark transition-colors group-hover:bg-primary/[0.08]">
                     <ShieldCheck className="h-5 w-5" />

@@ -62,12 +62,12 @@ export default function Careers() {
         </div>
       </section>
 
-      <section className="section-pad bg-navy-50">
+      <section className="section-pad">
         <div className="container-page">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <SectionHeading align="left" eyebrow="Open Positions" title="Current Openings" className="!mx-0" />
           </div>
-          <div className="mt-8 divide-y divide-navy-100 rounded-2xl border border-navy-100 bg-white">
+          <div className="mt-8 divide-y divide-navy-100 rounded-2xl border border-black bg-white">
             {careers.map((job) => {
               const isOpen = job.status === 'open';
               const expanded = openDetail === job.title;

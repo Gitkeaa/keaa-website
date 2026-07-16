@@ -118,7 +118,7 @@ export default function About() {
             <StaggerGroup className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {manufacturingStrength.map((m) => (
                 <StaggerItem key={m}>
-                  <div className="flex h-full items-center gap-3 rounded-xl border border-navy-100 bg-white p-5 shadow-card transition-all hover:-translate-y-1 hover:border-primary/50 hover:shadow-cardHover">
+                  <div className="flex h-full items-center gap-3 rounded-xl border border-black bg-white p-5 shadow-card transition-all hover:-translate-y-1 hover:border-primary/50 hover:shadow-cardHover">
                     <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-primary/[0.08] text-primary-darker">
                       <CheckCircle2 className="h-5 w-5" />
                     </span>
@@ -132,7 +132,7 @@ export default function About() {
       </section>
 
       {/* JOURNEY TIMELINE */}
-      <section className="section-pad bg-navy-50">
+      <section className="section-pad">
         <div className="container-page">
           <Reveal>
             <SectionHeading eyebrow="Our Journey" title="Growing Stronger, Together" />
@@ -163,21 +163,21 @@ export default function About() {
         <div className="container-page">
           <StaggerGroup className="grid gap-6 lg:grid-cols-3">
             <StaggerItem>
-              <div className="h-full rounded-2xl border border-navy-100 p-7 shadow-card transition-shadow hover:shadow-cardHover">
+              <div className="h-full rounded-2xl border border-black p-7 shadow-card transition-shadow hover:shadow-cardHover">
                 <Eye className="h-7 w-7 text-primary-dark" />
                 <h3 className="mt-4 font-display text-lg font-semibold text-navy-800">Our Vision</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink/65">{company.values.vision}</p>
               </div>
             </StaggerItem>
             <StaggerItem>
-              <div className="h-full rounded-2xl border border-navy-100 p-7 shadow-card transition-shadow hover:shadow-cardHover">
+              <div className="h-full rounded-2xl border border-black p-7 shadow-card transition-shadow hover:shadow-cardHover">
                 <Target className="h-7 w-7 text-primary-dark" />
                 <h3 className="mt-4 font-display text-lg font-semibold text-navy-800">Our Mission</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink/65">{company.values.mission}</p>
               </div>
             </StaggerItem>
             <StaggerItem>
-              <div className="h-full rounded-2xl border border-navy-100 p-7 shadow-card transition-shadow hover:shadow-cardHover">
+              <div className="h-full rounded-2xl border border-black p-7 shadow-card transition-shadow hover:shadow-cardHover">
                 <Gem className="h-7 w-7 text-primary-dark" />
                 <h3 className="mt-4 font-display text-lg font-semibold text-navy-800">Our Core Values</h3>
                 <ul className="mt-2 space-y-1.5 text-sm text-ink/65">
@@ -194,7 +194,7 @@ export default function About() {
       </section>
 
       {/* MESSAGE FROM MANAGING DIRECTORS */}
-      <section className="section-pad bg-navy-50 overflow-hidden">
+      <section className="section-pad overflow-hidden">
         <div className="container-page">
           <Reveal>
             <SectionHeading eyebrow="Leadership" title="Message from Managing Directors" />
@@ -210,7 +210,7 @@ export default function About() {
                     }`}
                   >
                     <div className={flip ? 'lg:order-2' : ''}>
-                      <div className="group rounded-2xl border border-navy-100 bg-white p-2 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-cardHover">
+                      <div className="group rounded-2xl border border-black bg-white p-2 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-cardHover">
                         <div className="overflow-hidden rounded-xl">
                           <img
                             src={m.photo}
@@ -261,7 +261,7 @@ export default function About() {
           <StaggerGroup className="mx-auto mt-14 flex max-w-5xl flex-wrap justify-center gap-7">
             {leadership.filter(l => l.role !== 'Chief Managing Director' && l.role !== 'Managing Director').map((l) => (
               <StaggerItem key={l.name} className="w-full sm:w-[calc(50%-14px)] lg:w-[calc(33.333%-19px)] max-w-sm">
-                <div className="group relative flex h-full flex-col items-center overflow-hidden rounded-2xl border border-navy-100 bg-white px-7 pb-7 pt-9 text-center shadow-card transition-all duration-300 hover:-translate-y-2 hover:border-primary/50 hover:shadow-cardHover">
+                <div className="group relative flex h-full flex-col items-center overflow-hidden rounded-2xl border border-black bg-white px-7 pb-7 pt-9 text-center shadow-card transition-all duration-300 hover:-translate-y-2 hover:border-primary/50 hover:shadow-cardHover">
                   {/* Accent bar that draws in on hover */}
                   <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-primary-light via-primary to-primary-darker transition-transform duration-300 group-hover:scale-x-100" />
                   {/* Soft gold glow behind the avatar */}

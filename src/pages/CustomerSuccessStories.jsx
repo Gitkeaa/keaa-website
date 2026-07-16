@@ -36,7 +36,7 @@ export default function CustomerSuccessStories() {
           <SectionHeading eyebrow="What Our Customers Say" title="Testimonials" />
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {testimonials.map((t) => (
-              <div key={t.name} className="rounded-xl border border-navy-100 p-6 shadow-card">
+              <div key={t.name} className="rounded-xl border border-black p-6 shadow-card">
                 <Quote className="h-5 w-5 text-primary-dark" />
                 <p className="mt-3 text-sm leading-relaxed text-ink/70">&ldquo;{t.quote}&rdquo;</p>
                 <div className="mt-4 flex gap-0.5">
@@ -57,7 +57,7 @@ export default function CustomerSuccessStories() {
         </div>
       </section>
 
-      <section className="section-pad bg-navy-50">
+      <section className="section-pad">
         <div className="container-page">
           <SectionHeading eyebrow="Case Study Highlights" title="Success Stories from the Field" />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

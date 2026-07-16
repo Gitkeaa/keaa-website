@@ -33,11 +33,12 @@
   /* Gold. Badges on dark surfaces only. */
   --color-accent: 231 179 33; /* #E7B321 */
 
-  /* Surfaces */
-  --color-surface: 245 249 253; /* #F5F9FD  page ground */
+  /* Surfaces — the page ground and near-white stages are flat white site-wide, so no
+     section reads as sky blue. Only `surface-deep*` (the footer) stays dark. */
+  --color-surface: 255 255 255; /* #FFFFFF  page ground (was #F5F9FD sky blue) */
   --color-surface-raised: 255 255 255; /* #FFFFFF  cards */
-  --color-surface-bright: 251 252 254; /* #FBFCFE  hero stage + scrim */
-  --color-surface-tint: 242 247 253; /* #F2F7FD  hero base band */
+  --color-surface-bright: 255 255 255; /* #FFFFFF  hero stage + scrim (was #FBFCFE) */
+  --color-surface-tint: 255 255 255; /* #FFFFFF  hero base band (was #F2F7FD) */
   --color-surface-deep: 7 20 38; /* #071426  footer ground */
   --color-surface-deep-raised: 14 39 66; /* #0E2742  raised on the footer ground */
 

@@ -137,7 +137,7 @@ export default function Manufacturing() {
           <StaggerGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {company.machinery.map((m, i) => (
               <StaggerItem key={m.name}>
-                <div className="overflow-hidden rounded-xl border border-navy-100 shadow-card transition-shadow hover:shadow-cardHover">
+                <div className="overflow-hidden rounded-xl border border-black shadow-card transition-shadow hover:shadow-cardHover">
                   <ImagePlaceholder src={machineryImages[i]} label={m.name} icon={Cog} ratio="aspect-[4/3]" />
                   <div className="p-5">
                     <h4 className="font-display text-sm font-semibold text-navy-800">{m.name}</h4>
@@ -151,7 +151,7 @@ export default function Manufacturing() {
       </section>
 
       {/* QUALITY ASSURANCE */}
-      <section className="section-pad bg-navy-50 overflow-hidden">
+      <section className="section-pad overflow-hidden">
         <div className="container-page grid items-center gap-10 lg:grid-cols-2">
           <Reveal>
             <span className="eyebrow text-primary-darker">
@@ -192,7 +192,7 @@ export default function Manufacturing() {
               { icon: ShieldCheck, value: '8', label: 'Certifications Held' },
             ].map((s) => (
               <StaggerItem key={s.label}>
-                <div className="rounded-xl border border-navy-100 p-6 text-center shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover">
+                <div className="rounded-xl border border-black p-6 text-center shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover">
                   <s.icon className="mx-auto h-7 w-7 text-primary-dark" />
                   <p className="mt-3 font-display text-xl font-bold text-navy-800">{s.value}</p>
                   <p className="text-xs text-ink/60">{s.label}</p>

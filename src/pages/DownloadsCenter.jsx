@@ -25,10 +25,10 @@ export default function DownloadsCenter() {
       image={img.factoryInterior}
       />
 
-      <section className="section-pad bg-navy-50">
+      <section className="section-pad">
         <div className="container-page">
           <SectionHeading eyebrow="All Downloads" title="Download Files" />
-          <div className="mt-10 divide-y divide-navy-100 rounded-2xl border border-navy-100 bg-white">
+          <div className="mt-10 divide-y divide-navy-100 rounded-2xl border border-black bg-white">
             {downloadResources.map((d) => (
               <div key={d.title} className="flex flex-wrap items-center justify-between gap-3 px-6 py-4">
                 <div className="flex items-center gap-3">

@@ -78,7 +78,7 @@ export default function Products() {
                 >
                   <Link
                     to={`/products/${cat.slug}`}
-                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-card transition-shadow hover:shadow-cardHover"
+                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-black bg-white shadow-card transition-shadow hover:shadow-cardHover"
                   >
                     <div className="relative h-44 overflow-hidden">
                       {cat.heroImage && (
@@ -129,7 +129,7 @@ export default function Products() {
 
       {/* FEATURED PRODUCTS */}
       {featured.length > 0 && (
-        <section className="section-pad bg-navy-50">
+        <section className="section-pad">
           <div className="container-page">
             <Reveal>
               <SectionHeading eyebrow="Featured Products" title="From Our Catalogue" />

@@ -36,7 +36,7 @@ export default function Certifications() {
             {company.certifications.map((c) => (
               <div
                 key={c.name}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
+                className="group flex flex-col overflow-hidden rounded-2xl border border-black bg-white shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
               >
                 <div className="overflow-hidden border-b border-navy-100 bg-navy-50/40 p-4">
                   <img
@@ -70,7 +70,7 @@ export default function Certifications() {
         </div>
       </section>
 
-      <section className="section-pad bg-navy-50">
+      <section className="section-pad">
         <div className="container-page grid gap-10 lg:grid-cols-2">
           <div>
             <span className="eyebrow text-primary-darker">

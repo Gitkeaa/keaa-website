@@ -89,7 +89,7 @@ export default function Contact() {
             <span className="eyebrow text-primary-darker">
               Get in Touch
             </span>
-            <div className="rounded-2xl border border-navy-100 p-6 shadow-card">
+            <div className="rounded-2xl border border-black p-6 shadow-card">
               <div className="flex gap-3">
                 <MapPin className="h-5 w-5 flex-shrink-0 text-primary-dark" />
                 <div>
@@ -160,7 +160,7 @@ export default function Contact() {
           </Reveal>
 
           {/* FORM */}
-          <Reveal delay={0.1} className="relative rounded-2xl border border-navy-100 p-7 shadow-card">
+          <Reveal delay={0.1} className="relative rounded-2xl border border-black p-7 shadow-card">
             <div className="flex items-center gap-3.5">
               <motion.button
                 type="button"
@@ -251,7 +251,7 @@ export default function Contact() {
       </section>
 
       {/* REQUEST A QUOTE STRIP */}
-      <section className="bg-navy-50 overflow-hidden">
+      <section className="overflow-hidden">
         <div className="container-page grid items-center gap-8 py-12 lg:grid-cols-[1fr_300px]">
           <Reveal>
             <span className="eyebrow text-primary-darker">
@@ -281,7 +281,7 @@ export default function Contact() {
               {company.manufacturing.line1}, {company.manufacturing.line2}
             </h3>
           </Reveal>
-          <Reveal delay={0.1} className="mt-5 overflow-hidden rounded-xl border border-navy-100 shadow-card">
+          <Reveal delay={0.1} className="mt-5 overflow-hidden rounded-xl border border-black shadow-card">
             <iframe
               title="KEAA International location map"
               src={mapEmbedSrc}
@@ -294,7 +294,7 @@ export default function Contact() {
         </div>
       </section>
       {/* BOOK YOUR RIDE */}
-      <section className="section-pad bg-navy-50">
+      <section className="section-pad">
         <div className="container-page">
           <Reveal>
             <span className="eyebrow text-primary-darker">
@@ -312,7 +312,7 @@ export default function Contact() {
               href={rideLinks.uber}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 rounded-xl border border-navy-100 bg-white px-6 py-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
+              className="flex items-center gap-3 rounded-xl border border-black bg-white px-6 py-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
             >
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white font-bold text-lg">U</span>
               <div>
@@ -325,7 +325,7 @@ export default function Contact() {
               href={rideLinks.ola}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 rounded-xl border border-navy-100 bg-white px-6 py-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
+              className="flex items-center gap-3 rounded-xl border border-black bg-white px-6 py-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
             >
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#3CB371] text-white font-bold text-lg">O</span>
               <div>
@@ -338,7 +338,7 @@ export default function Contact() {
               href={rideLinks.rapido}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 rounded-xl border border-navy-100 bg-white px-6 py-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
+              className="flex items-center gap-3 rounded-xl border border-black bg-white px-6 py-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
             >
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FFCC00] text-black font-bold text-lg">R</span>
               <div>
@@ -366,7 +366,7 @@ export default function Contact() {
                 href={s.href}
                 target={s.href !== '#' ? '_blank' : undefined}
                 rel={s.href !== '#' ? 'noopener noreferrer' : undefined}
-                className="group flex flex-col items-center rounded-xl border border-navy-100 p-6 text-center shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
+                className="group flex flex-col items-center rounded-xl border border-black p-6 text-center shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
               >
                 <span className="flex h-12 w-12 items-center justify-center rounded-full bg-navy-50 text-navy-700 transition-colors group-hover:bg-navy-700 group-hover:text-white">
                   <s.icon className="h-5 w-5" />
