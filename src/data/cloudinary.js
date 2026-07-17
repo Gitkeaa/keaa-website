@@ -12,7 +12,7 @@
  * `cldSrcSet(publicId)`. Nothing is added to the repo.
  */
 
-const CLOUD_NAME = 'tt2nmm62';
+const CLOUD_NAME = 'keaa-assets';
 const BASE = `https://res.cloudinary.com/${CLOUD_NAME}`;
 
 // public_ids may contain folder slashes ("products/ringlock-tower"); keep the slashes,
