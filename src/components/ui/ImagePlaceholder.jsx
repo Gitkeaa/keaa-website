@@ -6,6 +6,11 @@ import { Building2 } from 'lucide-react';
  * shimmer while loading, and a soft gradient overlay for legibility. Falls
  * back to a styled placeholder block when no `src` is supplied -- kept so any
  * slot can be wired to a photo later without touching layout code.
+ *
+ * It also falls back to that placeholder when the image FAILS to load (onError) --
+ * e.g. if the CDN is unreachable or an asset has been removed -- so a broken URL shows
+ * the branded "coming soon" block instead of a permanent grey shimmer or a broken-image
+ * icon. When the CDN recovers, the images load normally again with no code change.
  */
 export default function ImagePlaceholder({
   label,
@@ -22,6 +27,7 @@ export default function ImagePlaceholder({
   caption,
 }) {
   const [loaded, setLoaded] = useState(false);
+  const [errored, setErrored] = useState(false);
   const tones = {
     navy: 'from-navy-800 via-navy-700 to-navy-600',
     light: 'from-navy-100 via-navy-50 to-white',
@@ -29,7 +35,7 @@ export default function ImagePlaceholder({
 
   const textTone = tone === 'light' ? 'text-navy-400' : 'text-white/70';
 
-  if (src) {
+  if (src && !errored) {
     return (
       <div className={`group relative overflow-hidden rounded-xl ${ratio} ${className}`}>
         {!loaded && <div className="absolute inset-0 animate-pulse bg-navy-100" />}
@@ -40,6 +46,7 @@ export default function ImagePlaceholder({
           alt={alt || label || ''}
           loading="lazy"
           onLoad={() => setLoaded(true)}
+          onError={() => setErrored(true)}
           className={`h-full w-full object-cover transition-opacity duration-500 ${
             loaded ? 'opacity-100' : 'opacity-0'
           } ${zoom ? 'group-hover:scale-110' : ''}`}
