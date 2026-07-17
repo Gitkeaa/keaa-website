@@ -4,7 +4,7 @@ import { Lock, Mail, Loader2, ShieldCheck } from 'lucide-react';
 import { useAdminAuth } from '../auth/AdminAuthContext';
 
 export default function AdminLogin() {
-  const { login, loading, isAuthed } = useAdminAuth();
+  const { login, loading, isAuthed, checking } = useAdminAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from || '/admin';
@@ -12,6 +12,15 @@ export default function AdminLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  // Don't flash the form while we're still checking for an existing session.
+  if (checking) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-navy-900">
+        <Loader2 className="h-6 w-6 animate-spin text-white/70" />
+      </div>
+    );
+  }
 
   if (isAuthed) return <Navigate to={from} replace />;
 
@@ -81,11 +90,6 @@ export default function AdminLogin() {
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}
             {loading ? 'Signing in…' : 'Sign in'}
           </button>
-
-          {/* Phase-1 mock notice — remove once Spring Boot auth is wired. */}
-          <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-center text-xs text-amber-700">
-            Demo mode: any email + password signs you in as Super Admin.
-          </p>
         </form>
       </div>
     </div>

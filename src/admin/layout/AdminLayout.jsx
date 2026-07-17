@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X } from 'lucide-react';
+import { Loader2, X } from 'lucide-react';
 import { useAdminAuth } from '../auth/AdminAuthContext';
 import AdminSidebar from './AdminSidebar';
 import AdminTopbar from './AdminTopbar';
@@ -15,9 +15,19 @@ import AdminTopbar from './AdminTopbar';
  * on a "am I still logged in?" call to /api/auth/me — the redirect logic stays identical.
  */
 export default function AdminLayout() {
-  const { isAuthed } = useAdminAuth();
+  const { isAuthed, checking } = useAdminAuth();
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Wait for the session-restore call before deciding — otherwise a refresh flashes the
+  // login screen for an already-signed-in user.
+  if (checking) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+        <Loader2 className="h-6 w-6 animate-spin text-primary-dark" />
+      </div>
+    );
+  }
 
   if (!isAuthed) {
     return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;

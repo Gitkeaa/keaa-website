@@ -1,65 +1,66 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { ROLES } from './roles';
+import { api } from '../api/client';
 
 /**
- * Admin auth — MOCK for now, real later.
+ * Admin auth, backed by the Spring Boot API.
  *
- * Phase 1 has no backend yet, so login accepts any non-empty credentials and signs the
- * user in as SUPER_ADMIN. The session is held in sessionStorage so a refresh keeps you in.
- *
- * When Spring Boot lands, only the two marked functions change:
- *   login()  → POST /api/auth/login  (server sets an httpOnly JWT cookie; the response
- *              body carries the safe user profile { name, email, role } we store here —
- *              the token itself never touches JS, that is the point of the httpOnly cookie)
- *   logout() → POST /api/auth/logout (server clears the cookie)
- * Everything downstream (role, guards, nav) stays exactly as it is.
+ * The JWT is stored in an httpOnly cookie the browser can't read from JS, so we don't keep
+ * the token here at all. Instead:
+ *   - on load we ask GET /api/auth/me who the cookie belongs to (session restore);
+ *   - login() POSTs credentials and the server sets the cookie;
+ *   - logout() POSTs to clear it.
+ * `checking` is true while the initial /me call is in flight, so guards can wait instead of
+ * bouncing a logged-in user to the login screen on refresh.
  */
-const SESSION_KEY = 'keaa-admin-user';
-
 const AdminAuthContext = createContext(null);
 
-function readSession() {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = window.sessionStorage.getItem(SESSION_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
 export function AdminAuthProvider({ children }) {
-  const [user, setUser] = useState(readSession);
+  const [user, setUser] = useState(null);
+  const [checking, setChecking] = useState(true);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(user));
-    else window.sessionStorage.removeItem(SESSION_KEY);
-  }, [user]);
-
-  // MOCK — replace body with a fetch to /api/auth/login. Signature stays the same.
-  const login = useCallback(async ({ email, password }) => {
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 500)); // fake network latency
-    setLoading(false);
-    if (!email || !password) {
-      return { ok: false, error: 'Email and password are required.' };
-    }
-    const profile = {
-      name: email.split('@')[0].replace(/[._]/g, ' ') || 'Administrator',
-      email,
-      role: ROLES.SUPER_ADMIN, // Phase 1: everyone who logs in is the super admin
+    let alive = true;
+    api
+      .get('/api/auth/me')
+      .then((u) => alive && setUser(u))
+      .catch(() => alive && setUser(null))
+      .finally(() => alive && setChecking(false));
+    return () => {
+      alive = false;
     };
-    setUser(profile);
-    return { ok: true };
   }, []);
 
-  // MOCK — replace with POST /api/auth/logout, then clear.
-  const logout = useCallback(() => setUser(null), []);
+  const login = useCallback(async ({ email, password }) => {
+    setLoading(true);
+    try {
+      const u = await api.post('/api/auth/login', { email, password });
+      setUser(u);
+      return { ok: true };
+    } catch (e) {
+      // 401 -> bad credentials; a network error usually means the backend isn't running.
+      const error =
+        e.status === 401
+          ? 'Invalid email or password.'
+          : 'Could not reach the server. Is the backend running on port 8080?';
+      return { ok: false, error };
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const logout = useCallback(async () => {
+    try {
+      await api.post('/api/auth/logout');
+    } catch {
+      /* clear locally even if the call fails */
+    }
+    setUser(null);
+  }, []);
 
   const value = useMemo(
-    () => ({ user, role: user?.role ?? null, isAuthed: Boolean(user), loading, login, logout }),
-    [user, loading, login, logout]
+    () => ({ user, role: user?.role ?? null, isAuthed: Boolean(user), checking, loading, login, logout }),
+    [user, checking, loading, login, logout]
   );
 
   return <AdminAuthContext.Provider value={value}>{children}</AdminAuthContext.Provider>;

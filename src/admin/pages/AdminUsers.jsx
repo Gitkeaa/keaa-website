@@ -2,7 +2,7 @@ import { UserPlus } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
 import DataTable from '../components/DataTable';
 import StatusPill from '../components/StatusPill';
-import { adminUsers } from '../data/mock';
+import { useApi } from '../api/useApi';
 import { ROLE_LABELS } from '../auth/roles';
 
 const columns = [
@@ -12,7 +12,7 @@ const columns = [
     render: (u) => (
       <div className="flex items-center gap-3">
         <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-navy-100 text-xs font-bold uppercase text-navy-700">
-          {u.name.charAt(0)}
+          {(u.name || '?').charAt(0)}
         </span>
         <span className="font-medium text-navy-900">{u.name}</span>
       </div>
@@ -20,11 +20,18 @@ const columns = [
   },
   { key: 'email', label: 'Email' },
   { key: 'role', label: 'Role', render: (u) => <span className="text-slate-600">{ROLE_LABELS[u.role] || u.role}</span> },
-  { key: 'status', label: 'Status', render: (u) => <StatusPill status={u.status} /> },
-  { key: 'lastActive', label: 'Last active', render: (u) => <span className="text-slate-500">{u.lastActive}</span> },
+  { key: 'active', label: 'Status', render: (u) => <StatusPill status={u.active ? 'active' : 'inactive'} /> },
+  {
+    key: 'lastActive',
+    label: 'Last active',
+    render: (u) => <span className="text-slate-500">{u.lastActive ? u.lastActive.slice(0, 10) : '—'}</span>,
+  },
 ];
 
 export default function AdminUsers() {
+  const { data, loading, error } = useApi('/api/users');
+  const rows = data || [];
+
   return (
     <>
       <PageHeader
@@ -39,7 +46,12 @@ export default function AdminUsers() {
           </button>
         }
       />
-      <DataTable columns={columns} rows={adminUsers} />
+      {error && (
+        <p role="alert" className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </p>
+      )}
+      <DataTable columns={columns} rows={loading ? [] : rows} empty={loading ? 'Loading…' : 'No users yet.'} />
     </>
   );
 }
