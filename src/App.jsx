@@ -1,10 +1,11 @@
 import { Suspense, lazy, useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Layout from './components/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
 import PageLoader from './components/PageLoader';
 import AiChat from './components/AiChat';
 import { SplashProvider } from './hooks/useSplash';
+import { AdminAuthProvider } from './admin/auth/AdminAuthContext';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -23,9 +24,36 @@ const RequestQuotation = lazy(() => import('./pages/RequestQuotation'));
 const Legal = lazy(() => import('./pages/Legal'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
+// Admin console — lazy so its bundle (and the mock data / catalogue it pulls in) never
+// touches the public site's entry chunk. Its own shell provides header/nav/footer, so it
+// lives OUTSIDE the public <Layout> and skips the marketing splash and chat widget.
+const AdminLogin = lazy(() => import('./admin/pages/AdminLogin'));
+const AdminLayout = lazy(() => import('./admin/layout/AdminLayout'));
+const AdminDashboard = lazy(() => import('./admin/pages/AdminDashboard'));
+const AdminUsers = lazy(() => import('./admin/pages/AdminUsers'));
+const AdminProducts = lazy(() => import('./admin/pages/AdminProducts'));
+const AdminRFQ = lazy(() => import('./admin/pages/AdminRFQ'));
+const AdminContacts = lazy(() => import('./admin/pages/AdminContacts'));
+const AdminCareers = lazy(() => import('./admin/pages/AdminCareers'));
+
 export default function App() {
+  return (
+    <BrowserRouter>
+      <AdminAuthProvider>
+        <AppShell />
+      </AdminAuthProvider>
+    </BrowserRouter>
+  );
+}
+
+function AppShell() {
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith('/admin');
+
+  // The marketing splash never runs in the admin console.
   const [showLoader, setShowLoader] = useState(() => {
     if (typeof window === 'undefined') return true;
+    if (window.location.pathname.startsWith('/admin')) return false;
     return !window.sessionStorage.getItem('keaa-splash-shown');
   });
 
@@ -67,11 +95,22 @@ export default function App() {
   const splashDone = !showLoader;
 
   return (
-    <BrowserRouter>
-      <ErrorBoundary>
-        <SplashProvider done={splashDone}>
+    <ErrorBoundary>
+      <SplashProvider done={splashDone}>
         <Suspense fallback={null}>
           <Routes>
+            {/* Admin console — its own shell, guarded by AdminLayout. */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="users" element={<AdminUsers />} />
+              <Route path="products" element={<AdminProducts />} />
+              <Route path="rfq" element={<AdminRFQ />} />
+              <Route path="contacts" element={<AdminContacts />} />
+              <Route path="careers" element={<AdminCareers />} />
+            </Route>
+
+            {/* Public site. */}
             <Route element={<Layout />}>
               <Route index element={<Home />} />
               <Route path="about" element={<About />} />
@@ -95,14 +134,15 @@ export default function App() {
             </Route>
           </Routes>
         </Suspense>
-        {showLoader && <PageLoader onComplete={() => setShowLoader(false)} />}
-        <AiChat />
+
+        {/* Public-only chrome — never rendered inside the admin console. */}
+        {!isAdmin && showLoader && <PageLoader onComplete={() => setShowLoader(false)} />}
+        {!isAdmin && <AiChat />}
         {/* Certification "Globally Certified" pop-up (FloatingPromos) is temporarily
             disabled site-wide, to be reintroduced later with a refreshed design.
             The component still lives in components/FloatingPromos.jsx — re-add
             <FloatingPromos /> here to bring it back. */}
-        </SplashProvider>
-      </ErrorBoundary>
-    </BrowserRouter>
+      </SplashProvider>
+    </ErrorBoundary>
   );
 }
