@@ -10,6 +10,7 @@ import WordLimitTextarea from '../components/ui/WordLimitTextarea';
 import { getAllProductLines } from '../data/productLines';
 import { defaultCountry } from '../data/countriesData';
 import { img } from '../data/images';
+import { submitPublicForm } from '../data/adminApi';
 import useSEO from '../hooks/useSEO';
 
 const tabs = [
@@ -68,11 +69,38 @@ export default function RequestQuotation() {
 
   const [tab, setTab] = useState('rfq');
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState('');
   const [showIntro, setShowIntro] = useState(false);
   const [country, setCountry] = useState(defaultCountry);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [details, setDetails] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const val = (id) => form.querySelector('#' + id)?.value?.trim() || '';
+    const port = val('port');
+    setSending(true);
+    setSendError('');
+    try {
+      await submitPublicForm('/api/rfq', {
+        name: val('name'),
+        company: val('company'),
+        email,
+        phone: `${country?.dial || ''} ${phone || ''}`.trim(),
+        country: country?.name || '',
+        category: val('product'),
+        message: port ? `${details}\n\nPort of destination: ${port}` : details,
+      });
+      setSubmitted(true);
+    } catch {
+      setSendError('Could not submit your request. Please try again, or email us directly.');
+    } finally {
+      setSending(false);
+    }
+  };
 
   return (
     <>
@@ -171,13 +199,7 @@ export default function RequestQuotation() {
                 </p>
               </div>
             ) : (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setSubmitted(true);
-                }}
-                className="mt-6 grid gap-5 sm:grid-cols-2"
-              >
+              <form onSubmit={handleSubmit} className="mt-6 grid gap-5 sm:grid-cols-2">
                 <Field label="Full Name" id="name" required />
                 <Field label="Company Name" id="company" required />
                 <EmailField value={email} onChange={setEmail} required />
@@ -220,8 +242,13 @@ export default function RequestQuotation() {
                 />
 
                 <div className="sm:col-span-2">
-                  <Button type="submit" icon={Send}>
-                    Submit Request
+                  {sendError && (
+                    <p role="alert" className="mb-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+                      {sendError}
+                    </p>
+                  )}
+                  <Button type="submit" icon={Send} disabled={sending}>
+                    {sending ? 'Submitting…' : 'Submit Request'}
                   </Button>
                 </div>
               </form>

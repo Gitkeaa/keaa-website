@@ -7,6 +7,7 @@ import PhoneField from './ui/PhoneField';
 import EmailField from './ui/EmailField';
 import WordLimitTextarea from './ui/WordLimitTextarea';
 import { defaultCountry } from '../data/countriesData';
+import { submitPublicForm } from '../data/adminApi';
 
 const EXPERIENCE = ['Fresher (0–1 yr)', '1–3 years', '3–5 years', '5–10 years', '10+ years'];
 const NOTICE = ['Immediate', 'Within 15 days', '1 month', '2 months', 'Currently serving notice'];
@@ -59,6 +60,48 @@ export default function JobApplicationModal({ job, onClose }) {
   const [resumeName, setResumeName] = useState('');
   const [resumeError, setResumeError] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const val = (id) => form.querySelector('#' + id)?.value?.trim() || '';
+    // The applicant's message + all the extra fields the entity doesn't have its own column
+    // for (LinkedIn, qualification, notice, employer, resume filename) go into `notes` so
+    // nothing is lost. The actual resume FILE isn't uploaded yet — that needs server-side
+    // file storage, a follow-up.
+    const notes = [
+      message && `Message: ${message}`,
+      val('app-qual') && `Qualification: ${val('app-qual')}`,
+      val('app-notice') && `Notice: ${val('app-notice')}`,
+      val('app-company') && `Current employer: ${val('app-company')}`,
+      val('app-linkedin') && `LinkedIn/Portfolio: ${val('app-linkedin')}`,
+      resumeName && `Resume file: ${resumeName} (not uploaded — request from applicant)`,
+    ]
+      .filter(Boolean)
+      .join('\n');
+
+    setSending(true);
+    setSendError('');
+    try {
+      await submitPublicForm('/api/careers', {
+        name: val('app-name'),
+        email,
+        phone: `${country?.dial || ''} ${phone || ''}`.trim(),
+        position: job.title,
+        experience: val('app-exp'),
+        location: val('app-city'),
+        resumeUrl: val('app-linkedin'),
+        notes,
+      });
+      setSubmitted(true);
+    } catch {
+      setSendError('Could not submit your application. Please try again.');
+    } finally {
+      setSending(false);
+    }
+  };
 
   const onFile = (e) => {
     const file = e.target.files?.[0];
@@ -135,13 +178,7 @@ export default function JobApplicationModal({ job, onClose }) {
               </button>
             </div>
           ) : (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setSubmitted(true);
-              }}
-              className="mt-6 grid gap-5 sm:grid-cols-2"
-            >
+            <form onSubmit={handleSubmit} className="mt-6 grid gap-5 sm:grid-cols-2">
               <Field label="Full Name" id="app-name" required />
               <EmailField id="app-email" value={email} onChange={setEmail} required />
               <CountrySelect id="app-country" value={country} onChange={setCountry} required />
@@ -207,8 +244,13 @@ export default function JobApplicationModal({ job, onClose }) {
               </label>
 
               <div className="sm:col-span-2">
-                <Button type="submit" icon={Send}>
-                  Submit Application
+                {sendError && (
+                  <p role="alert" className="mb-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+                    {sendError}
+                  </p>
+                )}
+                <Button type="submit" icon={Send} disabled={sending}>
+                  {sending ? 'Submitting…' : 'Submit Application'}
                 </Button>
               </div>
             </form>

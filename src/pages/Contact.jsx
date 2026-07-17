@@ -13,6 +13,7 @@ import Reveal from '../components/ui/Reveal';
 import { company } from '../data/company';
 import { defaultCountry } from '../data/countriesData';
 import { img } from '../data/images';
+import { submitPublicForm } from '../data/adminApi';
 import useSEO from '../hooks/useSEO';
 
 const helpStrip = [
@@ -59,6 +60,8 @@ export default function Contact() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState('');
   const [showConsult, setShowConsult] = useState(false);
   const [country, setCountry] = useState(defaultCountry);
   const [email, setEmail] = useState('');
@@ -66,9 +69,27 @@ export default function Contact() {
   const [message, setMessage] = useState('');
   const landlineNumbers = Array.isArray(company.landline) ? company.landline : [company.landline];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    const form = e.currentTarget;
+    const val = (id) => form.querySelector('#' + id)?.value?.trim() || '';
+    setSending(true);
+    setSendError('');
+    try {
+      await submitPublicForm('/api/contact', {
+        name: val('name'),
+        email,
+        subject: val('subject'),
+        // The ContactMessage entity holds one message body; fold the extra context in
+        // so nothing the visitor typed is lost.
+        message: `${message}\n\n— Company: ${val('company') || '—'} · Phone: ${country?.dial || ''} ${phone || '—'} · Country: ${country?.name || '—'}`,
+      });
+      setSubmitted(true);
+    } catch {
+      setSendError('Could not send your message. Please try again, or email us directly.');
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -240,8 +261,13 @@ export default function Contact() {
                   placeholder="Tell us how we can help — product, quantity, timeline, destination…"
                 />
                 <div className="sm:col-span-2">
-                  <Button type="submit" icon={Send}>
-                    Send Message
+                  {sendError && (
+                    <p role="alert" className="mb-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+                      {sendError}
+                    </p>
+                  )}
+                  <Button type="submit" icon={Send} disabled={sending}>
+                    {sending ? 'Sending…' : 'Send Message'}
                   </Button>
                 </div>
               </form>
