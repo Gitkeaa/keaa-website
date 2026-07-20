@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X, ArrowUpRight, ShieldCheck, Award } from 'lucide-react';
 import { company } from '../data/company';
 
 const BASE_KEY = 'keaa-floating-promos';
@@ -108,7 +107,7 @@ export default function FloatingPromos() {
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             onMouseEnter={clearTimers}
             onMouseLeave={() => startHide(2000)}
-            className="pointer-events-auto relative flex h-[192px] flex-col overflow-hidden rounded-2xl border border-black bg-white/95 p-4 shadow-2xl shadow-navy-950/10 backdrop-blur-sm"
+            className="pointer-events-auto relative flex h-[192px] flex-col overflow-hidden rounded-card border border-navy-100 bg-white/95 p-4 shadow-2xl shadow-navy-950/10 backdrop-blur-sm"
             role="status"
             aria-live="polite"
           >
@@ -117,35 +116,29 @@ export default function FloatingPromos() {
             <button
               onClick={close}
               aria-label="Dismiss notification"
-              className="absolute right-2.5 top-2.5 flex h-6 w-6 items-center justify-center rounded-full text-ink/40 transition-colors hover:bg-navy-50 hover:text-navy-700"
+              className="absolute right-2.5 top-2.5 flex h-6 items-center justify-center rounded-full px-2 text-[13px] font-bold uppercase tracking-[0.12em] text-muted transition-colors hover:bg-navy-50 hover:text-navy-700"
             >
-              <X className="h-3.5 w-3.5" />
+              Close
             </button>
 
-            <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600">
-              <ShieldCheck className="h-3.5 w-3.5" /> Globally Certified
+            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600">
+              Globally Certified
             </span>
 
-            <p className="mt-1.5 truncate pr-5 font-display text-sm font-bold leading-snug text-navy-800">
+
+            <p className="mt-3 truncate pr-5 font-display text-body-compact font-bold leading-snug text-text">
               {cert.name} Certified
             </p>
-            <p className="mt-0.5 truncate text-xs text-ink/55">{cert.body}</p>
-
-            <div className="mt-3 flex h-9 items-center">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-                <Award className="h-5 w-5" />
-              </span>
-            </div>
+            <p className="mt-0.5 truncate text-xs text-ink">{cert.body}</p>
 
             <a
               href={cert.image}
               target="_blank"
               rel="noopener noreferrer"
               title="View the official certificate"
-              className="group mt-auto flex w-full items-center justify-center gap-1.5 rounded-xl bg-navy-800 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-navy-900 hover:shadow-lg"
+              className="mt-auto flex w-full items-center justify-center rounded-card bg-navy-800 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-navy-900 hover:shadow-lg"
             >
               View Certificate
-              <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </a>
           </motion.div>
         )}

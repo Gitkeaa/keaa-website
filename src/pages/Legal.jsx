@@ -1,21 +1,49 @@
 import PageHero from '../components/ui/PageHero';
 import { company } from '../data/company';
+import useSEO from '../hooks/useSEO';
 
 const content = {
+  /*
+   * This policy is written to the GDPR Art. 13 checklist because KEAA sells into the EU
+   * through Runi Industries B.V. in Eindhoven, which makes that establishment the anchor
+   * for EU visitors. It previously ran to four short paragraphs with no controller
+   * identity, no legal basis, no retention period, no data-subject rights, no named
+   * recipients, and — although the consent bar linked here as its only reference — nothing
+   * whatsoever about cookies or local storage.
+   *
+   * Keep the "Cookies and Local Storage" section in sync with STORAGE keys and CATEGORIES
+   * in src/components/CookieConsent.jsx; that is the section the banner points at.
+   */
   privacy: {
     title: 'Privacy Policy',
     sections: [
       {
+        h: 'Who We Are',
+        p: `${company.name} (${company.manufacturing.line1}, ${company.manufacturing.line2}) is the controller of personal data collected through this website. For visitors in the European Union, our EU establishment is ${company.salesOffice.label.replace('Sales Office & Warehouse — ', '')}, ${company.salesOffice.line1}, ${company.salesOffice.line2}. You can reach us about any privacy matter at ${company.emails[0]}.`,
+      },
+      {
         h: 'Information We Collect',
-        p: 'We collect information you provide directly to us — such as your name, company, email and phone number — when you submit an inquiry, request a quote, or subscribe to our newsletter.',
+        p: 'We collect information you provide directly to us — such as your name, company, email and phone number — when you submit an inquiry, request a quote, or apply for a role. If you use the AI assistant on this site, the messages you type are processed to generate a reply. We do not ask for, and ask that you do not send, confidential or special-category information through these channels.',
       },
       {
-        h: 'How We Use Your Information',
-        p: 'Information submitted through our forms is used solely to respond to your inquiry, process quotation requests, and — where you have opted in — to send relevant product and company updates.',
+        h: 'How We Use Your Information, and On What Basis',
+        p: 'Information submitted through our forms is used solely to respond to your inquiry, prepare quotations, and assess job applications. We rely on your consent where you have given it (for optional cookies and for marketing), on the steps necessary to enter into or perform a contract where you are requesting a quotation or placing an order, and on our legitimate interest in responding to business enquiries addressed to us.',
       },
       {
-        h: 'Data Sharing',
-        p: 'We do not sell or rent your personal information. Data may be shared with our logistics and export partners strictly to fulfil an order you have requested.',
+        h: 'Cookies and Local Storage',
+        p: 'This site sets no advertising or tracking cookies, and runs no analytics tool. It stores four small items in your browser: your cookie choice, the language you select, the sales region you select, and — only if you dismiss it — a note that a promotional message has been shown. All four are strictly necessary or set only because you asked for them, and none are shared with anyone. Separately, our Contact page can embed a Google Map; that is optional external content, it is switched off unless you allow it, and allowing it shares your IP address with Google. You can change or withdraw your choice at any time using the Cookie Preferences link at the bottom of every page. Your choice is remembered for 180 days, after which we ask again.',
+      },
+      {
+        h: 'Third Parties and International Transfers',
+        p: 'We do not sell or rent your personal information. Data may be shared with our logistics and export partners strictly to fulfil an order you have requested. This website also relies on: Cloudinary, which hosts our product imagery and video; Google, which provides the Gemini model behind the AI assistant and the optional Contact-page map; and our own application backend, which receives form submissions. Fonts and stylesheets are served from our own servers, so no font provider receives your data. Where information is transferred outside the European Economic Area — including to India, where our manufacturing and export operations are based — we rely on appropriate safeguards such as the European Commission’s Standard Contractual Clauses.',
+      },
+      {
+        h: 'How Long We Keep It',
+        p: 'Enquiry and quotation records are retained for as long as needed to serve the commercial relationship and to meet our legal and tax obligations, and are then deleted. Job applications are retained for the duration of the recruitment process unless you ask us to keep them on file. Your cookie choice is stored for 180 days.',
+      },
+      {
+        h: 'Your Rights',
+        p: `If you are in the EU or UK you have the right to access, correct, erase, restrict or object to our processing of your personal data, the right to data portability, and the right to withdraw consent at any time without affecting processing already carried out. To exercise any of these, write to ${company.emails[0]}. You also have the right to complain to your supervisory authority — for visitors in the Netherlands, the Autoriteit Persoonsgegevens.`,
       },
       {
         h: 'Contact',
@@ -46,8 +74,27 @@ const content = {
   },
 };
 
+/** Per-type metadata — these two routes previously inherited the homepage's title. */
+const seo = {
+  privacy: {
+    title: 'Privacy Policy',
+    description:
+      'How KEAA International collects, uses and protects the information you submit through our inquiry and quotation forms.',
+  },
+  terms: {
+    title: 'Terms & Conditions',
+    description:
+      'Terms governing the use of the KEAA International website, product specifications, quotations and intellectual property.',
+  },
+};
+
 export default function Legal({ type }) {
   const data = content[type];
+  useSEO({
+    title: seo[type]?.title || 'Legal',
+    description: seo[type]?.description,
+    breadcrumbs: [{ label: 'Home', to: '/' }, { label: seo[type]?.title || 'Legal' }],
+  });
   return (
     <>
       <PageHero
@@ -59,11 +106,11 @@ export default function Legal({ type }) {
         <div className="container-page max-w-3xl space-y-8">
           {data.sections.map((s) => (
             <div key={s.h}>
-              <h3 className="font-display text-lg font-semibold text-navy-800">{s.h}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink/65">{s.p}</p>
+              <h3 className="font-display text-lg font-semibold text-text">{s.h}</h3>
+              <p className="body-copy mt-2">{s.p}</p>
             </div>
           ))}
-          <p className="text-xs text-ink/40">Last updated: June 2026.</p>
+          <p className="text-xs text-muted">Last updated: June 2026.</p>
         </div>
       </section>
     </>

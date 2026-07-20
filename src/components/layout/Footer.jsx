@@ -1,24 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useReducedMotion } from 'framer-motion';
-import {
-  MapPin,
-  Phone,
-  Printer,
-  Mail,
-  Linkedin,
-  Facebook,
-  Instagram,
-  Youtube,
-  ChevronRight,
-  ChevronsUp,
-  Globe,
-  Factory,
-  Users,
-  Building2,
-  ShieldCheck,
-  Handshake,
-} from 'lucide-react';
+/* Social marks are the ONE sanctioned exception to the site's icon-free rule: a platform's
+   logo is its name, and spelling them out reads worse than the marks. Everything else in
+   this footer states itself in type — uppercase labels and hover underlines. */
+import { Linkedin, Facebook, Instagram, Youtube } from 'lucide-react';
 import Logo from './Logo';
+import { openCookiePreferences } from '../CookieConsent';
 import { company, developer } from '../../data/company';
 import { footerLinks } from '../../data/navigation';
 import { getAllCategories } from '../../data/categories';
@@ -36,17 +23,22 @@ import { getAllCategories } from '../../data/categories';
  *      copyright colour — measures 3.34:1 against the brightest pixel and fails; at 55%
  *      it clears AA with room, and the scrim only widens that margin.
  *
- * Brand colours on this ground: #8CCDF3 links (10.7:1), #3A86C6 icons and rules
+ * Brand colours on this ground: #8CCDF3 links (10.7:1), #3A86C6 icons and labels
  * (4.8:1). Gold is gone entirely; it survives only as #E7B321 on navy for certification
  * badges, and there are none here.
  */
 
+/**
+ * Channels without a live account are `null` in company.js and are filtered out here, so
+ * the row only ever shows icons that go somewhere. This replaced an '#' href that rendered
+ * a real, hover-animated button which just scrolled the reader to the top.
+ */
 const SOCIALS = [
   { icon: Linkedin, href: company.social.linkedin, label: 'LinkedIn' },
   { icon: Facebook, href: company.social.facebook, label: 'Facebook' },
   { icon: Instagram, href: company.social.instagram, label: 'Instagram' },
   { icon: Youtube, href: company.social.youtube, label: 'YouTube' },
-];
+].filter((s) => Boolean(s.href));
 
 /**
  * Every figure here is taken from src/data/company.js rather than from the design mock,
@@ -54,50 +46,46 @@ const SOCIALS = [
  * sq. m." (the company records 25,000 sq. m.).
  */
 const CREDENTIALS = [
-  { Icon: Globe, value: '42+ Countries', label: 'Exporting worldwide' },
-  { Icon: Factory, value: '5', label: 'Manufacturing facilities' },
-  { Icon: Users, value: '150+', label: 'Skilled professionals' },
-  { Icon: Building2, value: '25,000 sq. m.', label: 'In-house manufacturing area' },
-  { Icon: ShieldCheck, value: 'Quality Assured', label: 'Strict control at every stage' },
-  { Icon: Handshake, value: 'Built on Trust', label: `Long-term partnerships since ${company.founded}` },
+  { value: '42+ Countries', label: 'Exporting worldwide' },
+  { value: '5', label: 'Manufacturing facilities' },
+  { value: '150+', label: 'Skilled professionals' },
+  { value: '25,000 sq. m.', label: 'In-house manufacturing area' },
+  { value: 'Quality Assured', label: 'Strict control at every stage' },
+  { value: 'Built on Trust', label: `Long-term partnerships since ${company.founded}` },
 ];
 
 function ColumnHeading({ children }) {
   return (
     <h4 className="font-display text-[13px] font-semibold uppercase tracking-[0.12em] text-white">
       {children}
-      <span aria-hidden className="mt-3 block h-px w-10 bg-gradient-to-r from-primary to-primary/0" />
     </h4>
   );
 }
 
+/** The chevron is gone; the affordance is a brand-blue underline that draws in on hover. */
 function NavLinkRow({ to, children }) {
   return (
     <li>
       <Link
         to={to}
-        className="group inline-flex items-center gap-2 text-white/65 transition-colors duration-200 hover:text-primary-light"
+        className="inline-block border-b border-transparent pb-0.5 text-white/65 transition-colors duration-200 hover:border-primary hover:text-primary-light"
       >
-        <ChevronRight
-          aria-hidden
-          className="h-3.5 w-3.5 flex-shrink-0 text-primary transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transform-none"
-        />
         {children}
       </Link>
     </li>
   );
 }
 
-function ContactRow({ icon: Icon, children }) {
+/**
+ * A contact block naming itself in type instead of behind a pictogram. The uppercase
+ * brand-blue label is unambiguous where a printer/pin glyph was a guess, and it reads the
+ * same in every language.
+ */
+function ContactRow({ label, children }) {
   return (
-    <li className="flex gap-3">
-      <span
-        aria-hidden
-        className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/[0.12] ring-1 ring-inset ring-primary/25"
-      >
-        <Icon className="h-4 w-4 text-primary" />
-      </span>
-      <div className="min-w-0 space-y-1 leading-relaxed text-white/65">{children}</div>
+    <li>
+      <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">{label}</p>
+      <div className="mt-1.5 min-w-0 space-y-1 leading-relaxed text-white/65">{children}</div>
     </li>
   );
 }
@@ -142,8 +130,8 @@ export default function Footer() {
                 <a
                   key={social.label}
                   href={social.href}
-                  target={social.href !== '#' ? '_blank' : undefined}
-                  rel={social.href !== '#' ? 'noopener noreferrer' : undefined}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-white/[0.14] bg-white/[0.04] text-white/70 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-white hover:shadow-[0_10px_22px_-10px_rgb(var(--color-primary)_/_0.85)] motion-reduce:hover:translate-y-0"
                   aria-label={social.label}
                 >
@@ -155,7 +143,7 @@ export default function Footer() {
 
           <div>
             <ColumnHeading>Quick Links</ColumnHeading>
-            <ul className="mt-5 space-y-3 text-sm">
+            <ul className="mt-8 space-y-3 text-sm">
               {footerLinks.quick.map((l) => (
                 <NavLinkRow key={l.to} to={l.to}>
                   {l.label}
@@ -166,7 +154,7 @@ export default function Footer() {
 
           <div>
             <ColumnHeading>Products</ColumnHeading>
-            <ul className="mt-5 space-y-3 text-sm">
+            <ul className="mt-8 space-y-3 text-sm">
               {getAllCategories().map((c) => (
                 <NavLinkRow key={c.slug} to={`/products/${c.slug}`}>
                   {c.name}
@@ -177,7 +165,7 @@ export default function Footer() {
 
           <div>
             <ColumnHeading>Resources</ColumnHeading>
-            <ul className="mt-5 space-y-3 text-sm">
+            <ul className="mt-8 space-y-3 text-sm">
               {footerLinks.resources.map((l) => (
                 <NavLinkRow key={l.to} to={l.to}>
                   {l.label}
@@ -188,8 +176,8 @@ export default function Footer() {
 
           <div>
             <ColumnHeading>Contact Us</ColumnHeading>
-            <ul className="mt-5 space-y-4 text-sm">
-              <ContactRow icon={MapPin}>
+            <ul className="mt-8 space-y-4 text-sm">
+              <ContactRow label="Address">
                 <span className="block">
                   {company.manufacturing.line1}
                   <br />
@@ -197,7 +185,7 @@ export default function Footer() {
                 </span>
               </ContactRow>
 
-              <ContactRow icon={Phone}>
+              <ContactRow label="Mobile">
                 {company.phones.map((p) => (
                   <span key={p} className="block">
                     {p}
@@ -205,7 +193,7 @@ export default function Footer() {
                 ))}
               </ContactRow>
 
-              <ContactRow icon={Printer}>
+              <ContactRow label="Telephone &amp; Fax">
                 {landlineNumbers.map((line) => (
                   <span key={line} className="block">
                     Tel: {line}
@@ -214,7 +202,7 @@ export default function Footer() {
                 <span className="block">Fax: {company.fax}</span>
               </ContactRow>
 
-              <ContactRow icon={Mail}>
+              <ContactRow label="Email">
                 {company.emails.map((email) => (
                   <a
                     key={email}
@@ -234,17 +222,14 @@ export default function Footer() {
         {/* Credentials strip. */}
         <div className="relative z-10 border-t border-white/[0.08]">
           <div className="container-page grid grid-cols-1 gap-x-6 gap-y-7 py-9 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-            {CREDENTIALS.map(({ Icon, value, label }, i) => (
+            {CREDENTIALS.map(({ value, label }, i) => (
               <div
                 key={value}
-                className={`flex items-center gap-3 xl:pl-5 ${i > 0 ? 'xl:border-l xl:border-white/[0.08]' : 'xl:pl-0'}`}
+                className={`xl:pl-5 ${i > 0 ? 'xl:border-l xl:border-white/[0.08]' : 'xl:pl-0'}`}
               >
-                <Icon aria-hidden className="h-7 w-7 flex-shrink-0 text-primary" strokeWidth={1.4} />
-                <div className="min-w-0">
-                  {/* The value is the headline of each cell; wrapping it reads as a bug. */}
-                  <div className="whitespace-nowrap font-display text-sm font-bold leading-tight text-white">{value}</div>
-                  <div className="mt-0.5 text-[12px] leading-snug text-white/55">{label}</div>
-                </div>
+                {/* The value is the headline of each cell; wrapping it reads as a bug. */}
+                <div className="whitespace-nowrap font-display text-sm font-bold leading-tight text-white">{value}</div>
+                <div className="mt-0.5 text-[12px] leading-snug text-white/55">{label}</div>
               </div>
             ))}
           </div>
@@ -280,17 +265,23 @@ export default function Footer() {
               <Link to="/terms" className="transition-colors duration-200 hover:text-primary-light">
                 Terms &amp; Conditions
               </Link>
+              <span aria-hidden className="text-white/20">|</span>
+              {/* Reopens the consent dialog, so the banner's "manage your preferences at any
+                  time" is actually reachable once the banner has been dismissed. */}
+              <button
+                type="button"
+                onClick={openCookiePreferences}
+                className="transition-colors duration-200 hover:text-primary-light"
+              >
+                Cookie Preferences
+              </button>
 
               <button
                 type="button"
                 onClick={backToTop}
-                className="group ml-1 inline-flex items-center gap-2 rounded-lg border border-white/[0.14] bg-white/[0.04] px-3.5 py-2 font-medium text-white/75 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-white motion-reduce:hover:translate-y-0"
+                className="group ml-1 inline-flex items-center gap-2 rounded-card border border-white/[0.14] bg-white/[0.04] px-3.5 py-2 font-medium text-white/75 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-white motion-reduce:hover:translate-y-0"
               >
                 Back to Top
-                <ChevronsUp
-                  aria-hidden
-                  className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 motion-reduce:transform-none"
-                />
               </button>
             </div>
           </div>

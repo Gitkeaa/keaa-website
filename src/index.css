@@ -3,6 +3,69 @@
 @tailwind utilities;
 
 /* ============================================================================
+   Webfonts — SELF-HOSTED, and that is a compliance requirement, not a preference.
+
+   Satoshi used to come from api/cdn.fontshare.com and JetBrains Mono from
+   fonts.googleapis.com/fonts.gstatic.com, both as <link> tags in index.html's <head>.
+   Head links fire during HTML parse — before the bundle loads and long before the
+   consent bar can exist — so every visitor's IP was disclosed to a font CDN on every
+   page load with no consent and no way to gate it. For Google Fonts that exact pattern
+   drew damages in LG München I 3 O 17493/20; Fontshare is operated from India, which has
+   no EU adequacy decision, so it was also an undisclosed Chapter V transfer. KEAA sells
+   into the EU through the Eindhoven office, so EU visitors are in scope.
+
+   Serving the files ourselves removes the transfer entirely rather than gating it, and
+   drops two third-party round trips from the critical render path.
+
+   Files live in public/fonts/ (~160 KB total). JetBrains Mono is the LATIN subset only —
+   it renders item codes, which are ASCII, so Google's cyrillic/greek/vietnamese subsets
+   would be dead weight. Re-download with the script noted in the commit if a weight is
+   ever added; Satoshi has no 600, so `font-semibold` resolves upward to 700.
+   ========================================================================== */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-300.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================================================
    KEAA design tokens — the single source of truth for colour.
    Change a value here and it propagates through Tailwind (see tailwind.config.js,
    which maps each token to a utility) and through any inline style that reads the
@@ -45,11 +108,50 @@
   /* Lines */
   --color-border: 216 234 246; /* #D8EAF6 */
 
-  /* Text */
-  --color-text: 10 35 66; /* #0A2342  headings */
-  --color-text-body: 30 41 59; /* #1E293B  body copy */
-  --color-text-strong: 51 65 85; /* #334155  small emphasised copy */
-  --color-text-muted: 71 85 105; /* #475569  labels, captions */
+  /* Text.
+
+     There is ONE text colour on this site and it is #000000. Headings, body copy,
+     supporting copy, captions and metadata all resolve to it at FULL opacity.
+
+     It was not always so: body ink was once #384250 (from reference typography the client
+     supplied), secondary copy #646C7A, and utilities like `text-ink/60` tinted on top of
+     both — nine different greys at one point. The client has since asked, repeatedly, for
+     black; the tokens below are kept as distinct names purely so a future retune is a
+     one-line edit, not because they hold different values. */
+  --color-text: 0 0 0; /* #000000  headings — pure black, set by the client */
+  --color-text-body: 0 0 0; /* #000000  body copy — pure black, set by the client */
+  /*
+    EVERY TEXT TOKEN BELOW IS PURE BLACK, AND THAT IS THE CLIENT'S EXPLICIT DECISION.
+
+    The site has no grey text left. `text-muted` was #646C7A, then #2E333B, and both times
+    the client said the page still did not read as black — correctly, because this token is
+    on ~107 elements (card descriptions, subtitles, most supporting copy) against 3 for
+    text-body, so `muted` WAS the body copy a visitor actually saw. `strong` was #334155 on
+    breadcrumbs and hero stat labels, the last other grey.
+
+    The consequence is deliberate: there is no longer a colour difference between body copy,
+    captions and metadata. Hierarchy now comes from SIZE and WEIGHT alone. Do not reintroduce
+    a grey here to "restore hierarchy" — that is the change the client has rejected twice.
+    Both tokens are kept as separate names so a future retune stays a one-line edit.
+
+    Safe because neither token is ever used on a dark surface; dark panels use text-white*.
+  */
+  --color-text-strong: 0 0 0; /* #000000 */
+  --color-text-muted: 0 0 0; /* #000000 */
+
+  /* Body type scale — two sizes, both at 1.6 line-height.
+
+       --text-body          18px  long reading paragraphs (.body-copy, .prose-block)
+       --text-body-compact  16px  copy inside cards and dense grids
+
+     They are split by LENGTH, not by importance. A long paragraph earns 18px because a
+     wide measure is what makes a reader lose their place; a two-line blurb inside a 4-up
+     tile does not, and at 18px it would push the tile out of step with its neighbours.
+
+     Set them to the same value to collapse the site to one body size. */
+  --text-body: 1.125rem; /* 18px */
+  --text-body-compact: 1rem; /* 16px */
+  --leading-body: 1.6;
 
   /* Photographic grading — the hero's colour blend, its base shadow and its sun bloom. */
   --color-photo-tint-top: 154 214 252; /* #9AD6FC */
@@ -78,7 +180,7 @@
   --gutter: clamp(20px, 4vw, 72px); /* 20px on phones -> 72px on ultra-wide */
   --w-content: 1760px; /* standard content sections */
   --w-wide: 2040px; /* feature / CTA bands, showcase grids */
-  --w-prose: 70ch; /* body-copy readability cap */
+  --w-prose: 48rem; /* body-copy readability cap — 768px, inside the 700–800px band */
   --w-form: 46rem; /* form field blocks */
 }
 
@@ -103,6 +205,89 @@
     width: 100%;
     padding-inline: var(--gutter);
   }
+
+  /* ==========================================================================
+     Reading typography — matched to the reference the client supplied.
+
+     The reference measures 18px / #384250 / ~1.6 line-height, at ONE size on every
+     breakpoint. This used to ramp 16px → 18px → 20px across breakpoints, which is
+     why a paragraph never looked the same on two screens; it is now flat, so the
+     desktop reading size IS the reference's size.
+
+     Two entry points:
+       .body-copy    — one standalone reading paragraph.
+       .prose-block  — a wrapper; every child <p> and <ul>/<ol> inherits the
+                       treatment, and consecutive paragraphs get their gap
+                       automatically, so manual mt-* / <br> spacing can be removed.
+
+     These live in the components layer, so a prose <p> must NOT also carry a
+     `text-*` / `leading-*` / `text-ink/*` utility — those sit in the utilities
+     layer and would override the treatment.
+     ========================================================================== */
+  .body-copy,
+  .prose-block p,
+  .prose-block li {
+    /* 400, not 300. The colour here is already pure black, but at Light weight the strokes
+       are thin enough that the eye reads the paragraph as grey — the client reported body
+       copy "not looking black" while `--color-text-body` was #000000. Weight, not colour,
+       is what makes text look dark, so this is the lever. Satoshi Light (satoshi-300.woff2)
+       is still loaded and still used elsewhere; only reading prose steps up. */
+    font-weight: 400;
+    font-size: var(--text-body); /* 18px, flat — no breakpoint ramp */
+    line-height: var(--leading-body);
+    letter-spacing: normal; /* no artificial tracking — Satoshi's own metrics */
+    color: rgb(var(--color-text-body));
+    text-align: left;
+  }
+  .body-copy,
+  .prose-block p {
+    max-width: var(--w-prose); /* 768px readable measure */
+  }
+  .prose-block > p + p {
+    margin-top: 1.5rem; /* 24px — the reference's paragraph rhythm at 1.6 leading */
+  }
+
+  /* Bulleted lists, as in the reference: a real bullet, hanging indent so wrapped
+     lines align under the text rather than under the marker, and one line of air
+     between items. `li` inherits the body treatment from the rule above. */
+  .prose-block ul,
+  .prose-block ol {
+    margin-top: 1.5rem;
+    max-width: var(--w-prose);
+    padding-left: 1.25rem;
+  }
+  .prose-block ul {
+    list-style: disc;
+  }
+  .prose-block ol {
+    list-style: decimal;
+  }
+  .prose-block li + li {
+    margin-top: 0.75rem; /* 12px between items */
+  }
+  .prose-block li::marker {
+    color: rgb(var(--color-primary-dark));
+  }
+  /* The bold lead-in each reference bullet opens with. */
+  .prose-block li strong,
+  .prose-block p strong {
+    font-weight: 700;
+    color: rgb(var(--color-text-body));
+  }
+
+  /* A muted variant for secondary reading copy (intros over photography, etc.)
+     that still wants the premium measure and rhythm but a lighter ink. */
+  .body-copy--muted {
+    color: rgb(var(--color-text-muted));
+  }
+  /* Copy inside cards and dense grids. Same colour, same leading, one step down so
+     an 18px paragraph cannot overflow a 4-up tile. Set --text-body-compact to
+     1.125rem in :root to collapse this into a single site-wide size. */
+  .body-copy--compact {
+    font-size: var(--text-body-compact);
+    line-height: var(--leading-body);
+    color: rgb(var(--color-text-body));
+  }
 }
 
 html,
@@ -116,12 +301,32 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Anchor targets clear the sticky header.
+   The header is ~68px and `position: sticky`, so a hash link scrolling a section to
+   `block: 'start'` would park its heading directly underneath it. `scroll-margin-top`
+   reserves that space at the scroll destination — it costs nothing at any other time,
+   which is why it belongs here rather than in the scroll handler. */
+[id] {
+  scroll-margin-top: 6rem;
+}
+
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Satoshi', system-ui, sans-serif;
+  font-weight: 400; /* UI chrome default; reading prose now matches it — see .body-copy */
+  letter-spacing: normal; /* Satoshi's own metrics — no artificial tracking */
+  line-height: 1.6;
+  color: rgb(var(--color-text-body)); /* #000000 */
+  /* No `-webkit-font-smoothing: antialiased` here. It thins every stroke on macOS and iOS,
+     which is the opposite of what the client asked for — they want body copy reading dark.
+     Leaving the default (subpixel-antialiased) renders text denser on those platforms.
+     It changes nothing on Windows, where the property is ignored, so this is a fix aimed
+     squarely at Mac and iPhone visitors. */
+  text-rendering: optimizeLegibility;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Satoshi', system-ui, sans-serif; /* one family across headings and body */
+  letter-spacing: normal;
 }
 
 * {
@@ -140,6 +345,24 @@ svg {
   min-width: 0;
 }
 
+/* ============================================================================
+   Icon system — one consistent, enterprise-grade outline weight.
+
+   Every icon on the site is Lucide: hand-drawn outline SVGs on a 24px grid,
+   single `currentColor`, no fills — exactly the minimal, non-AI enterprise look
+   (Lely / Honeywell / PERI). The only thing that read as inconsistent was stroke
+   WEIGHT: Lucide defaults to 2 (slightly heavy) and call sites had sprinkled
+   ad-hoc strokeWidth values (1.4 / 1.6 / 1.7).
+
+   `stroke-width` is an inherited SVG property and a CSS declaration overrides the
+   SVG presentation attribute, so this single rule wins over both the default and
+   every per-icon prop, cascading to the paths. Result: one refined 1.5 line
+   weight across the whole site, regardless of icon or size. Change it here only.
+   ========================================================================== */
+.lucide {
+  stroke-width: 1.5;
+}
+
 main {
   min-width: 0;
 }
@@ -154,10 +377,18 @@ main {
    *   light surface -> text-primary-darker    dark surface -> text-primary-light
    */
   .eyebrow {
-    @apply inline-flex items-center gap-2 text-xs font-mono font-medium tracking-[0.18em] uppercase;
+    /* Matches the reference label ("OUR COMPANY"): Satoshi Bold, uppercase, tracked — no
+       longer monospace. Colour is still owned by each call site (brand blue:
+       text-primary-darker on light, text-primary-light on dark), never red. */
+    @apply inline-flex items-center gap-2 text-[13px] font-bold tracking-[0.14em] uppercase;
   }
+  /* The rhythm for every section on every page. The gap between two adjacent sections is
+     twice these numbers: ~74px (1.96cm) on a phone, ~114px (3.02cm) on desktop. It was
+     64/80/96 — nearly half again as tall — which left the longer pages mostly whitespace.
+     The three steps stay in proportion to each other so the ramp between breakpoints reads
+     evenly. (CSS centimetres: 1cm = 37.8px by spec, not a physical measurement.) */
   .section-pad {
-    @apply py-16 sm:py-20 lg:py-24;
+    @apply py-[37px] sm:py-[47px] lg:py-[57px];
   }
 }
 

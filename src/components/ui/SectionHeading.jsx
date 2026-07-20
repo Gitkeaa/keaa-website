@@ -17,13 +17,17 @@ export default function SectionHeading({
       )}
       <h2
         className={`mt-3 font-display text-3xl sm:text-4xl font-bold leading-tight ${
-          light ? 'text-white' : 'text-navy-800'
+          light ? 'text-white' : 'text-text'
         }`}
       >
         {title}
       </h2>
       {desc && (
-        <p className={`mt-4 text-base leading-relaxed ${light ? 'text-white/70' : 'text-ink/70'}`}>
+        <p
+          /* `text-body` carries both the 16px size and the 1.6 leading from the shared
+             tokens, so this section lead can never drift from the site's body copy. */
+          className={`mt-4 text-body ${light ? 'text-white/85' : 'text-text-body'}`}
+        >
           {desc}
         </p>
       )}

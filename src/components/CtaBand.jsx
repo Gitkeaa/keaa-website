@@ -1,9 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { Headset, Clock, ShieldCheck, Award, ArrowRight } from 'lucide-react';
 import Button from './ui/Button';
 import BrandTexture from './ui/BrandTexture';
 import { company } from '../data/company';
-import useSplashDone from '../hooks/useSplash';
 
 /**
  * The closing call-to-action, sitting between the last page section and the footer.
@@ -14,15 +12,15 @@ import useSplashDone from '../hooks/useSplash';
  *
  *   - `primary` (#3A86C6) is an accent only. As text on white it measures 3.89:1 and
  *     fails AA, so every blue word here is `primary-dark` (4.87:1) and `primary` is left
- *     to the rules, rings and icon strokes.
+ *     to the rules and rings.
  *   - The background artwork stays a texture. The photograph is held at 14% behind a
  *     left-to-right wash of the page colour, so nothing competes with the card.
  */
 
 const PROMISES = [
-  { Icon: Clock, title: 'Quick\nResponse' },
-  { Icon: ShieldCheck, title: 'Expert\nSupport' },
-  { Icon: Award, title: 'Best\nSolutions' },
+  { title: 'Quick\nResponse' },
+  { title: 'Expert\nSupport' },
+  { title: 'Best\nSolutions' },
 ];
 
 const EASE = [0.22, 1, 0.36, 1];
@@ -32,13 +30,11 @@ export default function CtaBand({
   accent = 'Scaffolding & Formwork Solutions?',
   desc = 'Get in touch with our team for the best solutions for your project.',
   note,
-  cta = { label: 'Request a Quote', to: '/rfq', icon: ArrowRight },
+  cta = { label: 'Request a Quote', to: '/rfq' },
   showPhone = true,
 }) {
   const reduce = useReducedMotion();
-  const splashDone = useSplashDone();
   const phone = company.phones[0];
-  const CtaIcon = cta.icon ?? ArrowRight;
 
   return (
     <section className="relative isolate overflow-hidden bg-surface pb-5 pt-10 sm:pt-12">
@@ -48,20 +44,13 @@ export default function CtaBand({
       <div className="container-wide relative z-10">
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 24 }}
-          whileInView={splashDone ? { opacity: 1, y: 0 } : undefined}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.6, ease: EASE }}
-          className="flex flex-col gap-6 rounded-2xl bg-surface-raised p-5 shadow-[0_1px_2px_-1px_rgb(var(--color-text)_/_0.08),0_28px_64px_-34px_rgb(var(--color-text)_/_0.35)] ring-1 ring-border sm:rounded-3xl sm:p-6 lg:flex-row lg:items-stretch lg:gap-0 lg:p-7"
+          className="flex flex-col gap-6 rounded-card bg-surface-raised p-5 shadow-[0_1px_2px_-1px_rgb(var(--color-text)_/_0.08),0_28px_64px_-34px_rgb(var(--color-text)_/_0.35)] ring-1 ring-border sm:p-6 lg:flex-row lg:items-stretch lg:gap-0 lg:p-7"
         >
           {/* Pitch */}
           <div className="flex items-center gap-5 lg:w-[36%] lg:pr-8">
-            <span
-              aria-hidden
-              className="hidden h-[68px] w-[68px] flex-shrink-0 items-center justify-center rounded-full ring-1 ring-border sm:flex"
-              style={{ background: 'linear-gradient(150deg, rgb(var(--color-primary-light) / 0.18), rgb(var(--color-primary) / 0.06))' }}
-            >
-              <Headset className="h-7 w-7 text-primary-dark" strokeWidth={1.4} />
-            </span>
             <div className="min-w-0">
               <h2 className="font-display text-xl font-bold leading-tight tracking-[-0.01em] sm:text-[1.375rem]">
                 <span className="block text-text">{title}</span>
@@ -74,11 +63,18 @@ export default function CtaBand({
             </div>
           </div>
 
-          {/* Promises. `divide-x` draws the rule between each, matching the reference. */}
-          <ul className="grid flex-1 grid-cols-3 divide-x divide-border border-t border-border pt-5 lg:border-l lg:border-t-0 lg:pt-0">
-            {PROMISES.map(({ Icon, title }) => (
-              <li key={title} className="flex flex-col items-center justify-center gap-2 px-2 text-center">
-                <Icon aria-hidden className="h-7 w-7 text-primary-dark" strokeWidth={1.4} />
+          {/* Promises. Each sits on its own tinted tile rather than being separated by a
+              `divide-x` rule: the tile already groups the two words, so a rule between them
+              would be a second separator doing the same job. `navy-50` is the faintest tint
+              on the palette — every `surface-*` token is pure white, so a tile has to reach
+              for the navy ramp to register at all. `lg:pl-8` matches the action column on
+              the other side, so the tiles clear the divider by the same gap. */}
+          <ul className="grid flex-1 grid-cols-3 gap-2 border-t border-border pt-5 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+            {PROMISES.map(({ title }) => (
+              <li
+                key={title}
+                className="flex flex-col items-center justify-center rounded-card bg-navy-50 px-2 py-4 text-center"
+              >
                 <span className="whitespace-pre-line text-[13px] font-semibold leading-snug text-text">
                   {title}
                 </span>
@@ -92,7 +88,6 @@ export default function CtaBand({
             <Button
               to={cta.to}
               href={cta.href}
-              icon={CtaIcon}
               size="lg"
               className="w-full justify-center"
             >

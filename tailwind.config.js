@@ -75,16 +75,47 @@ export default {
           800: '#7A5900',
           900: '#523C00',
         },
-        /* 118 usages of `text-ink` across the pages; left untouched. */
-        ink: '#1E293B',
+        /* Body-copy ink. Every `text-ink` on the site resolves here, so this token is the
+           single lever for the body colour. #384250 is taken from the reference typography
+           the client supplied and matches the `--color-text-body` token in index.css.
+
+           Use it at FULL opacity. `text-ink/60`-style tints were what produced nine
+           different body greys across the pages; secondary copy now uses `text-muted`
+           instead, so the site has exactly two body-text colours. */
+        ink: '#000000',
+        /* The one secondary body tone — captions, metadata, timestamps. Top-level so it
+           reads as the natural partner to `ink`: body copy is `text-ink`, secondary copy
+           is `text-muted`, and nothing else. It is the same value as the nested
+           `text.muted` above (which spells out as the clumsier `text-text-muted`); both
+           resolve to --color-text-muted, so there is still one source of truth. */
+        muted: 'rgb(var(--color-text-muted) / <alpha-value>)',
         /* The old flat `surface: '#F8F9FA'` was removed: declared after the token object
            above, it silently overwrote it. Its six usages now resolve to the token
            (#F5F9FD) — two levels bluer, nothing measured depends on it. */
       },
       fontFamily: {
-        display: ['"Space Grotesk"', 'sans-serif'],
-        body: ['"Inter"', 'sans-serif'],
+        // One unified typeface: Satoshi across headings AND body (the Lely/PERI reference
+        // look). `display` = headings/eyebrows (Bold 700), `body` = reading prose
+        // (Light 300 via the `.body-copy` primitive in src/index.css). `mono` stays
+        // JetBrains Mono, reserved for technical tokens only (item codes, step numbers).
+        display: ['"Satoshi"', 'system-ui', 'sans-serif'],
+        body: ['"Satoshi"', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
+      },
+      /**
+       * Body type scale. Values live in :root (src/index.css) so the `.body-copy`
+       * primitive and these utilities can never drift apart.
+       *
+       *   text-body          18px — reading paragraphs, the reference's own size
+       *   text-body-compact  16px — copy inside cards and dense grids
+       *
+       * Both carry the reference's 1.6 line-height, so a paragraph never needs a
+       * separate `leading-*` utility. Tailwind's own text-xs…text-5xl are untouched and
+       * remain correct for labels, badges and headings.
+       */
+      fontSize: {
+        body: ['var(--text-body)', { lineHeight: 'var(--leading-body)' }],
+        'body-compact': ['var(--text-body-compact)', { lineHeight: 'var(--leading-body)' }],
       },
       // Layout width tokens. Values live in :root (src/index.css) so the CSS
       // container tiers and these utilities share one source of truth.
@@ -93,6 +124,15 @@ export default {
         wide: 'var(--w-wide)',
         measure: 'var(--w-prose)',
         form: 'var(--w-form)',
+      },
+      // One corner radius for every rectangular box on the site — cards, panels, modals,
+      // inputs, media wrappers — matched to the project card on Projects & Gallery. The
+      // mixed rounded-lg/xl/2xl scale is what read as unfinished; routing every box
+      // through `rounded-card` means the whole site retunes from this one line.
+      // Tailwind's default scale is left intact so it keeps working during the migration,
+      // and `rounded-full` stays the deliberate exception for pills, chips and avatars.
+      borderRadius: {
+        card: '0.375rem',
       },
       boxShadow: {
         card: '0 1px 2px rgba(10,35,66,0.04), 0 8px 24px -8px rgba(10,35,66,0.12)',

@@ -1,4 +1,3 @@
-import { Eye, ShieldCheck, ArrowRight } from 'lucide-react';
 import PageHero from '../components/ui/PageHero';
 import SectionHeading from '../components/ui/SectionHeading';
 import { company } from '../data/company';
@@ -36,7 +35,7 @@ export default function Certifications() {
             {company.certifications.map((c) => (
               <div
                 key={c.name}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-black bg-white shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
+                className="group flex flex-col overflow-hidden rounded-card border border-navy-100 bg-white shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
               >
                 <div className="overflow-hidden border-b border-navy-100 bg-navy-50/40 p-4">
                   <img
@@ -47,21 +46,18 @@ export default function Certifications() {
                   />
                 </div>
                 <div className="flex flex-1 flex-col p-5">
-                  <div className="flex items-center gap-2">
-                    <ShieldCheck className="h-5 w-5 flex-shrink-0 text-primary-dark" />
-                    <h3 className="font-display text-lg font-semibold text-navy-800">{c.name}</h3>
-                  </div>
+                  <h3 className="font-display text-lg font-semibold text-text">{c.name}</h3>
                   <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-primary-darker">
                     {c.scope} — {c.body}
                   </p>
-                  <p className="mt-2 text-sm leading-relaxed text-ink/60">{c.note}</p>
+                  <p className="mt-2 text-body-compact leading-relaxed text-ink">{c.note}</p>
                   <a
                     href={c.image}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-navy-700 transition-colors hover:text-primary-deep"
+                    className="mt-4 inline-flex w-fit items-center border-b border-transparent pb-0.5 text-[13px] font-bold uppercase tracking-[0.12em] text-navy-700 transition-colors hover:border-primary hover:text-primary-darker"
                   >
-                    <Eye className="h-4 w-4" /> View Certificate
+                    View Certificate
                   </a>
                 </div>
               </div>
@@ -76,19 +72,19 @@ export default function Certifications() {
             <span className="eyebrow text-primary-darker">
               In-House Testing
             </span>
-            <h3 className="mt-2 font-display text-xl font-semibold text-navy-800">
+            <h3 className="mt-2 font-display text-xl font-semibold text-text">
               Tested Before It Leaves Our Facility
             </h3>
-            <p className="mt-3 text-sm leading-relaxed text-ink/65">{company.facilities.testing}.</p>
+            <p className="mt-3 text-body-compact leading-relaxed text-ink">{company.facilities.testing}.</p>
           </div>
           <div>
             <span className="eyebrow text-primary-darker">
               Certified Workforce
             </span>
-            <h3 className="mt-2 font-display text-xl font-semibold text-navy-800">
+            <h3 className="mt-2 font-display text-xl font-semibold text-text">
               Certified Welders, Verified Process
             </h3>
-            <p className="mt-3 text-sm leading-relaxed text-ink/65">{company.facilities.welders}.</p>
+            <p className="mt-3 text-body-compact leading-relaxed text-ink">{company.facilities.welders}.</p>
           </div>
         </div>
       </section>
@@ -97,7 +93,7 @@ export default function Certifications() {
         title="Need a Specific"
         accent="Compliance Document?"
         desc="We&rsquo;re happy to share full certification packs for your project or tender."
-        cta={{ label: 'Contact Our Team', to: '/contact', icon: ArrowRight }}
+        cta={{ label: 'Contact Our Team', to: '/contact' }}
       />
     </>
   );

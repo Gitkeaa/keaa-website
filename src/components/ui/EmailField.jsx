@@ -45,11 +45,11 @@ export default function EmailField({
         onBlur={() => setOpen(false)}
         autoComplete="email"
         placeholder="you@gmail.com"
-        className="mt-1.5 w-full rounded-md border border-navy-100 px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-primary"
+        className="mt-1.5 w-full rounded-card border border-navy-100 px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-primary"
       />
 
       {suggestions.length > 0 && (
-        <ul className="absolute z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-xl border border-black bg-white py-1 shadow-cardHover">
+        <ul className="absolute z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-card border border-navy-100 bg-white py-1 shadow-cardHover">
           {suggestions.map((s) => (
             <li key={s}>
               <button
@@ -62,7 +62,7 @@ export default function EmailField({
                 }}
                 className="flex w-full items-center px-4 py-2 text-left text-sm text-navy-800 transition-colors hover:bg-navy-50"
               >
-                <span className="text-ink/50">{local}@</span>
+                <span className="text-muted">{local}@</span>
                 <span className="font-medium">{s.slice(local.length + 1)}</span>
               </button>
             </li>

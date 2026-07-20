@@ -95,10 +95,10 @@ export default function MegaMenu({ open, onClose }) {
                 transition={{ delay: 0.05, duration: 0.3 }}
               >
                 <span className="eyebrow text-primary-darker">Explore</span>
-                <h2 className="mt-3 font-display text-4xl font-bold tracking-tight text-navy-800 sm:text-5xl">
+                <h2 className="mt-3 font-display text-4xl font-bold tracking-tight text-text sm:text-5xl">
                   Explore More About <span className="text-primary-dark">KEAA</span>
                 </h2>
-                <p className="mt-3 max-w-md text-sm text-ink/55">
+                <p className="mt-3 max-w-md text-sm text-ink">
                   Resources, insights and solutions — all in one place.
                 </p>
               </motion.div>
@@ -114,7 +114,7 @@ export default function MegaMenu({ open, onClose }) {
                     key={item.to}
                     variants={cardVariant}
                     onClick={() => handleNavigate(item.to)}
-                    className="group relative flex flex-col overflow-hidden rounded-2xl border border-black bg-white p-6 text-left shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-cardHover"
+                    className="group relative flex flex-col overflow-hidden rounded-card border border-navy-100 bg-white p-6 text-left shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-cardHover"
                   >
                     {/* accent bar that draws in on hover */}
                     <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-primary-light to-primary transition-transform duration-300 group-hover:scale-x-100" />
@@ -124,15 +124,15 @@ export default function MegaMenu({ open, onClose }) {
                     </span>
 
                     <span
-                      className={`relative flex h-11 w-11 items-center justify-center rounded-xl ${item.color} text-white shadow-md transition-transform duration-300 group-hover:scale-110`}
+                      className={`relative flex h-11 w-11 items-center justify-center rounded-card ${item.color} text-white shadow-md transition-transform duration-300 group-hover:scale-110`}
                     >
                       <item.icon className="h-5 w-5" />
                     </span>
 
-                    <h3 className="relative mt-5 font-display text-base font-semibold text-navy-800">
+                    <h3 className="relative mt-5 font-display text-base font-semibold text-text">
                       {item.title}
                     </h3>
-                    <p className="relative mt-1.5 flex-1 text-xs leading-relaxed text-ink/55">
+                    <p className="relative mt-1.5 flex-1 text-xs leading-relaxed text-ink">
                       {item.desc}
                     </p>
                     <span className="relative mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-primary-darker">
@@ -149,7 +149,7 @@ export default function MegaMenu({ open, onClose }) {
               <div className="container-page grid gap-8 py-10 md:grid-cols-2">
                 {/* Countries */}
                 <div>
-                  <h4 className="flex items-center gap-2 font-display text-sm font-semibold text-navy-800">
+                  <h4 className="flex items-center gap-2 font-display text-sm font-semibold text-text">
                     <Globe2 className="h-4 w-4 text-primary-dark" /> Exporting to 42+ Countries
                   </h4>
                   <div className="mt-3 flex flex-wrap gap-1.5">
@@ -158,7 +158,9 @@ export default function MegaMenu({ open, onClose }) {
                         key={c.name}
                         className="rounded-full border border-navy-100 bg-white px-2.5 py-1 text-xs text-navy-700 transition-colors hover:border-primary/50"
                       >
-                        {c.flag} {c.name}
+                        {/* No `c.flag` — Chrome on Windows renders flag emoji as bare
+                            country letters. Name only. */}
+                        {c.name}
                       </span>
                     ))}
                   </div>
@@ -166,23 +168,23 @@ export default function MegaMenu({ open, onClose }) {
 
                 {/* Need help */}
                 <div className="md:text-right">
-                  <h4 className="flex items-center gap-2 font-display text-sm font-semibold text-navy-800 md:justify-end">
+                  <h4 className="flex items-center gap-2 font-display text-sm font-semibold text-text md:justify-end">
                     <Headset className="h-4 w-4 text-primary-dark" /> Need Help?
                   </h4>
                   <div className="mt-3 space-y-2 text-sm">
                     <a
                       href={`tel:${company.phones[0]}`}
-                      className="flex items-center gap-2 text-ink/70 transition-colors hover:text-primary-deep md:justify-end"
+                      className="flex items-center gap-2 text-ink transition-colors hover:text-primary-deep md:justify-end"
                     >
                       <Phone className="h-4 w-4 text-primary-dark" /> {company.phones[0]}
                     </a>
                     <a
                       href={`mailto:${company.emails[0]}`}
-                      className="flex items-center gap-2 break-all text-ink/70 transition-colors hover:text-primary-deep md:justify-end"
+                      className="flex items-center gap-2 break-all text-ink transition-colors hover:text-primary-deep md:justify-end"
                     >
                       <Mail className="h-4 w-4 flex-shrink-0 text-primary-dark" /> {company.emails[0]}
                     </a>
-                    <p className="flex items-center gap-2 text-ink/50 md:justify-end">
+                    <p className="flex items-center gap-2 text-muted md:justify-end">
                       <Clock className="h-4 w-4 text-primary-dark" /> Mon – Sat, 9 AM – 6 PM (IST)
                     </p>
                   </div>
@@ -192,7 +194,7 @@ export default function MegaMenu({ open, onClose }) {
               {/* Quick access sub-row */}
               <div className="border-t border-navy-100">
                 <div className="container-page flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-4">
-                  <span className="text-xs font-semibold uppercase tracking-widest text-ink/40">
+                  <span className="text-xs font-semibold uppercase tracking-widest text-muted">
                     Quick Access
                   </span>
                   {downloadResources.slice(0, 3).map((d) => (

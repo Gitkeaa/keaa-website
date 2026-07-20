@@ -9,22 +9,35 @@
       name="description"
       content="KEAA International Pvt. Ltd. — ISO 9001:2015 certified manufacturer and exporter of scaffolding systems, formwork accessories, safety products, livestock housing solutions and garden hardware. Exporting to 30+ countries since 2003."
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://images.unsplash.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
+    <!--
+      NO FONT CDN LINKS AND NO THIRD-PARTY PRECONNECTS HERE — deliberately.
+
+      Satoshi (Fontshare/ITF) and JetBrains Mono (Google Fonts) used to load from <link>
+      tags at this point. Head links fire during HTML parse, before any script and long
+      before the consent bar exists, so each one disclosed every visitor's IP to a third
+      country with no consent and no possible gate. Both families are now served from
+      /fonts/ via @font-face in src/index.css — see the block at the top of that file.
+
+      Anything added here that points at another origin reintroduces exactly that problem.
+      Host it, or gate it behind consent inside the app where a gate can actually run.
+
+      Satoshi ships no 600 weight, so `font-semibold` resolves upward to 700.
+    -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/satoshi-400.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/satoshi-700.woff2" crossorigin />
     <link rel="canonical" href="https://www.keaainternational.com/" />
     <meta property="og:site_name" content="KEAA International" />
     <meta property="og:locale" content="en_US" />
-    <link
-      rel="preload"
-      as="image"
-      imagesrcset="https://images.unsplash.com/photo-1636362556682-11231883c01c?auto=format&fit=crop&w=1920&q=80"
-      fetchpriority="high"
-    />
+    <!--
+      The Unsplash hero preload that sat here is removed for the same reason as the font
+      links: a head preload fires before any script, so it front-loaded a request to
+      images.unsplash.com — and the visitor's IP — on every page load, un-gateable.
+
+      This only ever preloaded the hero's FALLBACK image; the hero's real source is the
+      local /images/hero2.jpg, so nothing that normally renders lost its preload. The
+      remaining Unsplash usages in src/data/images.js should move to the Cloudinary account
+      the site already uses.
+    -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -52,6 +65,28 @@
           }
         ],
         "sameAs": []
+      }
+    </script>
+    <!--
+      WebSite entity, so Google can attribute the site name rather than guessing it from
+      the <title>. There is deliberately NO potentialAction/SearchAction here: the product
+      catalogue's search is client-side component state and is not addressable by URL, so
+      advertising a search endpoint would point crawlers at a page that cannot honour the
+      query. Add it only if search ever becomes a real ?q= route.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "KEAA International",
+        "alternateName": "KEAA International Pvt. Ltd.",
+        "url": "https://www.keaainternational.com",
+        "inLanguage": "en",
+        "publisher": {
+          "@type": "Organization",
+          "name": "KEAA International Pvt. Ltd.",
+          "url": "https://www.keaainternational.com"
+        }
       }
     </script>
   </head>

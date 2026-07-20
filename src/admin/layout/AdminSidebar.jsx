@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import * as Icons from 'lucide-react';
+import { ADMIN_ICONS as Icons } from '../adminIcons';
 import { navForRole, ROLE_LABELS } from '../auth/roles';
 import { useAdminAuth } from '../auth/AdminAuthContext';
 

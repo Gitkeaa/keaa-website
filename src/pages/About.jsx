@@ -1,19 +1,56 @@
-import { Building2, Target, Eye, Gem, Globe2, ShieldCheck, ArrowRight, Linkedin, MessageCircle, CheckCircle2 } from 'lucide-react';
+import { Linkedin, ShieldCheck, Globe2, Factory, Handshake, Award, Maximize } from 'lucide-react';
 import PageHero from '../components/ui/PageHero';
 import SectionHeading from '../components/ui/SectionHeading';
 import ImagePlaceholder from '../components/ui/ImagePlaceholder';
 import Reveal, { StaggerGroup, StaggerItem } from '../components/ui/Reveal';
+import CardRail from '../components/ui/CardRail';
+import { PANEL_CARD } from '../components/ui/panelCard';
+import PurposePath from '../components/about/PurposePath';
 import AnimatedCounter from '../components/ui/AnimatedCounter';
-import { company, leadership, managingDirectors } from '../data/company';
+import { company, leadership, managingDirectors, chairmanMessage } from '../data/company';
 import { img } from '../data/images';
 import useSEO from '../hooks/useSEO';
 import CtaBand from '../components/CtaBand';
 
+/**
+ * How wide a leadership card sits on the rail: just under a full screen on a phone so the next
+ * one peeks in and the rail is discoverable, then 2 / 3 / 4 across. The `calc` subtracts the
+ * 1.5rem gaps so the cards land flush with the container edges.
+ */
+const TEAM_CARD_W =
+  'w-[74%] sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] xl:w-[calc((100%-4.5rem)/4)]';
+
+/** Placeholder cards on the end of the rail, for team members not yet published. */
+const OPEN_SLOTS = 4;
+
+/**
+ * The rail covers everyone except the CMD and the MDs. Those three carry the company's voice,
+ * so they get a full message section with a large square portrait higher up the page rather
+ * than a thumbnail on a rail — putting them in both read as a demotion.
+ */
+const TEAM = leadership.filter(
+  (l) => l.role !== 'Chief Managing Director' && l.role !== 'Managing Director'
+);
+
 const whoWeAre = [
-  { icon: ShieldCheck, title: 'Quality First', desc: 'We follow strict quality standards in every stage of production.' },
-  { icon: Globe2, title: 'Global Reach', desc: 'Serving customers across 42+ countries with consistent reliability.' },
-  { icon: Building2, title: '5 Manufacturing Units', desc: '25,000 sq. m of in-house facilities in Ludhiana, Punjab.' },
-  { icon: Gem, title: 'Reliable Partner', desc: 'Long-term partnerships built on trust, since 2003.' },
+  { title: 'Quality First', desc: 'We follow strict quality standards in every stage of production.' },
+  { title: 'Global Reach', desc: 'Serving customers across 42+ countries with consistent reliability.' },
+  { title: '5 Manufacturing Units', desc: '25,000 sq. m of in-house facilities in Ludhiana, Punjab.' },
+  { title: 'Reliable Partner', desc: 'Long-term partnerships built on trust, since 2003.' },
+];
+
+/* Icons are positional rather than a field on the objects above, so the copy stays free of
+   presentation and the same four strings can be rendered without icons anywhere else. */
+const WHO_WE_ARE_ICONS = [ShieldCheck, Globe2, Factory, Handshake];
+const STAT_ICONS = [Award, Globe2, Factory, Maximize];
+
+/* The angled strip beside the copy. Four frames, ordered to read process → product →
+   automation → output rather than as four interchangeable factory shots. */
+const COLLAGE = [
+  { src: img.metalSparks, alt: 'Sparks from steel cutting on the shop floor' },
+  { src: img.scaffoldRacks, alt: 'Finished scaffolding tubes racked for dispatch' },
+  { src: img.weldersFactory, alt: 'Robotic welding cell in operation' },
+  { src: img.steelFrame, alt: 'Galvanized steel components stacked in the yard' },
 ];
 
 const manufacturingStrength = [
@@ -43,73 +80,156 @@ export default function About() {
         image={img.steelFrame}
       />
 
-      {/* WHO WE ARE */}
+      {/* WHY CHOOSE KEAA — copy + navy pillar card on the left, angled photo collage right */}
+      <section id="who-we-are" className="overflow-hidden pt-16 sm:pt-20 lg:pt-24">
+        <div className="container-page grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-10">
+          <Reveal>
+            {/* Brand blue, not the gold this block was first built in. Gold reads as a
+                second accent the rest of the site does not use — the token file calls it
+                unsanctioned outside dark surfaces, and measured on white it is 1.93:1,
+                which cannot legally carry text at all.
+
+                The blues used here are the documented ones: `primary-darker` for the
+                eyebrow, `primary-dark` (4.87:1 on white) for the heading accent, and
+                `primary` for the icons on the navy card (4.75:1 on that ground). */}
+            <span className="flex items-center gap-4">
+              <span className="eyebrow text-primary-darker">
+                Why Choose KEAA
+              </span>
+              <span aria-hidden className="h-px w-16 bg-primary/50" />
+            </span>
+
+            {/* One colour across the whole headline — the accent span on "Global Reach" is
+                gone. It was the design's only two-tone heading, and every other h2 on the
+                site sets solid `text-text`. */}
+            <h2 className="mt-5 font-display text-4xl font-bold leading-[1.1] tracking-[-0.02em] text-text sm:text-5xl">
+              Engineering Excellence
+              <br />
+              with Global Reach
+            </h2>
+
+            <p className="body-copy mt-6">
+              For over two decades, the KEAA International name has stood for engineering
+              precision, manufacturing strength and close customer partnership. With
+              entrepreneurial thinking, reliability and a genuine passion for the people we
+              serve, we have grown into a trusted Indo-Dutch manufacturer and exporter of
+              scaffolding systems, formwork accessories, safety products, livestock housing
+              solutions and garden hardware.
+            </p>
+
+            {/* The four pillars, on the deep navy ground — one considered statement rather
+                than four loose tiles. Navy is also what lets the icons carry real colour:
+                `primary` is only 3.89:1 on white but 4.75:1 here. */}
+            <div className="mt-10 rounded-card bg-surface-deep p-6 sm:p-8">
+              <ul className="grid gap-x-8 gap-y-8 sm:grid-cols-2 xl:grid-cols-4 xl:divide-x xl:divide-white/10">
+                {whoWeAre.map((w, i) => {
+                  const Icon = WHO_WE_ARE_ICONS[i];
+                  return (
+                    <li key={w.title} className={i > 0 ? 'xl:pl-8' : ''}>
+                      <Icon aria-hidden className="h-7 w-7 text-primary" strokeWidth={1.5} />
+                      <h3 className="mt-4 text-sm font-semibold text-white">{w.title}</h3>
+                      <p className="mt-1.5 text-xs leading-relaxed text-white/65">{w.desc}</p>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </Reveal>
+
+          {/* Angled collage. The whole strip is skewed and each photo is counter-skewed by
+              the same amount, so the PANELS lean while the photographs stay upright —
+              skewing the images themselves would visibly distort every machine in them.
+              `scale` covers the corners the rotation would otherwise expose. */}
+          <Reveal delay={0.1}>
+            <div className="flex h-[26rem] -skew-x-[7deg] gap-2 overflow-hidden lg:h-[32rem]">
+              {COLLAGE.map((c) => (
+                <div key={c.alt} className="relative flex-1 overflow-hidden">
+                  <img
+                    src={c.src}
+                    alt={c.alt}
+                    loading="lazy"
+                    className="h-full w-full skew-x-[7deg] scale-125 object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* BUILT ON TRUST — the remaining company narrative, with the headline figures */}
+      <section className="section-pad bg-surface-tint">
+        <div className="container-page grid gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
+          <Reveal>
+            <span className="flex items-center gap-4">
+              <span className="eyebrow text-primary-darker">
+                Built on Trust. Driven by Excellence.
+              </span>
+            </span>
+            <span aria-hidden className="mt-3 block h-px w-16 bg-primary/50" />
+            <p className="body-copy mt-6">
+              Since our foundation in 2003, our headquarters and 25,000 sq. m of in-house
+              manufacturing in Ludhiana, India — together with our European sales office in
+              Eindhoven, the Netherlands — have steered the fortunes of our globally operating
+              business.
+            </p>
+            <p className="body-copy mt-6">
+              More than 150 skilled professionals work for us, serving customers in over 42
+              countries. Under the promise of delivering the best service to every client, our
+              team tackles the daily challenges of the construction process together with
+              contractors, builders, scaffolders and engineers worldwide.
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <div className="rounded-card border border-navy-100 bg-white p-8 shadow-card">
+              <ul className="grid gap-y-10 sm:grid-cols-2 xl:grid-cols-4 xl:divide-x xl:divide-navy-100">
+                {company.stats.slice(0, 4).map((s, i) => {
+                  const Icon = STAT_ICONS[i];
+                  return (
+                    <li
+                      key={s.label}
+                      className={`flex items-center gap-4 xl:flex-col xl:items-start xl:gap-3 ${
+                        i > 0 ? 'xl:pl-6' : ''
+                      }`}
+                    >
+                      <span
+                        aria-hidden
+                        className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-primary/35 text-primary-dark"
+                      >
+                        <Icon className="h-5 w-5" strokeWidth={1.5} />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="font-display text-2xl font-bold leading-none text-text">
+                          <AnimatedCounter value={s.value} />
+                        </p>
+                        <p className="mt-1.5 text-xs leading-snug text-ink">{s.label}</p>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* WHY KEAA STANDS APART */}
       <section className="section-pad overflow-hidden">
         <div className="container-page">
-          {/* Photo left, copy right. The order is flipped with `order-*` rather than by
-              moving the markup, so a screen reader still meets the heading before the
-              photograph, and the stacked mobile layout is unchanged. */}
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-          <Reveal className="lg:order-2">
-            <span className="eyebrow text-primary-darker">
-              Why choose keaa
-            </span>
-            <h2 className="mt-3 font-display text-3xl font-bold text-navy-800">
-              Engineering Excellence with Global Reach
-            </h2>
-            <p className="mt-4 text-ink/70 leading-relaxed">
-              KEAA International Pvt. Ltd. is a leading Indo-Dutch manufacturer and exporter of
-              scaffolding systems, formwork accessories, safety products, livestock housing
-              solutions and garden hardware. With our European sales office in Eindhoven, The
-              Netherlands, and advanced manufacturing facilities in India, we proudly serve
-              customers across 42+ countries.
-            </p>
-            <p className="mt-3 text-ink/70 leading-relaxed">
-              Our commitment to quality, innovation and precision engineering enables us to
-              deliver products that meet the highest international standards while building
-              long-term partnerships based on trust and reliability.
-            </p>
-            <div className="mt-8 grid grid-cols-2 gap-6">
-              {company.stats.slice(0, 4).map((s) => (
-                <div key={s.label}>
-                  <p className="font-display text-3xl font-bold text-navy-800">
-                    <AnimatedCounter value={s.value} />
-                  </p>
-                  <p className="text-sm text-ink/60">{s.label}</p>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-          <Reveal delay={0.1} className="relative lg:order-1">
-            <ImagePlaceholder
-              src={img.factoryInterior}
-              label="KEAA International manufacturing plant — Ludhiana"
-              icon={Building2}
-              ratio="aspect-[4/3]"
-              className="shadow-xl"
-            />
-            <div className="mt-4 grid grid-cols-2 gap-4">
-              {whoWeAre.map((w) => (
-                <div key={w.title} className="rounded-xl bg-navy-50 p-4 transition-colors hover:bg-navy-100">
-                  <w.icon className="h-5 w-5 text-primary-darker" />
-                  <h4 className="mt-2 text-sm font-semibold text-navy-800">{w.title}</h4>
-                  <p className="mt-1 text-xs text-ink/60">{w.desc}</p>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-          </div>
-
-          {/* Why KEAA stands apart + manufacturing strength */}
-          <div className="mt-16 border-t border-navy-100 pt-12">
+        <div className={PANEL_CARD}>
+          {/* This used to be a `mt-16 border-t pt-12` divider inside the Who We Are panel.
+              That panel is now its own section, so the rule and top margin are gone — the
+              block opens its own card instead. */}
+          <div>
             <Reveal className="max-w-3xl">
               <span className="eyebrow text-primary-darker">
                 Why KEAA Stands Apart
               </span>
-              <h3 className="mt-3 font-display text-2xl font-bold text-navy-800">
+              <h3 className="mt-3 font-display text-2xl font-bold text-text">
                 Complete Production Control, In-House
               </h3>
-              <p className="mt-3 text-ink/70 leading-relaxed">
+              <p className="body-copy mt-3">
                 Unlike conventional manufacturers, KEAA controls the complete production process
                 in-house — ensuring consistent quality, faster lead times and dependable
                 performance across every product line.
@@ -118,121 +238,187 @@ export default function About() {
             <StaggerGroup className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {manufacturingStrength.map((m) => (
                 <StaggerItem key={m}>
-                  <div className="flex h-full items-center gap-3 rounded-xl border border-black bg-white p-5 shadow-card transition-all hover:-translate-y-1 hover:border-primary/50 hover:shadow-cardHover">
-                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-primary/[0.08] text-primary-darker">
-                      <CheckCircle2 className="h-5 w-5" />
-                    </span>
-                    <p className="text-sm font-medium leading-snug text-navy-800">{m}</p>
+                  {/* Flat inside the panel — see the note on the vision columns. */}
+                  <div className="flex h-full items-center gap-3">
+                    <p className="border-l-2 border-primary/40 pl-4 text-body-compact font-medium leading-snug text-text">{m}</p>
                   </div>
                 </StaggerItem>
               ))}
             </StaggerGroup>
           </div>
         </div>
-      </section>
-
-      {/* JOURNEY TIMELINE */}
-      <section className="section-pad">
-        <div className="container-page">
-          <Reveal>
-            <SectionHeading eyebrow="Our Journey" title="Growing Stronger, Together" />
-          </Reveal>
-          <StaggerGroup className="mt-14 grid gap-8 lg:grid-cols-5">
-            {company.timeline.map((t, i) => (
-              <StaggerItem key={t.year} className="relative">
-                <div className="flex items-center gap-3 lg:flex-col lg:gap-2 lg:text-center">
-                  <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-navy-700 font-display text-xs font-bold text-primary-light">
-                    {t.year}
-                  </span>
-                  <div className="lg:mt-2">
-                    <h4 className="font-display text-sm font-semibold text-navy-800">{t.title}</h4>
-                    <p className="mt-1 text-xs leading-relaxed text-ink/60">{t.desc}</p>
-                  </div>
-                </div>
-                {i < company.timeline.length - 1 && (
-                  <span className="absolute left-6 top-12 hidden h-px w-full bg-navy-200 lg:left-1/2 lg:top-6 lg:block" />
-                )}
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
         </div>
       </section>
 
-      {/* VISION MISSION VALUES */}
-      <section className="section-pad">
+      {/* JOURNEY TIMELINE — the horizontal rail that used to sit on the Home page, moved here
+          so the story lives in one place. Numbered steps run above a hairline, and each dot is
+          punched out of that line by a ring in the section's own background colour, so the rail
+          appears to break at the dot rather than run underneath it. Hence the explicit
+          `bg-surface-bright` — the ring has to match whatever is behind it. */}
+      <section id="journey" className="section-pad bg-surface-bright">
         <div className="container-page">
-          <StaggerGroup className="grid gap-6 lg:grid-cols-3">
-            <StaggerItem>
-              <div className="h-full rounded-2xl border border-black p-7 shadow-card transition-shadow hover:shadow-cardHover">
-                <Eye className="h-7 w-7 text-primary-dark" />
-                <h3 className="mt-4 font-display text-lg font-semibold text-navy-800">Our Vision</h3>
-                <p className="mt-2 text-sm leading-relaxed text-ink/65">{company.values.vision}</p>
-              </div>
-            </StaggerItem>
-            <StaggerItem>
-              <div className="h-full rounded-2xl border border-black p-7 shadow-card transition-shadow hover:shadow-cardHover">
-                <Target className="h-7 w-7 text-primary-dark" />
-                <h3 className="mt-4 font-display text-lg font-semibold text-navy-800">Our Mission</h3>
-                <p className="mt-2 text-sm leading-relaxed text-ink/65">{company.values.mission}</p>
-              </div>
-            </StaggerItem>
-            <StaggerItem>
-              <div className="h-full rounded-2xl border border-black p-7 shadow-card transition-shadow hover:shadow-cardHover">
-                <Gem className="h-7 w-7 text-primary-dark" />
-                <h3 className="mt-4 font-display text-lg font-semibold text-navy-800">Our Core Values</h3>
-                <ul className="mt-2 space-y-1.5 text-sm text-ink/65">
-                  {company.values.values.map((v) => (
-                    <li key={v} className="flex gap-2">
-                      <span className="text-primary-dark">•</span> {v}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </StaggerItem>
-          </StaggerGroup>
+        <div className={PANEL_CARD}>
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,0.68fr)_minmax(0,1.32fr)] lg:items-start lg:gap-14">
+          <Reveal>
+            <span className="eyebrow text-primary-darker">Our Journey</span>
+            <h2 className="mt-3 font-display text-3xl font-bold leading-[1.12] tracking-[-0.02em] text-text sm:text-4xl">
+              From Vision to
+              <br />
+              Global Impact
+            </h2>
+            <p className="body-copy mt-5 max-w-[24rem]">
+              Our journey is built on a foundation of hard work, innovation and a relentless focus
+              on our customers.
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <ol className="relative grid gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-5">
+              {/* The rail the dots sit on. Desktop only — stacked items need no connector.
+                  46px = step index (20) + mt-5 (20) + half the 12px dot. */}
+              <span aria-hidden className="absolute inset-x-0 top-[46px] hidden h-px bg-navy-200 lg:block" />
+              {company.timeline.map((t, i) => (
+                <li key={t.year} className="relative">
+                  <span aria-hidden className="block font-display text-sm font-bold leading-5 text-primary-dark">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span
+                    aria-hidden
+                    className="relative z-10 mt-5 block h-3 w-3 rounded-full bg-primary-dark ring-4 ring-surface-raised"
+                  />
+                  <p className="mt-5 font-display text-lg font-bold text-primary-dark">{t.year}</p>
+                  <h3 className="mt-1 font-display text-sm font-bold text-text">{t.title}</h3>
+                  <p className="mt-2 text-[13px] leading-relaxed text-ink">{t.desc}</p>
+                </li>
+              ))}
+            </ol>
+          </Reveal>
+        </div>
+        </div>
+        </div>
+      </section>
+
+      {/* OUR PURPOSE — vision / mission / core values as a numbered path. Deliberately a
+          full-bleed band rather than a PANEL_CARD: the connector and its background texture
+          are the section's surface, so a panel around them would box a box. */}
+      <PurposePath />
+
+      {/* MESSAGE FROM THE CHAIRMAN — moved here from the Home page. It sits directly above the
+          managing directors so the page reads Chairman → Managing Directors → Leadership Team,
+          which is the order the company itself is structured in. */}
+      <section className="section-pad overflow-hidden">
+        <div className="container-page">
+          {/* LEADERSHIP INTRO — opens the whole leadership run (Chairman → Managing Directors
+              → Leadership Team), so it sits above the chairman rather than above the directors,
+              and stays unpanelled: it is the section's opening statement, not one of its cards.
+              `max-w-none` on each paragraph is what actually makes it run edge to edge —
+              `.body-copy` clamps itself to a 768px reading measure in index.css. */}
+          <Reveal>
+            <SectionHeading
+              align="left"
+              eyebrow="Leadership"
+              title="Leadership That Inspires Excellence"
+              className="!mx-0"
+            />
+            <div className="mt-6 space-y-5">
+              <p className="body-copy max-w-none">
+                Behind every successful project is a leadership team driven by vision, innovation,
+                and engineering excellence. At KEAA International, our leaders combine strategic
+                thinking with deep manufacturing expertise to deliver high-quality solutions,
+                foster continuous improvement, and create lasting value for customers worldwide.
+              </p>
+              <p className="body-copy max-w-none">
+                With decades of industry experience, they empower our people, embrace advanced
+                technologies, and uphold the highest standards of quality, integrity, and
+                operational excellence. Their commitment to innovation and customer success
+                continues to strengthen KEAA International&rsquo;s position as a trusted
+                engineering and manufacturing partner, serving industries across 42+ countries.
+              </p>
+            </div>
+          </Reveal>
+
+        <div className={`${PANEL_CARD} mt-12`}>
+        <div className="grid items-center gap-10 lg:grid-cols-[400px_1fr]">
+          <Reveal x={-20} y={0}>
+            {/* Square, and the same frame the managing directors use below. Square because the
+                supplied portraits are square: a 4:3 box would crop the top and bottom off a
+                1:1 source. The column is 400px, so a 900×900 file still has better than 2×
+                pixel density on a retina screen. */}
+            <div className="group overflow-hidden rounded-card ring-1 ring-text/[0.08]">
+              <img
+                src={chairmanMessage.photo}
+                alt={`${chairmanMessage.name || 'Chairman'} — KEAA International`}
+                loading="lazy"
+                className="aspect-square w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+              />
+            </div>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <span className="eyebrow text-primary-darker">
+              Message from Chairman, keaa international Pvt. Ltd.
+            </span>
+            <h2 className="mt-3 font-display text-3xl font-bold text-text">
+              A Legacy of Trust &amp; Quality
+            </h2>
+            <p className="body-copy mt-4">{chairmanMessage.message}</p>
+            <p className="mt-5 font-display font-semibold text-navy-800">
+              {chairmanMessage.name ? (
+                <>
+                  — {chairmanMessage.name}
+                  <span className="block text-sm font-normal text-muted">{chairmanMessage.role}</span>
+                </>
+              ) : (
+                <>— {chairmanMessage.role}</>
+              )}
+            </p>
+          </Reveal>
+        </div>
+        </div>
         </div>
       </section>
 
       {/* MESSAGE FROM MANAGING DIRECTORS */}
-      <section className="section-pad overflow-hidden">
+      <section id="leadership" className="section-pad overflow-hidden">
         <div className="container-page">
-          <Reveal>
-            <SectionHeading eyebrow="Leadership" title="Message from Managing Directors" />
-          </Reveal>
-          <div className="mt-14 space-y-14">
+          {/* No heading here — the leadership intro above the chairman opens this whole run,
+              and each message below is introduced by the director's own name. */}
+          <div className={PANEL_CARD}>
+          <div className="space-y-14">
             {managingDirectors.map((m, i) => {
-              const flip = i % 2 === 1;
+              /* The chairman's block above sits photo-left, so the first director here flips to
+                 photo-right and the second returns to photo-left. That makes the three messages
+                 alternate left → right → left down the page instead of opening with two
+                 photo-left blocks in a row. */
+              const flip = i % 2 === 0;
               return (
                 <Reveal key={m.name} delay={i * 0.1}>
                   <div
                     className={`grid items-center gap-10 ${
-                      flip ? 'lg:grid-cols-[1fr_300px]' : 'lg:grid-cols-[300px_1fr]'
+                      flip ? 'lg:grid-cols-[1fr_400px]' : 'lg:grid-cols-[400px_1fr]'
                     }`}
                   >
                     <div className={flip ? 'lg:order-2' : ''}>
-                      <div className="group rounded-2xl border border-black bg-white p-2 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-cardHover">
-                        <div className="overflow-hidden rounded-xl">
-                          <img
-                            src={m.photo}
-                            alt={`${m.name} — ${m.role}`}
-                            loading="lazy"
-                            className="aspect-[4/3] w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                          />
-                        </div>
+                      {/* Same frame as the chairman above and the team cards below. */}
+                      <div className="group overflow-hidden rounded-card ring-1 ring-text/[0.08]">
+                        <img
+                          src={m.photo}
+                          alt={`${m.name} — ${m.role}`}
+                          loading="lazy"
+                          className="aspect-square w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                        />
                       </div>
                     </div>
-                    <div className={flip ? 'lg:order-1 lg:text-right' : ''}>
-                      <span className={`eyebrow text-primary-darker ${flip ? 'lg:justify-end' : ''}`}>
-                        {m.name}
-                      </span>
-                      <p className="mt-4 text-ink/70 leading-relaxed">{m.message}</p>
+                    {/* Only the photograph swaps sides on the second row. The copy stays
+                        left-aligned in both: right-aligning a paragraph leaves a ragged left
+                        edge, so the eye has to hunt for the start of every line. */}
+                    <div className={flip ? 'lg:order-1' : ''}>
+                      <span className="eyebrow text-primary-darker">{m.name}</span>
+                      <p className="body-copy mt-4">{m.message}</p>
                       <p className="mt-5 font-display font-semibold text-navy-800">
                         — {m.name}
-                        <span className="block text-sm font-normal text-ink/50">{m.role}</span>
+                        <span className="block text-sm font-normal text-muted">{m.role}</span>
                       </p>
-                      <div
-                        className={`mt-4 flex items-center gap-3 ${flip ? 'lg:justify-end' : ''}`}
-                      >
+                      <div className="mt-4 flex items-center gap-3">
                         <a
                           href={m.linkedin}
                           target="_blank"
@@ -249,75 +435,91 @@ export default function About() {
               );
             })}
           </div>
+          </div>
         </div>
       </section>
 
       {/* LEADERSHIP TEAM */}
-      <section className="section-pad">
+      <section id="team" className="section-pad">
         <div className="container-page">
-          <Reveal>
-            <SectionHeading eyebrow="Our Leadership Team" title="Experienced Leaders. Strong Foundation." />
-          </Reveal>
-          <StaggerGroup className="mx-auto mt-14 flex max-w-5xl flex-wrap justify-center gap-7">
-            {leadership.filter(l => l.role !== 'Chief Managing Director' && l.role !== 'Managing Director').map((l) => (
-              <StaggerItem key={l.name} className="w-full sm:w-[calc(50%-14px)] lg:w-[calc(33.333%-19px)] max-w-sm">
-                <div className="group relative flex h-full flex-col items-center overflow-hidden rounded-2xl border border-black bg-white px-7 pb-7 pt-9 text-center shadow-card transition-all duration-300 hover:-translate-y-2 hover:border-primary/50 hover:shadow-cardHover">
-                  {/* Accent bar that draws in on hover */}
-                  <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-primary-light via-primary to-primary-darker transition-transform duration-300 group-hover:scale-x-100" />
-                  {/* Soft gold glow behind the avatar */}
-                  <span className="pointer-events-none absolute -top-10 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-primary/10 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100" />
+          {/* No heading. The directors' messages directly above already open the leadership
+              run, so a second "Our Leadership Team / Experienced Leaders" title restated it.
+              The rail still carries its own accessible name (`label` on CardRail), so the
+              `/about#team` link from the nav panel lands on a labelled region. */}
+          {/* Photo-led cards on a scrolling rail. Every name in the leadership list rides it,
+              including the CMD and the MDs — they used to be filtered out here because they
+              already have a message section above, but that left the rail reading as "everyone
+              except the people in charge".
 
-                  {/* Avatar — gold gradient ring around a photo, or a navy monogram fallback */}
-                  <div className="relative rounded-full bg-gradient-to-br from-primary-light via-primary to-primary-darker p-[3px] shadow-lg shadow-primary/25 transition-transform duration-300 group-hover:scale-105">
-                    <div className="h-28 w-28 overflow-hidden rounded-full bg-gradient-to-br from-navy-800 to-navy-950">
-                      {l.photo ? (
-                        <img
-                          src={l.photo}
-                          alt={l.name}
-                          loading="lazy"
-                          className="h-full w-full rounded-full object-cover object-top"
-                        />
-                      ) : (
-                        <span className="flex h-full w-full items-center justify-center font-display text-2xl font-bold tracking-wide text-primary-light">
-                          {l.name.split(' ').map((n) => n[0]).join('')}
-                        </span>
-                      )}
-                    </div>
-                  </div>
+              Some of these people have no photograph on file yet. Rather than leave a hole, the
+              same block renders their initials on the brand ground at the identical aspect
+              ratio. Drop a file into that person's `photo` in data/company.js and it takes over
+              with no change here. */}
+          <CardRail
+            label="Leadership team"
+            labels={[
+              ...TEAM.map((l) => `Show ${l.name}`),
+              ...Array.from({ length: OPEN_SLOTS }, (_, i) => `Open position ${i + 1}`),
+            ]}
+          >
+            {TEAM.map((l) => (
+                <article key={l.name} className={`${TEAM_CARD_W} group flex flex-none snap-start flex-col overflow-hidden rounded-card ring-1 ring-text/[0.08] transition-all duration-300 hover:-translate-y-1 hover:ring-text/[0.16]`}>
+                  {l.photo ? (
+                    <img
+                      src={l.photo}
+                      alt={l.name}
+                      loading="lazy"
+                      className="aspect-[3/4] w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                    />
+                  ) : (
+                    <span
+                      aria-hidden
+                      className="flex aspect-[3/4] w-full items-center justify-center bg-gradient-to-br from-navy-800 to-navy-950 font-display text-4xl font-bold tracking-[0.08em] text-primary-light"
+                    >
+                      {l.name.split(' ').map((n) => n[0]).join('')}
+                    </span>
+                  )}
 
-                  <h4 className="mt-5 font-display text-lg font-semibold text-navy-800">{l.name}</h4>
-                  <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-darker">{l.role}</p>
-                  <span className="mt-3 h-px w-10 bg-navy-100 transition-all duration-300 group-hover:w-16 group-hover:bg-primary" />
-                  <p className="mt-3 text-sm leading-relaxed text-ink/60">{l.bio}</p>
-
-                  <div className="mt-auto flex items-center justify-center gap-3 pt-6">
+                  <div className="flex flex-1 flex-col bg-navy-50 p-5">
+                    <h3 className="font-display text-lg font-bold leading-snug text-text">{l.name}</h3>
+                    <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-darker">
+                      {l.role}
+                    </p>
+                    <p className="mt-3 text-body-compact leading-relaxed text-ink">{l.bio}</p>
                     {l.linkedin && (
                       <a
                         href={l.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-navy-100 text-navy-700 transition-all hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary hover:text-white"
-                        aria-label={`${l.name} LinkedIn`}
+                        className="mt-auto inline-flex w-fit items-center gap-2 pt-4 text-navy-700 transition-colors hover:text-primary-darker"
+                        aria-label={`${l.name} on LinkedIn`}
                       >
                         <Linkedin className="h-4 w-4" />
                       </a>
                     )}
-                    {l.whatsapp && (
-                      <a
-                        href={l.whatsapp}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-navy-100 text-navy-700 transition-all hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary hover:text-white"
-                        aria-label={`${l.name} WhatsApp`}
-                      >
-                        <MessageCircle className="h-4 w-4" />
-                      </a>
-                    )}
                   </div>
-                </div>
-              </StaggerItem>
+                </article>
             ))}
-          </StaggerGroup>
+
+            {/* Empty slots for the people still to be added. They are marked aria-hidden and
+                carry no text, so a screen reader is never told about a person who is not there;
+                sighted visitors read them as "more to come" rather than as broken cards. */}
+            {Array.from({ length: OPEN_SLOTS }, (_, i) => (
+              <div
+                key={`slot-${i}`}
+                aria-hidden
+                className={`${TEAM_CARD_W} flex flex-none snap-start flex-col overflow-hidden rounded-card ring-1 ring-text/[0.06]`}
+              >
+                <span className="block aspect-[3/4] w-full bg-navy-50" />
+                <div className="flex flex-1 flex-col gap-2.5 bg-navy-50 p-5">
+                  <span className="block h-4 w-2/3 rounded-card bg-navy-100" />
+                  <span className="block h-2.5 w-1/3 rounded-card bg-navy-100" />
+                  <span className="mt-1.5 block h-2.5 w-full rounded-card bg-navy-100" />
+                  <span className="block h-2.5 w-5/6 rounded-card bg-navy-100" />
+                </div>
+              </div>
+            ))}
+          </CardRail>
         </div>
       </section>
 
@@ -329,7 +531,7 @@ export default function About() {
         accent="Partnerships Worldwide"
         desc="From concept to delivery, KEAA International combines engineering expertise, modern manufacturing and global export experience to provide reliable solutions trusted by customers across the world."
         note="Built for Safety. Built to Last."
-        cta={{ label: 'Request a Quote', to: '/rfq', icon: ArrowRight }}
+        cta={{ label: 'Request a Quote', to: '/rfq' }}
       />
     </>
   );

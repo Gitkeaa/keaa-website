@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
-import { ChevronRight } from 'lucide-react';
 import AnimatedCounter from './AnimatedCounter';
-import useSplashDone from '../../hooks/useSplash';
 
 /**
  * The interior-page hero, rebuilt to match the homepage: a light stage with the
@@ -56,7 +54,6 @@ export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], st
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const drift = useTransform(scrollYProgress, [0, 1], [0, 60]);
   const parallax = reduce ? 0 : drift;
-  const splashDone = useSplashDone();
 
   const media = image;
 
@@ -69,7 +66,7 @@ export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], st
         <div className="absolute inset-0 z-0" style={{ isolation: 'isolate' }}>
           <motion.div
             initial={{ scale: reduce ? 1 : 1.06 }}
-            animate={splashDone ? { scale: 1 } : undefined}
+            animate={{ scale: 1 }}
             transition={{ duration: 1.4, ease: EASE }}
             style={{ y: parallax }}
             className="absolute -top-[8%] left-0 right-0 h-[116%]"
@@ -143,9 +140,16 @@ export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], st
           <nav aria-label="Breadcrumb" className="mb-5 flex items-center gap-1.5 text-xs text-text-strong">
             {crumbs.map((c, i) => (
               <span key={c.label} className="flex items-center gap-1.5">
-                {i > 0 && <ChevronRight className="h-3 w-3 text-primary" />}
+                {i > 0 && (
+                  <span aria-hidden className="text-primary">
+                    /
+                  </span>
+                )}
                 {c.to ? (
-                  <Link to={c.to} className="transition-colors hover:text-primary-darker">
+                  <Link
+                    to={c.to}
+                    className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker"
+                  >
                     {c.label}
                   </Link>
                 ) : (
@@ -160,7 +164,7 @@ export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], st
 
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 18 }}
-          animate={splashDone ? { opacity: 1, y: 0 } : undefined}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: EASE }}
         >
           {eyebrow && <span className="eyebrow text-primary-darker">{eyebrow}</span>}
@@ -168,7 +172,13 @@ export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], st
           <h1 className="mt-3 max-w-[34rem] font-display text-3xl font-bold leading-[1.1] tracking-[-0.02em] text-text sm:text-4xl lg:text-5xl">
             {title} {accent && <span className="text-primary-dark">{accent}</span>}
           </h1>
-          {desc && <p className="mt-4 max-w-[30rem] text-base leading-relaxed text-text-body sm:text-[17px]">{desc}</p>}
+          {/* Satoshi Light lead. Kept capped at 30rem, NOT the .body-copy 768px measure —
+              the copy column width is load-bearing for the hero contrast solve (see note
+              2 above). Only the type is upgraded: 300 weight, 1.8 line-height, 0.2px ink. */}
+          {/* Same body token as every other reading paragraph — this was 17px stepping to
+              18px at `sm`, which made the interior-page intro a different size from the
+              copy directly beneath it. */}
+          {desc && <p className="mt-5 max-w-[30rem] text-body text-text-body">{desc}</p>}
         </motion.div>
 
         {stats.length > 0 && (

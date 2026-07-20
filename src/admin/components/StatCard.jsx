@@ -1,4 +1,4 @@
-import * as Icons from 'lucide-react';
+import { ADMIN_ICONS as Icons } from '../adminIcons';
 
 const TONES = {
   primary: 'bg-primary/10 text-primary-darker',

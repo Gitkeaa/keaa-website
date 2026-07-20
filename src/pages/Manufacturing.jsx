@@ -1,11 +1,3 @@
-import {
-  Building2,
-  Cog,
-  ShieldCheck,
-  TrendingUp,
-  FileText,
-  CheckCircle2,
-} from 'lucide-react';
 import PageHero from '../components/ui/PageHero';
 import SectionHeading from '../components/ui/SectionHeading';
 import ImagePlaceholder from '../components/ui/ImagePlaceholder';
@@ -69,10 +61,10 @@ export default function Manufacturing() {
             <span className="eyebrow text-primary-darker">
               Our Infrastructure
             </span>
-            <h2 className="mt-3 font-display text-3xl font-bold text-navy-800">
+            <h2 className="mt-3 font-display text-3xl font-bold text-text">
               World-Class Manufacturing Facilities
             </h2>
-            <p className="mt-4 text-ink/70 leading-relaxed">
+            <p className="body-copy mt-4">
               Our two manufacturing units in Ludhiana, Punjab are equipped with modern
               infrastructure and in-house technology — including hot dip galvanizing baths,
               powder coating lines and dedicated mould rooms — to ensure precision engineering,
@@ -81,10 +73,10 @@ export default function Manufacturing() {
             <div className="mt-8 grid grid-cols-2 gap-6">
               {infraStats.map((s) => (
                 <div key={s.label}>
-                  <p className="font-display text-2xl font-bold text-navy-800">
+                  <p className="font-display text-2xl font-bold text-text">
                     <AnimatedCounter value={s.value} />
                   </p>
-                  <p className="text-sm text-ink/60">{s.label}</p>
+                  <p className="text-body-compact text-ink">{s.label}</p>
                 </div>
               ))}
             </div>
@@ -93,7 +85,6 @@ export default function Manufacturing() {
             <ImagePlaceholder
               src={img.metalBuilding}
               label="Manufacturing plant — Ludhiana, Punjab"
-              icon={Building2}
               ratio="aspect-[4/3]"
               className="shadow-xl"
             />
@@ -102,7 +93,7 @@ export default function Manufacturing() {
       </section>
 
       {/* PROCESS FLOW */}
-      <section className="section-pad bg-navy-900 text-white">
+      <section id="process" className="section-pad bg-navy-900 text-white">
         <div className="container-page">
           <Reveal>
             <SectionHeading
@@ -112,16 +103,13 @@ export default function Manufacturing() {
             />
           </Reveal>
           <StaggerGroup className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-7" stagger={0.06}>
-            {company.processSteps.map((s, i) => (
+            {company.processSteps.map((s) => (
               <StaggerItem key={s.step} className="relative flex flex-col items-center text-center">
-                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-navy-700 font-display text-sm font-bold text-primary-light ring-1 ring-white/10 transition-transform duration-300 hover:scale-110">
+                <span aria-hidden className="font-display text-sm font-bold text-primary">
                   {s.step}
                 </span>
                 <h4 className="mt-4 font-display text-sm font-semibold">{s.title}</h4>
                 <p className="mt-1.5 text-xs leading-relaxed text-white/55">{s.desc}</p>
-                {i < company.processSteps.length - 1 && (
-                  <span className="absolute right-[-1.1rem] top-7 hidden text-white/25 lg:block">→</span>
-                )}
               </StaggerItem>
             ))}
           </StaggerGroup>
@@ -129,19 +117,23 @@ export default function Manufacturing() {
       </section>
 
       {/* MACHINERY */}
-      <section className="section-pad">
+      <section id="machinery" className="section-pad">
         <div className="container-page">
           <Reveal>
             <SectionHeading eyebrow="Advanced Machinery" title="Powerful Machines. Precision Output." />
           </Reveal>
-          <StaggerGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {/* 4 columns, matching the Projects & Gallery tiles — the image ratio was already
+              4/3, so the columns were the only reason a machinery card rendered ~120px
+              wider than every other image tile on the site. Six items lay out 4 + 2, the
+              same as the featured projects grid. */}
+          <StaggerGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {company.machinery.map((m, i) => (
               <StaggerItem key={m.name}>
-                <div className="overflow-hidden rounded-xl border border-black shadow-card transition-shadow hover:shadow-cardHover">
-                  <ImagePlaceholder src={machineryImages[i]} label={m.name} icon={Cog} ratio="aspect-[4/3]" />
+                <div className="overflow-hidden rounded-card border border-navy-100 shadow-card transition-shadow hover:shadow-cardHover">
+                  <ImagePlaceholder src={machineryImages[i]} label={m.name} ratio="aspect-[4/3]" />
                   <div className="p-5">
-                    <h4 className="font-display text-sm font-semibold text-navy-800">{m.name}</h4>
-                    <p className="mt-1.5 text-sm text-ink/60">{m.desc}</p>
+                    <h4 className="font-display text-sm font-semibold text-text">{m.name}</h4>
+                    <p className="mt-1.5 text-body-compact text-ink">{m.desc}</p>
                   </div>
                 </div>
               </StaggerItem>
@@ -157,45 +149,43 @@ export default function Manufacturing() {
             <span className="eyebrow text-primary-darker">
               Quality Assurance
             </span>
-            <h2 className="mt-3 font-display text-3xl font-bold text-navy-800">Quality in Every Step</h2>
-            <p className="mt-4 text-ink/70 leading-relaxed">
+            <h2 className="mt-3 font-display text-3xl font-bold text-text">Quality in Every Step</h2>
+            <p className="body-copy mt-4">
               We follow stringent quality control procedures at every stage of manufacturing —
               backed by in-house tensile, compression, bend and weld-penetration testing — to
               ensure every product meets global standards.
             </p>
             <ul className="mt-6 space-y-3">
               {qaSteps.map((q) => (
-                <li key={q} className="flex items-start gap-2.5 text-sm text-ink/70">
-                  <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-primary-dark" />
+                <li key={q} className="border-l-2 border-primary/40 pl-4 text-body-compact text-ink">
                   {q}
                 </li>
               ))}
             </ul>
           </Reveal>
           <Reveal delay={0.1}>
-            <ImagePlaceholder src={img.personTool} label="In-house testing & quality inspection" icon={ShieldCheck} ratio="aspect-[4/3]" className="shadow-xl" />
+            <ImagePlaceholder src={img.personTool} label="In-house testing & quality inspection" ratio="aspect-[4/3]" className="shadow-xl" />
           </Reveal>
         </div>
       </section>
 
       {/* STATS STRIP */}
-      <section className="section-pad">
+      <section id="stats" className="section-pad">
         <div className="container-page">
           <Reveal>
             <SectionHeading eyebrow="Manufacturing Statistics" title="Engineering Output at Scale" />
           </Reveal>
           <StaggerGroup className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { icon: Building2, value: '25,000 sq.m', label: 'Total Manufacturing Area' },
-              { icon: Cog, value: '6+', label: 'Core Machinery Lines' },
-              { icon: TrendingUp, value: '5,000+ MT', label: 'Annual Production Capacity' },
-              { icon: ShieldCheck, value: '8', label: 'Certifications Held' },
+              { value: '25,000 sq.m', label: 'Total Manufacturing Area' },
+              { value: '6+', label: 'Core Machinery Lines' },
+              { value: '5,000+ MT', label: 'Annual Production Capacity' },
+              { value: '8', label: 'Certifications Held' },
             ].map((s) => (
               <StaggerItem key={s.label}>
-                <div className="rounded-xl border border-black p-6 text-center shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover">
-                  <s.icon className="mx-auto h-7 w-7 text-primary-dark" />
-                  <p className="mt-3 font-display text-xl font-bold text-navy-800">{s.value}</p>
-                  <p className="text-xs text-ink/60">{s.label}</p>
+                <div className="rounded-card border border-navy-100 p-6 text-center shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover">
+                  <p className="font-display text-xl font-bold text-text">{s.value}</p>
+                  <p className="text-xs text-ink">{s.label}</p>
                 </div>
               </StaggerItem>
             ))}
@@ -208,7 +198,7 @@ export default function Manufacturing() {
         title="Looking for a Reliable"
         accent="Manufacturing Partner?"
         desc="We are ready to support your business with quality products and on-time delivery."
-        cta={{ label: 'Request a Quote', to: '/rfq', icon: FileText }}
+        cta={{ label: 'Request a Quote', to: '/rfq' }}
       />
     </>
   );

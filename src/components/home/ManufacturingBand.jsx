@@ -1,0 +1,141 @@
+import Button from '../ui/Button';
+import Reveal from '../ui/Reveal';
+import { company } from '../../data/company';
+
+/**
+ * "Manufacturing Excellence" — the home page's production-capability band.
+ *
+ * The pitch and its proof points sit on the left, the four headline capabilities as a 2x2 on
+ * the right, and the scale figures run along the bottom. It replaced a photograph-and-list
+ * layout: the photo showed a machine shop but said nothing specific, whereas these cards name
+ * the four processes KEAA actually runs in-house, which is the claim the section is making.
+ *
+ * EVERYTHING HERE IS DERIVED FROM company.js. That is deliberate and load-bearing — the
+ * design this was built from carried "600+ Skilled Professionals" and "200+ Advanced
+ * Machines", and neither is true: `company.stats` says 150+ employees, and there is no
+ * machine count anywhere in the data. Both would have been invented numbers on a
+ * manufacturer's home page. The figures below read from the same source as the About page,
+ * so the two can never disagree.
+ *
+ * Icon-free and single-accent by house rule. The design's gold rules under the eyebrow and
+ * beside the section label are also omitted: short decorative dashes were removed from the
+ * whole site, and re-adding them here would reopen exactly that.
+ */
+
+/**
+ * The four processes to feature, named by their `company.machinery` entry so the copy stays
+ * in sync with the Manufacturing page. `short` is the display name — the data uses the plant
+ * name ("Automatic Powder Coating Plant") where a heading wants the process.
+ */
+const FEATURED = [
+  { key: 'Sheet Laser Cutting', short: 'Laser Cutting' },
+  { key: 'Robotic Welding Stations', short: 'Robotic Welding' },
+  { key: 'Hot Dip Galvanizing Plant', short: 'Hot-Dip Galvanizing' },
+  { key: 'Automatic Powder Coating Plant', short: 'Powder Coating' },
+];
+
+const CAPABILITIES = FEATURED.map((f) => {
+  const entry = company.machinery.find((m) => m.name === f.key);
+  return entry ? { title: f.short, desc: entry.desc } : null;
+}).filter(Boolean);
+
+/** Pull a headline figure out of `company.stats` by its label, so nothing is retyped here. */
+const statValue = (label) => company.stats.find((s) => s.label === label)?.value;
+
+const SCALE = [
+  /* `facilities.area` already carries its unit ("25,000 sq. m."), so it is printed whole. */
+  { value: company.facilities.area, label: 'Manufacturing Area' },
+  /* The one figure with no home in company.js. It was previously hard-coded on the photo
+     badge this band replaced; it belongs in the data, but moving it is a separate change. */
+  { value: '5,000+ MT', label: 'Annual Capacity' },
+  { value: statValue('Skilled Employees'), label: 'Skilled Employees' },
+  { value: statValue('Countries Exported'), label: 'Countries Served' },
+].filter((s) => s.value);
+
+const PROOF = [
+  'State-of-the-art facilities over 25,000 sq. m.',
+  'Advanced machinery & technology at global standards',
+  'Strict in-house quality control at every stage',
+  'Large production capacity to meet global demand',
+];
+
+export default function ManufacturingBand() {
+  return (
+    <section className="section-pad">
+      <div className="container-page">
+        <div className="grid gap-10 lg:grid-cols-2 lg:gap-12">
+          {/* ------------------------------------------------------------------ PITCH */}
+          <Reveal>
+            <span className="eyebrow text-primary-darker">Manufacturing Excellence</span>
+            <h2 className="mt-3 font-display text-3xl font-bold leading-[1.08] tracking-[-0.02em] text-text sm:text-4xl">
+              Advanced Manufacturing, Strong Production Capability
+            </h2>
+            <p className="body-copy mt-5 max-w-xl">
+              Two integrated units in Ludhiana — laser cutting, robotic welding, in-house
+              hot-dip galvanizing and powder coating — engineered for precision, consistency
+              and scale on every order.
+            </p>
+
+            {/* The rule is the LIST's own left edge, one continuous line down the group,
+                rather than a dash per row — it groups the four claims into one block. */}
+            <ul className="mt-7 space-y-3.5 border-l-2 border-primary/40 pl-5 text-sm text-text">
+              {PROOF.map((text) => (
+                <li key={text}>{text}</li>
+              ))}
+            </ul>
+
+            <Button to="/manufacturing" variant="navy" size="sm" className="mt-8">
+              View Manufacturing
+            </Button>
+          </Reveal>
+
+          {/* ----------------------------------------------------------- CAPABILITIES */}
+          <Reveal delay={0.1}>
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.14em] text-text">
+              Our Manufacturing Strength
+            </h3>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              {CAPABILITIES.map((c) => (
+                <div
+                  key={c.title}
+                  className="rounded-card border border-border bg-surface-raised p-5"
+                >
+                  <h4 className="font-display text-base font-semibold text-text">{c.title}</h4>
+                  <p className="mt-2 text-body-compact text-text-muted">{c.desc}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+
+        {/* ----------------------------------------------------------------- SCALE */}
+        <Reveal delay={0.15}>
+          <div className="mt-10 rounded-card bg-navy-50 p-6 sm:p-8">
+            <div className="grid gap-6 lg:grid-cols-[16rem_minmax(0,1fr)] lg:items-center lg:gap-10">
+              <p className="font-display text-base font-bold leading-snug text-text">
+                Built for scale.
+                <span className="block">Delivered with consistency.</span>
+              </p>
+              <ul className="grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-4">
+                {SCALE.map((s, i) => (
+                  <li
+                    key={s.label}
+                    /* Hairlines BETWEEN the figures only, and only once they sit on one
+                       row — a divider on the first cell of a wrapped grid reads as a
+                       stray mark. */
+                    className={i > 0 ? 'sm:border-l sm:border-border sm:pl-6' : ''}
+                  >
+                    <div className="font-display text-xl font-bold leading-none text-text">
+                      {s.value}
+                    </div>
+                    <div className="mt-1.5 text-xs text-text-muted">{s.label}</div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}

@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Send, FileText, Globe2, ChevronDown, Lightbulb, CheckCircle2 } from 'lucide-react';
+import { useRegion } from '../context/RegionContext';
+import { useAdminAuth } from '../admin/auth/AdminAuthContext';
+import { useT } from '../i18n/LocaleContext';
 import PageHero from '../components/ui/PageHero';
 import Button from '../components/ui/Button';
 import CountrySelect from '../components/ui/CountrySelect';
@@ -14,8 +17,8 @@ import { submitPublicForm } from '../data/adminApi';
 import useSEO from '../hooks/useSEO';
 
 const tabs = [
-  { id: 'rfq', label: 'RFQ Form', icon: FileText },
-  { id: 'export', label: 'Export Inquiry', icon: Globe2 },
+  { id: 'rfq', label: 'RFQ Form' },
+  { id: 'export', label: 'Export Inquiry' },
 ];
 
 const formIntros = {
@@ -77,6 +80,54 @@ export default function RequestQuotation() {
   const [phone, setPhone] = useState('');
   const [details, setDetails] = useState('');
 
+  /**
+   * The header's region control links here as `/rfq?region=<key>`. Adopting it means the
+   * enquiry carries the desk that should answer it (Eindhoven for Europe, Ludhiana
+   * otherwise) without asking the visitor to restate what they already told us.
+   * `setRegion` ignores an unknown key, so a hand-edited URL cannot corrupt the preference.
+   */
+  const [searchParams] = useSearchParams();
+  const { region, setRegion, meta: regionMeta, office } = useRegion();
+
+  /*
+    PREFILL FOR A SIGNED-IN TEAM MEMBER.
+
+    Timing is the whole problem here. AdminAuthContext resolves who you are from
+    GET /api/auth/me, which lands well AFTER this page mounts — so anything that only reads
+    `user` during the first render silently prefills nothing.
+
+    Name is an UNCONTROLLED input (the submit handler reads it back with querySelector), and
+    `defaultValue` is only consulted on mount, so a late-arriving name would be ignored.
+    Rather than convert the field to controlled state — which would mean threading a value
+    and onChange through the shared <Field> and diverging from the other uncontrolled fields
+    on this form — the field is REMOUNTED by keying it on the user id. A remount re-reads
+    defaultValue, and it costs one throwaway DOM node on a transition that happens at most
+    once per page load. Note the key changes on sign-out too, which correctly clears it.
+
+    Email IS controlled, so it just needs an effect — but one that never overwrites what the
+    visitor has already typed. The functional update below reads the CURRENT value at the
+    moment it runs, which is why `email` is not a dependency: adding it would re-run this on
+    every keystroke.
+  */
+  const t = useT();
+  const { user } = useAdminAuth();
+  const prefilledFor = useRef(null);
+
+  useEffect(() => {
+    if (!user?.email) return;
+    if (prefilledFor.current === user.id) return;
+    prefilledFor.current = user.id;
+    setEmail((current) => (current.trim() ? current : user.email));
+  }, [user]);
+
+  useEffect(() => {
+    const requested = searchParams.get('region');
+    if (requested && requested !== region) setRegion(requested);
+    // `region` is intentionally not a dependency: this should react to the URL changing,
+    // not fight the user if they pick a different region from the header afterwards.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, setRegion]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -92,7 +143,16 @@ export default function RequestQuotation() {
         phone: `${country?.dial || ''} ${phone || ''}`.trim(),
         country: country?.name || '',
         category: val('product'),
-        message: port ? `${details}\n\nPort of destination: ${port}` : details,
+        // The region line tells whoever picks this up which desk owns it — the backend
+        // takes a flat `message`, so it rides along as a labelled trailer rather than a
+        // new field the API would drop.
+        message: [
+          details,
+          port ? `Port of destination: ${port}` : '',
+          `Sales region: ${regionMeta.label} — handled by ${office.name}`,
+        ]
+          .filter(Boolean)
+          .join('\n\n'),
       });
       setSubmitted(true);
     } catch {
@@ -115,17 +175,17 @@ export default function RequestQuotation() {
 
       <section className="section-pad">
         <div className="container-page grid gap-10 lg:grid-cols-[1fr_320px]">
-          <div className="rounded-2xl border border-black p-7 shadow-card">
+          <div className="rounded-card border border-navy-100 p-7 shadow-card">
             <div className="flex flex-wrap gap-2 border-b border-navy-100 pb-5">
               {tabs.map((t) => (
                 <button
                   key={t.id}
                   onClick={() => setTab(t.id)}
-                  className={`flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
-                    tab === t.id ? 'bg-navy-700 text-white' : 'text-ink/60 hover:bg-navy-50'
+                  className={`flex items-center rounded-card px-4 py-2 text-sm font-medium transition-colors ${
+                    tab === t.id ? 'bg-navy-700 text-white' : 'text-ink hover:bg-navy-50'
                   }`}
                 >
-                  <t.icon className="h-4 w-4" /> {t.label}
+                  {t.label}
                 </button>
               ))}
             </div>
@@ -139,24 +199,19 @@ export default function RequestQuotation() {
                 transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
                 aria-expanded={showIntro}
                 aria-label="Toggle form guidance"
-                className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-primary-dark text-white shadow-lg shadow-primary/30 transition-transform hover:scale-105"
+                className="flex h-11 flex-shrink-0 items-center justify-center rounded-card bg-primary-dark px-4 text-[13px] font-bold uppercase tracking-[0.12em] text-white shadow-lg shadow-primary/30 transition-transform hover:scale-105"
               >
-                <Lightbulb className="h-5 w-5" />
+                Guide
               </motion.button>
               <button
                 type="button"
                 onClick={() => setShowIntro((v) => !v)}
                 aria-expanded={showIntro}
-                className="flex flex-1 items-center gap-1.5 text-left"
+                className="flex flex-1 items-center text-left"
               >
-                <h3 className="font-display text-base font-bold text-navy-800 sm:text-lg">
+                <h3 className="font-display text-base font-bold text-text border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker sm:text-lg">
                   {formIntros[tab].title}
                 </h3>
-                <ChevronDown
-                  className={`h-4 w-4 flex-shrink-0 text-primary-darker transition-transform duration-300 ${
-                    showIntro ? 'rotate-180' : ''
-                  }`}
-                />
               </button>
             </div>
 
@@ -170,16 +225,18 @@ export default function RequestQuotation() {
                   transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                   className="overflow-hidden"
                 >
-                  <div className="mt-4 rounded-xl border border-primary/20 bg-primary/[0.05] p-5">
+                  <div className="mt-4 rounded-card border border-primary/20 bg-primary/[0.05] p-5">
                     {formIntros[tab].paras.map((p, i) => (
-                      <p key={i} className={`text-sm leading-relaxed text-ink/70 ${i > 0 ? 'mt-2.5' : ''}`}>
+                      <p key={i} className={`body-copy ${i > 0 ? 'mt-8' : ''}`}>
                         {p}
                       </p>
                     ))}
                     <ul className="mt-4 grid gap-2 sm:grid-cols-2">
                       {formIntros[tab].perks.map((perk) => (
-                        <li key={perk} className="flex items-center gap-2 text-sm font-medium text-navy-700">
-                          <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-emerald-600" />
+                        <li
+                          key={perk}
+                          className="border-l-2 border-primary/40 pl-4 text-body-compact font-medium text-text"
+                        >
                           {perk}
                         </li>
                       ))}
@@ -190,17 +247,32 @@ export default function RequestQuotation() {
             </AnimatePresence>
 
             {submitted ? (
-              <div className="mt-8 rounded-xl bg-navy-50 p-10 text-center">
-                <p className="font-display text-lg font-semibold text-navy-800">
+              <div className="mt-8 rounded-card bg-navy-50 p-10 text-center">
+                <p className="font-display text-lg font-semibold text-text">
                   Your Request Has Been Submitted
                 </p>
-                <p className="mt-2 text-sm text-ink/60">
+                <p className="mt-2 text-body-compact text-ink">
                   Our export team will review your requirement and respond within 24 hours.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="mt-6 grid gap-5 sm:grid-cols-2">
-                <Field label="Full Name" id="name" required />
+                {user && (
+                  <p className="text-body-compact text-muted sm:col-span-2">
+                    {t('auth.signedInAs')} {user.name}
+                  </p>
+                )}
+                {/* Keyed on the user id so a name arriving after mount actually lands — see
+                    the prefill note above. */}
+                <Field
+                  key={`name-${user?.id ?? 'anon'}`}
+                  label="Full Name"
+                  id="name"
+                  required
+                  defaultValue={user?.name || ''}
+                />
+                {/* Company is NOT prefilled: the backend user object is {id,name,email,role}
+                    and has no company, and guessing one would put a wrong name on a quote. */}
                 <Field label="Company Name" id="company" required />
                 <EmailField value={email} onChange={setEmail} required />
 
@@ -213,7 +285,7 @@ export default function RequestQuotation() {
                   </label>
                   <select
                     id="product"
-                    className="mt-1.5 w-full rounded-md border border-navy-100 px-3.5 py-2.5 text-sm outline-none focus:border-primary"
+                    className="mt-1.5 w-full rounded-card border border-navy-100 px-3.5 py-2.5 text-sm outline-none focus:border-primary"
                   >
                     {productLines.map((c) => (
                       <option key={c.slug}>{c.name}</option>
@@ -243,11 +315,11 @@ export default function RequestQuotation() {
 
                 <div className="sm:col-span-2">
                   {sendError && (
-                    <p role="alert" className="mb-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+                    <p role="alert" className="mb-3 rounded-card bg-red-50 px-3 py-2 text-body-compact text-red-700">
                       {sendError}
                     </p>
                   )}
-                  <Button type="submit" icon={Send} disabled={sending}>
+                  <Button type="submit" disabled={sending}>
                     {sending ? 'Submitting…' : 'Submit Request'}
                   </Button>
                 </div>
@@ -256,9 +328,9 @@ export default function RequestQuotation() {
           </div>
 
           <aside className="space-y-5">
-            <div className="rounded-2xl border border-navy-100 bg-navy-50 p-6">
-              <h4 className="font-display text-sm font-semibold text-navy-800">What Happens Next?</h4>
-              <ol className="mt-4 space-y-3 text-sm text-ink/65">
+            <div className="rounded-card border border-navy-100 bg-navy-50 p-6">
+              <h4 className="font-display text-sm font-semibold text-text">What Happens Next?</h4>
+              <ol className="mt-4 space-y-3 text-sm text-ink">
                 <li className="flex gap-2.5">
                   <span className="font-mono text-xs font-semibold text-primary-darker">01</span>
                   Our export team reviews your requirement.
@@ -273,11 +345,11 @@ export default function RequestQuotation() {
                 </li>
               </ol>
             </div>
-            <div className="rounded-2xl border border-black p-6 shadow-card">
-              <h4 className="font-display text-sm font-semibold text-navy-800">Prefer to Talk?</h4>
-              <p className="mt-2 text-sm text-ink/60">Call or email our export team directly.</p>
-              <p className="mt-3 text-sm font-medium text-navy-700">+91 98767 01926</p>
-              <p className="text-sm font-medium text-navy-700 break-all">raveesh@keaa-international.net</p>
+            <div className="rounded-card border border-navy-100 p-6 shadow-card">
+              <h4 className="font-display text-sm font-semibold text-text">Prefer to Talk?</h4>
+              <p className="mt-2 text-body-compact text-ink">Call or email our export team directly.</p>
+              <p className="mt-3 text-body-compact font-medium text-text">+91 98767 01926</p>
+              <p className="text-body-compact font-medium text-text break-all">raveesh@keaa-international.net</p>
             </div>
           </aside>
         </div>
@@ -286,7 +358,15 @@ export default function RequestQuotation() {
   );
 }
 
-function Field({ label, id, type = 'text', required = false, className = '', placeholder = '' }) {
+function Field({
+  label,
+  id,
+  type = 'text',
+  required = false,
+  className = '',
+  placeholder = '',
+  defaultValue = undefined,
+}) {
   return (
     <div className={className}>
       <label htmlFor={id} className="text-sm font-medium text-navy-800">
@@ -297,7 +377,8 @@ function Field({ label, id, type = 'text', required = false, className = '', pla
         type={type}
         required={required}
         placeholder={placeholder}
-        className="mt-1.5 w-full rounded-md border border-navy-100 px-3.5 py-2.5 text-sm outline-none focus:border-primary"
+        defaultValue={defaultValue}
+        className="mt-1.5 w-full rounded-card border border-navy-100 px-3.5 py-2.5 text-sm outline-none focus:border-primary"
       />
     </div>
   );

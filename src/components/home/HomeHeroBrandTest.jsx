@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Play, ExternalLink, Download, Award, Globe2, Factory, Package } from 'lucide-react';
 import AnimatedCounter from '../ui/AnimatedCounter';
 import HeroMediaNav from './HeroMediaNav';
 import { droneFilmUrl, heroFilms } from '../../data/content';
-import useSplashDone from '../../hooks/useSplash';
 
 /**
  * HOMEPAGE HERO — bright split, brand-blue.
@@ -47,8 +45,13 @@ const HERO_IMAGE = '/images/hero2.jpg';
 
 // Until that file exists the hero falls back to the Unsplash frame it used before, so a
 // missing asset degrades to the old photo rather than to a broken image.
+// Proxied through Cloudinary, not fetched from Unsplash directly — the browser must only
+// ever talk to the site's own CDN. See the note at the top of src/data/images.js.
 const FALLBACK = 'https://images.unsplash.com/photo-1636362556682-11231883c01c';
-const fbSrc = (w) => `${FALLBACK}?auto=format&fit=crop&q=82&w=${w}`;
+const fbSrc = (w) =>
+  `https://res.cloudinary.com/keaa-assets/image/fetch/f_auto,q_auto,w_${w},c_limit/${encodeURIComponent(
+    FALLBACK
+  )}`;
 const FALLBACK_SRCSET = [768, 1200, 1600, 2000, 2560, 3200].map((w) => `${fbSrc(w)} ${w}w`).join(', ');
 
 /**
@@ -84,8 +87,10 @@ const SCRIM = {
   photo:
     'linear-gradient(90deg, rgb(var(--color-surface-bright) / 0.86) 0%, rgb(var(--color-surface-bright) / 0.72) 18%, rgb(var(--color-surface-bright) / 0.58) 34%, rgb(var(--color-surface-bright) / 0.46) 44%, rgb(var(--color-surface-bright) / 0.38) 50%, rgb(var(--color-surface-bright) / 0.14) 58%, rgb(var(--color-surface-bright) / 0) 66%)',
   // Solved to the lightest veil that still clears AA against the darkest frames of every
-  // film: the 52px accent is the binding constraint at ~37% of the width, and it holds
-  // ~3.1:1 here (need 3.0). Take these any lower and the headline fails over dark footage.
+  // film: the 52px accent was the binding constraint at ~37% of the width, holding ~3.1:1
+  // (need 3.0) while it was brand blue. It is now black like the rest of the headline, so
+  // that line has headroom — but the veil stays as solved, because the 18px body copy and
+  // the eyebrow below it were never the slack ones. Take these lower and those fail.
   video:
     'linear-gradient(90deg, rgb(var(--color-surface-bright) / 0.905) 0%, rgb(var(--color-surface-bright) / 0.87) 18%, rgb(var(--color-surface-bright) / 0.82) 34%, rgb(var(--color-surface-bright) / 0.785) 44%, rgb(var(--color-surface-bright) / 0.745) 50%, rgb(var(--color-surface-bright) / 0.30) 58%, rgb(var(--color-surface-bright) / 0) 66%)',
 };
@@ -125,10 +130,10 @@ const EASE = [0.22, 1, 0.36, 1];
 const GUTTER = 'container-full';
 
 const stats = [
-  { value: '20+', label: 'Years of\nExperience', Icon: Award },
-  { value: '42+', label: 'Countries\nExported', Icon: Globe2 },
-  { value: '5', label: 'Manufacturing\nFacilities', Icon: Factory },
-  { value: '100+', label: 'Product\nRange', Icon: Package },
+  { value: '20+', label: 'Years of\nExperience' },
+  { value: '42+', label: 'Countries\nExported' },
+  { value: '5', label: 'Manufacturing\nFacilities' },
+  { value: '100+', label: 'Product\nRange' },
 ];
 
 const parent = { hidden: {}, show: { transition: { staggerChildren: 0.09, delayChildren: 0.1 } } };
@@ -150,7 +155,6 @@ function useMinWidth(query) {
 
 export default function HomeHeroBrandTest() {
   const reduce = useReducedMotion();
-  const splashDone = useSplashDone();
   const isDesktop = useMinWidth('(min-width: 1024px)');
   const stageRef = useRef(null);
   const videoRefs = useRef({});
@@ -217,39 +221,34 @@ export default function HomeHeroBrandTest() {
   };
 
   /**
-   * The media bar. Desktop only, and its position is dictated by two fixed overlays.
+   * The media bar. Desktop only. It sits in the hero's footer band, on the far right and
+   * vertically centred against the stat card on the left — the two frame the base of the
+   * hero as a pair (card left, controls right, same line).
    *
-   * It lives *outside* the photo stage: the stage is `lg:z-0` while the copy column is
-   * `w-full` at `z-10` and covers it edge to edge, so a control parked inside the stage
-   * paints but cannot be clicked — the same trap the pointer listener hit. It also sits
-   * well above the hero's bottom edge, because AiChat is `fixed bottom-6 right-6` at
-   * z-50 and owns the bottom ~80px of the viewport.
+   * It is rendered inside the stat-card container (z-20), which sits above the photo stage,
+   * so it is clickable: a control parked inside the stage itself paints but cannot be
+   * clicked, because the copy column is `w-full` at z-10 and covers the stage edge to edge.
    *
-   * Below `lg` there is nowhere to put it. FloatingPromos is `fixed bottom-6 left-4`,
-   * 192px tall and effectively full-width on a phone; on a 390px screen it covers the
-   * hero's whole photo band, so no position over the photo is clickable at rest. The
-   * film does not play at that size either — it is 8 MB and the band is static — so the
-   * bar is simply not rendered, and the hero shows the film's poster frame.
+   * Below `lg` it is not rendered. The film does not play at that size (several MB, the band
+   * is static), and FloatingPromos (`fixed bottom-6 left-4`) plus AiChat (`fixed bottom-6
+   * right-6`) own the bottom corners of a phone viewport — so the hero shows the film's
+   * poster frame instead.
    */
-  const nav = (wrapper) =>
+  const mediaNav =
     slides.length > 1 ? (
-      <div className={`pointer-events-none ${wrapper}`}>
-        <div className="pointer-events-auto">
-          <HeroMediaNav
-            count={slides.length}
-            index={index}
-            labels={slides.map((s) => s.label)}
-            onSelect={go}
-            onPrev={() => go(index - 1)}
-            onNext={() => go(index + 1)}
-            showMediaControls={active.kind === 'video' && isDesktop && !reduce}
-            playing={playing}
-            muted={muted}
-            onTogglePlay={() => setPlaying((p) => !p)}
-            onToggleMute={() => setMuted((m) => !m)}
-          />
-        </div>
-      </div>
+      <HeroMediaNav
+        count={slides.length}
+        index={index}
+        labels={slides.map((s) => s.label)}
+        onSelect={go}
+        onPrev={() => go(index - 1)}
+        onNext={() => go(index + 1)}
+        showMediaControls={active.kind === 'video' && isDesktop && !reduce}
+        playing={playing}
+        muted={muted}
+        onTogglePlay={() => setPlaying((p) => !p)}
+        onToggleMute={() => setMuted((m) => !m)}
+      />
     ) : null;
 
   // Exactly one film may be running. Everything else is paused, whatever the dot history.
@@ -320,7 +319,7 @@ export default function HomeHeroBrandTest() {
           <motion.div
             variants={parent}
             initial={reduce ? false : 'hidden'}
-            animate={splashDone ? 'show' : undefined}
+            animate="show"
             /* Capped so no glyph crosses ~42% of the viewport, which is where the tower's
                dark edge begins (measured from hero.jpg). Everything left of that sits on
                sky, so the scrim barely has to work. Widen this and the scrim must grow. */
@@ -328,10 +327,9 @@ export default function HomeHeroBrandTest() {
           >
             <motion.span
               variants={child}
-              className="inline-flex items-center gap-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-primary-deep"
+              className="inline-block text-[13px] font-bold uppercase tracking-[0.14em] text-primary-deep"
             >
-              <span aria-hidden className="h-px w-7 bg-gradient-to-r from-primary-glow to-primary-dark" />
-              ISO 9001:2015 Certified Manufacturer &amp; Exporter
+              Est. 2003 &middot; ISO 9001 &middot; EN 1090 &middot; 42+ Countries
             </motion.span>
 
             <motion.h1
@@ -339,67 +337,48 @@ export default function HomeHeroBrandTest() {
               className="mt-5 font-display text-[2.25rem] font-bold leading-[1.05] tracking-[-0.03em] sm:text-[2.875rem] lg:text-[2.75rem] xl:text-[3.25rem]"
             >
               <span className="block text-text">Engineering Reliable</span>
-              <span className="block text-primary-dark">Scaffolding &amp;</span>
-              <span className="block text-primary-dark">Formwork Solutions</span>
+              <span className="block text-text">Scaffolding &amp;</span>
+              <span className="block text-text">Formwork Solutions</span>
             </motion.h1>
 
             <motion.p
               variants={child}
               /* Bracketed, not `/88`: Tailwind's opacity scale only steps by 5, so `/88`
                  generates no rule and the copy silently falls back to inherited black. */
-              className="mt-6 max-w-[30rem] text-base leading-relaxed text-text-body/[0.88] sm:text-[17px]"
+              /* One body treatment site-wide: the `text-body` token (18px / 1.6) in the
+                 solid reference ink. This was 16px stepping to 17px at `sm`, at 88%
+                 opacity — a fourth body size and a tinted ink that matched nothing else
+                 on the page. Opacity is gone: the scrim behind this copy was solved
+                 against full-strength ink, so a tint only ate contrast. */
+              className="mt-6 max-w-[30rem] text-body text-text-body"
             >
               Delivering world-class scaffolding systems, formwork accessories and safety
               products to 42+ countries worldwide.
             </motion.p>
 
-            <motion.div variants={child} className="mt-9 flex flex-wrap items-center gap-3.5 sm:gap-4">
-              {/* Watch the drone film. Carried over from the original navy hero, restyled
-                  for this light stage: the play disc was a gold circle on navy, which the
-                  brand palette no longer allows outside `surface-deep`. Opens in a new tab
+            <motion.div variants={child} className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
+              {/* One primary CTA + one quiet link — decluttered from the old two-button row so
+                  the hero has a single, obvious next step. The drone film opens in a new tab
                   because SharePoint refuses to be framed. */}
               <motion.div whileHover={reduce ? undefined : { y: -2 }} whileTap={reduce ? undefined : { scale: 0.985 }} transition={{ duration: 0.18 }}>
-                <a
-                  href={droneFilmUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Watch the KEAA drone film (opens in a new tab)"
-                  className="group inline-flex items-center gap-3 rounded-xl border border-primary-dark/25 bg-white/70 py-1.5 pl-1.5 pr-5 text-left shadow-[0_2px_8px_-4px_rgb(var(--color-text)_/_0.14)] backdrop-blur-sm transition-all duration-300 hover:border-primary-dark/55 hover:bg-white hover:shadow-[0_12px_26px_-14px_rgb(var(--color-text)_/_0.32)]"
-                >
-                  <span className="relative flex h-11 w-11 shrink-0 items-center justify-center">
-                    <span
-                      aria-hidden
-                      className="absolute inset-0 animate-ping rounded-full bg-primary/25 motion-reduce:animate-none"
-                      style={{ animationDuration: '2.8s' }}
-                    />
-                    <span className="relative flex h-11 w-11 items-center justify-center rounded-full bg-primary-dark text-white shadow-md transition-transform duration-300 group-hover:scale-105">
-                      <Play className="h-[18px] w-[18px] translate-x-[1px] fill-current" />
-                    </span>
-                  </span>
-                  <span className="leading-tight">
-                    <span className="flex items-center gap-1.5 font-display text-[15px] font-semibold tracking-wide text-primary-dark">
-                      Watch the drone film
-                      <ExternalLink className="h-3.5 w-3.5 opacity-60" />
-                    </span>
-                    <span className="mt-0.5 block text-xs text-text-muted">A bird&rsquo;s-eye view of KEAA</span>
-                  </span>
-                </a>
-              </motion.div>
-
-              <motion.div whileHover={reduce ? undefined : { y: -2 }} whileTap={reduce ? undefined : { scale: 0.985 }} transition={{ duration: 0.18 }}>
                 <Link
-                  to="/downloads"
-                  className="group inline-flex items-center justify-center gap-2 rounded-lg border border-primary-dark/25 bg-white/70 px-7 py-3.5 font-display text-[15px] font-semibold tracking-wide text-primary-dark shadow-[0_2px_8px_-4px_rgb(var(--color-text)_/_0.14)] backdrop-blur-sm transition-all duration-300 hover:border-primary-dark/55 hover:bg-white hover:shadow-[0_12px_26px_-14px_rgb(var(--color-text)_/_0.32)]"
+                  to="/rfq"
+                  className="inline-flex items-center rounded-card bg-primary-dark px-7 py-3.5 font-display text-[15px] font-semibold tracking-wide text-white shadow-[0_6px_20px_-8px_rgb(var(--color-primary-dark)_/_0.5)] transition-all duration-300 hover:bg-primary-darker hover:shadow-[0_14px_30px_-12px_rgb(var(--color-primary-dark)_/_0.6)]"
                 >
-                  Download Catalog
-                  <Download className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
+                  Request a Quote
                 </Link>
               </motion.div>
-            </motion.div>
 
-            <motion.p variants={child} className="mt-8 font-mono text-[11px] uppercase tracking-[0.14em] text-text-strong">
-              ISO 9001 &middot; ISO 14001 &middot; ISO 45001 &mdash; T&Uuml;V Rheinland
-            </motion.p>
+              <a
+                href={droneFilmUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Watch the KEAA drone film (opens in a new tab)"
+                className="inline-flex items-center border-b border-transparent pb-0.5 font-display text-[15px] font-semibold text-primary-dark transition-colors duration-200 hover:border-primary-dark"
+              >
+                Watch the drone film
+              </a>
+            </motion.div>
           </motion.div>
         </div>
 
@@ -412,7 +391,7 @@ export default function HomeHeroBrandTest() {
             <motion.div style={{ y: parallax }} className="absolute -top-[9%] left-0 right-0 h-[118%]">
               <motion.div
                 initial={{ scale: reduce ? 1 : 1.07 }}
-                animate={splashDone ? { scale: 1 } : undefined}
+                animate={{ scale: 1 }}
                 transition={{ duration: 1.6, ease: EASE }}
                 className="h-full w-full"
               >
@@ -547,29 +526,31 @@ export default function HomeHeroBrandTest() {
 
         </div>
 
-        {/* lg+ only — see the note on `nav`. */}
-        {nav('absolute inset-x-0 bottom-24 z-30 hidden justify-end px-4 lg:flex lg:pr-10 xl:pr-16')}
       </div>
 
-      {/* Stat card — floats over the photo's bottom edge, so it lives outside the stage. */}
+      {/* Hero footer band — the stat card (left) floats over the photo's bottom edge, and
+          the media controls sit level with it on the far right; together they frame the base
+          of the hero. Both live outside the photo stage so they clear its z-0 layer. */}
       <div className={`${GUTTER} relative z-20 -mt-20 pb-14 sm:-mt-24 sm:pb-16`}>
+        <div className="flex items-center justify-between gap-6 lg:gap-10">
+        {/* Left-anchored and capped, not full width: the photograph's tower lives on the
+            right, and a card spanning the container would sit right across it. */}
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 30 }}
-          animate={splashDone ? { opacity: 1, y: 0 } : undefined}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.55, ease: EASE }}
+          className="w-full max-w-[34rem] md:max-w-[46rem]"
         >
           <motion.div
             animate={reduce ? undefined : { y: [0, -6, 0] }}
             transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-            /* Left-anchored and capped, not full width: the photograph's tower lives on the
-               right, and a card spanning the container would sit right across it. */
-            className="grid w-full max-w-[34rem] grid-cols-2 overflow-hidden rounded-[22px] border border-white/60 bg-white/85 shadow-[0_1px_0_0_rgba(255,255,255,0.9)_inset,0_2px_6px_-2px_rgb(var(--color-text)_/_0.10),0_34px_70px_-30px_rgb(var(--color-text)_/_0.42)] ring-1 ring-primary-dark/[0.07] backdrop-blur-2xl md:max-w-[46rem] md:grid-cols-4"
+            className="grid w-full grid-cols-2 overflow-hidden rounded-card border border-white/60 bg-white/85 shadow-[0_1px_0_0_rgba(255,255,255,0.9)_inset,0_2px_6px_-2px_rgb(var(--color-text)_/_0.10),0_34px_70px_-30px_rgb(var(--color-text)_/_0.42)] ring-1 ring-primary-dark/[0.07] backdrop-blur-2xl md:grid-cols-4"
           >
             {stats.map((s, i) => (
               <div
                 key={s.label}
                 className={[
-                  'flex items-center gap-3 px-4 py-6 sm:px-5 sm:py-7',
+                  'px-4 py-6 sm:px-5 sm:py-7',
                   'border-primary-dark/[0.09]',
                   i % 2 === 1 ? 'border-l' : '',
                   i >= 2 ? 'border-t' : '',
@@ -577,15 +558,8 @@ export default function HomeHeroBrandTest() {
                   'md:border-t-0',
                 ].join(' ')}
               >
-                <span
-                  aria-hidden
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1 ring-inset ring-primary-glow/40"
-                  style={{ backgroundImage: 'linear-gradient(145deg, rgb(var(--color-primary-glow) / 0.28), rgb(var(--color-primary-dark) / 0.10))' }}
-                >
-                  <s.Icon className="h-5 w-5" strokeWidth={1.5} style={{ color: 'rgb(var(--color-primary-dark))' }} />
-                </span>
                 <div className="min-w-0">
-                  <div className="font-display text-[1.625rem] font-bold leading-none tracking-[-0.02em] text-primary-dark">
+                  <div className="font-display text-[1.625rem] font-bold leading-none tracking-[-0.02em] text-text">
                     {/* AnimatedCounter is shared: it has no reduced-motion branch, and it observes
                         its own inline span with a -40px inset. `block` widens the observed box so a
                         short value like "5" can never sit entirely inside that inset. */}
@@ -599,6 +573,11 @@ export default function HomeHeroBrandTest() {
             ))}
           </motion.div>
         </motion.div>
+
+          {/* Media controls — far right, vertically centred against the card. Desktop only;
+              see the note on `mediaNav` for why it is not shown below lg. */}
+          {mediaNav && <div className="ml-auto hidden flex-shrink-0 lg:block">{mediaNav}</div>}
+        </div>
       </div>
     </section>
   );

@@ -72,7 +72,7 @@ export default function Button({
   const reduce = useReducedMotion();
 
   const classes = [
-    'group relative isolate inline-flex items-center justify-center gap-2 overflow-hidden rounded-lg',
+    'group relative isolate inline-flex items-center justify-center gap-2 overflow-hidden rounded-card',
     'font-display font-semibold tracking-wide',
     'transition-[color,background-color,border-color,box-shadow] duration-300 ease-out',
     variants[variant],

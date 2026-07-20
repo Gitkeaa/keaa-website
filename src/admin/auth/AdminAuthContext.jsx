@@ -38,12 +38,18 @@ export function AdminAuthProvider({ children }) {
       setUser(u);
       return { ok: true };
     } catch (e) {
-      // 401 -> bad credentials; a network error usually means the backend isn't running.
+      // A CODE, not just a sentence. This used to return English prose, which was fine while
+      // /admin/login was the only caller — an internal console, English-only, staffed by people
+      // who know what port 8080 is. It is now also reachable from the PUBLIC header in twelve
+      // languages, where "Is the backend running on port 8080?" is both untranslated and an
+      // internal detail no visitor should ever be shown. Callers map the code to their own copy;
+      // `error` stays for the admin console, which wants exactly this wording.
+      const code = e.status === 401 ? 'invalid' : 'unreachable';
       const error =
-        e.status === 401
+        code === 'invalid'
           ? 'Invalid email or password.'
           : 'Could not reach the server. Is the backend running on port 8080?';
-      return { ok: false, error };
+      return { ok: false, code, error };
     } finally {
       setLoading(false);
     }

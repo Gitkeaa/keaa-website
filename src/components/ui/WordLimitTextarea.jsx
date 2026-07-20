@@ -37,10 +37,10 @@ export default function WordLimitTextarea({
         value={value}
         onChange={handle}
         placeholder={placeholder}
-        className="mt-1.5 w-full rounded-md border border-navy-100 px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-primary"
+        className="mt-1.5 w-full rounded-card border border-navy-100 px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-primary"
       />
       <div className="mt-1 flex justify-end">
-        <span className={`text-xs ${atLimit ? 'font-semibold text-red-500' : 'text-ink/45'}`}>
+        <span className={`text-xs ${atLimit ? 'font-semibold text-red-500' : 'text-muted'}`}>
           {count} / {maxWords} words
         </span>
       </div>

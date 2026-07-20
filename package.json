@@ -8,8 +8,9 @@
     "dev:server": "node server.js",
     "dev:all": "concurrently \"npm run dev\" \"npm run dev:server\"",
     "gen:categories": "node scripts/gen-categories.mjs",
-    "prebuild": "node scripts/gen-categories.mjs",
-    "build": "vite build",
+    "gen:sitemap": "node scripts/gen-categories.mjs && node scripts/gen-sitemap.mjs",
+    "prebuild": "node scripts/gen-categories.mjs && node scripts/gen-sitemap.mjs",
+    "build": "vite build && node scripts/gen-search-index.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -26,6 +27,8 @@
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
+    "@prerenderer/renderer-puppeteer": "^1.2.4",
+    "@prerenderer/rollup-plugin": "^0.3.12",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

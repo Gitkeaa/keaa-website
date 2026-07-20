@@ -1,0 +1,91 @@
+/**
+ * Regenerates public/sitemap.xml from the catalogue.
+ *
+ * The hand-maintained sitemap listed only the 13 static marketing routes, so every
+ * category, subcategory and product page — the overwhelming majority of the site, and the
+ * pages that actually carry long-tail search demand — was invisible to crawlers.
+ *
+ * This reads categories.json (NOT products.json) for the category/subcategory slugs, so
+ * the slug derivation lives in exactly one place: gen-categories.mjs. That means order
+ * matters — `prebuild` runs gen-categories.mjs first, then this. Run both by hand with
+ * `npm run gen:sitemap` after editing products.json.
+ *
+ * Deliberately no <lastmod>: stamping every URL with the build date claims content
+ * freshness that did not happen, and crawlers discount a sitemap whose lastmod is always
+ * "today". Add real per-product timestamps here if the catalogue ever carries them.
+ */
+import { readFileSync, writeFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+const DATA = join(ROOT, 'src', 'data');
+
+const SITE_URL = 'https://www.keaainternational.com';
+
+/** Mirrors the public routes in src/App.jsx. Admin routes are intentionally excluded. */
+const STATIC_ROUTES = [
+  ['/', 1.0],
+  ['/about', 0.9],
+  ['/products', 0.9],
+  ['/contact', 0.9],
+  ['/manufacturing', 0.8],
+  ['/projects-gallery', 0.8],
+  ['/rfq', 0.8],
+  ['/certifications', 0.7],
+  ['/faq', 0.7],
+  ['/downloads', 0.6],
+  ['/success-stories', 0.6],
+  ['/careers', 0.6],
+  ['/privacy-policy', 0.3],
+  ['/terms', 0.3],
+];
+
+const XML_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' };
+const escapeXml = (value) => String(value).replace(/[&<>"']/g, (c) => XML_ESCAPES[c]);
+
+const categories = JSON.parse(readFileSync(join(DATA, 'categories.json'), 'utf8'));
+const products = JSON.parse(readFileSync(join(DATA, 'products.json'), 'utf8'));
+
+const urls = [];
+const seen = new Set();
+const add = (path, priority) => {
+  if (seen.has(path)) return;
+  seen.add(path);
+  urls.push({ path, priority });
+};
+
+for (const [path, priority] of STATIC_ROUTES) add(path, priority);
+
+let subCount = 0;
+for (const c of categories) {
+  add(`/products/${c.slug}`, 0.8);
+  for (const s of c.subcategories) {
+    add(`/products/${c.slug}/${s.slug}`, 0.7);
+    subCount++;
+  }
+}
+
+let productCount = 0;
+for (const p of products) {
+  if (p.id === undefined || p.id === null) continue;
+  add(`/product/${p.id}`, 0.6);
+  productCount++;
+}
+
+const body = urls
+  .map(
+    ({ path, priority }) =>
+      `  <url><loc>${escapeXml(`${SITE_URL}${path}`)}</loc><priority>${priority.toFixed(1)}</priority></url>`,
+  )
+  .join('\n');
+
+const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`;
+
+writeFileSync(join(ROOT, 'public', 'sitemap.xml'), xml);
+
+console.log(
+  `sitemap.xml: ${urls.length} URLs ` +
+    `(${STATIC_ROUTES.length} static, ${categories.length} categories, ` +
+    `${subCount} subcategories, ${productCount} products)`,
+);

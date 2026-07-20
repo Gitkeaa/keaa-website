@@ -1,5 +1,30 @@
-const u = (id, w = 1920, q = 80) =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=${q}`;
+/**
+ * Stock photography, delivered THROUGH CLOUDINARY rather than straight from Unsplash.
+ *
+ * The browser used to request these from images.unsplash.com directly, which disclosed
+ * every visitor's IP to Unsplash on every page, with no consent and — because images are
+ * plain <img> tags in the page — no practical way to gate it. Cloudinary's `image/fetch`
+ * mode proxies the remote file: the visitor only ever talks to res.cloudinary.com, which is
+ * already the site's image CDN and is named as a processor in the Privacy Policy.
+ *
+ * It is also faster: `f_auto` serves WebP/AVIF and `q_auto` picks the smallest quality that
+ * still looks right, neither of which Unsplash's own resizer does.
+ *
+ * THE REMOTE URL MUST BE ENCODED. Appended raw, Cloudinary truncates it at the `?` and
+ * fetches the full-size original — measured at 3.0 MB versus 52 KB for the encoded form.
+ * That is also why the width lives in the Cloudinary transform (`w_`) rather than in an
+ * Unsplash `?w=` query: once encoded, a query param is no longer addressable by the
+ * resizing helpers below.
+ *
+ * These are placeholders. Replacing them with real KEAA photography — uploaded to the same
+ * Cloudinary account and referenced with `cldImage()` — removes the third party entirely.
+ */
+const CLOUDINARY_FETCH = 'https://res.cloudinary.com/keaa-assets/image/fetch';
+
+const u = (id, w = 1920) =>
+  `${CLOUDINARY_FETCH}/f_auto,q_auto,w_${w},c_limit/${encodeURIComponent(
+    `https://images.unsplash.com/${id}`
+  )}`;
 
 export const img = {
   // Hero / scaffolding & construction
@@ -51,3 +76,19 @@ export const img = {
   woodenFenceSky: u('photo-1621673610286-a6b5e788ab82'),
   woodenStructureSky: u('photo-1676802540678-2dceb1820113'),
 };
+
+/**
+ * Responsive delivery helpers. The URLs above are Cloudinary fetch URLs, which resize on
+ * the `w_` transform — so a component can request a right-sized file instead of shipping
+ * the full 1920px original into a slot that only renders a few hundred px wide.
+ *
+ *   imgSized(url, 1024)  -> the same photo delivered at 1024px wide
+ *   imgSrcSet(url)       -> a `srcSet` string across common widths, for <img srcset sizes>
+ *
+ * The pattern is anchored to `,w_` so it can only ever match the transform segment — the
+ * encoded remote URL that follows it contains no bare `w_`.
+ */
+export const atWidth = (url, w) => url.replace(/,w_\d+/, `,w_${w}`);
+export const imgSized = (url, w) => atWidth(url, w);
+export const imgSrcSet = (url, widths = [480, 768, 1024, 1280, 1600]) =>
+  widths.map((w) => `${atWidth(url, w)} ${w}w`).join(', ');

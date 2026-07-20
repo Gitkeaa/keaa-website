@@ -33,10 +33,16 @@ export const company = {
   emails: ['raveesh@keaa-international.net', 'bhupesh@keaa-international.net', 'sumit@keaa-international.net'],
   website: 'www.keaainternational.com',
 
+  /**
+   * A channel with no live account is `null`, NOT '#'. Both the footer and the contact page
+   * filter falsy hrefs out, so a null channel simply does not render — where '#' rendered a
+   * full, hover-animated tile that jumped the reader to the top of the page when clicked.
+   * Fill in a real profile URL here and the icon reappears everywhere by itself.
+   */
   social: {
     linkedin: 'https://www.linkedin.com/company/keaa/',
-    facebook: '#',
-    instagram: '#',
+    facebook: null,
+    instagram: null,
     youtube: 'https://www.youtube.com/@keaainternationalpvtltd5005',
     whatsapp: 'https://wa.me/919872984707',
   },
@@ -139,12 +145,17 @@ export const leadership = [
     name: 'Raveesh Moudgil',
     role: 'Chief Managing Director',
     bio: 'Drives the overall strategic vision, global partnerships, and long-term growth of Keaa International.',
+    // Same file the managing-directors message block uses. Repeated here because the team
+    // grid reads only this array — without it these two rendered as initials while their
+    // photograph sat a few sections further up the same page.
+    photo: '/images/raveesh-moudgil.jpg',
     linkedin: 'https://www.linkedin.com/in/raveesh-moudgil-b0618642',
   },
   {
     name: 'Sumit Moudgil',
     role: 'Managing Director',
     bio: 'Oversees day-to-day operations, manufacturing facilities, and technology integration.',
+    photo: '/images/sumit.jpg',
     linkedin: 'https://www.linkedin.com/in/sumit-moudgil',
   },
   {
@@ -152,14 +163,12 @@ export const leadership = [
     role: 'Global Business Head',
     bio: 'Leads international trade compliance, global sales strategy, and client relations across 42+ countries.',
     linkedin: 'https://www.linkedin.com/in/bhupesh-gautam-13867a7b/',
-    whatsapp: 'https://wa.me/919XXXXXXXXX',
   },
   {
     name: 'Rajiv Madan',
     role: 'Vice President',
     bio: 'Manages organizational development, corporate planning, and strategic business units.',
     linkedin: 'https://www.linkedin.com/in/rajiv-madan-632957b2',
-    whatsapp: 'https://wa.me/919XXXXXXXXX',
   },
   {
     name: 'Mandeep Singh',
@@ -167,14 +176,12 @@ export const leadership = [
     bio: 'Coordinates manufacturing operations, shop floor efficiency, and supply chain logistics.',
     photo: '/images/mandeep-singh.jpg',
     linkedin: 'https://www.linkedin.com/in/mandeep-singh-dhanda-473319229',
-    whatsapp: 'https://wa.me/919XXXXXXXXX',
   },
   {
     name: 'S. K. Rawat',
     role: 'Assistant General Manager',
     bio: 'Assists in operations management, quality control processes, and production scheduling.',
     linkedin: 'https://www.linkedin.com/in/s-k-rawat',
-    whatsapp: 'https://wa.me/919XXXXXXXXX',
   },
   {
     name: 'Harbansh Singh',
@@ -182,7 +189,6 @@ export const leadership = [
     bio: 'Manages talent acquisition, employee welfare, and organizational culture.',
     photo: '/images/harbansh-singh.jpg',
     linkedin: 'https://www.linkedin.com/in/harbansh-singh',
-    whatsapp: 'https://wa.me/919XXXXXXXXX',
   },
 ];
 

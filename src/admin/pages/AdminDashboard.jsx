@@ -1,4 +1,4 @@
-import * as Icons from 'lucide-react';
+import { ADMIN_ICONS as Icons } from '../adminIcons';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import StatCard from '../components/StatCard';

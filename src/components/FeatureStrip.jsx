@@ -1,6 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import BrandTexture from './ui/BrandTexture';
-import useSplashDone from '../hooks/useSplash';
 
 /**
  * A row of supporting promises -- Products' perks, Contact's help strip -- rendered as a
@@ -21,7 +20,6 @@ const EASE = [0.22, 1, 0.36, 1];
 
 export default function FeatureStrip({ items, lead, photo = true, className = '' }) {
   const reduce = useReducedMotion();
-  const splashDone = useSplashDone();
 
   return (
     <section className={`relative isolate overflow-hidden bg-surface py-10 sm:py-12 ${className}`}>
@@ -31,10 +29,10 @@ export default function FeatureStrip({ items, lead, photo = true, className = ''
       <div className="container-wide relative z-10">
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 20 }}
-          whileInView={splashDone ? { opacity: 1, y: 0 } : undefined}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.6, ease: EASE }}
-          className={`gap-8 rounded-2xl bg-surface-raised p-6 shadow-[0_1px_2px_-1px_rgb(var(--color-text)_/_0.08),0_28px_64px_-34px_rgb(var(--color-text)_/_0.35)] ring-1 ring-border sm:rounded-3xl sm:p-7 ${
+          className={`gap-8 rounded-card bg-surface-raised p-6 shadow-[0_1px_2px_-1px_rgb(var(--color-text)_/_0.08),0_28px_64px_-34px_rgb(var(--color-text)_/_0.35)] ring-1 ring-border sm:p-7 ${
             lead ? 'grid lg:grid-cols-[22rem_minmax(0,1fr)] lg:items-center' : 'block'
           }`}
         >
@@ -52,22 +50,14 @@ export default function FeatureStrip({ items, lead, photo = true, className = ''
               lead ? 'border-t border-border pt-6 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0' : ''
             }`}
           >
-            {items.map(({ icon: Icon, title, desc }) => (
-              <li key={title} className="flex items-start gap-3.5">
-                <span
-                  aria-hidden
-                  className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl ring-1 ring-border"
-                  style={{
-                    background:
-                      'linear-gradient(150deg, rgb(var(--color-primary-light) / 0.18), rgb(var(--color-primary) / 0.06))',
-                  }}
-                >
-                  <Icon className="h-5 w-5 text-primary-dark" strokeWidth={1.6} />
-                </span>
-                <div className="min-w-0">
-                  <h4 className="font-display text-sm font-semibold text-text">{title}</h4>
-                  <p className="mt-1 text-[13px] leading-relaxed text-text-muted">{desc}</p>
-                </div>
+            {/* Icon-free, and marker-free too: these are plain title + description blocks now.
+                Callers no longer pass an `icon` on these items — destructuring one here and
+                rendering it is what crashed /products with "Element type is invalid ...
+                undefined", so do not reintroduce it. */}
+            {items.map(({ title, desc }) => (
+              <li key={title} className="min-w-0">
+                <h4 className="font-display text-sm font-semibold text-text">{title}</h4>
+                <p className="mt-1 text-[13px] leading-relaxed text-text-muted">{desc}</p>
               </li>
             ))}
           </ul>

@@ -1,22 +1,11 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import {
-  ChevronRight,
-  FileText,
-  ShieldCheck,
-  Ruler,
-  Layers3,
-  ArrowRight,
-  Headphones,
-  PackageSearch,
-  Info,
-} from 'lucide-react';
 import ImagePlaceholder from '../components/ui/ImagePlaceholder';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import ProductCard from '../components/products/ProductCard';
 import CtaBand from '../components/CtaBand';
-import useSEO from '../hooks/useSEO';
+import useSEO, { absoluteUrl } from '../hooks/useSEO';
 import { getProductById, getRelatedProducts, publicIdFromCloudinaryUrl } from '../data/productHelpers';
 import { cldImage } from '../data/cloudinary';
 
@@ -38,18 +27,75 @@ export default function ProductDetail() {
     setActive(0);
   }
 
+  /**
+   * Product + BreadcrumbList structured data. This is the page that earns rich results
+   * (product name, image and SKU in the SERP), so the schema mirrors the visible
+   * breadcrumb above the title exactly.
+   *
+   * No `offers` block: the catalogue publishes no prices, and inventing one — or emitting
+   * an empty/zero offer — is exactly what trips Google's structured-data spam checks.
+   * Add it here if pricing ever ships.
+   */
+  const breadcrumbs = product
+    ? [
+        { label: 'Home', to: '/' },
+        { label: 'Products', to: '/products' },
+        { label: product.category, to: `/products/${product.catSlug}` },
+        { label: product.subcategory, to: `/products/${product.catSlug}/${product.subSlug}` },
+        { label: product.name },
+      ]
+    : undefined;
+
+  const productSchema = product
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: product.name,
+        url: absoluteUrl(`/product/${product.id}`),
+        ...(product.description ? { description: product.description } : {}),
+        ...(product.itemCode ? { sku: product.itemCode, mpn: product.itemCode } : {}),
+        ...(product.cloudinaryImages?.length
+          ? { image: product.cloudinaryImages.slice(0, 6) }
+          : {}),
+        category: `${product.category} > ${product.subcategory}`,
+        brand: { '@type': 'Brand', name: 'KEAA International' },
+        manufacturer: {
+          '@type': 'Organization',
+          name: 'KEAA International Pvt. Ltd.',
+          url: absoluteUrl('/'),
+        },
+        ...(product.diameter || product.finish
+          ? {
+              additionalProperty: [
+                product.diameter && {
+                  '@type': 'PropertyValue',
+                  name: 'Tube Size',
+                  value: product.diameter,
+                },
+                product.finish && {
+                  '@type': 'PropertyValue',
+                  name: 'Finish',
+                  value: product.finish,
+                },
+              ].filter(Boolean),
+            }
+          : {}),
+      }
+    : undefined;
+
   useSEO({
     title: product ? product.name : 'Product',
     description: product?.description || product?.subcategory,
+    breadcrumbs,
+    schema: productSchema,
   });
 
   if (!product) {
     return (
       <section className="container-page py-24 text-center">
-        <PackageSearch className="mx-auto h-12 w-12 text-ink/30" />
-        <h1 className="mt-4 font-display text-2xl font-bold text-navy-800">Product not found</h1>
-        <p className="mt-2 text-sm text-text-muted">This product may have been moved or removed.</p>
-        <Button to="/products" className="mt-6" icon={ArrowRight}>Back to Products</Button>
+        <h1 className="font-display text-2xl font-bold text-text">Product not found</h1>
+        <p className="body-copy mx-auto text-center mt-2">This product may have been moved or removed.</p>
+        <Button to="/products" className="mt-6">Back to Products</Button>
       </section>
     );
   }
@@ -62,10 +108,10 @@ export default function ProductDetail() {
   const hasSpecs = product.specs && product.specs.length > 0;
 
   const facts = [
-    product.itemCode && { icon: FileText, label: 'Item Code', value: product.itemCode },
-    product.diameter && { icon: Ruler, label: 'Tube Size', value: product.diameter },
-    product.finish && { icon: ShieldCheck, label: 'Finish', value: product.finish },
-    { icon: Layers3, label: 'Category', value: product.subcategory },
+    product.itemCode && { label: 'Item Code', value: product.itemCode },
+    product.diameter && { label: 'Tube Size', value: product.diameter },
+    product.finish && { label: 'Finish', value: product.finish },
+    { label: 'Category', value: product.subcategory },
   ].filter(Boolean);
 
   return (
@@ -74,26 +120,25 @@ export default function ProductDetail() {
         <div className="container-page py-8 lg:py-10">
           {/* Breadcrumb */}
           <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-xs text-text-strong">
-            <Link to="/" className="hover:text-primary-darker">Home</Link>
-            <ChevronRight className="h-3 w-3 text-primary" />
-            <Link to="/products" className="hover:text-primary-darker">Products</Link>
-            <ChevronRight className="h-3 w-3 text-primary" />
-            <Link to={`/products/${product.catSlug}`} className="hover:text-primary-darker">{product.category}</Link>
-            <ChevronRight className="h-3 w-3 text-primary" />
-            <Link to={`/products/${product.catSlug}/${product.subSlug}`} className="hover:text-primary-darker">{product.subcategory}</Link>
-            <ChevronRight className="h-3 w-3 text-primary" />
+            <Link to="/" className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">Home</Link>
+            <span aria-hidden className="text-primary">/</span>
+            <Link to="/products" className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">Products</Link>
+            <span aria-hidden className="text-primary">/</span>
+            <Link to={`/products/${product.catSlug}`} className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">{product.category}</Link>
+            <span aria-hidden className="text-primary">/</span>
+            <Link to={`/products/${product.catSlug}/${product.subSlug}`} className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">{product.subcategory}</Link>
+            <span aria-hidden className="text-primary">/</span>
             <span className="font-medium text-text" aria-current="page">{product.name}</span>
           </nav>
 
           <div className="mt-6 grid gap-8 lg:grid-cols-2 lg:gap-12">
             {/* Gallery */}
             <div>
-              <div className="overflow-hidden rounded-2xl border border-black bg-white shadow-card">
+              <div className="overflow-hidden rounded-card border border-navy-100 bg-white shadow-card">
                 <ImagePlaceholder
                   src={mainSrc}
                   label={product.name}
                   alt={product.name}
-                  icon={PackageSearch}
                   tone="light"
                   ratio="aspect-square"
                   zoom={false}
@@ -109,7 +154,7 @@ export default function ProductDetail() {
                       type="button"
                       onClick={() => setActive(i)}
                       aria-label={`View image ${i + 1}`}
-                      className={`h-16 w-16 overflow-hidden rounded-lg border-2 transition-colors ${
+                      className={`h-16 w-16 overflow-hidden rounded-card border-2 transition-colors ${
                         i === active ? 'border-primary-dark' : 'border-navy-100 hover:border-navy-300'
                       }`}
                     >
@@ -126,16 +171,15 @@ export default function ProductDetail() {
                 <Badge tone="navy">{product.category}</Badge>
                 {product.finish && <Badge tone="gold">{product.finish}</Badge>}
               </div>
-              <h1 className="mt-3 font-display text-3xl font-bold text-navy-800">{product.name}</h1>
+              <h1 className="mt-3 font-display text-3xl font-bold text-text">{product.name}</h1>
               {product.itemCode && (
-                <p className="mt-1.5 font-mono text-sm text-primary-dark">Item Code: {product.itemCode}</p>
+                <p className="mt-1.5 font-mono text-body-compact text-primary-dark">Item Code: {product.itemCode}</p>
               )}
 
               {product.description ? (
-                <p className="mt-5 text-sm leading-relaxed text-ink/70">{product.description}</p>
+                <p className="body-copy mt-5">{product.description}</p>
               ) : (
-                <p className="mt-5 flex items-start gap-2 rounded-lg bg-navy-50 px-4 py-3 text-sm text-text-muted">
-                  <Info className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
+                <p className="mt-5 rounded-card border-l-2 border-primary/40 bg-navy-50 px-4 py-3 text-body-compact text-text-muted">
                   Full product description available on request — contact our team for details.
                 </p>
               )}
@@ -143,9 +187,9 @@ export default function ProductDetail() {
               {/* Key facts */}
               <dl className="mt-6 grid grid-cols-2 gap-4">
                 {facts.map((f) => (
-                  <div key={f.label} className="rounded-xl border border-black bg-white p-3.5 shadow-card">
-                    <dt className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-text-muted">
-                      <f.icon className="h-3.5 w-3.5 text-primary" /> {f.label}
+                  <div key={f.label} className="rounded-card border border-navy-100 bg-white p-3.5 shadow-card">
+                    <dt className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
+                      {f.label}
                     </dt>
                     <dd className="mt-1 text-sm font-semibold text-navy-800">{f.value}</dd>
                   </div>
@@ -154,31 +198,30 @@ export default function ProductDetail() {
 
               {/* CTAs */}
               <div className="mt-7 flex flex-wrap gap-3">
-                <Button to="/rfq" icon={ArrowRight}>Request a Quote</Button>
-                <Button to="/contact" variant="outlineNavy" icon={Headphones}>Talk to an Expert</Button>
+                <Button to="/rfq">Request a Quote</Button>
+                <Button to="/contact" variant="outlineNavy">Talk to an Expert</Button>
               </div>
             </div>
           </div>
 
           {/* Specifications */}
           <div className="mt-12">
-            <h2 className="font-display text-xl font-bold text-navy-800">Specifications</h2>
+            <h2 className="font-display text-xl font-bold text-text">Specifications</h2>
             {hasSpecs ? (
-              <div className="mt-4 overflow-hidden rounded-2xl border border-black bg-white shadow-card">
+              <div className="mt-4 overflow-hidden rounded-card border border-navy-100 bg-white shadow-card">
                 <table className="w-full text-left text-sm">
                   <tbody className="divide-y divide-navy-50">
                     {product.specs.map((s, i) => (
                       <tr key={i} className={i % 2 ? 'bg-navy-50/40' : ''}>
                         <th scope="row" className="w-1/3 px-5 py-3 align-top font-medium text-navy-800">{s.label}</th>
-                        <td className="px-5 py-3 text-ink/70">{s.value}</td>
+                        <td className="px-5 py-3 text-ink">{s.value}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
             ) : (
-              <p className="mt-4 flex items-start gap-2 rounded-xl border border-dashed border-navy-200 bg-navy-50/40 px-5 py-6 text-sm text-text-muted">
-                <Info className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
+              <p className="mt-4 rounded-card border border-dashed border-navy-200 border-l-2 border-l-primary/40 bg-navy-50/40 px-5 py-6 text-body-compact text-text-muted">
                 Detailed specifications for this product are being added. Contact our team for the full datasheet.
               </p>
             )}
@@ -188,12 +231,12 @@ export default function ProductDetail() {
           {related.length > 0 && (
             <div className="mt-12">
               <div className="flex items-center justify-between">
-                <h2 className="font-display text-xl font-bold text-navy-800">Related Products</h2>
+                <h2 className="font-display text-xl font-bold text-text">Related Products</h2>
                 <Link
                   to={`/products/${product.catSlug}/${product.subSlug}`}
-                  className="flex items-center gap-1 text-sm font-medium text-primary-dark hover:text-primary-darker"
+                  className="border-b border-transparent pb-0.5 text-sm font-medium text-primary-dark transition-colors hover:border-primary hover:text-primary-darker"
                 >
-                  View all <ChevronRight className="h-4 w-4" />
+                  View all
                 </Link>
               </div>
               <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
@@ -210,7 +253,7 @@ export default function ProductDetail() {
         title="Interested in This"
         accent="Product?"
         desc="Request a quote or talk to our team about specifications, pricing and bulk orders."
-        cta={{ label: 'Request a Quote', to: '/rfq', icon: ArrowRight }}
+        cta={{ label: 'Request a Quote', to: '/rfq' }}
       />
     </>
   );

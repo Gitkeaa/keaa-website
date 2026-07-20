@@ -1,10 +1,7 @@
-import { Suspense, lazy, useEffect, useState } from 'react';
+import { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Layout from './components/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
-import PageLoader from './components/PageLoader';
-import AiChat from './components/AiChat';
-import { SplashProvider } from './hooks/useSplash';
 import { AdminAuthProvider } from './admin/auth/AdminAuthContext';
 
 const Home = lazy(() => import('./pages/Home'));
@@ -20,13 +17,20 @@ const DownloadsCenter = lazy(() => import('./pages/DownloadsCenter'));
 const Certifications = lazy(() => import('./pages/Certifications'));
 const CustomerSuccessStories = lazy(() => import('./pages/CustomerSuccessStories'));
 const Careers = lazy(() => import('./pages/Careers'));
+const FAQ = lazy(() => import('./pages/FAQ'));
 const RequestQuotation = lazy(() => import('./pages/RequestQuotation'));
 const Legal = lazy(() => import('./pages/Legal'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
+// The chat widget is lazy: it alone pulls in react-markdown + the remark/micromark stack
+// (the heaviest dependency on the site), which no first paint needs. Loading it after the
+// page keeps that weight off the initial bundle — the floating button just appears a
+// moment later.
+const AiChat = lazy(() => import('./components/AiChat'));
+
 // Admin console — lazy so its bundle (and the mock data / catalogue it pulls in) never
 // touches the public site's entry chunk. Its own shell provides header/nav/footer, so it
-// lives OUTSIDE the public <Layout> and skips the marketing splash and chat widget.
+// lives OUTSIDE the public <Layout> and skips the marketing chat widget.
 const AdminLogin = lazy(() => import('./admin/pages/AdminLogin'));
 const AdminLayout = lazy(() => import('./admin/layout/AdminLayout'));
 const AdminDashboard = lazy(() => import('./admin/pages/AdminDashboard'));
@@ -50,99 +54,57 @@ function AppShell() {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
 
-  // The marketing splash never runs in the admin console.
-  const [showLoader, setShowLoader] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    if (window.location.pathname.startsWith('/admin')) return false;
-    return !window.sessionStorage.getItem('keaa-splash-shown');
-  });
-
-  useEffect(() => {
-    if (!showLoader) return;
-    window.sessionStorage.setItem('keaa-splash-shown', 'true');
-  }, [showLoader]);
-
-  /**
-   * The splash is an overlay, not a gate.
-   *
-   * It used to be rendered *instead of* <Routes>, which meant the route tree — and
-   * therefore every word of page copy and the LCP hero image — did not exist in the DOM
-   * for the 3.5s the splash ran. The lazy route chunk was not even requested until it
-   * finished. A crawler always has empty sessionStorage, so that was the page Googlebot
-   * saw: a loading animation with no content.
-   *
-   * Routes now mount immediately and the splash sits on top of them (it is already
-   * `fixed inset-0 z-[9999]` and fully opaque, so nothing behind it is visible). The
-   * splash itself is unchanged: same 3.1s progress run, same 400ms blur-and-fade exit.
-   *
-   * Body scroll is locked while it is up. Without this the now-mounted page would put a
-   * scrollbar on the right of the splash, which was never there before. Layout owns
-   * body.overflow for its menus, and its effect runs before this one (child effects run
-   * before parent effects), so this write lands last and wins.
-   */
-  useEffect(() => {
-    if (!showLoader) return undefined;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = previous;
-    };
-  }, [showLoader]);
-
-  // Entrance animations hold until the splash lifts, then play. See hooks/useSplash for
-  // why: IntersectionObserver ignores occlusion, so without this they would fire at t=0
-  // behind the overlay and be spent before anyone saw them.
-  const splashDone = !showLoader;
-
   return (
     <ErrorBoundary>
-      <SplashProvider done={splashDone}>
+      <Suspense fallback={null}>
+        <Routes>
+          {/* Admin console — its own shell, guarded by AdminLayout. */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="products" element={<AdminProducts />} />
+            <Route path="rfq" element={<AdminRFQ />} />
+            <Route path="contacts" element={<AdminContacts />} />
+            <Route path="careers" element={<AdminCareers />} />
+          </Route>
+
+          {/* Public site. */}
+          <Route element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="about" element={<About />} />
+            <Route path="products" element={<Products />} />
+            <Route path="products/:categorySlug" element={<ProductCatalog />} />
+            <Route path="products/:categorySlug/:subSlug" element={<ProductCatalog />} />
+            <Route path="product/:id" element={<ProductDetail />} />
+            <Route path="manufacturing" element={<Manufacturing />} />
+            <Route path="projects-gallery" element={<ProjectsGallery />} />
+            <Route path="contact" element={<Contact />} />
+
+            <Route path="downloads" element={<DownloadsCenter />} />
+            <Route path="certifications" element={<Certifications />} />
+            <Route path="success-stories" element={<CustomerSuccessStories />} />
+            <Route path="careers" element={<Careers />} />
+            <Route path="faq" element={<FAQ />} />
+            <Route path="rfq" element={<RequestQuotation />} />
+
+            <Route path="privacy-policy" element={<Legal type="privacy" />} />
+            <Route path="terms" element={<Legal type="terms" />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </Suspense>
+
+      {/* Public-only chrome — never rendered inside the admin console. */}
+      {!isAdmin && (
         <Suspense fallback={null}>
-          <Routes>
-            {/* Admin console — its own shell, guarded by AdminLayout. */}
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="users" element={<AdminUsers />} />
-              <Route path="products" element={<AdminProducts />} />
-              <Route path="rfq" element={<AdminRFQ />} />
-              <Route path="contacts" element={<AdminContacts />} />
-              <Route path="careers" element={<AdminCareers />} />
-            </Route>
-
-            {/* Public site. */}
-            <Route element={<Layout />}>
-              <Route index element={<Home />} />
-              <Route path="about" element={<About />} />
-              <Route path="products" element={<Products />} />
-              <Route path="products/:categorySlug" element={<ProductCatalog />} />
-              <Route path="products/:categorySlug/:subSlug" element={<ProductCatalog />} />
-              <Route path="product/:id" element={<ProductDetail />} />
-              <Route path="manufacturing" element={<Manufacturing />} />
-              <Route path="projects-gallery" element={<ProjectsGallery />} />
-              <Route path="contact" element={<Contact />} />
-
-              <Route path="downloads" element={<DownloadsCenter />} />
-              <Route path="certifications" element={<Certifications />} />
-              <Route path="success-stories" element={<CustomerSuccessStories />} />
-              <Route path="careers" element={<Careers />} />
-              <Route path="rfq" element={<RequestQuotation />} />
-
-              <Route path="privacy-policy" element={<Legal type="privacy" />} />
-              <Route path="terms" element={<Legal type="terms" />} />
-              <Route path="*" element={<NotFound />} />
-            </Route>
-          </Routes>
+          <AiChat />
         </Suspense>
-
-        {/* Public-only chrome — never rendered inside the admin console. */}
-        {!isAdmin && showLoader && <PageLoader onComplete={() => setShowLoader(false)} />}
-        {!isAdmin && <AiChat />}
-        {/* Certification "Globally Certified" pop-up (FloatingPromos) is temporarily
-            disabled site-wide, to be reintroduced later with a refreshed design.
-            The component still lives in components/FloatingPromos.jsx — re-add
-            <FloatingPromos /> here to bring it back. */}
-      </SplashProvider>
+      )}
+      {/* Certification "Globally Certified" pop-up (FloatingPromos) is temporarily
+          disabled site-wide, to be reintroduced later with a refreshed design.
+          The component still lives in components/FloatingPromos.jsx — re-add
+          <FloatingPromos /> here to bring it back. */}
     </ErrorBoundary>
   );
 }

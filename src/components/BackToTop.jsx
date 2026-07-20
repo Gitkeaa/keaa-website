@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
-import { ArrowUp } from 'lucide-react';
 
 /**
  * Floating back-to-top button with a circular scroll-progress ring.
@@ -31,9 +30,12 @@ export default function BackToTop() {
           whileTap={{ scale: 0.94 }}
           onClick={scrollTop}
           aria-label="Back to top"
-          className="fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-navy-800 text-primary-light shadow-lg"
+          /* Offset above the consent bar for the same reason as the chat launcher —
+             see the note there and `--consent-bar-h` in CookieConsent. */
+          style={{ bottom: 'calc(1.5rem + var(--consent-bar-h, 0px))' }}
+          className="fixed right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-navy-800 text-primary-light shadow-lg transition-[bottom] duration-300"
         >
-          <svg className="absolute inset-0 -rotate-90" viewBox="0 0 48 48">
+          <svg aria-hidden className="absolute inset-0 -rotate-90" viewBox="0 0 48 48">
             <circle cx="24" cy="24" r="21" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="2" />
             <motion.circle
               cx="24"
@@ -46,7 +48,7 @@ export default function BackToTop() {
               style={{ pathLength: progress }}
             />
           </svg>
-          <ArrowUp className="h-4 w-4" />
+          <span className="relative text-[13px] font-bold uppercase tracking-[0.12em]">Top</span>
         </motion.button>
       )}
     </AnimatePresence>

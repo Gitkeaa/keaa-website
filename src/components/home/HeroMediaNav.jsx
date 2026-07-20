@@ -11,6 +11,14 @@ import { ChevronLeft, ChevronRight, Pause, Play, Volume2, VolumeX } from 'lucide
  * The play/mute pair appears only while the film is showing. It is part of this bar
  * rather than floating in the hero's own corner, because AiChat and BackToTop are both
  * `fixed bottom-6 right-6` and would sit on top of anything parked there.
+ *
+ * ICON EXCEPTION — DO NOT CONVERT THESE TO WORD LABELS.
+ * The site is otherwise deliberately icon-free (see layout/Header.jsx and layout/Footer.jsx),
+ * with social marks as the one exception. Media TRANSPORT controls are the second: prev /
+ * next / play / pause / mute are a universal, language-independent vocabulary that every
+ * video player on earth uses, so the glyph is more legible than the word — and the words
+ * are long enough that spelling them out ("UNMUTE") turns a compact bar into a text strip
+ * that competes with the headline beside it. They were converted to words once and reverted.
  */
 
 function IconButton({ onClick, label, children, pressed }) {
@@ -41,7 +49,7 @@ export default function HeroMediaNav({
   onToggleMute,
 }) {
   return (
-    <div className="flex items-center gap-1.5 rounded-2xl bg-surface-raised/[0.88] p-1.5 shadow-[0_1px_2px_-1px_rgb(var(--color-text)_/_0.1),0_18px_40px_-28px_rgb(var(--color-text)_/_0.45)] ring-1 ring-border backdrop-blur-sm sm:gap-2 sm:p-2">
+    <div className="flex items-center gap-1.5 rounded-card bg-surface-raised/[0.88] p-1.5 shadow-[0_1px_2px_-1px_rgb(var(--color-text)_/_0.1),0_18px_40px_-28px_rgb(var(--color-text)_/_0.45)] ring-1 ring-border backdrop-blur-sm sm:gap-2 sm:p-2">
       <IconButton onClick={onPrev} label="Previous background">
         <ChevronLeft className="h-4 w-4" strokeWidth={2.2} />
       </IconButton>

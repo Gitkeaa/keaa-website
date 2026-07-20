@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock, Send, ArrowRight, Zap, Headset, Globe2, Linkedin, Facebook, Instagram, Youtube, MessageCircle, ChevronDown } from 'lucide-react';
+/* Social marks only — the sanctioned exception to the site's icon-free rule. */
+import { Linkedin, Facebook, Instagram, Youtube, MessageCircle } from 'lucide-react';
 import PageHero from '../components/ui/PageHero';
 import FeatureStrip from '../components/FeatureStrip';
 import Button from '../components/ui/Button';
@@ -14,21 +15,95 @@ import { company } from '../data/company';
 import { defaultCountry } from '../data/countriesData';
 import { img } from '../data/images';
 import { submitPublicForm } from '../data/adminApi';
+import { useConsent, openCookiePreferences } from '../components/CookieConsent';
 import useSEO from '../hooks/useSEO';
 
+/* No `icon` field: FeatureStrip renders these as plain title + description. */
 const helpStrip = [
-  { icon: Zap, title: 'Quick Response', desc: 'We respond within 24 hours' },
-  { icon: Headset, title: 'Expert Support', desc: 'Get professional advice from our experts' },
-  { icon: Globe2, title: 'Global Delivery', desc: 'We deliver worldwide with reliability' },
+  { title: 'Quick Response', desc: 'We respond within 24 hours' },
+  { title: 'Expert Support', desc: 'Get professional advice from our experts' },
+  { title: 'Global Delivery', desc: 'We deliver worldwide with reliability' },
 ];
 
+/**
+ * Filtered on `href` for the same reason as the footer's row: these render as large,
+ * hover-lifted cards, so a channel with no account was the most convincingly clickable
+ * dead element on the site. A null entry in company.js now simply drops its card.
+ */
 const socials = [
   { icon: Linkedin, name: 'LinkedIn', href: company.social.linkedin, desc: 'Company updates, industry news and hiring announcements.' },
   { icon: Facebook, name: 'Facebook', href: company.social.facebook, desc: 'Behind-the-scenes factory moments and product highlights.' },
   { icon: Instagram, name: 'Instagram', href: company.social.instagram, desc: 'Visual stories from our manufacturing floor and project sites.' },
   { icon: Youtube, name: 'YouTube', href: company.social.youtube, desc: 'Factory tours, product demos and installation guides.' },
   { icon: MessageCircle, name: 'WhatsApp', href: company.social.whatsapp, desc: 'Quick, direct support for inquiries and order updates.' },
-];
+].filter((s) => Boolean(s.href));
+
+/**
+ * The map, gated on consent.
+ *
+ * A Google Maps `<iframe>` sets google.com cookies and discloses the visitor's IP to Google
+ * the moment it mounts. It used to render unconditionally on this page — the page EU buyers
+ * are most likely to open — which is precisely what ePrivacy Art. 5(3) requires prior
+ * consent for. `loading="lazy"` is a performance hint, not a consent gate.
+ *
+ * So: nothing third-party loads until `embeds` is allowed. Until then the visitor gets the
+ * address and a plain link, which sets nothing, plus a one-click "Load map" that turns the
+ * embed on for this visit only. `useConsent` re-renders on withdrawal too, so revoking in
+ * the preferences dialog unmounts the iframe immediately rather than at the next reload.
+ */
+function ConsentedMap() {
+  const allowed = useConsent('embeds');
+  const [loadedOnce, setLoadedOnce] = useState(false);
+
+  // Withdrawing consent must also cancel a one-off "Load map" from earlier in the session.
+  useEffect(() => {
+    if (!allowed) setLoadedOnce(false);
+  }, [allowed]);
+
+  if (allowed || loadedOnce) {
+    return (
+      <iframe
+        title="KEAA International location map"
+        src={mapEmbedSrc}
+        className="aspect-[16/6] w-full"
+        style={{ border: 0 }}
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+      />
+    );
+  }
+
+  return (
+    <div className="flex aspect-[16/6] w-full flex-col items-center justify-center gap-3 bg-navy-50/40 px-6 text-center">
+      <p className="text-body-compact text-ink">
+        The interactive map is hosted by Google. Loading it shares your IP address with Google.
+      </p>
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        <Button variant="outlineNavy" size="sm" onClick={() => setLoadedOnce(true)}>
+          Load map
+        </Button>
+        {/* A plain link sets nothing until it is clicked, so it is always safe to show. */}
+        <a
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+            `${company.manufacturing.line1}, ${company.manufacturing.line2}`
+          )}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="border-b border-transparent pb-0.5 text-sm font-semibold text-primary-dark transition-colors hover:border-primary hover:text-primary-darker"
+        >
+          Open in Google Maps
+        </a>
+      </div>
+      <button
+        type="button"
+        onClick={openCookiePreferences}
+        className="text-xs font-semibold text-muted underline underline-offset-2 transition-colors hover:text-primary-darker"
+      >
+        Always allow embedded content
+      </button>
+    </div>
+  );
+}
 
 const mapEmbedSrc =
   'https://www.google.com/maps?q=Dehlon+Road,+Ludhiana,+Punjab,+India&output=embed';
@@ -110,47 +185,44 @@ export default function Contact() {
             <span className="eyebrow text-primary-darker">
               Get in Touch
             </span>
-            <div className="rounded-2xl border border-black p-6 shadow-card">
-              <div className="flex gap-3">
-                <MapPin className="h-5 w-5 flex-shrink-0 text-primary-dark" />
+            <div className="rounded-card border border-navy-100 p-6 shadow-card">
+              <div>
                 <div>
-                  <h4 className="font-display text-sm font-semibold text-navy-800">
+                  <h4 className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
                     {company.manufacturing.label}
                   </h4>
-                  <p className="mt-1 text-sm text-ink/60">
+                  <p className="mt-1 text-body-compact text-ink">
                     {company.manufacturing.line1}
                     <br />
                     {company.manufacturing.line2}
                   </p>
                 </div>
               </div>
-              <div className="mt-5 flex gap-3">
-                <Phone className="h-5 w-5 flex-shrink-0 text-primary-dark" />
+              <div className="mt-5">
                 <div>
-                  <h4 className="font-display text-sm font-semibold text-navy-800">Phone</h4>
+                  <h4 className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">Phone</h4>
                   {company.phones.map((p) => (
-                    <p key={p} className="text-sm text-ink/60">
+                    <p key={p} className="text-body-compact text-ink">
                       <a href={`tel:${p}`} className="hover:text-navy-700">
                         {p}
                       </a>
                     </p>
                   ))}
                   {landlineNumbers.map((line) => (
-                    <p key={line} className="text-sm text-ink/60">
+                    <p key={line} className="text-body-compact text-ink">
                       <a href={`tel:${line.replace(/[^\d+]/g, '')}`} className="hover:text-navy-700">
                         Tel: {line}
                       </a>
                     </p>
                   ))}
-                  <p className="text-sm text-ink/60">Fax: {company.fax}</p>
+                  <p className="text-body-compact text-ink">Fax: {company.fax}</p>
                 </div>
               </div>
-              <div className="mt-5 flex gap-3">
-                <Mail className="h-5 w-5 flex-shrink-0 text-primary-dark" />
+              <div className="mt-5">
                 <div>
-                  <h4 className="font-display text-sm font-semibold text-navy-800">Email</h4>
+                  <h4 className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">Email</h4>
                   {company.emails.map((e) => (
-                    <p key={e} className="text-sm text-ink/60 break-all">
+                    <p key={e} className="text-body-compact text-ink break-all">
                       <a href={`mailto:${e}`} className="hover:text-navy-700">
                         {e}
                       </a>
@@ -158,54 +230,39 @@ export default function Contact() {
                   ))}
                 </div>
               </div>
-              <div className="mt-5 flex gap-3">
-                <Clock className="h-5 w-5 flex-shrink-0 text-primary-dark" />
+              <div className="mt-5">
                 <div>
-                  <h4 className="font-display text-sm font-semibold text-navy-800">Business Hours</h4>
-                  <p className="text-sm text-ink/60">Monday – Saturday</p>
-                  <p className="text-sm text-ink/60">9:00 AM – 6:00 PM (IST)</p>
+                  <h4 className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">Business Hours</h4>
+                  <p className="text-body-compact text-ink">Monday – Saturday</p>
+                  <p className="text-body-compact text-ink">9:00 AM – 6:00 PM (IST)</p>
                 </div>
               </div>
             </div>
 
-            <div className="rounded-2xl border border-navy-100 bg-navy-50 p-6">
-              <h4 className="font-display text-sm font-semibold text-navy-800">
+            <div className="rounded-card border border-navy-100 bg-navy-50 p-6">
+              <h4 className="font-display text-sm font-semibold text-text">
                 {company.salesOffice.label}
               </h4>
-              <p className="mt-1 text-sm text-ink/60">
+              <p className="mt-1 text-body-compact text-ink">
                 {company.salesOffice.line1}, {company.salesOffice.line2}
               </p>
-              <p className="mt-2 text-sm text-ink/60">{company.salesOffice.phone}</p>
-              <p className="text-sm text-ink/60">{company.salesOffice.email}</p>
+              <p className="mt-2 text-body-compact text-ink">{company.salesOffice.phone}</p>
+              <p className="text-body-compact text-ink">{company.salesOffice.email}</p>
             </div>
           </Reveal>
 
           {/* FORM */}
-          <Reveal delay={0.1} className="relative rounded-2xl border border-black p-7 shadow-card">
-            <div className="flex items-center gap-3.5">
-              <motion.button
-                type="button"
-                onClick={() => setShowConsult((v) => !v)}
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
-                aria-expanded={showConsult}
-                aria-label="Toggle consultation details"
-                className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary-dark text-white shadow-lg shadow-primary/30 transition-transform hover:scale-105"
-              >
-                <Headset className="h-6 w-6" />
-              </motion.button>
+          <Reveal delay={0.1} className="relative rounded-card border border-navy-100 p-7 shadow-card">
+            <div>
               <div>
-                <h3 className="font-display text-xl font-bold text-navy-800">Send Us a Message</h3>
+                <h3 className="font-display text-xl font-bold text-text">Send Us a Message</h3>
                 <button
                   type="button"
                   onClick={() => setShowConsult((v) => !v)}
                   aria-expanded={showConsult}
-                  className="mt-0.5 inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-primary-darker transition-colors hover:text-primary-deep"
+                  className="mt-0.5 inline-block border-b border-transparent pb-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary-darker transition-colors hover:border-primary hover:text-primary-deep"
                 >
                   Request a Consultation
-                  <ChevronDown
-                    className={`h-3.5 w-3.5 transition-transform duration-300 ${showConsult ? 'rotate-180' : ''}`}
-                  />
                 </button>
               </div>
             </div>
@@ -220,7 +277,7 @@ export default function Contact() {
                   transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                   className="overflow-hidden"
                 >
-                  <p className="mt-4 rounded-xl border border-primary/20 bg-primary/[0.05] p-4 text-sm leading-relaxed text-ink/70">
+                  <p className="mt-4 rounded-card border border-primary/20 bg-primary/[0.05] p-4 text-body-compact leading-relaxed text-ink">
                     Planning your next construction or industrial project? Tell us about your
                     requirements, and our specialists will recommend the right products, pricing, and
                     manufacturing solutions tailored to your business. From initial inquiry to final
@@ -231,9 +288,9 @@ export default function Contact() {
             </AnimatePresence>
 
             {submitted ? (
-              <div className="mt-8 rounded-xl bg-navy-50 p-8 text-center">
-                <p className="font-display text-lg font-semibold text-navy-800">Message Sent</p>
-                <p className="mt-2 text-sm text-ink/60">
+              <div className="mt-8 rounded-card bg-navy-50 p-8 text-center">
+                <p className="font-display text-lg font-semibold text-text">Message Sent</p>
+                <p className="mt-2 text-body-compact text-ink">
                   Thank you for reaching out. Our team will get back to you within 24 hours.
                 </p>
               </div>
@@ -262,11 +319,11 @@ export default function Contact() {
                 />
                 <div className="sm:col-span-2">
                   {sendError && (
-                    <p role="alert" className="mb-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+                    <p role="alert" className="mb-3 rounded-card bg-red-50 px-3 py-2 text-body-compact text-red-700">
                       {sendError}
                     </p>
                   )}
-                  <Button type="submit" icon={Send} disabled={sending}>
+                  <Button type="submit" disabled={sending}>
                     {sending ? 'Sending…' : 'Send Message'}
                   </Button>
                 </div>
@@ -283,10 +340,10 @@ export default function Contact() {
             <span className="eyebrow text-primary-darker">
               Request a Quote
             </span>
-            <h3 className="mt-2 font-display text-xl font-semibold text-navy-800">
+            <h3 className="mt-2 font-display text-xl font-semibold text-text">
               Share your requirements and our team will get back to you with the best solution.
             </h3>
-            <Button to="/rfq" icon={ArrowRight} className="mt-5">
+            <Button to="/rfq" className="mt-5">
               Request a Quote
             </Button>
           </Reveal>
@@ -303,19 +360,12 @@ export default function Contact() {
             <span className="eyebrow text-primary-darker">
               Our Location
             </span>
-            <h3 className="mt-2 font-display text-xl font-semibold text-navy-800">
+            <h3 className="mt-2 font-display text-xl font-semibold text-text">
               {company.manufacturing.line1}, {company.manufacturing.line2}
             </h3>
           </Reveal>
-          <Reveal delay={0.1} className="mt-5 overflow-hidden rounded-xl border border-black shadow-card">
-            <iframe
-              title="KEAA International location map"
-              src={mapEmbedSrc}
-              className="aspect-[16/6] w-full"
-              style={{ border: 0 }}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
+          <Reveal delay={0.1} className="mt-5 overflow-hidden rounded-card border border-navy-100 shadow-card">
+            <ConsentedMap />
           </Reveal>
         </div>
       </section>
@@ -326,10 +376,10 @@ export default function Contact() {
             <span className="eyebrow text-primary-darker">
               Book Your Ride
             </span>
-            <h3 className="mt-2 font-display text-xl font-semibold text-navy-800">
+            <h3 className="mt-2 font-display text-xl font-semibold text-text">
               Get to KEAA International — Dehlon Road, Ludhiana, Pujab-India
             </h3>
-            <p className="mt-1 text-sm text-ink/55">
+            <p className="mt-1 text-body-compact text-ink">
               Click any app below — destination is pre-filled with our factory location.
             </p>
           </Reveal>
@@ -338,12 +388,12 @@ export default function Contact() {
               href={rideLinks.uber}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 rounded-xl border border-black bg-white px-6 py-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
+              className="flex items-center gap-3 rounded-card border border-navy-100 bg-white px-6 py-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
             >
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white font-bold text-lg">U</span>
               <div>
-                <p className="font-display text-sm font-semibold text-navy-800">Uber</p>
-                <p className="text-xs text-ink/50">Ride to KEAA</p>
+                <p className="font-display text-body-compact font-semibold text-text">Uber</p>
+                <p className="text-xs text-muted">Ride to KEAA</p>
               </div>
             </a>
 
@@ -351,12 +401,12 @@ export default function Contact() {
               href={rideLinks.ola}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 rounded-xl border border-black bg-white px-6 py-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
+              className="flex items-center gap-3 rounded-card border border-navy-100 bg-white px-6 py-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
             >
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#3CB371] text-white font-bold text-lg">O</span>
               <div>
-                <p className="font-display text-sm font-semibold text-navy-800">Ola</p>
-                <p className="text-xs text-ink/50">Cab to KEAA</p>
+                <p className="font-display text-body-compact font-semibold text-text">Ola</p>
+                <p className="text-xs text-muted">Cab to KEAA</p>
               </div>
             </a>
 
@@ -364,12 +414,12 @@ export default function Contact() {
               href={rideLinks.rapido}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 rounded-xl border border-black bg-white px-6 py-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
+              className="flex items-center gap-3 rounded-card border border-navy-100 bg-white px-6 py-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
             >
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FFCC00] text-black font-bold text-lg">R</span>
               <div>
-                <p className="font-display text-sm font-semibold text-navy-800">Rapido</p>
-                <p className="text-xs text-ink/50">Bike to KEAA</p>
+                <p className="font-display text-body-compact font-semibold text-text">Rapido</p>
+                <p className="text-xs text-muted">Bike to KEAA</p>
               </div>
             </a>
           </div>
@@ -383,7 +433,7 @@ export default function Contact() {
             <span className="eyebrow text-primary-darker">
               Follow Us
             </span>
-            <h3 className="mt-2 font-display text-xl font-semibold text-navy-800">Find Us on Social Media</h3>
+            <h3 className="mt-2 font-display text-xl font-semibold text-text">Find Us on Social Media</h3>
           </Reveal>
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
             {socials.map((s) => (
@@ -392,13 +442,13 @@ export default function Contact() {
                 href={s.href}
                 target={s.href !== '#' ? '_blank' : undefined}
                 rel={s.href !== '#' ? 'noopener noreferrer' : undefined}
-                className="group flex flex-col items-center rounded-xl border border-black p-6 text-center shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
+                className="group flex flex-col items-center rounded-card border border-navy-100 p-6 text-center shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
               >
                 <span className="flex h-12 w-12 items-center justify-center rounded-full bg-navy-50 text-navy-700 transition-colors group-hover:bg-navy-700 group-hover:text-white">
                   <s.icon className="h-5 w-5" />
                 </span>
-                <h4 className="mt-4 font-display text-sm font-semibold text-navy-800">{s.name}</h4>
-                <p className="mt-1.5 text-xs text-ink/60">{s.desc}</p>
+                <h4 className="mt-4 font-display text-sm font-semibold text-text">{s.name}</h4>
+                <p className="mt-1.5 text-xs text-ink">{s.desc}</p>
               </a>
             ))}
           </div>
@@ -426,7 +476,7 @@ function Field({ label, id, type = 'text', required = false, className = '', pla
         type={type}
         required={required}
         placeholder={placeholder}
-        className="mt-1.5 w-full rounded-md border border-navy-100 px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-primary"
+        className="mt-1.5 w-full rounded-card border border-navy-100 px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-primary"
       />
     </div>
   );

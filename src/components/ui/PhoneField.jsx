@@ -16,7 +16,7 @@ export default function PhoneField({
       <label htmlFor={id} className="text-sm font-medium text-navy-800">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
-      <div className="mt-1.5 flex overflow-hidden rounded-md border border-navy-100 transition-colors focus-within:border-primary">
+      <div className="mt-1.5 flex overflow-hidden rounded-card border border-navy-100 transition-colors focus-within:border-primary">
         <span className="flex flex-shrink-0 items-center border-r border-navy-100 bg-navy-50/60 px-3 text-sm font-medium text-navy-700">
           {country?.dial}
         </span>

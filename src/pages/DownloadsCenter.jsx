@@ -1,4 +1,3 @@
-import { ExternalLink, FileText, FileSpreadsheet, ArrowRight } from 'lucide-react';
 import PageHero from '../components/ui/PageHero';
 import SectionHeading from '../components/ui/SectionHeading';
 import Button from '../components/ui/Button';
@@ -28,24 +27,15 @@ export default function DownloadsCenter() {
       <section className="section-pad">
         <div className="container-page">
           <SectionHeading eyebrow="All Downloads" title="Download Files" />
-          <div className="mt-10 divide-y divide-navy-100 rounded-2xl border border-black bg-white">
+          <div className="mt-10 divide-y divide-navy-100 rounded-card border border-navy-100 bg-white">
             {downloadResources.map((d) => (
               <div key={d.title} className="flex flex-wrap items-center justify-between gap-3 px-6 py-4">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-navy-50 text-navy-700">
-                    {d.type === 'PPTX' ? (
-                      <FileSpreadsheet className="h-5 w-5" />
-                    ) : (
-                      <FileText className="h-5 w-5" />
-                    )}
-                  </span>
-                  <div>
-                    <p className="text-sm font-medium text-navy-800">{d.title}</p>
-                    <p className="text-xs text-ink/50 font-mono">
-                      {d.type}
-                      {d.size ? ` · ${d.size}` : ''}
-                    </p>
-                  </div>
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
+                    {d.type}
+                  </p>
+                  <p className="mt-1 text-body-compact font-medium text-text">{d.title}</p>
+                  {d.size && <p className="text-xs text-muted font-mono">{d.size}</p>}
                 </div>
                 <Button
                   href={d.url}
@@ -53,7 +43,7 @@ export default function DownloadsCenter() {
                   rel="noopener noreferrer"
                   variant="outlineNavy"
                   size="sm"
-                  icon={ExternalLink}
+                  className="text-[13px] font-bold uppercase tracking-[0.12em]"
                 >
                   Open / Download
                 </Button>
@@ -67,7 +57,7 @@ export default function DownloadsCenter() {
         title="Can&rsquo;t Find"
         accent="What You Need?"
         desc="Reach out and we&rsquo;ll send the right document directly to you."
-        cta={{ label: 'Contact Our Team', to: '/contact', icon: ArrowRight }}
+        cta={{ label: 'Contact Our Team', to: '/contact' }}
       />
     </>
   );
