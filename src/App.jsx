@@ -35,10 +35,19 @@ const AdminLogin = lazy(() => import('./admin/pages/AdminLogin'));
 const AdminLayout = lazy(() => import('./admin/layout/AdminLayout'));
 const AdminDashboard = lazy(() => import('./admin/pages/AdminDashboard'));
 const AdminUsers = lazy(() => import('./admin/pages/AdminUsers'));
+const AdminRoles = lazy(() => import('./admin/pages/AdminRoles'));
 const AdminProducts = lazy(() => import('./admin/pages/AdminProducts'));
+const AdminProductCategories = lazy(() => import('./admin/pages/AdminProductCategories'));
+const AdminMedia = lazy(() => import('./admin/pages/AdminMedia'));
+const AdminDownloads = lazy(() => import('./admin/pages/AdminDownloads'));
+const AdminTranslations = lazy(() => import('./admin/pages/AdminTranslations'));
 const AdminRFQ = lazy(() => import('./admin/pages/AdminRFQ'));
+const AdminExportInquiries = lazy(() => import('./admin/pages/AdminExportInquiries'));
 const AdminContacts = lazy(() => import('./admin/pages/AdminContacts'));
 const AdminCareers = lazy(() => import('./admin/pages/AdminCareers'));
+const AdminProfile = lazy(() => import('./admin/pages/AdminProfile'));
+const AdminNotifications = lazy(() => import('./admin/pages/AdminNotifications'));
+const AdminSettings = lazy(() => import('./admin/pages/AdminSettings'));
 
 export default function App() {
   return (
@@ -63,10 +72,19 @@ function AppShell() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="users" element={<AdminUsers />} />
+            <Route path="roles" element={<AdminRoles />} />
             <Route path="products" element={<AdminProducts />} />
+            <Route path="product-categories" element={<AdminProductCategories />} />
+            <Route path="media" element={<AdminMedia />} />
+            <Route path="downloads" element={<AdminDownloads />} />
+            <Route path="translations" element={<AdminTranslations />} />
             <Route path="rfq" element={<AdminRFQ />} />
+            <Route path="export-inquiries" element={<AdminExportInquiries />} />
             <Route path="contacts" element={<AdminContacts />} />
             <Route path="careers" element={<AdminCareers />} />
+            <Route path="profile" element={<AdminProfile />} />
+            <Route path="notifications" element={<AdminNotifications />} />
+            <Route path="settings" element={<AdminSettings />} />
           </Route>
 
           {/* Public site. */}
@@ -90,6 +108,7 @@ function AppShell() {
 
             <Route path="privacy-policy" element={<Legal type="privacy" />} />
             <Route path="terms" element={<Legal type="terms" />} />
+            <Route path="cookie-policy" element={<Legal type="cookies" />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

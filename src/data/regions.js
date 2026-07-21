@@ -16,7 +16,7 @@ export const offices = {
   europe: {
     key: 'europe',
     name: 'Runi Industries B.V.',
-    role: 'Sales Office & Warehouse — Europe',
+    role: 'Sales Office & Warehouse, Europe',
     lines: [company.salesOffice.line1, company.salesOffice.line2],
     country: company.salesOffice.country,
     phones: [company.salesOffice.phone],
@@ -25,7 +25,7 @@ export const offices = {
   hq: {
     key: 'hq',
     name: company.name,
-    role: 'Head Office & Manufacturing — Global Export Desk',
+    role: 'Head Office & Manufacturing, Global Export Desk',
     lines: [company.manufacturing.line1, company.manufacturing.line2],
     country: company.manufacturing.country,
     phones: company.phones,

@@ -21,6 +21,15 @@ import {
   Circle,
   ArrowRight,
   Activity,
+  ShieldCheck,
+  Globe2,
+  CircleUser,
+  Bell,
+  Settings,
+  FolderTree,
+  Image,
+  Download,
+  Languages,
 } from 'lucide-react';
 
 export const ADMIN_ICONS = {
@@ -34,4 +43,13 @@ export const ADMIN_ICONS = {
   Circle,
   ArrowRight,
   Activity,
+  ShieldCheck,
+  Globe2,
+  CircleUser,
+  Bell,
+  Settings,
+  FolderTree,
+  Image,
+  Download,
+  Languages,
 };

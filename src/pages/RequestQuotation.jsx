@@ -4,7 +4,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useRegion } from '../context/RegionContext';
 import { useAdminAuth } from '../admin/auth/AdminAuthContext';
 import { useT } from '../i18n/LocaleContext';
-import PageHero from '../components/ui/PageHero';
+import GalleryHero from '../components/gallery/GalleryHero';
+import { heroSlides } from '../data/heroSlides';
 import Button from '../components/ui/Button';
 import CountrySelect from '../components/ui/CountrySelect';
 import PhoneField from '../components/ui/PhoneField';
@@ -12,7 +13,6 @@ import EmailField from '../components/ui/EmailField';
 import WordLimitTextarea from '../components/ui/WordLimitTextarea';
 import { getAllProductLines } from '../data/productLines';
 import { defaultCountry } from '../data/countriesData';
-import { img } from '../data/images';
 import { submitPublicForm } from '../data/adminApi';
 import useSEO from '../hooks/useSEO';
 
@@ -143,13 +143,16 @@ export default function RequestQuotation() {
         phone: `${country?.dial || ''} ${phone || ''}`.trim(),
         country: country?.name || '',
         category: val('product'),
+        // Which desk owns this: the Export tab routes to the admin's Export Inquiries screen,
+        // everything else is a normal quote request. Defaults server-side to "quote" too.
+        type: tab === 'export' ? 'export' : 'quote',
         // The region line tells whoever picks this up which desk owns it — the backend
         // takes a flat `message`, so it rides along as a labelled trailer rather than a
         // new field the API would drop.
         message: [
           details,
           port ? `Port of destination: ${port}` : '',
-          `Sales region: ${regionMeta.label} — handled by ${office.name}`,
+          `Sales region: ${regionMeta.label}, handled by ${office.name}`,
         ]
           .filter(Boolean)
           .join('\n\n'),
@@ -164,16 +167,14 @@ export default function RequestQuotation() {
 
   return (
     <>
-      <PageHero
+      <GalleryHero
         eyebrow="Request for Quotation"
-        title="Request a"
-        accent="Quote."
-        desc="Tell us what you need — our team responds to every inquiry within 24 hours with the best solution and pricing."
         crumbs={[{ label: 'Home', to: '/' }, { label: 'Request for Quotation' }]}
-      image={img.scaffoldRacks}
+        slides={heroSlides.rfq}
+        scrollTo="content"
       />
 
-      <section className="section-pad">
+      <section id="content" className="section-pad">
         <div className="container-page grid gap-10 lg:grid-cols-[1fr_320px]">
           <div className="rounded-card border border-navy-100 p-7 shadow-card">
             <div className="flex flex-wrap gap-2 border-b border-navy-100 pb-5">
@@ -298,7 +299,7 @@ export default function RequestQuotation() {
                     label="Port of Destination"
                     id="port"
                     className="sm:col-span-2"
-                    placeholder="e.g. Jebel Ali Port, Dubai (UAE) — or Rotterdam, Netherlands"
+                    placeholder="e.g. Jebel Ali Port, Dubai (UAE), or Rotterdam, Netherlands"
                   />
                 )}
 

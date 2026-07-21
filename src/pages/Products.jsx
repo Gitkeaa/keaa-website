@@ -1,14 +1,16 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import PageHero from '../components/ui/PageHero';
+import GalleryHero from '../components/gallery/GalleryHero';
 import CtaBand from '../components/CtaBand';
 import FeatureStrip from '../components/FeatureStrip';
 import SectionHeading from '../components/ui/SectionHeading';
 import Button from '../components/ui/Button';
-import Reveal, { StaggerGroup, StaggerItem } from '../components/ui/Reveal';
+import Reveal from '../components/ui/Reveal';
+import CardRail from '../components/ui/CardRail';
+import { PANEL_CARD } from '../components/ui/panelCard';
 import ProductCard from '../components/products/ProductCard';
 import { getAllCategories, getProductsByCategory, TOTAL_PRODUCTS } from '../data/productHelpers';
-import { img } from '../data/images';
+import { heroSlides } from '../data/heroSlides';
 import useSEO from '../hooks/useSEO';
 
 const perks = [
@@ -17,10 +19,20 @@ const perks = [
   { title: 'Quality Assurance', desc: 'All products are tested and certified to meet international standards.' },
 ];
 
-// A spread of real products (with images) across the three categories.
-const featured = getAllCategories()
-  .flatMap((c) => getProductsByCategory(c.slug).filter((p) => p.hasImage).slice(0, 4))
-  .slice(0, 10);
+/*
+  Featured products, ONE RAIL PER CATEGORY. Each category keeps its own swipeable row with its
+  own prev / next control, stacked down the page, rather than being mixed into a single grid —
+  so every category is featured in its own right. Up to twelve image-carrying products each is
+  plenty for a rail; a category with no images drops out entirely.
+*/
+const featuredByCategory = getAllCategories()
+  .map((c) => ({
+    category: c,
+    items: getProductsByCategory(c.slug)
+      .filter((p) => p.hasImage)
+      .slice(0, 12),
+  }))
+  .filter((group) => group.items.length > 0);
 
 export default function Products() {
   const categories = getAllCategories();
@@ -28,27 +40,27 @@ export default function Products() {
   useSEO({
     title: 'Products',
     description:
-      'Explore KEAA’s full product catalogue: scaffolding & formwork systems, livestock housing solutions and wood connectors — with specifications and images.',
+      'Explore KEAA’s full product catalogue: scaffolding & formwork systems, livestock housing solutions and wood connectors, with specifications and images.',
   });
 
   return (
     <>
-      <PageHero
+      {/* Framed hero carousel (see components/gallery/GalleryHero) — real KEAA product
+          photography with the copy changing per slide. */}
+      <GalleryHero
         eyebrow="Our Products"
-        title="Engineered for Strength."
-        accent="Built for Performance."
-        desc="Browse our full manufacturing range — modular scaffolding & formwork systems, livestock housing solutions and structural wood connectors, all built to global standards."
         crumbs={[{ label: 'Home', to: '/' }, { label: 'Products' }]}
-        image={img.scaffoldFrame}
+        slides={heroSlides.products}
         stats={[
           { value: `${TOTAL_PRODUCTS}+`, label: 'Products in Catalogue' },
           { value: `${categories.length}`, label: 'Product Categories' },
           { value: 'DIN EN 1461', label: 'Hot Dip Galvanizing' },
         ]}
+        scrollTo="browse"
       />
 
       {/* BROWSE BY CATEGORY */}
-      <section className="section-pad">
+      <section id="browse" className="section-pad">
         <div className="container-page">
           <Reveal>
             <SectionHeading eyebrow="Our Product Range" title="Browse by Category" />
@@ -107,21 +119,50 @@ export default function Products() {
         </div>
       </section>
 
-      {/* FEATURED PRODUCTS */}
-      {featured.length > 0 && (
+      {/* FEATURED PRODUCTS — one rail per category, stacked. Each category has its name, then a
+          swipeable row of its products with its own prev / next control, then the next category
+          below it, and so on. */}
+      {featuredByCategory.length > 0 && (
         <section className="section-pad">
           <div className="container-page">
             <Reveal>
               <SectionHeading eyebrow="Featured Products" title="From Our Catalogue" />
             </Reveal>
-            <StaggerGroup className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-              {featured.map((p) => (
-                <StaggerItem key={p.id}>
-                  <ProductCard product={p} />
-                </StaggerItem>
+
+            {/* Each of the three category groups sits in its own PANEL_CARD, matching the
+                carded bands on Home and About. `space-y` gives the cards their gap. */}
+            <div className="mt-8 space-y-8">
+              {featuredByCategory.map(({ category, items }) => (
+                <Reveal key={category.slug}>
+                  <div className={PANEL_CARD}>
+                    <div className="flex items-baseline justify-between gap-4">
+                      <h3 className="font-display text-xl font-semibold text-text">{category.name}</h3>
+                      <Link
+                        to={`/products/${category.slug}`}
+                        className="flex-shrink-0 border-b border-transparent pb-0.5 text-sm font-semibold text-primary-dark transition-colors hover:border-primary hover:text-primary-darker"
+                      >
+                        View all
+                      </Link>
+                    </div>
+                    <CardRail
+                      label={`${category.name} products`}
+                      labels={items.map((p) => `Show ${p.name}`)}
+                    >
+                      {items.map((p) => (
+                        <div
+                          key={p.id}
+                          className="w-[46%] flex-none snap-start sm:w-[calc((100%-3rem)/3)] lg:w-[calc((100%-6rem)/5)]"
+                        >
+                          <ProductCard product={p} />
+                        </div>
+                      ))}
+                    </CardRail>
+                  </div>
+                </Reveal>
               ))}
-            </StaggerGroup>
-            <div className="mt-10 text-center">
+            </div>
+
+            <div className="mt-12 text-center">
               <Button to={`/products/${categories[0]?.slug || ''}`} variant="outlineNavy">
                 Explore Full Catalogue
               </Button>

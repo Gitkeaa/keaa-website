@@ -80,7 +80,7 @@ export default function JobApplicationModal({ job, onClose }) {
         val('app-company') && `Current employer: ${val('app-company')}`,
         val('app-linkedin') && `LinkedIn/Portfolio: ${val('app-linkedin')}`,
         // Only claim the file is missing when it genuinely is.
-        resumeName && !fileDelivered && `Resume file: ${resumeName} (not received — request from applicant)`,
+        resumeName && !fileDelivered && `Resume file: ${resumeName} (not received, request from applicant)`,
       ]
         .filter(Boolean)
         .join('\n');
@@ -224,7 +224,7 @@ export default function JobApplicationModal({ job, onClose }) {
                     </>
                   ) : (
                     <>
-                      We could not attach <span className="font-medium">{resumeName}</span> —
+                      We could not attach <span className="font-medium">{resumeName}</span>, so
                       our team will email you to request it.
                     </>
                   )}

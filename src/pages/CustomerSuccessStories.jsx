@@ -1,10 +1,10 @@
-import PageHero from '../components/ui/PageHero';
+import GalleryHero from '../components/gallery/GalleryHero';
+import { heroSlides } from '../data/heroSlides';
 import SectionHeading from '../components/ui/SectionHeading';
 import ImagePlaceholder from '../components/ui/ImagePlaceholder';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import { testimonials, featuredProjects } from '../data/content';
-import { img } from '../data/images';
 import useSEO from '../hooks/useSEO';
 
 export default function CustomerSuccessStories() {
@@ -16,21 +16,19 @@ export default function CustomerSuccessStories() {
 
   return (
     <>
-      <PageHero
+      <GalleryHero
         eyebrow="Customer Success Stories"
-        title="Trusted"
-        accent="Worldwide."
-        desc="Real experiences from real customers who trust KEAA International with their construction and farming infrastructure."
         crumbs={[{ label: 'Home', to: '/' }, { label: 'Customer Success Stories' }]}
-        image={img.scaffoldWorker3}
+        slides={heroSlides.customerSuccess}
         stats={[
           { value: '2000+', label: 'Happy Customers' },
           { value: '42+', label: 'Countries Served' },
           { value: '98%', label: 'Customer Satisfaction' },
         ]}
+        scrollTo="content"
       />
 
-      <section className="section-pad">
+      <section id="content" className="section-pad">
         <div className="container-page">
           <SectionHeading eyebrow="What Our Customers Say" title="Testimonials" />
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

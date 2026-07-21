@@ -13,7 +13,7 @@ import { products, searchProducts } from '../../data/productHelpers';
 const PAGE_SIZE = 15;
 
 const columns = [
-  { key: 'itemCode', label: 'Item Code', render: (p) => <span className="font-mono text-xs text-slate-600">{p.itemCode || '—'}</span> },
+  { key: 'itemCode', label: 'Item Code', render: (p) => <span className="font-mono text-xs text-slate-600">{p.itemCode || 'N/A'}</span> },
   { key: 'name', label: 'Product', render: (p) => <span className="font-medium text-navy-900">{p.name}</span> },
   { key: 'category', label: 'Category', render: (p) => <span className="text-slate-600">{p.category}</span> },
   { key: 'subcategory', label: 'Subcategory', render: (p) => <span className="text-slate-500">{p.subcategory}</span> },
@@ -25,7 +25,7 @@ const columns = [
       p.hasImage ? (
         <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">Yes</span>
       ) : (
-        <span className="text-slate-300">—</span>
+        <span className="text-slate-300">No</span>
       ),
   },
 ];

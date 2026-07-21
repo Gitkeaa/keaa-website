@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Search, X } from 'lucide-react';
 import { useT } from '../../i18n/LocaleContext';
 import { headerControl } from './headerControl';
+import HeaderHint from './HeaderHint';
 
 /**
  * Site search, INLINE in the header.
@@ -106,6 +107,9 @@ export default function HeaderSearch({ onOpenChange }) {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
+  // Hover/focus prompt on the closed icon — the same chip the region control uses.
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
   const [query, setQuery] = useState('');
   const [catalog, setCatalog] = useState(null);
   const [pages, setPages] = useState(null);
@@ -299,20 +303,31 @@ export default function HeaderSearch({ onOpenChange }) {
       does not reflow the header — an inline width change would shove the nav sideways
       every time the icon is clicked.
     */
-    <div ref={wrapRef} className="relative flex items-center">
+    <div
+      ref={wrapRef}
+      className="relative flex items-center"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       {!open && (
-        <button
-          type="button"
-          onClick={() => {
-            setOpen(true);
-            requestAnimationFrame(() => inputRef.current?.focus());
-          }}
-          aria-label={t('header.searchAria')}
-          aria-expanded={false}
-          className={`${headerControl} justify-center`}
-        >
-          <Search aria-hidden className="h-[18px] w-[18px]" strokeWidth={2} />
-        </button>
+        <>
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(true);
+              requestAnimationFrame(() => inputRef.current?.focus());
+            }}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            aria-label={t('header.searchAria')}
+            aria-expanded={false}
+            className={`${headerControl} justify-center`}
+          >
+            <Search aria-hidden className="h-[18px] w-[18px]" strokeWidth={2} />
+          </button>
+          {/* Only while closed — once the field is open it is its own prompt. */}
+          <HeaderHint show={hovered || focused}>{t('header.searchHint')}</HeaderHint>
+        </>
       )}
 
       {open && (

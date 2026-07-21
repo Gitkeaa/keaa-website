@@ -95,7 +95,7 @@ export default function CoreSolutions() {
                 src={cldImage(WHO_WE_ARE, { w: 1200 })}
                 srcSet={cldSrcSet(WHO_WE_ARE)}
                 sizes="(min-width: 1024px) 46vw, 92vw"
-                alt="Inside KEAA International's plant — a branded overhead crane above the machining lines, with racked steel tube, section and coil stock"
+                alt="Inside KEAA International's plant: a branded overhead crane above the machining lines, with racked steel tube, section and coil stock"
                 loading="lazy"
                 decoding="async"
                 className="aspect-[16/10] w-full object-cover"

@@ -60,7 +60,7 @@ const ALL = {
   name: 'All Categories',
   count: TOTAL_PRODUCTS,
   short:
-    'The complete KEAA range — modular scaffolding and formwork, livestock housing systems and structural wood connectors, all manufactured to global standards.',
+    'The complete KEAA range: modular scaffolding and formwork, livestock housing systems and structural wood connectors, all manufactured to global standards.',
   /*
     Its OWN photograph, not a borrowed one. This used to fall back to CATEGORIES[0], which
     meant "All Categories" and "Scaffolding & Formworks" showed the identical picture — so

@@ -94,7 +94,7 @@ export default function ProductCatalog() {
     ? {
         '@context': 'https://schema.org',
         '@type': 'CollectionPage',
-        name: activeSub ? `${activeSub.name} — ${category.name}` : category.name,
+        name: activeSub ? `${activeSub.name}, ${category.name}` : category.name,
         ...(category.short ? { description: category.short } : {}),
         url: absoluteUrl(
           activeSub ? `/products/${category.slug}/${activeSub.slug}` : `/products/${category.slug}`,
@@ -113,7 +113,7 @@ export default function ProductCatalog() {
     : undefined;
 
   useSEO({
-    title: category ? `${activeSub ? activeSub.name : category.name} — Products` : 'Products',
+    title: category ? `${activeSub ? activeSub.name : category.name}, Products` : 'Products',
     description: category?.short,
     breadcrumbs,
     schema: collectionSchema,

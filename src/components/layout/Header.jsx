@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { NavLink, Link, useLocation } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
 import Button from '../ui/Button';
 import RegionLanguageSwitcher from './RegionLanguageSwitcher';
@@ -37,6 +37,8 @@ export default function Header({ onOpenDrawer }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const t = useT();
   const location = useLocation();
+  const navigate = useNavigate();
+  const headerRef = useRef(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -45,28 +47,43 @@ export default function Header({ onOpenDrawer }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Navigating from inside a panel must dismiss it — the route changes underneath but the
-  // pointer never leaves the header, so no mouseleave would ever fire.
+  // Navigating from inside a panel dismisses it — the route changes underneath.
   useEffect(() => setOpenKey(null), [location.pathname]);
 
-  // Escape closes it, as it does for every other overlay on the site.
+  /*
+    The panel is CLICK-CONTROLLED, not hover-controlled: it opens on a click and stays open
+    until the visitor acts. Hover does nothing. So the only ways to close it are a click on a
+    link inside it (which navigates, closing via the route effect above), a click on another
+    nav item (which switches the panel), Escape, or a click ANYWHERE outside the header.
+
+    That last one is this effect. `pointerdown`, not `click`, so it settles before the nav
+    button's own click fires; and it is scoped to "outside the header", so clicks inside the
+    panel — which is a child of the header — never trip it.
+  */
   useEffect(() => {
     if (!openKey) return undefined;
+    const onPointerDown = (e) => {
+      if (headerRef.current && !headerRef.current.contains(e.target)) setOpenKey(null);
+    };
     const onKey = (e) => e.key === 'Escape' && setOpenKey(null);
+    document.addEventListener('pointerdown', onPointerDown);
     document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKey);
+    };
   }, [openKey]);
 
   const openItem = mainNav.find((i) => i.key === openKey && i.children);
 
   return (
     /*
-      `onMouseLeave` sits on the header, not on each nav item: the panel is a child of the
-      header, so moving the pointer down from a nav item INTO the panel never leaves this
-      element — which is what lets the panel stay open long enough to click.
+      No `onMouseLeave` — the panel must NOT close when the pointer leaves. It is pinned open
+      by a click and dismissed only by the deliberate actions handled in the effect above.
+      `ref` is what that outside-click check measures against.
     */
     <header
-      onMouseLeave={() => setOpenKey(null)}
+      ref={headerRef}
       className={`sticky top-0 z-40 w-full border-b bg-white transition-[box-shadow,border-color] ${
         scrolled ? 'border-border shadow-[0_1px_3px_rgba(10,35,66,0.06)]' : 'border-transparent'
       }`}
@@ -95,8 +112,14 @@ export default function Header({ onOpenDrawer }) {
           itself is the affordance, and a glyph here would be the only icon left in a header
           that states everything else in words.
 
-          `onFocus` alongside `onMouseEnter` so the panel is reachable by keyboard, not just
-          by pointer.
+          CLICK, not hover: a panel item opens on click and stays open. Hover does nothing,
+          so a visitor reading one panel never has it yanked away by the pointer drifting off.
+
+          DOUBLE-CLICK goes to the section's own page — the same landing a panelless item like
+          Home or Contact reaches on a single click. So a single click browses the panel; a
+          double click says "just take me to Products". The two single clicks a double click
+          also fires only toggle the panel open then shut before the navigation lands, so there
+          is nothing left open behind the new route.
         */}
         <nav
           className={`hidden items-center gap-7 transition-opacity duration-200 xl:flex ${
@@ -133,12 +156,16 @@ export default function Header({ onOpenDrawer }) {
               <button
                 key={item.key}
                 type="button"
+                aria-haspopup="menu"
                 aria-expanded={openKey === item.key}
-                onMouseEnter={() => setOpenKey(item.key)}
-                onFocus={() => setOpenKey(item.key)}
-                /* Click TOGGLES rather than only opening: on a touch screen there is no
-                   hover, so the first tap opens the panel and a second one must close it. */
+                /* Toggle: clicking the open item again closes it; clicking a different item
+                   switches the panel to that one. No hover handlers — this is click-only. */
                 onClick={() => setOpenKey(openKey === item.key ? null : item.key)}
+                /* Double click skips the panel and opens the parent page itself. */
+                onDoubleClick={() => {
+                  setOpenKey(null);
+                  navigate(item.to);
+                }}
                 className={cls}
               >
                 {t(item.key)}
@@ -147,8 +174,10 @@ export default function Header({ onOpenDrawer }) {
               <NavLink
                 key={item.key}
                 to={item.to}
-                onMouseEnter={() => setOpenKey(null)}
-                onFocus={() => setOpenKey(null)}
+                /* A panelless item (Home, Contact Us) closes any open panel as it navigates.
+                   The route effect already covers a real navigation; this also handles the
+                   case where the target is the current route, so no route change fires. */
+                onClick={() => setOpenKey(null)}
                 className={cls}
               >
                 {t(item.key)}

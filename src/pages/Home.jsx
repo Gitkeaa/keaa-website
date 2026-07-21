@@ -59,14 +59,13 @@ export default function Home() {
 
       {/* WHO WE ARE + PRODUCT CATEGORIES — merged into one band. */}
       <CoreSolutions />
-      {/* PRODUCTS AT KEAA — the catalogue's shop window, straight after the company pitch:
-          the visitor has just been told who KEAA is, so this is where "what do they make?"
-          gets answered before the page moves on to how it is made. */}
-      <ProductsShowcase />
       {/* MANUFACTURING EXCELLENCE — capabilities and scale figures, all read from company.js.
-          Sits after "Products at KEAA": the visitor now knows what KEAA makes, so this is
-          where how it is made belongs. */}
+          Placed before "Products at KEAA": the company pitch leads into how KEAA makes things,
+          establishing the manufacturing strength before the catalogue shows what comes out of it. */}
       <ManufacturingBand />
+      {/* PRODUCTS AT KEAA — the catalogue's shop window. With the manufacturing capability
+          established just above, this answers "and here is what that produces". */}
+      <ProductsShowcase />
 
       {/* FEATURED PROJECTS */}
       <section className="section-pad">
@@ -97,7 +96,7 @@ export default function Home() {
             <div className="my-6 flex flex-1 items-center overflow-hidden rounded-card bg-navy-50/30 p-4">
               <img
                 src="/images/global-presence-map.png"
-                alt="KEAA global presence — export markets across 42+ countries"
+                alt="KEAA global presence, export markets across 42+ countries"
                 loading="lazy"
                 className="w-full transition-transform duration-500 ease-out group-hover:scale-[1.04]"
               />

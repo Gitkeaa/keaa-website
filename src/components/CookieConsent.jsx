@@ -170,13 +170,13 @@ const CATEGORIES = [
   {
     key: 'necessary',
     title: 'Strictly Necessary',
-    desc: 'Required for the site to work — navigation, security, form submission, and remembering the language and region you choose. These cannot be switched off and involve no third party.',
+    desc: 'Required for the site to work: navigation, security, form submission, and remembering the language and region you choose. These cannot be switched off and involve no third party.',
     locked: true,
   },
   {
     key: 'embeds',
     title: 'External Content',
-    desc: 'Lets us show content hosted by others — currently the Google Map on our Contact page. Turning this on shares your IP address with Google. With it off, we show the address and a plain link instead.',
+    desc: 'Lets us show content hosted by others, currently the Google Map on our Contact page. Turning this on shares your IP address with Google. With it off, we show the address and a plain link instead.',
   },
 ];
 
@@ -431,7 +431,7 @@ export default function CookieConsent() {
               <p className="text-body-compact leading-[1.6] text-ink">
                 This site uses local storage to work and to remember the language and region you
                 choose. We also embed a Google Map on our Contact page, which shares your IP
-                address with Google — that one is optional and off unless you allow it.
+                address with Google (that one is optional and off unless you allow it).
               </p>
               <p className="text-body-compact leading-[1.6] text-ink">
                 Choose &ldquo;Cookie Settings&rdquo; to decide, or change your mind at any time

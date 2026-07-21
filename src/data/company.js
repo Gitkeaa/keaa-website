@@ -18,7 +18,7 @@ export const company = {
     country: 'India',
   },
   salesOffice: {
-    label: 'Sales Office & Warehouse — Runi Industries B.V.',
+    label: 'Sales Office & Warehouse, Runi Industries B.V.',
     line1: 'Park Forum 1005',
     line2: '5657 HJ Eindhoven, The Netherlands',
     country: 'Netherlands',
@@ -34,17 +34,25 @@ export const company = {
   website: 'www.keaainternational.com',
 
   /**
-   * A channel with no live account is `null`, NOT '#'. Both the footer and the contact page
-   * filter falsy hrefs out, so a null channel simply does not render — where '#' rendered a
-   * full, hover-animated tile that jumped the reader to the top of the page when clicked.
-   * Fill in a real profile URL here and the icon reappears everywhere by itself.
+   * One line per channel, read by both the footer and the contact page.
+   *
+   * linkedin, youtube and whatsapp are LIVE accounts. facebook, instagram and x are
+   * PLACEHOLDERS: the client asked for every icon to show now and will send the real profile
+   * URLs to drop in. They point at each platform's home page for the meantime rather than at
+   * '#', because '#' scrolls the reader to the top of the page instead of leaving the site.
+   * REPLACE each placeholder with the real profile URL when it arrives; nothing else changes,
+   * the icon simply starts pointing at the right place.
+   *
+   * A channel set back to `null` disappears from both places (the two lists filter falsy
+   * hrefs), so removing one is a one-word edit too.
    */
   social: {
     linkedin: 'https://www.linkedin.com/company/keaa/',
-    facebook: null,
-    instagram: null,
+    facebook: 'https://www.facebook.com/', // TODO: real KEAA page URL
+    instagram: 'https://www.instagram.com/', // TODO: real KEAA profile URL
     youtube: 'https://www.youtube.com/@keaainternationalpvtltd5005',
     whatsapp: 'https://wa.me/919872984707',
+    x: 'https://x.com/', // TODO: real KEAA profile URL
   },
 
   stats: [
@@ -58,9 +66,12 @@ export const company = {
   facilities: {
     area: '25,000 sq. m.',
     units: 2,
+    /* Annual production capacity. Was a hard-coded literal on the Manufacturing page and the
+       Home band; centralised here so the two can never disagree. TODO: client to confirm. */
+    capacity: '5,000+ MT',
     galvanizingBaths: '4 m and 1.7 m in-house Hot Dip Galvanizing zinc baths',
     powderCoating: 'In-house automatic powder coating facility',
-    moldRooms: '2 mould rooms — one for maintenance, one for new mould development',
+    moldRooms: '2 mould rooms: one for maintenance, one for new mould development',
     testing:
       'In-house tensile & compression testing, fracture & bend test and macro/weld-penetration examination',
     welders: 'Certified welders as per EN 1090-2 / 3834-2, accredited by SLV Germany',
@@ -73,7 +84,7 @@ export const company = {
       body: 'TÜV Rheinland',
       scope: 'Quality Management System',
       image: '/images/cert-iso-9001.jpg',
-      note: 'Quality Management System for the manufacture of sheet-metal and fabricated components — scaffolding, framework, garden hardware and livestock products.',
+      note: 'Quality Management System for the manufacture of sheet-metal and fabricated components: scaffolding, framework, garden hardware and livestock products.',
     },
     {
       name: 'ISO 14001:2015',
@@ -127,16 +138,17 @@ export const company = {
 
   values: {
     vision:
-      'To be a trusted global partner in scaffolding, formwork and industrial hardware — known for engineering integrity, consistent quality and dependable export service.',
+      'To be a trusted globally admired partner in providing resilient, intelligent and advanced solutions in infrastructural systems, integrated habitat technologies, and smart living creations-committed to sustainable growth and the well being of people and the planet.',
     mission:
-      'To manufacture and supply high-quality scaffolding, formwork, safety, livestock housing and garden hardware products that ensure safety, efficiency and value for customers in over 42 countries.',
+      'We are committed to delivering world class scaffolding systems, livestock housing solutions and DIY wood Connectors by combining deep domain expertise with advanced manufacturing Thought a culture of respect, innovation and sustainable growth, we empower our people to exceed expectations and build enduring value for our global partners.',
     values: [
       'Integrity in everything we do',
-      'Commitment to quality at every stage',
-      'Continuous improvement and in-house innovation',
-      'Respect for people — our team and our customers',
-      'Responsibility towards the environment',
-    ],
+      'Innovation driven solutions',
+      'Excellence in manufacturing and service',
+      'Customer Focus and satisfaction',
+      'Team Empowerment and collaboration',
+      'Sustainability and environmental responsibility',
+      ],
   },
 };
 
@@ -196,7 +208,7 @@ export const chairmanMessage = {
   name: 'Om Parkash Sharma',
   role: 'Chairman, KEAA International Pvt. Ltd.',
   message:
-    'For over two decades, KEAA International has grown on a foundation of quality, integrity and trust — from a focused manufacturing vision to a name relied upon across 42+ countries. I am deeply proud of the people and partnerships behind this journey, and remain committed to building solutions that make the world safer and stronger for generations to come.',
+    'For over two decades, KEAA International has grown on a foundation of quality, integrity and trust, from a focused manufacturing vision to a name relied upon across 42+ countries. I am deeply proud of the people and partnerships behind this journey, and remain committed to building solutions that make the world safer and stronger for generations to come.',
   photo: '/images/chairman.jpg',
 };
 

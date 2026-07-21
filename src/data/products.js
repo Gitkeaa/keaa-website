@@ -12,7 +12,7 @@ export const productCategories = [
     standard: 'Hot dip galvanized as per DIN EN 1461',
     families: [
       {
-        title: 'Load Bearing System — Shoring Tower (Frame)',
+        title: 'Load Bearing System: Shoring Tower (Frame)',
         spec: 'Tube: vertical Ø57mm, horizontal Ø42 & Ø27mm · CEBTP load tested to 310kN for 8m height',
         items: [
           { code: 'KIST-F-5ST', label: 'Frame (5 Steps)', size: '1500(L) x 1200(W) mm' },
@@ -25,8 +25,8 @@ export const productCategories = [
         ],
       },
       {
-        title: 'System Scaffolds — Ringlock',
-        spec: 'Standard & diagonal brace tube Ø48.3mm, S355JR / S235JR — EN10219 / EN10025',
+        title: 'System Scaffolds: Ringlock',
+        spec: 'Standard & diagonal brace tube Ø48.3mm, S355JR / S235JR, EN10219 / EN10025',
         items: [
           { code: 'KIRS 50–300', label: 'Ringlock Standard', size: '500 – 3000 mm' },
           { code: 'KIRDB 730–3070', label: 'Ringlock Diagonal Brace', size: '730 – 3070 x 2000 mm' },
@@ -34,28 +34,28 @@ export const productCategories = [
         ],
       },
       {
-        title: 'System Scaffolds — HK',
-        spec: 'High tensile, low-weight tube Ø48.3mm S355JRH / S420JRH — EN10219 / EN10025',
+        title: 'System Scaffolds: HK',
+        spec: 'High tensile, low-weight tube Ø48.3mm S355JRH / S420JRH, EN10219 / EN10025',
         items: [
           { code: 'KIHKS 050–300', label: 'HK Standard', size: '500 – 3000 mm (under 15kg)' },
           { code: 'KIHKES 100–300', label: 'Enhak Standard', size: '1000 – 3000 mm' },
-          { code: 'KIHKL (LD/HD)', label: 'Ledger — Light/Heavy Duty', size: '1000 – 3000 mm' },
+          { code: 'KIHKL (LD/HD)', label: 'Ledger (Light/Heavy Duty)', size: '1000 – 3000 mm' },
           { code: 'KIHKGRF 120–300', label: 'Guard Rail Frame', size: '1200 – 3000 mm' },
         ],
       },
       {
-        title: 'Scaffold Tube Fittings — European',
-        spec: 'Tube fitting 48.3mm — EN 74-1, finish EZP / hot dip galvanized as per DIN EN 1461',
+        title: 'Scaffold Tube Fittings: European',
+        spec: 'Tube fitting 48.3mm, EN 74-1, finish EZP / hot dip galvanized as per DIN EN 1461',
         items: [
           { code: 'KIHCLS/SS', label: 'Half Coupler with L Strip (Long/Short)' },
           { code: 'KIHCWR', label: 'Half Coupler with Welded Rod' },
           { code: 'KIHCVS', label: 'Half Coupler with Welded V-Strip' },
           { code: 'KIGC-E', label: 'Girder Coupler' },
-          { code: 'KISC-F', label: 'Sleeve Coupler — Forged' },
+          { code: 'KISC-F', label: 'Sleeve Coupler (Forged)' },
           { code: 'KICWS', label: 'Coupler with Welded Strip' },
           { code: 'KIHCWT', label: 'Half Coupler with Welded Tube' },
           { code: 'KIPSC', label: 'Pin for Sleeve Coupler' },
-          { code: 'KIRC', label: 'Rosette Coupler — fitment 48.3mm' },
+          { code: 'KIRC', label: 'Rosette Coupler (fitment 48.3mm)' },
         ],
       },
     ],
@@ -69,16 +69,16 @@ export const productCategories = [
     standard: 'Pre-galvanized / hot dip galvanized as per DIN 1461',
     families: [
       {
-        title: 'Slab Formwork Systems — Props (Ü-Mark Certified)',
-        spec: 'Props EN 1065 Class BD — Ü-mark certified, Cert No. 9 152/Z (Sigma Karlsruhe)',
+        title: 'Slab Formwork Systems: Props (Ü-Mark Certified)',
+        spec: 'Props EN 1065 Class BD, Ü-mark certified, Cert No. 9 152/Z (Sigma Karlsruhe)',
         items: [
           { code: 'KIP-Ü-BD30', label: 'Ü-Mark Prop', size: 'Closing 1747 / Opening 3000 mm' },
           { code: 'KIP-Ü-BD35', label: 'Ü-Mark Prop', size: 'Closing 1980 / Opening 3500 mm' },
         ],
       },
       {
-        title: 'Slab Formwork Props — 20kN Load Tested (PN-EN 1065)',
-        spec: 'Inner tube Ø48mm S235JRH, outer tube Ø60.3mm S235JRH — G locking pin S355JR',
+        title: 'Slab Formwork Props: 20kN Load Tested (PN-EN 1065)',
+        spec: 'Inner tube Ø48mm S235JRH, outer tube Ø60.3mm S235JRH, G locking pin S355JR',
         items: [
           { code: 'KIP-B15', label: 'Prop', size: 'Closing 950 / Opening 1500 mm' },
           { code: 'KIP-B25', label: 'Prop', size: 'Closing 1500 / Opening 2500 mm' },
@@ -127,10 +127,10 @@ export const productCategories = [
     families: [
       {
         title: 'Cow Safety Headlocks',
-        spec: 'Essential requirement of a free-stall barn — rubber bush noise reduction, individual feed-space locking',
+        spec: 'Essential requirement of a free-stall barn: rubber bush noise reduction, individual feed-space locking',
         items: [
-          { code: 'ART 325007', label: 'Giant Safety Headlock', size: '44cm wide head space — 129/194/260/325cm runs' },
-          { code: 'ART 325008', label: 'HF Safety Headlock', size: '38cm wide head space — 129/194/260/325cm runs' },
+          { code: 'ART 325007', label: 'Giant Safety Headlock', size: '44cm wide head space, 129/194/260/325cm runs' },
+          { code: 'ART 325008', label: 'HF Safety Headlock', size: '38cm wide head space, 129/194/260/325cm runs' },
         ],
       },
       {
@@ -141,7 +141,7 @@ export const productCategories = [
           { code: 'ART 325019–24', label: 'Neck Rail & U-Bolt Clamps', size: 'Ø48–Ø76 mm' },
           { code: 'ART 325025–26', label: 'Cubicle Divider Mounting Brackets' },
           { code: 'ART 325027–28', label: 'Brisket Board Clamp & Plate' },
-          { code: 'ART 325013–14', label: 'Posts with Foot Plate', size: 'Ø76 x 3.6mm — 100/145/160/180/195cm' },
+          { code: 'ART 325013–14', label: 'Posts with Foot Plate', size: 'Ø76 x 3.6mm, 100/145/160/180/195cm' },
         ],
       },
       {
@@ -166,13 +166,13 @@ export const productCategories = [
     standard: 'S250GD + Z275 per DIN EN 10346 · CE marked',
     families: [
       {
-        title: 'Wood Connectors — Joist Hangers',
+        title: 'Wood Connectors: Joist Hangers',
         spec: 'Material S250GD + Z275 (DIN EN 10346) · YS min. 250 MPa, UTS min. 350 MPa · Z275 zinc coating ≈20µm',
         items: [
-          { code: 'Joist Hanger — Type A', label: 'Blank sizes 210–320 mm', size: 'CE / Z275 marked' },
-          { code: 'Joist Hanger — Type B', label: 'Blank sizes 240–500 mm', size: 'CE / Z275 marked' },
-          { code: 'Joist Hanger — Type C', label: 'a 25–50 mm range', size: 'CE / Z275 marked' },
-          { code: 'Joist Hanger — Type D', label: 'Compact angle bracket', size: 'CE / Z275 marked' },
+          { code: 'Joist Hanger (Type A)', label: 'Blank sizes 210–320 mm', size: 'CE / Z275 marked' },
+          { code: 'Joist Hanger (Type B)', label: 'Blank sizes 240–500 mm', size: 'CE / Z275 marked' },
+          { code: 'Joist Hanger (Type C)', label: 'a 25–50 mm range', size: 'CE / Z275 marked' },
+          { code: 'Joist Hanger (Type D)', label: 'Compact angle bracket', size: 'CE / Z275 marked' },
         ],
       },
       {
@@ -203,7 +203,7 @@ export const bestSellers = [
   { name: 'Ü-Mark Prop (KIP-Ü-BD30)', category: 'Formwork Accessories' },
   { name: 'Full Body Harness', category: 'Safety Products' },
   { name: 'Giant Safety Headlock (ART 325007)', category: 'Livestock Housing Solutions' },
-  { name: 'Joist Hanger — Type A', category: 'Wood Connectors / Garden Hardware' },
+  { name: 'Joist Hanger (Type A)', category: 'Wood Connectors / Garden Hardware' },
   { name: 'Sheep Race (ART 425011)', category: 'Livestock Housing Solutions' },
 ];
 

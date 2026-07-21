@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import PageHero from '../components/ui/PageHero';
+import GalleryHero from '../components/gallery/GalleryHero';
+import { heroSlides } from '../data/heroSlides';
 import Reveal from '../components/ui/Reveal';
 import Button from '../components/ui/Button';
 import { PANEL_CARD } from '../components/ui/panelCard';
 import { faqs, allFaqs } from '../data/faqs';
-import { img } from '../data/images';
 import useSEO from '../hooks/useSEO';
-import CtaBand from '../components/CtaBand';
 
 /**
  * Answers are native <details>/<summary>, not a JS accordion.
@@ -21,8 +20,27 @@ import CtaBand from '../components/CtaBand';
  * It also means the answers are in the DOM at load, so the build-time search index
  * (scripts/gen-search-index.mjs) picks up every answer as searchable page content.
  */
+/* The accordion keeps at most this many answers open at once. */
+const MAX_OPEN = 2;
+
 export default function FAQ() {
-  const [open, setOpen] = useState(null);
+  /*
+    `open` is the list of open question ids, OLDEST FIRST. The accordion is not single-open:
+    a visitor can leave one answer open and read a second alongside it. Opening a THIRD does
+    not collapse everything — it evicts the oldest of the two still-open answers, so the two
+    most-recently-opened always stay. Closing an answer by hand always works and just removes
+    it from the list.
+  */
+  const [open, setOpen] = useState([]);
+
+  const toggleFaq = (id, isOpen) =>
+    setOpen((prev) => {
+      if (!isOpen) return prev.filter((x) => x !== id); // manual close
+      if (prev.includes(id)) return prev;
+      const next = [...prev, id];
+      // Past the cap, drop from the FRONT (the oldest still-open answer).
+      return next.length > MAX_OPEN ? next.slice(next.length - MAX_OPEN) : next;
+    });
 
   useSEO({
     title: 'Frequently Asked Questions',
@@ -48,16 +66,14 @@ export default function FAQ() {
 
   return (
     <>
-      <PageHero
+      <GalleryHero
         eyebrow="Help & Support"
-        title="Frequently Asked"
-        accent="Questions."
-        desc="Answers on our products, manufacturing, certifications and how ordering works. If yours is not here, ask us directly."
         crumbs={[{ label: 'Home', to: '/' }, { label: 'FAQ' }]}
-        image={img.factoryInterior}
+        slides={heroSlides.faq}
+        scrollTo="content"
       />
 
-      <section className="section-pad">
+      <section id="content" className="section-pad">
         <div className="container-page">
           <div className={PANEL_CARD}>
             <div className="grid gap-12 lg:grid-cols-[16rem_1fr] lg:gap-16">
@@ -102,8 +118,8 @@ export default function FAQ() {
                         return (
                           <details
                             key={item.q}
-                            open={open === id}
-                            onToggle={(e) => setOpen(e.currentTarget.open ? id : null)}
+                            open={open.includes(id)}
+                            onToggle={(e) => toggleFaq(id, e.currentTarget.open)}
                             className="group py-5"
                           >
                             <summary className="flex cursor-pointer list-none items-start justify-between gap-6 text-left">
@@ -116,7 +132,7 @@ export default function FAQ() {
                                 aria-hidden
                                 className="mt-0.5 flex-shrink-0 text-lg leading-none text-primary-dark"
                               >
-                                {open === id ? '–' : '+'}
+                                {open.includes(id) ? '–' : '+'}
                               </span>
                             </summary>
                             <p className="body-copy mt-3 max-w-3xl">{item.a}</p>
@@ -145,7 +161,6 @@ export default function FAQ() {
         </div>
       </section>
 
-      <CtaBand />
     </>
   );
 }

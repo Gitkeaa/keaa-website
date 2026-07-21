@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AnimatedCounter from './AnimatedCounter';
 
 /**
@@ -48,19 +48,50 @@ const GRADE = { filter: 'saturate(0.4) contrast(1.2) brightness(0.99)', tint: 0.
  */
 const GUTTER = 'container-full';
 
-export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], stats = [], image }) {
+/**
+ * `align="center"` is for the imageless heroes only (the legal pages). The default
+ * left anchor is load-bearing for the contrast solve above — it depends on the copy
+ * sitting where the scrim is thickest — so centring copy OVER a photo would break it.
+ * With no image there is no scrim and no solve, so centring is free.
+ */
+export default function PageHero({
+  eyebrow,
+  title,
+  accent,
+  desc,
+  crumbs = [],
+  stats = [],
+  image,
+  images,
+  align = 'left',
+}) {
+  const centered = align === 'center';
   const ref = useRef(null);
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const drift = useTransform(scrollYProgress, [0, 1], [0, 60]);
   const parallax = reduce ? 0 : drift;
 
-  const media = image;
+  // `images` (an array) turns the hero photo into a slow crossfade slideshow; `image` (single)
+  // is the still-image path every other page uses. Both share the same grade + scrim treatment.
+  const slides = images && images.length ? images : image ? [image] : [];
+  const media = slides.length > 0;
+  const [slide, setSlide] = useState(0);
+  useEffect(() => {
+    if (reduce || slides.length < 2) return undefined; // one image, or reduced motion: no cycling
+    const t = setInterval(() => setSlide((s) => (s + 1) % slides.length), 5000);
+    return () => clearInterval(t);
+  }, [reduce, slides.length]);
 
   return (
     <section
       ref={ref}
-      className="relative isolate flex min-h-[420px] items-center overflow-hidden bg-surface-bright sm:min-h-[460px] lg:min-h-[500px]"
+      /* The tall min-height exists to give the photograph room; a centred, imageless legal
+         hero has no photo, so that height just becomes empty space above and below a short
+         heading. There it collapses to its own padding + content instead. */
+      className={`relative isolate flex items-center overflow-hidden bg-surface-bright ${
+        centered ? '' : 'min-h-[420px] sm:min-h-[460px] lg:min-h-[500px]'
+      }`}
     >
       {media && (
         <div className="absolute inset-0 z-0" style={{ isolation: 'isolate' }}>
@@ -71,13 +102,22 @@ export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], st
             style={{ y: parallax }}
             className="absolute -top-[8%] left-0 right-0 h-[116%]"
           >
-            {/* No opacity animation: this is the page's largest paint. */}
-            <img
-              src={image}
-              alt=""
-              className="h-full w-full object-cover object-[55%_40%]"
-              style={{ filter: GRADE.filter }}
-            />
+            {/* Slides stacked and crossfaded; a single image is just a one-item slideshow that
+                never changes. All eager, NOT lazy: a slide sits at opacity 0 until its turn,
+                and the browser treats a lazy off-screen-looking image as deferrable, so it
+                would still be unloaded when the crossfade reaches it and fade in to nothing. */}
+            {slides.map((src, i) => (
+              <img
+                key={src}
+                src={src}
+                alt=""
+                loading="eager"
+                className={`absolute inset-0 h-full w-full object-cover object-[55%_40%] transition-opacity duration-1000 ${
+                  i === slide ? 'opacity-100' : 'opacity-0'
+                }`}
+                style={{ filter: GRADE.filter }}
+              />
+            ))}
             <div
               aria-hidden
               className="pointer-events-none absolute inset-0"
@@ -135,9 +175,9 @@ export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], st
         </>
       )}
 
-      <div className={`${GUTTER} relative z-10 py-14 sm:py-16 lg:py-20`}>
+      <div className={`${GUTTER} relative z-10 py-14 sm:py-16 lg:py-20 ${centered ? 'text-center' : ''}`}>
         {crumbs.length > 0 && (
-          <nav aria-label="Breadcrumb" className="mb-5 flex items-center gap-1.5 text-xs text-text-strong">
+          <nav aria-label="Breadcrumb" className={`mb-5 flex items-center gap-1.5 text-xs text-text-strong ${centered ? 'justify-center' : ''}`}>
             {crumbs.map((c, i) => (
               <span key={c.label} className="flex items-center gap-1.5">
                 {i > 0 && (
@@ -168,8 +208,14 @@ export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], st
           transition={{ duration: 0.6, ease: EASE }}
         >
           {eyebrow && <span className="eyebrow text-primary-darker">{eyebrow}</span>}
-          {/* 34rem — see note 2 at the top of this file. */}
-          <h1 className="mt-3 max-w-[34rem] font-display text-3xl font-bold leading-[1.1] tracking-[-0.02em] text-text sm:text-4xl lg:text-5xl">
+          {/* 34rem — see note 2 at the top of this file. Centred heroes have no image and
+              so no contrast solve to protect: the cap only balances the line, and mx-auto
+              centres it. */}
+          <h1
+            className={`mt-3 max-w-[34rem] font-display text-3xl font-bold leading-[1.1] tracking-[-0.02em] text-text sm:text-4xl lg:text-5xl ${
+              centered ? 'mx-auto' : ''
+            }`}
+          >
             {title} {accent && <span className="text-primary-dark">{accent}</span>}
           </h1>
           {/* Satoshi Light lead. Kept capped at 30rem, NOT the .body-copy 768px measure —
@@ -178,7 +224,7 @@ export default function PageHero({ eyebrow, title, accent, desc, crumbs = [], st
           {/* Same body token as every other reading paragraph — this was 17px stepping to
               18px at `sm`, which made the interior-page intro a different size from the
               copy directly beneath it. */}
-          {desc && <p className="mt-5 max-w-[30rem] text-body text-text-body">{desc}</p>}
+          {desc && <p className={`mt-5 max-w-[30rem] text-body text-text-body ${centered ? 'mx-auto' : ''}`}>{desc}</p>}
         </motion.div>
 
         {stats.length > 0 && (

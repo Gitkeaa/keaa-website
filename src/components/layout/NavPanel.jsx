@@ -44,7 +44,10 @@ export default function NavPanel({ item, categories = [], onNavigate }) {
 
   return (
     <div className="absolute inset-x-0 top-full border-t border-border bg-white shadow-[0_18px_40px_-24px_rgb(10,35,66,0.35)]">
-      <div className="container-full grid min-h-[38vh] gap-x-14 gap-y-10 py-12 xl:grid-cols-[1fr_24rem] 2xl:grid-cols-[1fr_26rem]">
+      {/* No `min-h` — the panel hugs its content. It used to force `min-h-[38vh]`, which left
+          a large empty band under the links on the shorter panels. `py-12` still gives it
+          generous top and bottom breathing room. */}
+      <div className="container-full grid gap-x-14 gap-y-10 py-12 xl:grid-cols-[1fr_24rem] 2xl:grid-cols-[1fr_26rem]">
         <div>
           <p className="text-[13px] font-bold uppercase tracking-[0.14em] text-primary-darker">
             {item.label}
@@ -79,16 +82,22 @@ export default function NavPanel({ item, categories = [], onNavigate }) {
               className="group flex h-full flex-col overflow-hidden rounded-card border border-border transition-colors hover:border-primary/40"
             >
               {featureImage && (
-                <div className="relative aspect-[16/10] w-full overflow-hidden bg-navy-50">
+                /* `flex-1` + a min-height floor, NOT a fixed aspect ratio. A fixed
+                   aspect-[16/10] set the image height from its width, which made this card
+                   taller than the two link columns beside it; the grid then stretched to the
+                   card and left a dead band under the (shorter) links. As a flex child the
+                   image instead fills whatever height the LINKS define, so the panel hugs its
+                   tallest real content. The floor stops it collapsing when the links are few. */
+                <div className="relative min-h-[8.5rem] w-full flex-1 overflow-hidden bg-navy-50">
                   <img
                     src={featureImage}
                     alt=""
                     loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
               )}
-              <div className="flex flex-1 flex-col p-5">
+              <div className="flex flex-col p-5">
                 <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
                   {feature.eyebrow}
                 </p>

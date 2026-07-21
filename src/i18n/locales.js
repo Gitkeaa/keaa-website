@@ -31,6 +31,8 @@ const en = {
 
   'header.search': 'Search',
   'header.searchAria': 'Search products and pages',
+  /* The hover/focus hint on the header's search icon — see HeaderHint. */
+  'header.searchHint': 'Search products & pages',
   'header.language': 'Language',
   'header.languageAria': 'Change language',
   'header.region': 'Region',
@@ -64,6 +66,10 @@ const en = {
   'search.remove': 'Remove',
 
   'region.title': 'Your region',
+  /* The hover/focus hint on the header's region+language control. It names both, because
+     the one control sets both — a "change your language" tooltip alone would hide that
+     picking a row also sets the sales region. */
+  'region.hint': 'Change region & language',
   'region.subtitle': 'Pick your region to reach the right KEAA team.',
   'region.yourContact': 'Your contact',
   'region.call': 'Call',

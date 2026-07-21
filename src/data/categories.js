@@ -50,7 +50,7 @@ export const categoryMeta = {
     icon: 'Layers',
     heroImage: img.scaffoldFrame,
     short:
-      'A complete range of modular scaffolding, formwork systems and fittings — engineered for safety, strength and fast installation.',
+      'A complete range of modular scaffolding, formwork systems and fittings, engineered for safety, strength and fast installation.',
     standard: 'Hot Dip Galvanized as per DIN EN 1461',
     badges: [
       { icon: 'ShieldCheck', title: 'High Strength', sub: 'Tested & Certified' },
@@ -63,8 +63,8 @@ export const categoryMeta = {
     icon: 'Warehouse',
     heroImage: img.cattleHerdBarn || img.cowsInBarn,
     short:
-      'Robust cattle, sheep, pig and horse housing systems, field gates and feeders — built from heavy-gauge galvanized steel for years of service.',
-    standard: 'Hot Dip Galvanized — heavy-gauge steel',
+      'Robust cattle, sheep, pig and horse housing systems, field gates and feeders, built from heavy-gauge galvanized steel for years of service.',
+    standard: 'Hot Dip Galvanized, heavy-gauge steel',
     badges: [
       { icon: 'ShieldCheck', title: 'Durable Build', sub: 'Heavy-Gauge Steel' },
       { icon: 'Heart', title: 'Animal Safe', sub: 'Smooth Welded Finish' },
@@ -76,7 +76,7 @@ export const categoryMeta = {
     icon: 'Hammer',
     heroImage: img.woodenFrameSky,
     short:
-      'Structural timber connectors, post supports and ground anchors for decks, pergolas, fencing and joinery — precision-formed and corrosion-protected.',
+      'Structural timber connectors, post supports and ground anchors for decks, pergolas, fencing and joinery, precision-formed and corrosion-protected.',
     standard: 'Hot Dip Galvanized / structural grade steel',
     badges: [
       { icon: 'Gauge', title: 'Load Rated', sub: 'Structural Grade' },

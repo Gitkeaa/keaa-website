@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../../admin/auth/AdminAuthContext';
 import { useT } from '../../i18n/LocaleContext';
@@ -175,19 +176,27 @@ export default function SignInModal({ open, onClose }) {
                 </div>
 
                 <div>
-                  {/* The show/hide control is a word, not an eye glyph — same rule as the
-                      header's search and menu controls. It sits on the label row so it does
-                      not overlap the field's own text. */}
-                  <div className="flex items-baseline justify-between">
+                  {/* Reveal toggle: a crossed-out eye while the password is hidden, an open
+                      eye once it is shown — the icon reflects the CURRENT state. Icon-only,
+                      so the accessible name comes from `aria-label`, and `aria-pressed`
+                      tells assistive tech it is a toggle. It sits on the label row so it
+                      never overlaps the field's own text. */}
+                  <div className="flex items-center justify-between">
                     <label htmlFor="signin-password" className="text-sm font-medium text-navy-800">
                       {t('auth.password')}
                     </label>
                     <button
                       type="button"
                       onClick={() => setShowPassword((v) => !v)}
-                      className="text-[11px] font-bold uppercase tracking-[0.1em] text-muted transition-colors hover:text-navy-900"
+                      aria-label={showPassword ? t('auth.hide') : t('auth.show')}
+                      aria-pressed={showPassword}
+                      className="flex h-7 w-7 items-center justify-center rounded-md text-muted transition-colors hover:bg-navy-50 hover:text-navy-900"
                     >
-                      {showPassword ? t('auth.hide') : t('auth.show')}
+                      {showPassword ? (
+                        <Eye aria-hidden className="h-4 w-4" strokeWidth={1.75} />
+                      ) : (
+                        <EyeOff aria-hidden className="h-4 w-4" strokeWidth={1.75} />
+                      )}
                     </button>
                   </div>
                   <input

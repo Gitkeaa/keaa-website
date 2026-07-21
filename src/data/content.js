@@ -309,12 +309,12 @@ export const downloadResources = [
     url: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/web_support_keaa-international_net/IQDZg2UkpJN-RaIAwbR0rsxeATkSWko0PsjqrFR1SWLZMWc?e=DPhLYa',
   },
   {
-    title: 'KEAA India — Company Presentation (Updated)',
+    title: 'KEAA India: Company Presentation (Updated)',
     type: 'PPTX',
     url: 'https://itkeaainternational-my.sharepoint.com/:p:/g/personal/kishlay_keaa-international_net/IQAIL-4QLo7cQ4_Zi9Vp46cJAcBzAl8BLrUb5lGjbjtWvvo?e=2bzLyl',
   },
   {
-    title: 'KEAA India — Company Presentation',
+    title: 'KEAA India: Company Presentation',
     type: 'PPTX',
     url: 'https://itkeaainternational-my.sharepoint.com/:p:/g/personal/kishlay_keaa-international_net/IQDE-onHfdcgQrsvQ8CrqWjbATZUjIc-dhP31racQeN6Eg8?e=GcPDin',
   },

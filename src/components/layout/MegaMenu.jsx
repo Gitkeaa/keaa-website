@@ -99,7 +99,7 @@ export default function MegaMenu({ open, onClose }) {
                   Explore More About <span className="text-primary-dark">KEAA</span>
                 </h2>
                 <p className="mt-3 max-w-md text-sm text-ink">
-                  Resources, insights and solutions — all in one place.
+                  Resources, insights and solutions, all in one place.
                 </p>
               </motion.div>
 

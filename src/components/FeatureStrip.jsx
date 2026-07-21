@@ -54,8 +54,15 @@ export default function FeatureStrip({ items, lead, photo = true, className = ''
                 Callers no longer pass an `icon` on these items — destructuring one here and
                 rendering it is what crashed /products with "Element type is invalid ...
                 undefined", so do not reintroduce it. */}
+            {/* Across the three columns the text hugs the card: first stays left, the middle
+                centres, the last aligns right — so the outer items sit against the card edges
+                instead of all three starting from the left. Only from `sm`, where the row is
+                actually three across; stacked on mobile every item stays left-aligned. */}
             {items.map(({ title, desc }) => (
-              <li key={title} className="min-w-0">
+              <li
+                key={title}
+                className="min-w-0 sm:[&:nth-child(2)]:text-center sm:[&:last-child]:text-right"
+              >
                 <h4 className="font-display text-sm font-semibold text-text">{title}</h4>
                 <p className="mt-1 text-[13px] leading-relaxed text-text-muted">{desc}</p>
               </li>

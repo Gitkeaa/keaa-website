@@ -1,41 +1,44 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-/* Social marks only — the sanctioned exception to the site's icon-free rule. */
-import { Linkedin, Facebook, Instagram, Youtube, MessageCircle } from 'lucide-react';
-import PageHero from '../components/ui/PageHero';
-import FeatureStrip from '../components/FeatureStrip';
+/* Full-colour brand marks, the sanctioned exception to the site's icon-free rule. The client
+   asked this row specifically to show each platform in its own colour (see BrandIconsColor). */
+import {
+  FacebookColor,
+  LinkedinColor,
+  XColor,
+  InstagramColor,
+  YoutubeColor,
+  WhatsAppColor,
+} from '../components/ui/BrandIconsColor';
+import GalleryHero from '../components/gallery/GalleryHero';
+import { heroSlides } from '../data/heroSlides';
 import Button from '../components/ui/Button';
 import CountrySelect from '../components/ui/CountrySelect';
 import PhoneField from '../components/ui/PhoneField';
 import EmailField from '../components/ui/EmailField';
 import WordLimitTextarea from '../components/ui/WordLimitTextarea';
-import ImagePlaceholder from '../components/ui/ImagePlaceholder';
 import Reveal from '../components/ui/Reveal';
 import { company } from '../data/company';
-import { defaultCountry } from '../data/countriesData';
 import { img } from '../data/images';
+import { defaultCountry } from '../data/countriesData';
 import { submitPublicForm } from '../data/adminApi';
 import { useConsent, openCookiePreferences } from '../components/CookieConsent';
 import useSEO from '../hooks/useSEO';
-
-/* No `icon` field: FeatureStrip renders these as plain title + description. */
-const helpStrip = [
-  { title: 'Quick Response', desc: 'We respond within 24 hours' },
-  { title: 'Expert Support', desc: 'Get professional advice from our experts' },
-  { title: 'Global Delivery', desc: 'We deliver worldwide with reliability' },
-];
 
 /**
  * Filtered on `href` for the same reason as the footer's row: these render as large,
  * hover-lifted cards, so a channel with no account was the most convincingly clickable
  * dead element on the site. A null entry in company.js now simply drops its card.
  */
+/* Order follows the reference the client sent. Any channel still `null` in company.js drops
+   out, so the row only shows icons that go somewhere. */
 const socials = [
-  { icon: Linkedin, name: 'LinkedIn', href: company.social.linkedin, desc: 'Company updates, industry news and hiring announcements.' },
-  { icon: Facebook, name: 'Facebook', href: company.social.facebook, desc: 'Behind-the-scenes factory moments and product highlights.' },
-  { icon: Instagram, name: 'Instagram', href: company.social.instagram, desc: 'Visual stories from our manufacturing floor and project sites.' },
-  { icon: Youtube, name: 'YouTube', href: company.social.youtube, desc: 'Factory tours, product demos and installation guides.' },
-  { icon: MessageCircle, name: 'WhatsApp', href: company.social.whatsapp, desc: 'Quick, direct support for inquiries and order updates.' },
+  { icon: FacebookColor, name: 'Facebook', href: company.social.facebook },
+  { icon: LinkedinColor, name: 'LinkedIn', href: company.social.linkedin },
+  { icon: XColor, name: 'X', href: company.social.x },
+  { icon: InstagramColor, name: 'Instagram', href: company.social.instagram },
+  { icon: YoutubeColor, name: 'YouTube', href: company.social.youtube },
+  { icon: WhatsAppColor, name: 'WhatsApp', href: company.social.whatsapp },
 ].filter((s) => Boolean(s.href));
 
 /**
@@ -74,12 +77,24 @@ function ConsentedMap() {
   }
 
   return (
-    <div className="flex aspect-[16/6] w-full flex-col items-center justify-center gap-3 bg-navy-50/40 px-6 text-center">
-      <p className="text-body-compact text-ink">
+    <div className="relative isolate flex aspect-[16/6] w-full flex-col items-center justify-center gap-3 overflow-hidden px-6 text-center">
+      {/* A KEAA plant photo stands in for the map until Google is allowed. It is served through
+          Cloudinary — the one external host a pre-consent visitor may reach — so showing it sets
+          nothing, unlike the Google iframe it replaces. Before this the slot was an empty navy
+          wash, which read as a broken/loading map; the photo makes the gate look deliberate. A
+          navy scrim over it keeps the copy and controls legible. */}
+      <img
+        src={img.factoryInterior}
+        alt=""
+        aria-hidden
+        className="absolute inset-0 -z-10 h-full w-full object-cover"
+      />
+      <div aria-hidden className="absolute inset-0 -z-10 bg-navy-950/70" />
+      <p className="max-w-md text-body-compact text-white/85">
         The interactive map is hosted by Google. Loading it shares your IP address with Google.
       </p>
       <div className="flex flex-wrap items-center justify-center gap-3">
-        <Button variant="outlineNavy" size="sm" onClick={() => setLoadedOnce(true)}>
+        <Button variant="primary" size="sm" onClick={() => setLoadedOnce(true)}>
           Load map
         </Button>
         {/* A plain link sets nothing until it is clicked, so it is always safe to show. */}
@@ -89,7 +104,7 @@ function ConsentedMap() {
           )}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="border-b border-transparent pb-0.5 text-sm font-semibold text-primary-dark transition-colors hover:border-primary hover:text-primary-darker"
+          className="border-b border-transparent pb-0.5 text-sm font-semibold text-white transition-colors hover:border-white/70"
         >
           Open in Google Maps
         </a>
@@ -97,7 +112,7 @@ function ConsentedMap() {
       <button
         type="button"
         onClick={openCookiePreferences}
-        className="text-xs font-semibold text-muted underline underline-offset-2 transition-colors hover:text-primary-darker"
+        className="text-xs font-semibold text-white/70 underline underline-offset-2 transition-colors hover:text-white"
       >
         Always allow embedded content
       </button>
@@ -126,6 +141,15 @@ const rideLinks = {
     rideLocation.name,
   )}&utm_source=keaa`,
 };
+
+/* Rendered exactly like `socials` — a plain badge + name row, no card — so the two columns
+   read as one system. Each badge is the app's initial on its brand colour, since these have
+   no lucide/brand SVG the way the social channels do. */
+const rideApps = [
+  { name: 'Uber', href: rideLinks.uber, badge: 'U', badgeClass: 'bg-black text-white' },
+  { name: 'Ola', href: rideLinks.ola, badge: 'O', badgeClass: 'bg-[#3CB371] text-white' },
+  { name: 'Rapido', href: rideLinks.rapido, badge: 'R', badgeClass: 'bg-[#FFCC00] text-black' },
+];
 
 export default function Contact() {
   useSEO({
@@ -157,7 +181,7 @@ export default function Contact() {
         subject: val('subject'),
         // The ContactMessage entity holds one message body; fold the extra context in
         // so nothing the visitor typed is lost.
-        message: `${message}\n\n— Company: ${val('company') || '—'} · Phone: ${country?.dial || ''} ${phone || '—'} · Country: ${country?.name || '—'}`,
+        message: `${message}\n\nCompany: ${val('company') || 'N/A'} · Phone: ${country?.dial || ''} ${phone || 'N/A'} · Country: ${country?.name || 'N/A'}`,
       });
       setSubmitted(true);
     } catch {
@@ -169,16 +193,14 @@ export default function Contact() {
 
   return (
     <>
-      <PageHero
+      <GalleryHero
         eyebrow="Contact Us"
-        title="Let's Build Stronger"
-        accent="Together."
-        desc="Get in touch with our team for inquiries, quotes or partnership opportunities."
         crumbs={[{ label: 'Home', to: '/' }, { label: 'Contact Us' }]}
-        image={img.scaffoldOnBuilding}
+        slides={heroSlides.contact}
+        scrollTo="content"
       />
 
-      <section className="section-pad">
+      <section id="content" className="section-pad">
         <div className="container-page grid gap-10 lg:grid-cols-[340px_1fr]">
           {/* GET IN TOUCH */}
           <Reveal className="space-y-5">
@@ -315,7 +337,7 @@ export default function Contact() {
                   onChange={setMessage}
                   required
                   maxWords={250}
-                  placeholder="Tell us how we can help — product, quantity, timeline, destination…"
+                  placeholder="Tell us how we can help: product, quantity, timeline, destination…"
                 />
                 <div className="sm:col-span-2">
                   {sendError && (
@@ -329,26 +351,6 @@ export default function Contact() {
                 </div>
               </form>
             )}
-          </Reveal>
-        </div>
-      </section>
-
-      {/* REQUEST A QUOTE STRIP */}
-      <section className="overflow-hidden">
-        <div className="container-page grid items-center gap-8 py-12 lg:grid-cols-[1fr_300px]">
-          <Reveal>
-            <span className="eyebrow text-primary-darker">
-              Request a Quote
-            </span>
-            <h3 className="mt-2 font-display text-xl font-semibold text-text">
-              Share your requirements and our team will get back to you with the best solution.
-            </h3>
-            <Button to="/rfq" className="mt-5">
-              Request a Quote
-            </Button>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <ImagePlaceholder src={img.scaffoldFrame} label="Scaffolding & formwork product range" ratio="aspect-[4/3]" />
           </Reveal>
         </div>
       </section>
@@ -369,98 +371,63 @@ export default function Contact() {
           </Reveal>
         </div>
       </section>
-      {/* BOOK YOUR RIDE */}
+      {/* BOOK YOUR RIDE + FOLLOW US — two ground-level ways to reach KEAA, side by side.
+          The ride column gets the extra width so its three app cards sit on one row; both
+          columns start at the same top line and stack on a phone. */}
       <section className="section-pad">
         <div className="container-page">
-          <Reveal>
-            <span className="eyebrow text-primary-darker">
-              Book Your Ride
-            </span>
-            <h3 className="mt-2 font-display text-xl font-semibold text-text">
-              Get to KEAA International — Dehlon Road, Ludhiana, Pujab-India
-            </h3>
-            <p className="mt-1 text-body-compact text-ink">
-              Click any app below — destination is pre-filled with our factory location.
-            </p>
-          </Reveal>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <a
-              href={rideLinks.uber}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 rounded-card border border-navy-100 bg-white px-6 py-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
-            >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white font-bold text-lg">U</span>
-              <div>
-                <p className="font-display text-body-compact font-semibold text-text">Uber</p>
-                <p className="text-xs text-muted">Ride to KEAA</p>
+          <div className="grid gap-x-12 gap-y-12 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+            {/* Book Your Ride */}
+            <Reveal>
+              <span className="eyebrow text-primary-darker">Book Your Ride</span>
+              <h3 className="mt-2 font-display text-xl font-semibold text-text">
+                Get to KEAA International, Dehlon Road, Ludhiana, Punjab, India
+              </h3>
+              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+                {rideApps.map((r) => (
+                  <a
+                    key={r.name}
+                    href={r.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-2 text-sm font-medium text-text transition-opacity hover:opacity-70"
+                  >
+                    <span
+                      className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${r.badgeClass}`}
+                    >
+                      {r.badge}
+                    </span>
+                    {r.name}
+                  </a>
+                ))}
               </div>
-            </a>
+            </Reveal>
 
-            <a
-              href={rideLinks.ola}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 rounded-card border border-navy-100 bg-white px-6 py-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
-            >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#3CB371] text-white font-bold text-lg">O</span>
-              <div>
-                <p className="font-display text-body-compact font-semibold text-text">Ola</p>
-                <p className="text-xs text-muted">Cab to KEAA</p>
+            {/* Follow Us — icons on one horizontal line under the heading. */}
+            <Reveal delay={0.1}>
+              <span className="eyebrow text-primary-darker">Follow Us</span>
+              <h3 className="mt-2 font-display text-xl font-semibold text-text">
+                Find Us on Social Media
+              </h3>
+              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+                {socials.map((s) => (
+                  <a
+                    key={s.name}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-2 text-sm font-medium text-text transition-opacity hover:opacity-70"
+                  >
+                    <s.icon className="h-6 w-6" />
+                    {s.name}
+                  </a>
+                ))}
               </div>
-            </a>
-
-            <a
-              href={rideLinks.rapido}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 rounded-card border border-navy-100 bg-white px-6 py-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
-            >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FFCC00] text-black font-bold text-lg">R</span>
-              <div>
-                <p className="font-display text-body-compact font-semibold text-text">Rapido</p>
-                <p className="text-xs text-muted">Bike to KEAA</p>
-              </div>
-            </a>
+            </Reveal>
           </div>
         </div>
       </section>
 
-      {/* FIND US ON SOCIAL MEDIA */}
-      <section className="section-pad">
-        <div className="container-page">
-          <Reveal>
-            <span className="eyebrow text-primary-darker">
-              Follow Us
-            </span>
-            <h3 className="mt-2 font-display text-xl font-semibold text-text">Find Us on Social Media</h3>
-          </Reveal>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-            {socials.map((s) => (
-              <a
-                key={s.name}
-                href={s.href}
-                target={s.href !== '#' ? '_blank' : undefined}
-                rel={s.href !== '#' ? 'noopener noreferrer' : undefined}
-                className="group flex flex-col items-center rounded-card border border-navy-100 p-6 text-center shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
-              >
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-navy-50 text-navy-700 transition-colors group-hover:bg-navy-700 group-hover:text-white">
-                  <s.icon className="h-5 w-5" />
-                </span>
-                <h4 className="mt-4 font-display text-sm font-semibold text-text">{s.name}</h4>
-                <p className="mt-1.5 text-xs text-ink">{s.desc}</p>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* HELP STRIP. Last section before the footer, so it keeps the photograph.
-          Entities like `&rsquo;` only decode in JSX text, not in a string prop. */}
-      <FeatureStrip
-        lead={{ title: 'We’re Here', accent: 'to Help You.', desc: 'Reach out to us today!' }}
-        items={helpStrip}
-      />
     </>
   );
 }

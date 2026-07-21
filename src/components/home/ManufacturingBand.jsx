@@ -1,5 +1,6 @@
 import Button from '../ui/Button';
 import Reveal from '../ui/Reveal';
+import { PANEL_CARD } from '../ui/panelCard';
 import { company } from '../../data/company';
 
 /**
@@ -45,9 +46,7 @@ const statValue = (label) => company.stats.find((s) => s.label === label)?.value
 const SCALE = [
   /* `facilities.area` already carries its unit ("25,000 sq. m."), so it is printed whole. */
   { value: company.facilities.area, label: 'Manufacturing Area' },
-  /* The one figure with no home in company.js. It was previously hard-coded on the photo
-     badge this band replaced; it belongs in the data, but moving it is a separate change. */
-  { value: '5,000+ MT', label: 'Annual Capacity' },
+  { value: company.facilities.capacity, label: 'Annual Capacity' },
   { value: statValue('Skilled Employees'), label: 'Skilled Employees' },
   { value: statValue('Countries Exported'), label: 'Countries Served' },
 ].filter((s) => s.value);
@@ -63,6 +62,11 @@ export default function ManufacturingBand() {
   return (
     <section className="section-pad">
       <div className="container-page">
+        {/* One PANEL_CARD around the whole band, so this section's content sits on the same
+            inset as every other carded band on the page. Without it the eyebrow started at the
+            container edge (58px) while the card above it inset its content to 106px, so the two
+            read as misaligned down the left. */}
+        <div className={PANEL_CARD}>
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-12">
           {/* ------------------------------------------------------------------ PITCH */}
           <Reveal>
@@ -71,8 +75,8 @@ export default function ManufacturingBand() {
               Advanced Manufacturing, Strong Production Capability
             </h2>
             <p className="body-copy mt-5 max-w-xl">
-              Two integrated units in Ludhiana — laser cutting, robotic welding, in-house
-              hot-dip galvanizing and powder coating — engineered for precision, consistency
+              Two integrated units in Ludhiana (laser cutting, robotic welding, in-house
+              hot-dip galvanizing and powder coating) engineered for precision, consistency
               and scale on every order.
             </p>
 
@@ -94,12 +98,14 @@ export default function ManufacturingBand() {
             <h3 className="text-[11px] font-bold uppercase tracking-[0.14em] text-text">
               Our Manufacturing Strength
             </h3>
+            {/* Soft navy-50 fill, no border. The tiles sit inside the white PANEL_CARD now,
+                and a bordered white tile on a white panel is the card-in-card the rest of the
+                site avoids — the border would be the only thing showing, stacked inside the
+                panel's own ring. A tint reads as a distinct tile without a second border, and
+                echoes the scale strip below. */}
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {CAPABILITIES.map((c) => (
-                <div
-                  key={c.title}
-                  className="rounded-card border border-border bg-surface-raised p-5"
-                >
+                <div key={c.title} className="rounded-card bg-navy-50 p-5">
                   <h4 className="font-display text-base font-semibold text-text">{c.title}</h4>
                   <p className="mt-2 text-body-compact text-text-muted">{c.desc}</p>
                 </div>
@@ -135,6 +141,7 @@ export default function ManufacturingBand() {
             </div>
           </div>
         </Reveal>
+        </div>
       </div>
     </section>
   );

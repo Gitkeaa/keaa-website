@@ -3,6 +3,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Loader2, X } from 'lucide-react';
 import { useAdminAuth } from '../auth/AdminAuthContext';
+import { roleAllowsPath } from '../auth/roles';
 import AdminSidebar from './AdminSidebar';
 import AdminTopbar from './AdminTopbar';
 
@@ -15,7 +16,7 @@ import AdminTopbar from './AdminTopbar';
  * on a "am I still logged in?" call to /api/auth/me — the redirect logic stays identical.
  */
 export default function AdminLayout() {
-  const { isAuthed, checking } = useAdminAuth();
+  const { isAuthed, checking, role } = useAdminAuth();
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -31,6 +32,13 @@ export default function AdminLayout() {
 
   if (!isAuthed) {
     return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
+  }
+
+  // Role guard: a signed-in user who deep-links to a module their role cannot open is sent to
+  // the dashboard (visible to every role) rather than a page whose data the backend will 403.
+  // The sidebar already hides these links; this covers a typed URL or a stale bookmark.
+  if (role && !roleAllowsPath(role, location.pathname)) {
+    return <Navigate to="/admin" replace />;
   }
 
   return (

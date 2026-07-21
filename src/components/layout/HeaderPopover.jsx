@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { headerControlCls } from './headerControl';
+import HeaderHint from './HeaderHint';
 
 /**
  * The shared shell behind the header's language and region controls.
@@ -20,14 +21,26 @@ import { headerControlCls } from './headerControl';
 export default function HeaderPopover({
   label,
   srLabel,
+  hint,
   children,
   panelClassName = 'w-72',
   align = 'right',
 }) {
   const [open, setOpen] = useState(false);
+  // A small hover/focus prompt so the control reads as changeable, not just a status label.
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
   const wrapRef = useRef(null);
   const triggerRef = useRef(null);
   const panelId = useId();
+
+  /*
+    The hint shows only while the panel is CLOSED — once the panel is open it has already
+    done the hint's job, and two things stacked under one trigger reads as a glitch. It is
+    aria-hidden: the trigger's `aria-label` (srLabel) already tells a screen reader what the
+    control does, so announcing the hint too would just repeat it.
+  */
+  const showHint = Boolean(hint) && !open && (hovered || focused);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -50,11 +63,18 @@ export default function HeaderPopover({
   }, [open]);
 
   return (
-    <div ref={wrapRef} className="relative">
+    <div
+      ref={wrapRef}
+      className="relative"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       <button
         ref={triggerRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         aria-expanded={open}
         aria-controls={panelId}
         aria-label={srLabel}
@@ -62,6 +82,8 @@ export default function HeaderPopover({
       >
         {label}
       </button>
+
+      <HeaderHint show={showHint}>{hint}</HeaderHint>
 
       {open && (
         <div

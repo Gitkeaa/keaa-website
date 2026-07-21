@@ -25,11 +25,11 @@ export const faqs = [
     items: [
       {
         q: 'What does KEAA manufacture?',
-        a: 'We manufacture and export scaffolding systems, formwork accessories, safety products, livestock housing solutions and garden hardware. Everything is produced in our own facilities in Ludhiana, India — we are a manufacturer, not a trading house.',
+        a: 'We manufacture and export scaffolding systems, formwork accessories, safety products, livestock housing solutions and garden hardware. Everything is produced in our own facilities in Ludhiana, India: we are a manufacturer, not a trading house.',
       },
       {
         q: 'Do you manufacture in-house, or outsource?',
-        a: `All core production is in-house across ${company.facilities.area} of manufacturing. That includes laser cutting, CNC forming, robotic and certified manual welding, ${company.facilities.galvanizingBaths.toLowerCase()}, and an automatic powder coating line — so quality and lead time stay under our control rather than a subcontractor's.`,
+        a: `All core production is in-house across ${company.facilities.area} of manufacturing. That includes laser cutting, CNC forming, robotic and certified manual welding, ${company.facilities.galvanizingBaths.toLowerCase()}, and an automatic powder coating line, so quality and lead time stay under our control rather than a subcontractor's.`,
       },
       {
         q: 'What finishes are available?',
@@ -56,7 +56,7 @@ export const faqs = [
       },
       {
         q: 'How is quality controlled during production?',
-        a: 'Quality control runs at every stage, not just at the end — raw material inspection on arrival, in-process checks during production, and final testing before dispatch. We run our own tensile, compression, bend and weld-penetration testing in-house, plus third-party inspection where a project calls for it.',
+        a: 'Quality control runs at every stage, not just at the end: raw material inspection on arrival, in-process checks during production, and final testing before dispatch. We run our own tensile, compression, bend and weld-penetration testing in-house, plus third-party inspection where a project calls for it.',
       },
     ],
   },
@@ -70,7 +70,7 @@ export const faqs = [
       },
       {
         q: 'What is your minimum order quantity?',
-        a: 'It depends on the product and the finish — a standard catalogue item and a custom-tooled component have very different economics. Send us your requirement through the quotation form and we will confirm the minimum for those exact items.',
+        a: 'It depends on the product and the finish: a standard catalogue item and a custom-tooled component have very different economics. Send us your requirement through the quotation form and we will confirm the minimum for those exact items.',
         needsRealAnswer: true,
       },
       {
@@ -102,7 +102,7 @@ export const faqs = [
       },
       {
         q: 'Do you supply to distributors and resellers?',
-        a: 'Yes — distributors, wholesalers, importers, contractors and project developers all form part of our customer base, and we offer OEM and private-label options for partners building their own range.',
+        a: 'Yes, distributors, wholesalers, importers, contractors and project developers all form part of our customer base, and we offer OEM and private-label options for partners building their own range.',
       },
       {
         q: 'Where can I download catalogues and datasheets?',

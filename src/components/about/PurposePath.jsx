@@ -1,8 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { Globe } from 'lucide-react';
-import { PeakFlag, TargetArrow, PeopleStar } from './purposeIcons';
-import AnimatedCounter from '../ui/AnimatedCounter';
 import { company } from '../../data/company';
+import { img, atWidth } from '../../data/images';
 
 /**
  * OUR PURPOSE — the vision / mission / core-values band on the About page.
@@ -113,7 +111,10 @@ export function splitLead(sentence) {
 }
 
 /**
- * White disc, navy line icon, offset dashed ring, dots where the path lands.
+ * A round photo on a white disc, with an offset dashed ring and the dots where the
+ * connector path lands. The photo is delivered at 400px through Cloudinary (atWidth):
+ * the disc is at most 112px (lg:h-28), so 400px stays crisp to ~3x DPR without shipping
+ * the 1920px original into a thumbnail.
  *
  * `stub` draws the connector THROUGH the medallion's column, from the row's edge to the
  * medallion's centre, hidden behind the opaque disc where they overlap. This is what makes
@@ -126,7 +127,7 @@ export function splitLead(sentence) {
  * titles took the gap from 14px to 66px. Now the stub always spans exactly half the row,
  * so the join lands on the boundary no matter how tall the copy grows.
  */
-function Medallion({ Icon, dots = [], stub = [] }) {
+function Medallion({ image, alt, dots = [], stub = [] }) {
   return (
     <div className="relative flex h-full items-center justify-center">
       {/* lg only: below that the <ol>'s own left rail carries the connection. */}
@@ -147,8 +148,14 @@ function Medallion({ Icon, dots = [], stub = [] }) {
         aria-hidden="true"
         className="absolute -inset-3 translate-x-[3px] translate-y-[3px] rounded-full border border-dashed border-primary/45"
       />
-      <span className="relative flex h-full w-full items-center justify-center rounded-full bg-surface-raised shadow-card ring-1 ring-border">
-        <Icon aria-hidden="true" className="h-6 w-6 text-primary-deep sm:h-8 sm:w-8 lg:h-11 lg:w-11" />
+      <span className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-surface-raised shadow-card ring-1 ring-border">
+        <img
+          src={atWidth(image, 400)}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover"
+        />
       </span>
       {dots.includes('top') && (
         <span
@@ -187,8 +194,11 @@ const TITLE =
 const UNDERLINE = 'mt-3 block h-[3px] w-12 rounded-full bg-primary';
 /* A ch-based measure, not a column count: company.values.mission is a single long
    sentence and .container-page runs to 1760px, so without this it would set a
-   ~150-character line at desktop widths. */
-const PARA = 'mt-4 max-w-[54ch] text-body-compact font-light leading-relaxed text-ink';
+   ~150-character line at desktop widths.
+   No font-light: index.css deliberately sets reading copy to weight 400, because the
+   client reported Light-weight text reading as grey even at pure black (#000). This
+   paragraph matches the page's other `text-body-compact ... text-ink` copy. */
+const PARA = 'mt-4 max-w-[54ch] text-body-compact leading-relaxed text-ink';
 
 export default function PurposePath() {
   const reduce = useReducedMotion();
@@ -204,10 +214,6 @@ export default function PurposePath() {
     const { lead, rest } = splitLead(raw);
     return { raw, lead, rest };
   });
-
-  // Read the headline figure from the stats table rather than typing '42+' into markup.
-  const countries =
-    company.stats.find((s) => s.label === 'Countries Exported')?.value ?? '42+';
 
   return (
     <section
@@ -262,7 +268,12 @@ export default function PurposePath() {
             {/* self-stretch, not the row's default centring: the stub inside needs the cell
                 to be the full row height so it always reaches the connector below. */}
             <div className="lg:col-start-1 lg:col-span-2 lg:justify-self-center lg:self-stretch">
-              <Medallion Icon={PeakFlag} dots={['bottom']} stub={['down']} />
+              <Medallion
+                image={img.scaffoldOnBuilding}
+                alt="Scaffolding erected on a building under construction"
+                dots={['bottom']}
+                stub={['down']}
+              />
             </div>
             <div className="relative min-w-0 lg:col-start-3 lg:col-span-7">
               <span aria-hidden="true" className={NUMERAL}>
@@ -286,7 +297,12 @@ export default function PurposePath() {
           {/* ===== 02 ===== */}
           <motion.li {...step} className={STEP_ROW}>
             <div className="lg:col-start-5 lg:col-span-2 lg:justify-self-center lg:self-stretch">
-              <Medallion Icon={TargetArrow} dots={['top', 'bottom']} stub={['up', 'down']} />
+              <Medallion
+                image={img.manOnMachine}
+                alt="A technician operating machinery on the factory floor"
+                dots={['top', 'bottom']}
+                stub={['up', 'down']}
+              />
             </div>
             <div className="relative min-w-0 lg:col-start-8 lg:col-span-5">
               <span aria-hidden="true" className={NUMERAL}>
@@ -314,7 +330,12 @@ export default function PurposePath() {
           {/* ===== 03 ===== */}
           <motion.li {...step} className={STEP_ROW}>
             <div className="lg:col-start-2 lg:col-span-2 lg:justify-self-center lg:self-stretch">
-              <Medallion Icon={PeopleStar} dots={['top']} stub={['up']} />
+              <Medallion
+                image={img.scaffoldMenWorking}
+                alt="A team working together on a scaffolding site"
+                dots={['top']}
+                stub={['up']}
+              />
             </div>
             <div className="relative min-w-0 lg:col-start-5 lg:col-span-8">
               <span aria-hidden="true" className={NUMERAL}>
@@ -323,21 +344,29 @@ export default function PurposePath() {
               <h3 className={TITLE}>Our Core Values</h3>
               <span aria-hidden="true" className={UNDERLINE} />
 
-              {/* Five across at lg with thin vertical rules; 2-up then stacked below,
-                  where the page's existing border-l-2 border-primary/40 motif carries
-                  the separation rather than it disappearing. Per-item border classes
-                  rather than divide-x: divide-x misbehaves the moment a grid wraps. */}
-              <ul className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-0">
+              {/* A balanced 3-across grid: stacked on mobile, 2-up on sm, then 3×2 from lg up.
+                  Three columns (not five) keeps any value count that is a multiple of three —
+                  the data now holds six — as full, symmetric rows with no orphan trailing item,
+                  and gives two-word leads like "Team Empowerment" room to sit on one or two
+                  clean lines instead of being crushed into a fifth of the row.
+
+                  Separation: on mobile/sm the page's border-l-2 border-primary/40 accent bar
+                  marks each item; from lg it becomes a thin divider between columns. Each row's
+                  FIRST cell clears that divider via nth-child(3n+1) rather than :first-child,
+                  so the reset repeats per row instead of only clearing the very first item —
+                  :first-child would leave a stray rule hanging at the left of the second row.
+                  Per-item borders, not divide-x, because divide-x misbehaves once a grid wraps. */}
+              <ul className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-0 lg:gap-y-10">
                 {values.map(({ raw, lead, rest }) => (
                   <li
                     key={raw}
-                    className="border-l-2 border-primary/40 pl-4 lg:border-l lg:border-primary/30 lg:px-5 lg:first:border-l-0 lg:first:pl-0"
+                    className="border-l-2 border-primary/40 pl-4 lg:border-l lg:border-primary/30 lg:px-6 lg:[&:nth-child(3n+1)]:border-l-0 lg:[&:nth-child(3n+1)]:pl-0"
                   >
-                    <span className="block font-display text-sm font-bold leading-snug text-text">
+                    <span className="block font-display text-base font-bold leading-snug text-text">
                       {lead}
                     </span>
                     {rest ? (
-                      <span className="mt-1 block text-[13px] font-light leading-relaxed text-muted">
+                      <span className="mt-1.5 block text-body-compact leading-relaxed text-ink">
                         {rest}
                       </span>
                     ) : null}
@@ -347,29 +376,6 @@ export default function PurposePath() {
             </div>
           </motion.li>
         </ol>
-
-        {/* BOTTOM BAR */}
-        <div className="mt-16 flex flex-col items-center gap-6 border-t border-border pt-10 text-center sm:flex-row sm:justify-center sm:gap-10 sm:text-left lg:mt-20">
-          <div className="flex items-center gap-4">
-            <Globe aria-hidden="true" className="h-10 w-10 shrink-0 text-primary-dark" />
-            <p className="flex items-baseline gap-3">
-              {/* AnimatedCounter drives a JS animation and does not consult
-                  prefers-reduced-motion, so render the static figure instead. */}
-              <span className="font-display text-4xl font-bold leading-none text-text lg:text-5xl">
-                {reduce ? countries : <AnimatedCounter value={countries} />}
-              </span>
-              <span className="max-w-[7rem] text-left font-display text-[11px] font-bold uppercase leading-tight tracking-[0.14em] text-muted">
-                Countries Worldwide
-              </span>
-            </p>
-          </div>
-          <span aria-hidden="true" className="hidden h-12 w-px bg-primary sm:block" />
-          <p className="text-body-compact font-light leading-relaxed text-ink">
-            Building strong partnerships.
-            <br />
-            Delivering lasting impact.
-          </p>
-        </div>
       </div>
     </section>
   );

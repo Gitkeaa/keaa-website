@@ -61,7 +61,7 @@ export default function AdminDashboard() {
               {recent.map((r) => (
                 <li key={r.id} className="flex items-center justify-between gap-3 px-5 py-3.5">
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-navy-800">{r.name} — {r.company}</p>
+                    <p className="truncate text-sm font-medium text-navy-800">{r.name}, {r.company}</p>
                     <p className="truncate text-xs text-slate-400">{r.category} · {r.country}</p>
                   </div>
                   <StatusPill status={r.status} />

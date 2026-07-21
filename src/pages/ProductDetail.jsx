@@ -180,7 +180,7 @@ export default function ProductDetail() {
                 <p className="body-copy mt-5">{product.description}</p>
               ) : (
                 <p className="mt-5 rounded-card border-l-2 border-primary/40 bg-navy-50 px-4 py-3 text-body-compact text-text-muted">
-                  Full product description available on request — contact our team for details.
+                  Full product description available on request, contact our team for details.
                 </p>
               )}
 

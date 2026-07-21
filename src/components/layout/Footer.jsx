@@ -4,6 +4,7 @@ import { useReducedMotion } from 'framer-motion';
    logo is its name, and spelling them out reads worse than the marks. Everything else in
    this footer states itself in type — uppercase labels and hover underlines. */
 import { Linkedin, Facebook, Instagram, Youtube } from 'lucide-react';
+import { WhatsApp, XLogo } from '../ui/BrandGlyphs';
 import Logo from './Logo';
 import { openCookiePreferences } from '../CookieConsent';
 import { company, developer } from '../../data/company';
@@ -13,15 +14,22 @@ import { getAllCategories } from '../../data/categories';
 /**
  * Footer — deep navy card on a light page, over the supplied blueprint artwork.
  *
+ * The ground is the raised navy `#0E2742` (surface-deep-raised), one step up from the
+ * near-black `#071426` this used to sit on. That earlier ground read as crushed-black once
+ * the equally-dark artwork and the scrim stacked on top; lifting the ground AND tying the
+ * scrim to the same raised navy softens the whole panel to a deep blue while keeping every
+ * contrast rule below intact. The visible colour is scrim-over-artwork, not the base — so
+ * the scrim colour, not the base class, is what actually does the lifting.
+ *
  * The artwork is already very dark: measured, its median luminance is 0.006 and its
  * brightest pixel (a wireframe line, right-hand side) is 0.0595. That single fact sets
  * two rules:
  *
- *   1. A ~0.6 navy scrim sits over it, holding the artwork back to a texture. Push it
+ *   1. A ~0.6–0.7 navy scrim sits over it, holding the artwork back to a texture. Push it
  *      much further and the dotted world map disappears entirely.
- *   2. No text goes below 55% white. Even with no scrim at all, white/45 — the old
- *      copyright colour — measures 3.34:1 against the brightest pixel and fails; at 55%
- *      it clears AA with room, and the scrim only widens that margin.
+ *   2. No text goes below 55% white. On the raised ground, white/55 measures ~5.6:1 and
+ *      clears AA with room; white/45 — the old copyright colour — failed at 3.34:1 against
+ *      the brightest pixel, which is why 55% is the floor. The scrim only widens the margin.
  *
  * Brand colours on this ground: #8CCDF3 links (10.7:1), #3A86C6 icons and labels
  * (4.8:1). Gold is gone entirely; it survives only as #E7B321 on navy for certification
@@ -29,30 +37,19 @@ import { getAllCategories } from '../../data/categories';
  */
 
 /**
- * Channels without a live account are `null` in company.js and are filtered out here, so
- * the row only ever shows icons that go somewhere. This replaced an '#' href that rendered
- * a real, hover-animated button which just scrolled the reader to the top.
+ * The social row. Order runs from the most-used channel down. Any entry whose href is `null`
+ * in company.js drops out here, so the row only ever shows icons that go somewhere — see the
+ * note there for which are live and which are placeholders awaiting a real URL.
  */
 const SOCIALS = [
   { icon: Linkedin, href: company.social.linkedin, label: 'LinkedIn' },
-  { icon: Facebook, href: company.social.facebook, label: 'Facebook' },
   { icon: Instagram, href: company.social.instagram, label: 'Instagram' },
+  { icon: Facebook, href: company.social.facebook, label: 'Facebook' },
+  { icon: XLogo, href: company.social.x, label: 'X' },
   { icon: Youtube, href: company.social.youtube, label: 'YouTube' },
+  { icon: WhatsApp, href: company.social.whatsapp, label: 'WhatsApp' },
 ].filter((s) => Boolean(s.href));
 
-/**
- * Every figure here is taken from src/data/company.js rather than from the design mock,
- * which quoted "200+ skilled professionals" (the company records 150+) and "25,000+
- * sq. m." (the company records 25,000 sq. m.).
- */
-const CREDENTIALS = [
-  { value: '42+ Countries', label: 'Exporting worldwide' },
-  { value: '5', label: 'Manufacturing facilities' },
-  { value: '150+', label: 'Skilled professionals' },
-  { value: '25,000 sq. m.', label: 'In-house manufacturing area' },
-  { value: 'Quality Assured', label: 'Strict control at every stage' },
-  { value: 'Built on Trust', label: `Long-term partnerships since ${company.founded}` },
-];
 
 function ColumnHeading({ children }) {
   return (
@@ -101,7 +98,7 @@ export default function Footer() {
   // Flush, square footer (no rounded "floating card" curve or inset) on every page.
   return (
     <footer className="bg-surface">
-      <div className="relative isolate overflow-hidden bg-surface-deep text-white/70">
+      <div className="relative isolate overflow-hidden bg-surface-deep-raised text-white/70">
         {/* The supplied artwork, and the scrim that keeps text over it legible. */}
         <div
           aria-hidden
@@ -111,7 +108,7 @@ export default function Footer() {
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 z-0"
-          style={{ background: 'linear-gradient(180deg, rgb(var(--color-surface-deep) / 0.58) 0%, rgb(var(--color-surface-deep) / 0.70) 100%)' }}
+          style={{ background: 'linear-gradient(180deg, rgb(var(--color-surface-deep-raised) / 0.60) 0%, rgb(var(--color-surface-deep-raised) / 0.72) 100%)' }}
         />
         {/* A single cool light source so the navy is not flat. */}
         <div
@@ -219,28 +216,18 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Credentials strip. */}
-        <div className="relative z-10 border-t border-white/[0.08]">
-          <div className="container-page grid grid-cols-1 gap-x-6 gap-y-7 py-9 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-            {CREDENTIALS.map(({ value, label }, i) => (
-              <div
-                key={value}
-                className={`xl:pl-5 ${i > 0 ? 'xl:border-l xl:border-white/[0.08]' : 'xl:pl-0'}`}
-              >
-                {/* The value is the headline of each cell; wrapping it reads as a bug. */}
-                <div className="whitespace-nowrap font-display text-sm font-bold leading-tight text-white">{value}</div>
-                <div className="mt-0.5 text-[12px] leading-snug text-white/55">{label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* The credentials strip (42+ Countries, 5 facilities, Quality Assured…) was removed
+            from here on request. The same figures already appear as the hero/stat blocks on
+            About and Manufacturing, so the footer stops restating them. */}
 
-        {/* Bottom bar. */}
-        <div className="relative z-10 border-t border-white/[0.08] bg-black/20">
+        {/* Bottom bar. White strip under the dark footer body, so its text flips to dark.
+            Every control here carries its own fill (see PILL / the Back-to-Top button) so it
+            reads as a button on the white ground — a borderless link would otherwise vanish. */}
+        <div className="relative z-10 border-t border-border bg-white">
           {/* The AI chat widget is fixed to the viewport's bottom-right and lands exactly
               on top of "Back to Top" once the footer is in view. The extra right padding
               parks the button clear of it. */}
-          <div className="container-page flex flex-col items-center gap-4 py-5 text-xs text-white/55 lg:flex-row lg:justify-between lg:pr-44">
+          <div className="container-page flex flex-col items-center gap-4 py-5 text-xs text-text/70 lg:flex-row lg:justify-between lg:pr-44">
             <p className="order-1 text-center lg:text-left">
               &copy; {year} {company.name} All Rights Reserved.
             </p>
@@ -251,27 +238,41 @@ export default function Footer() {
                 href={developer.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-semibold text-white/75 transition-colors duration-200 hover:text-primary-light"
+                className="font-semibold text-text transition-colors duration-200 hover:text-primary-dark"
               >
                 {developer.name}
               </a>
             </p>
 
-            <div className="order-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 lg:order-3">
-              <Link to="/privacy-policy" className="transition-colors duration-200 hover:text-primary-light">
+            {/* Shared chip background so the legal controls are visible buttons on white.
+                The separators are gone — the pills already read as discrete controls. */}
+            <div className="order-2 flex flex-wrap items-center justify-center gap-2 lg:order-3">
+              <Link
+                to="/privacy-policy"
+                className="rounded-full bg-navy-50 px-3.5 py-1.5 font-medium text-text transition-colors duration-200 hover:bg-navy-100 hover:text-primary-dark"
+              >
                 Privacy Policy
               </Link>
-              <span aria-hidden className="text-white/20">|</span>
-              <Link to="/terms" className="transition-colors duration-200 hover:text-primary-light">
+              <Link
+                to="/terms"
+                className="rounded-full bg-navy-50 px-3.5 py-1.5 font-medium text-text transition-colors duration-200 hover:bg-navy-100 hover:text-primary-dark"
+              >
                 Terms &amp; Conditions
               </Link>
-              <span aria-hidden className="text-white/20">|</span>
+              {/* The Cookie POLICY page (what we store, and why). Distinct from Cookie
+                  Preferences below, which opens the settings dialog to change your choice. */}
+              <Link
+                to="/cookie-policy"
+                className="rounded-full bg-navy-50 px-3.5 py-1.5 font-medium text-text transition-colors duration-200 hover:bg-navy-100 hover:text-primary-dark"
+              >
+                Cookie Policy
+              </Link>
               {/* Reopens the consent dialog, so the banner's "manage your preferences at any
                   time" is actually reachable once the banner has been dismissed. */}
               <button
                 type="button"
                 onClick={openCookiePreferences}
-                className="transition-colors duration-200 hover:text-primary-light"
+                className="rounded-full bg-navy-50 px-3.5 py-1.5 font-medium text-text transition-colors duration-200 hover:bg-navy-100 hover:text-primary-dark"
               >
                 Cookie Preferences
               </button>
@@ -279,7 +280,7 @@ export default function Footer() {
               <button
                 type="button"
                 onClick={backToTop}
-                className="group ml-1 inline-flex items-center gap-2 rounded-card border border-white/[0.14] bg-white/[0.04] px-3.5 py-2 font-medium text-white/75 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-white motion-reduce:hover:translate-y-0"
+                className="group ml-1 inline-flex items-center gap-2 rounded-full bg-navy-700 px-4 py-1.5 font-medium text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-primary motion-reduce:hover:translate-y-0"
               >
                 Back to Top
               </button>

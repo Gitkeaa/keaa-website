@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import PageHero from '../components/ui/PageHero';
+import GalleryHero from '../components/gallery/GalleryHero';
+import { heroSlides } from '../data/heroSlides';
 import SectionHeading from '../components/ui/SectionHeading';
 import ImagePlaceholder from '../components/ui/ImagePlaceholder';
 import Button from '../components/ui/Button';
@@ -29,18 +30,16 @@ export default function Careers() {
 
   return (
     <>
-      <PageHero
+      <GalleryHero
         eyebrow="Careers"
-        title="Join Our"
-        accent="Team."
-        desc="Build your career with KEAA International and be part of a mission to deliver excellence in manufacturing."
         crumbs={[{ label: 'Home', to: '/' }, { label: 'Careers' }]}
-      image={img.personTool}
+        slides={heroSlides.careers}
+        scrollTo="content"
       />
 
-      <section className="section-pad">
+      <section id="content" className="section-pad">
         <div className="container-page grid items-center gap-10 lg:grid-cols-2">
-          <ImagePlaceholder src={img.scaffoldWorker2} label="Life at KEAA — our manufacturing team" ratio="aspect-[4/3]" />
+          <ImagePlaceholder src={img.scaffoldWorker2} label="Life at KEAA, our manufacturing team" ratio="aspect-[4/3]" />
           <div>
             <span className="eyebrow text-primary-darker">
               Why Work With Us

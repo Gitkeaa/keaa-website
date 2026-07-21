@@ -106,7 +106,7 @@ function Panel({ close }) {
         <p className="mt-0.5 text-xs text-muted">
           {/* An unconfirmed region is a guess from the browser locale — say so, so the
               visitor knows to check it rather than trusting a wrong number. */}
-          {confirmed ? t('region.subtitle') : 'We guessed this from your browser — please confirm.'}
+          {confirmed ? t('region.subtitle') : 'We guessed this from your browser, please confirm.'}
         </p>
       </div>
 
@@ -167,7 +167,8 @@ export default function RegionLanguageSwitcher() {
   return (
     <HeaderPopover
       label={label}
-      srLabel={`${t('header.regionAria')} — ${entry ? `${entry.country}, ` : ''}${meta.label}, ${
+      hint={t('region.hint')}
+      srLabel={`${t('header.regionAria')}, ${entry ? `${entry.country}, ` : ''}${meta.label}, ${
         getLanguage(language).label
       }`}
       panelClassName="w-[21rem]"

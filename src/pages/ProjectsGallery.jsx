@@ -1,65 +1,61 @@
 import { useState } from 'react';
-import PageHero from '../components/ui/PageHero';
+import GalleryHero from '../components/gallery/GalleryHero';
+import { heroSlides } from '../data/heroSlides';
 import SectionHeading from '../components/ui/SectionHeading';
-import ImagePlaceholder from '../components/ui/ImagePlaceholder';
-import Button from '../components/ui/Button';
-import Badge from '../components/ui/Badge';
 import ProjectCard from '../components/ui/ProjectCard';
+import CardRail from '../components/ui/CardRail';
+import Pagination from '../components/ui/Pagination';
+import Lightbox from '../components/ui/Lightbox';
 import Reveal, { StaggerGroup, StaggerItem } from '../components/ui/Reveal';
 import {
   featuredProjects,
   featuredProjectImages,
-  galleryCategories,
-  galleryItems,
-  galleryImages,
   droneFilmUrl,
   naymoFilmUrl,
   raasFilmUrl,
   galleryFilms,
 } from '../data/content';
-import { img, atWidth } from '../data/images';
+import { galleryPhotos, galleryCategories, galleryAlt } from '../data/gallery';
+import { cldImage, cldSrcSet, cldVideoPoster } from '../data/cloudinary';
 import useSEO from '../hooks/useSEO';
-import CtaBand from '../components/CtaBand';
 
-const projectFilters = ['All Projects', 'Infrastructure', 'Industrial', 'Commercial', 'Residential', 'International'];
+// Video thumbnails use KEAA's OWN gallery photography (real facility, aerial and product
+// shots from Cloudinary), not stock imagery — the stock stand-ins read as generic / AI.
+// A true frame-grab from each film is not possible: the films are SharePoint share pages,
+// not files we can transform, so those fall back to a real KEAA photo until the film is
+// uploaded to Cloudinary. There are more photos (57) than films, so each gets a distinct one.
+// w_800 on purpose — the SAME width the gallery grid uses, so a video thumbnail reuses the
+// grid's already-generated (and CDN-cached) transformation instead of forcing Cloudinary to
+// generate a new size on first view. Cold transformations are ~1.8s each; reuse avoids them.
+const REAL_THUMBS = galleryPhotos.map((p) => cldImage(p.id, { w: 800 }));
+const thumbAt = (i) => REAL_THUMBS[i % REAL_THUMBS.length];
 
-// Real KEAA films shown below the featured factory film. Thumbnails are stock
-// stand-ins for now — swap `thumb` for an actual frame from each video later.
-// The extra films come from `galleryFilms` (data/content.js); their thumbnails cycle
-// through this stock set until real frames are captured.
-const FILM_THUMBS = [
-  img.factoryInterior,
-  img.metalSparks,
-  img.grinderMetal,
-  img.metalPour,
-  img.steelFrame,
-  img.manOnMachine,
-  img.welderFactory,
-  img.powerTool,
-  img.personTool,
-  img.metalBuilding,
-  img.scaffoldCrane,
-  img.containersStacked,
-];
+/*
+ * Two of these films ALSO exist on Cloudinary — they are the ones powering the home-page
+ * hero background (see heroFilms in data/content.js) — so cldVideoPoster lifts a REAL frame
+ * out of the actual .mp4 for them: the aerial/factory film (hero1_a0hnen) and the Raass film
+ * (Rass_wixfl0). Every other film is a OneDrive/SharePoint share page, not a file, so no
+ * frame can be pulled from it — those keep a real KEAA photo until they too are on Cloudinary.
+ */
+const FRAME = {
+  aerial: cldVideoPoster('hero1_a0hnen', { so: 6, w: 640 }),
+  raas: cldVideoPoster('Rass_wixfl0', { so: 8, w: 640 }),
+};
 
-// Stock thumbs are built at 1920px (see data/images.js) but the video grid renders them
-// only a few hundred px wide, so ask the CDN for a ~640px version — a big byte saving
-// across the grid, without touching the full-size images used elsewhere.
-const small = (url) => atWidth(url, 640);
-
+// The KEAA factory film is the first card here now (same size as the rest) rather than a
+// separate full-width hero above the grid.
 const galleryVideos = [
-  { title: 'Naymo International Pvt. Ltd', url: naymoFilmUrl, thumb: small(img.factoryMachines) },
-  { title: 'Raas Industries', url: raasFilmUrl, thumb: small(img.weldersFactory) },
-  ...galleryFilms.map((f, i) => ({ ...f, thumb: small(FILM_THUMBS[i % FILM_THUMBS.length]) })),
+  { title: 'KEAA International Pvt. Ltd.', url: droneFilmUrl, thumb: FRAME.aerial },
+  { title: 'Raas Industries', url: raasFilmUrl, thumb: FRAME.raas },
+  { title: 'Naymo International Pvt. Ltd', url: naymoFilmUrl, thumb: thumbAt(0) },
+  ...galleryFilms.map((f, i) => ({ ...f, thumb: thumbAt(i + 1) })),
 ];
 
-// How many video cards render before the "Show all" button. Keeps the initial paint light
-// even as the film list grows — the rest mount only when asked.
-const VIDEOS_PREVIEW = 8;
 
-// The gallery grid follows the same preview-then-expand rule as the videos above. It used
-// to render every item at once under a "View More Gallery" button that did nothing.
-const GALLERY_PREVIEW = 12;
+// Videos and photos both paginate (see components/ui/Pagination): this is the default
+// page size, and the dropdown offers the rest. Keeps the initial paint light.
+const PER_PAGE_DEFAULT = 8;
+const PER_PAGE_OPTIONS = [8, 20, 40, 80];
 
 export default function ProjectsGallery() {
   useSEO({
@@ -68,35 +64,38 @@ export default function ProjectsGallery() {
       '500+ completed projects across 42+ countries. Browse KEAA\'s featured projects, factory gallery and product photography.',
   });
 
-  const [projectFilter, setProjectFilter] = useState('All Projects');
-  const [galleryFilter, setGalleryFilter] = useState('All');
-  const [showAllVideos, setShowAllVideos] = useState(false);
-  const [showAllGallery, setShowAllGallery] = useState(false);
-  const visibleVideos = showAllVideos ? galleryVideos : galleryVideos.slice(0, VIDEOS_PREVIEW);
+  // Photo gallery: category filter + pagination + a click-to-open lightbox.
+  const [galleryCat, setGalleryCat] = useState('All');
+  const [galleryPage, setGalleryPage] = useState(1);
+  const [galleryPerPage, setGalleryPerPage] = useState(PER_PAGE_DEFAULT);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
-  const projects = featuredProjects
-    .map((p, i) => ({ ...p, image: featuredProjectImages[i] }))
-    .filter((p) => projectFilter === 'All Projects' || p.category === projectFilter);
+  // Videos: pagination only (each card links out to the film, so no lightbox).
+  const [videoPage, setVideoPage] = useState(1);
+  const [videoPerPage, setVideoPerPage] = useState(PER_PAGE_DEFAULT);
 
-  const gallery =
-    galleryFilter === 'All' ? galleryItems : galleryItems.filter((g) => g.category === galleryFilter);
-  const visibleGallery = showAllGallery ? gallery : gallery.slice(0, GALLERY_PREVIEW);
+  const projects = featuredProjects.map((p, i) => ({ ...p, image: featuredProjectImages[i] }));
+
+  // Filter, then page. galleryList is the full filtered set (the lightbox pages through all
+  // of it, across page boundaries); pageGallery is just the current page's tiles.
+  const galleryList =
+    galleryCat === 'All' ? galleryPhotos : galleryPhotos.filter((p) => p.category === galleryCat);
+  const galleryStart = (galleryPage - 1) * galleryPerPage;
+  const pageGallery = galleryList.slice(galleryStart, galleryStart + galleryPerPage);
+  const galleryIds = galleryList.map((p) => p.id);
+
+  const videoStart = (videoPage - 1) * videoPerPage;
+  const pageVideos = galleryVideos.slice(videoStart, videoStart + videoPerPage);
 
   return (
     <>
-      <PageHero
+      {/* Framed, Lely-style hero (only this page): a rounded card with the crossfading gallery
+          photography behind it, copy bottom-left, Explore hint bottom-right. */}
+      <GalleryHero
         eyebrow="Projects & Gallery"
-        title="Building Projects."
-        accent="Delivering Excellence."
-        desc="Take a look at how our high-quality products are used in real-world applications across industries and countries."
         crumbs={[{ label: 'Home', to: '/' }, { label: 'Projects & Gallery' }]}
-        image={img.scaffoldHighRise}
-        stats={[
-          { value: '500+', label: 'Projects Completed' },
-          { value: '20+', label: 'Industries Served' },
-          { value: '42+', label: 'Countries' },
-          { value: '1000+', label: 'Happy Clients' },
-        ]}
+        slides={heroSlides.gallery}
+        scrollTo="projects"
       />
 
       {/* FEATURED PROJECTS */}
@@ -105,79 +104,116 @@ export default function ProjectsGallery() {
           <Reveal>
             <SectionHeading align="left" eyebrow="Featured Projects" title="Trusted by Clients Worldwide" className="!mx-0" />
           </Reveal>
-          <div className="mt-6 flex flex-wrap gap-2">
-            {projectFilters.map((f) => (
-              <button
-                key={f}
-                onClick={() => setProjectFilter(f)}
-                className={`rounded-full border px-4 py-1.5 text-xs font-medium transition-colors ${
-                  projectFilter === f
-                    ? 'border-navy-700 bg-navy-700 text-white'
-                    : 'border-navy-100 text-ink hover:border-navy-300'
-                }`}
-              >
-                {f}
-              </button>
-            ))}
-          </div>
 
-          {/* The same card as the Home rail — see components/ui/ProjectCard, so the design
-              lives in one file. No `to` here: there is still no project-detail route, so the
-              card carries no affordance that could never resolve. `withDesc` because this is
-              the page where projects are actually read rather than teased. */}
-          <StaggerGroup className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {/* The same rail as the Home page — a snap-scrolling row of cards with the
+              prev / dots / next control underneath (see components/ui/CardRail). It replaces
+              the old four-up grid + "Show all" button: on a rail every project is already
+              reachable by scrolling or a dot, so the toggle was a second way to do what the
+              rail does on its own. No `to` here — there is still no project-detail route — and
+              `withDesc` because this is the page where projects are actually read, not teased.
+              Card widths mirror the Home rail exactly so the two read as one component. */}
+          <CardRail label="Featured projects" labels={projects.map((p) => `Show ${p.title}`)}>
             {projects.map((p) => (
-              <StaggerItem key={p.title}>
-                <ProjectCard project={p} image={p.image} withDesc />
-              </StaggerItem>
+              <ProjectCard
+                key={p.title}
+                project={p}
+                image={p.image}
+                withDesc
+                className="w-[82%] flex-none snap-start sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
+              />
             ))}
-          </StaggerGroup>
+          </CardRail>
         </div>
       </section>
 
-      {/* GALLERY */}
+      {/* GALLERY — KEAA's own photography from Cloudinary (see data/gallery.js): a category
+          filter (categories are editable in that file), a paginated grid, and a click-to-open
+          lightbox. */}
       <section id="gallery" className="section-pad">
         <div className="container-page">
           <Reveal>
             <SectionHeading align="left" eyebrow="Gallery" title="Factory, Product & Project Gallery" className="!mx-0" />
           </Reveal>
+
           <div className="mt-6 flex flex-wrap gap-2">
             {galleryCategories.map((c) => (
               <button
                 key={c}
-                onClick={() => setGalleryFilter(c)}
+                onClick={() => {
+                  setGalleryCat(c);
+                  setGalleryPage(1); // a new filter starts at page 1
+                }}
                 className={`rounded-full border px-4 py-1.5 text-xs font-medium transition-colors ${
-                  galleryFilter === c
+                  galleryCat === c
                     ? 'border-navy-700 bg-navy-700 text-white'
-                    : 'border-navy-100 bg-white text-ink hover:border-navy-300'
+                    : 'border-navy-100 text-ink hover:border-navy-300'
                 }`}
               >
                 {c}
               </button>
             ))}
           </div>
-          {/* Same grid and same tile shape as Featured Projects above — see the note there.
-              This was `sm:grid-cols-3 gap-4` with square tiles, so its images were both a
-              different shape AND a different size from every other tile on the page. */}
-          <StaggerGroup className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4" stagger={0.05}>
-            {visibleGallery.map((g) => (
-              <StaggerItem key={g.id}>
-                <ImagePlaceholder src={galleryImages[g.id]} label={g.label} ratio="aspect-[4/3]" />
+
+          {/* key changes with filter/page/perPage so the group remounts and re-runs its
+              entrance animation — StaggerGroup's whileInView fires once, so without this the
+              new tiles would stay at opacity 0 after a filter or page change. */}
+          <StaggerGroup
+            key={`${galleryCat}-${galleryPage}-${galleryPerPage}`}
+            className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            stagger={0.04}
+          >
+            {pageGallery.map((p, i) => (
+              <StaggerItem key={p.id}>
+                <button
+                  type="button"
+                  onClick={() => setLightboxIndex(galleryStart + i)}
+                  aria-label="Open image in full-screen viewer"
+                  className="group block w-full overflow-hidden rounded-card ring-1 ring-border"
+                >
+                  <img
+                    /* f_auto,q_auto + a small srcSet — a tile only ever renders a few hundred
+                       px wide, so we never ship the full-size original. Keeps Cloudinary
+                       bandwidth low across the set. */
+                    src={cldImage(p.id, { w: 800 })}
+                    /* Just two widths — 400 for 1x, 800 for 2x — not four. Every extra width is
+                       a separate Cloudinary transformation that must be generated cold (~1.8s)
+                       the first time anyone views it; fewer widths = far fewer cold generations
+                       and a faster first load. 800 is shared with the src, the video thumbnails
+                       and the lightbox placeholder, so it is generated once and reused. */
+                    srcSet={cldSrcSet(p.id, [400, 800])}
+                    sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    alt={galleryAlt(p.id)}
+                    loading="lazy"
+                    decoding="async"
+                    className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </button>
               </StaggerItem>
             ))}
           </StaggerGroup>
-          {gallery.length > GALLERY_PREVIEW && (
-            <div className="mt-8 text-center">
-              <Button
-                variant="outlineNavy"
-                onClick={() => setShowAllGallery((s) => !s)}
-              >
-                {showAllGallery ? 'Show fewer images' : `Show all ${gallery.length} images`}
-              </Button>
-            </div>
-          )}
+
+          <Pagination
+            total={galleryList.length}
+            page={galleryPage}
+            perPage={galleryPerPage}
+            perPageOptions={PER_PAGE_OPTIONS}
+            onPage={setGalleryPage}
+            onPerPage={(n) => {
+              setGalleryPerPage(n);
+              setGalleryPage(1);
+            }}
+          />
         </div>
       </section>
+
+      {/* Full-screen viewer — pages through the whole filtered set, across page boundaries. */}
+      <Lightbox
+        items={galleryIds}
+        index={lightboxIndex}
+        onClose={() => setLightboxIndex(null)}
+        onIndex={setLightboxIndex}
+        alt={galleryAlt}
+      />
 
       {/* VIDEOS */}
       <section id="videos" className="section-pad">
@@ -186,57 +222,18 @@ export default function ProjectsGallery() {
             <SectionHeading align="left" eyebrow="Videos" title="Watch Our Manufacturing Process & Product Applications" className="!mx-0" />
           </Reveal>
 
-          {/* Featured factory film — opens the SharePoint video in a new tab */}
-          <Reveal>
-            <a
-              href={droneFilmUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative mt-8 block overflow-hidden rounded-card shadow-card"
-              aria-label="Watch the KEAA International factory film (opens in a new tab)"
-            >
-              <img
-                src={img.factoryInterior}
-                alt="Inside the KEAA International manufacturing facility"
-                loading="lazy"
-                className="aspect-[16/9] w-full object-cover transition-transform duration-700 group-hover:scale-105 sm:aspect-[21/9]"
-              />
-              <span className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/25 to-transparent" />
-              {/* centre watch control */}
-              <span className="absolute inset-0 flex items-center justify-center">
-                <span className="relative flex items-center justify-center">
-                  <span
-                    className="absolute inset-0 rounded-full bg-primary/30 animate-ping motion-reduce:animate-none"
-                    style={{ animationDuration: '2.8s' }}
-                  />
-                  <span className="relative flex items-center justify-center rounded-full bg-primary-dark px-7 py-3.5 text-[13px] font-bold uppercase tracking-[0.12em] text-white shadow-lg shadow-primary/40 transition-transform duration-300 group-hover:scale-110">
-                    Watch
-                  </span>
-                </span>
-              </span>
-              {/* caption */}
-              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-7">
-                <Badge tone="gold">Inside the Factory</Badge>
-                <h3 className="mt-2 font-display text-xl font-bold text-white sm:text-2xl">
-                  KEAA International Pvt. Ltd.
-                </h3>
-                <p className="mt-1 max-w-xl text-body-compact text-white/75">
-                  An inside look at our 25,000 sq. m in-house manufacturing facility in Ludhiana, Punjab.
-                </p>
-              </div>
-            </a>
-          </Reveal>
+          {/* The KEAA factory film is no longer a full-width hero above the grid — it is now
+              the first card in the grid below, the same size as every other film. */}
 
-          {/* key flips with the toggle so the group remounts and re-runs its entrance
-              animation — otherwise the newly revealed cards stay at opacity 0, because
-              StaggerGroup's whileInView only fires once and never re-triggers for the
-              items added when "Show all" is clicked. */}
+          {/* key changes with page/perPage so the group remounts and re-runs its entrance
+              animation — StaggerGroup's whileInView fires once, so the next page's cards
+              would otherwise stay at opacity 0. */}
           <StaggerGroup
-            key={showAllVideos ? 'all' : 'preview'}
+            key={`${videoPage}-${videoPerPage}`}
             className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
             stagger={0.05}
           >
-            {visibleVideos.map((v) => (
+            {pageVideos.map((v) => (
               <StaggerItem key={v.title}>
                 <a
                   href={v.url}
@@ -256,11 +253,23 @@ export default function ProjectsGallery() {
                     className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <span className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/20 to-transparent" />
-                  {/* centre watch control */}
+                  {/* centre play control — a blue disc with a white play triangle, drawn inline
+                      (no asset to host, crisp at any size). */}
                   <span className="absolute inset-0 flex items-center justify-center">
-                    <span className="relative flex items-center justify-center rounded-full bg-primary-dark px-5 py-2.5 text-[13px] font-bold uppercase tracking-[0.12em] text-white shadow-lg shadow-primary/40 transition-transform duration-300 group-hover:scale-110">
-                      Watch
-                    </span>
+                    <svg
+                      viewBox="0 0 64 64"
+                      aria-hidden="true"
+                      className="h-16 w-16 text-primary drop-shadow-[0_6px_16px_rgba(10,35,66,0.45)] transition-transform duration-300 group-hover:scale-110"
+                    >
+                      <circle cx="32" cy="32" r="31" fill="currentColor" />
+                      <path
+                        d="M26 21.5 L45 32 L26 42.5 Z"
+                        fill="white"
+                        strokeWidth="4"
+                        stroke="white"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                   </span>
                   {/* title */}
                   <div className="absolute inset-x-0 bottom-0 p-3">
@@ -271,28 +280,20 @@ export default function ProjectsGallery() {
             ))}
           </StaggerGroup>
 
-          {galleryVideos.length > VIDEOS_PREVIEW && (
-            <div className="mt-8 text-center">
-              <Button
-                variant="outlineNavy"
-                onClick={() => setShowAllVideos((s) => !s)}
-              >
-                {showAllVideos
-                  ? 'Show fewer videos'
-                  : `Show all ${galleryVideos.length} videos`}
-              </Button>
-            </div>
-          )}
+          <Pagination
+            total={galleryVideos.length}
+            page={videoPage}
+            perPage={videoPerPage}
+            perPageOptions={PER_PAGE_OPTIONS}
+            onPage={setVideoPage}
+            onPerPage={(n) => {
+              setVideoPerPage(n);
+              setVideoPage(1);
+            }}
+          />
         </div>
       </section>
 
-      {/* FINAL CTA */}
-      <CtaBand
-        title="Have a Project"
-        accent="in Mind?"
-        desc="Let&rsquo;s build something great together."
-        cta={{ label: 'Request a Quote', to: '/rfq' }}
-      />
     </>
   );
 }

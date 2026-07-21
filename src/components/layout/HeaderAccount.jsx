@@ -96,7 +96,7 @@ export default function HeaderAccount() {
         // control visibly shows — speech input ("click Kishlay") would find nothing to match,
         // and a screen reader would never say which account is signed in. Same superset shape
         // as RegionLanguageSwitcher's srLabel, em dash included.
-        aria-label={`${firstName} — ${t('auth.accountAria')}`}
+        aria-label={`${firstName}, ${t('auth.accountAria')}`}
         className={triggerCls}
       >
         <User aria-hidden className="h-[18px] w-[18px] flex-shrink-0" strokeWidth={2} />

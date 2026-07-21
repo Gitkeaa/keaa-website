@@ -1,5 +1,5 @@
+import { Link } from 'react-router-dom';
 import { Linkedin, ShieldCheck, Globe2, Factory, Handshake, Award, Maximize } from 'lucide-react';
-import PageHero from '../components/ui/PageHero';
 import SectionHeading from '../components/ui/SectionHeading';
 import ImagePlaceholder from '../components/ui/ImagePlaceholder';
 import Reveal, { StaggerGroup, StaggerItem } from '../components/ui/Reveal';
@@ -10,7 +10,6 @@ import AnimatedCounter from '../components/ui/AnimatedCounter';
 import { company, leadership, managingDirectors, chairmanMessage } from '../data/company';
 import { img } from '../data/images';
 import useSEO from '../hooks/useSEO';
-import CtaBand from '../components/CtaBand';
 
 /**
  * How wide a leadership card sits on the rail: just under a full screen on a phone so the next
@@ -45,12 +44,15 @@ const WHO_WE_ARE_ICONS = [ShieldCheck, Globe2, Factory, Handshake];
 const STAT_ICONS = [Award, Globe2, Factory, Maximize];
 
 /* The angled strip beside the copy. Four frames, ordered to read process → product →
-   automation → output rather than as four interchangeable factory shots. */
+   automation → output rather than as four interchangeable factory shots. Chosen for
+   brightness: the earlier set (steelFrame, weldersFactory) rendered near-black once the
+   skew-crop zoomed into their shadows, so the strip read as a dark block instead of the
+   reference's vivid one. `steelFrame` is swapped for the brighter `factoryMachines`. */
 const COLLAGE = [
   { src: img.metalSparks, alt: 'Sparks from steel cutting on the shop floor' },
   { src: img.scaffoldRacks, alt: 'Finished scaffolding tubes racked for dispatch' },
-  { src: img.weldersFactory, alt: 'Robotic welding cell in operation' },
-  { src: img.steelFrame, alt: 'Galvanized steel components stacked in the yard' },
+  { src: img.factoryMachines, alt: 'The manufacturing floor and machinery' },
+  { src: img.weldersFactory, alt: 'Welding in the production hall' },
 ];
 
 const manufacturingStrength = [
@@ -66,23 +68,58 @@ export default function About() {
   useSEO({
     title: 'About Us',
     description:
-      'Two decades of in-house manufacturing excellence -- learn KEAA International\'s journey, leadership team, vision and certifications.',
+      'Two decades of in-house manufacturing excellence. Learn KEAA International\'s journey, leadership team, vision and certifications.',
   });
 
   return (
     <>
-      <PageHero
-        eyebrow="About Us"
-        title="Building Strength."
-        accent="Delivering Trust."
-        desc="At KEAA International, we combine engineering expertise, in-house manufacturing and uncompromising quality to deliver scaffolding, formwork and industrial hardware that build a safer, stronger world."
-        crumbs={[{ label: 'Home', to: '/' }, { label: 'About Us' }]}
-        image={img.steelFrame}
-      />
+      {/* PAGE OPENER — a flat, branded header, not the old image banner.
+          Breadcrumb and eyebrow sit above the title; the intro sits alongside it on desktop
+          so the first fold is type rather than a stock welding photo. The page's single h1
+          lives here — PageHero used to own it. A hairline closes the header off from the
+          first content section without a full band change. */}
+      <section className="border-b border-navy-100 pt-9 sm:pt-11">
+        <div className="container-page pb-12 sm:pb-14">
+          <nav aria-label="Breadcrumb">
+            <ol className="flex items-center gap-2 text-xs text-muted">
+              <li>
+                <Link to="/" className="transition-colors hover:text-primary-dark">
+                  Home
+                </Link>
+              </li>
+              <li aria-hidden>/</li>
+              <li className="font-medium text-text" aria-current="page">
+                About Us
+              </li>
+            </ol>
+          </nav>
+
+          <div className="mt-9 grid gap-x-12 gap-y-6 lg:grid-cols-2 lg:items-end">
+            <Reveal>
+              <span className="eyebrow text-primary-darker">About Us</span>
+              <h1 className="mt-4 font-display text-4xl font-bold leading-[1.05] tracking-[-0.02em] text-text sm:text-5xl xl:text-[3.5rem]">
+                Building Strength.
+                <br />
+                Delivering Trust.
+              </h1>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <p className="body-copy lg:pb-1.5">
+                At KEAA International, we combine engineering expertise, in-house manufacturing
+                and uncompromising quality to deliver scaffolding, formwork and industrial
+                hardware that build a safer, stronger world.
+              </p>
+            </Reveal>
+          </div>
+        </div>
+      </section>
 
       {/* WHY CHOOSE KEAA — copy + navy pillar card on the left, angled photo collage right */}
       <section id="who-we-are" className="overflow-hidden pt-16 sm:pt-20 lg:pt-24">
-        <div className="container-page grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-10">
+        {/* `items-stretch` (not center): the collage fills the column's full height so its
+            top and bottom line up with the copy block and the navy card beside it. Centering
+            left the fixed-height strip floating, so its lower edge fell below the card's. */}
+        <div className="container-page grid items-stretch gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-10">
           <Reveal>
             {/* Brand blue, not the gold this block was first built in. Gold reads as a
                 second accent the rest of the site does not use — the token file calls it
@@ -140,15 +177,20 @@ export default function About() {
               the same amount, so the PANELS lean while the photographs stay upright —
               skewing the images themselves would visibly distort every machine in them.
               `scale` covers the corners the rotation would otherwise expose. */}
-          <Reveal delay={0.1}>
-            <div className="flex h-[26rem] -skew-x-[7deg] gap-2 overflow-hidden lg:h-[32rem]">
+          <Reveal delay={0.1} className="lg:h-full">
+            {/* `lg:h-full` so the strip matches the left column's height exactly (its bottom
+                meets the navy card's bottom); the fixed `h-[26rem]` still governs the mobile
+                stack, where the two are no longer side by side. */}
+            <div className="flex h-[26rem] -skew-x-[7deg] gap-2 overflow-hidden lg:h-full">
               {COLLAGE.map((c) => (
                 <div key={c.alt} className="relative flex-1 overflow-hidden">
+                  {/* `brightness-110` lifts the moody stock frames toward the reference's
+                      vivid look; `scale-125` still covers the corners the skew exposes. */}
                   <img
                     src={c.src}
                     alt={c.alt}
                     loading="lazy"
-                    className="h-full w-full skew-x-[7deg] scale-125 object-cover"
+                    className="h-full w-full skew-x-[7deg] scale-125 object-cover brightness-110"
                   />
                 </div>
               ))}
@@ -157,9 +199,12 @@ export default function About() {
         </div>
       </section>
 
-      {/* BUILT ON TRUST — the remaining company narrative, with the headline figures */}
+      {/* BUILT ON TRUST — the remaining company narrative, with the headline figures.
+          The copy runs the FULL page width now, as two columns of prose, rather than a narrow
+          column squeezed into the left half beside the stats card. The figures then sit in
+          their own full-width band directly below it. */}
       <section className="section-pad bg-surface-tint">
-        <div className="container-page grid gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
+        <div className="container-page">
           <Reveal>
             <span className="flex items-center gap-4">
               <span className="eyebrow text-primary-darker">
@@ -167,43 +212,45 @@ export default function About() {
               </span>
             </span>
             <span aria-hidden className="mt-3 block h-px w-16 bg-primary/50" />
-            <p className="body-copy mt-6">
-              Since our foundation in 2003, our headquarters and 25,000 sq. m of in-house
-              manufacturing in Ludhiana, India — together with our European sales office in
-              Eindhoven, the Netherlands — have steered the fortunes of our globally operating
-              business.
-            </p>
-            <p className="body-copy mt-6">
-              More than 150 skilled professionals work for us, serving customers in over 42
-              countries. Under the promise of delivering the best service to every client, our
-              team tackles the daily challenges of the construction process together with
-              contractors, builders, scaffolders and engineers worldwide.
-            </p>
+            {/* One single full-width column. Both sentences run as one continuous paragraph —
+                "…globally operating business." flows straight into "More than 150…" with no
+                break between them. `max-w-none` releases the 768px measure `.body-copy` clamps
+                to, so the copy fills the container edge to edge. */}
+            <div className="mt-6">
+              <p className="body-copy max-w-none">
+                Since our foundation in 2003, our headquarters and 25,000 sq. m of in-house
+                manufacturing in Ludhiana, India, together with our European sales office in
+                Eindhoven, the Netherlands, have steered the fortunes of our globally operating
+                business. More than 150 skilled professionals work for us, serving customers in
+                over 42 countries. Under the promise of delivering the best service to every
+                client, our team tackles the daily challenges of the construction process together
+                with contractors, builders, scaffolders and engineers worldwide.
+              </p>
+            </div>
           </Reveal>
 
           <Reveal delay={0.1}>
-            <div className="rounded-card border border-navy-100 bg-white p-8 shadow-card">
+            <div className="mt-12 rounded-card border border-navy-100 bg-white p-8 shadow-card">
               <ul className="grid gap-y-10 sm:grid-cols-2 xl:grid-cols-4 xl:divide-x xl:divide-navy-100">
                 {company.stats.slice(0, 4).map((s, i) => {
                   const Icon = STAT_ICONS[i];
                   return (
-                    <li
-                      key={s.label}
-                      className={`flex items-center gap-4 xl:flex-col xl:items-start xl:gap-3 ${
-                        i > 0 ? 'xl:pl-6' : ''
-                      }`}
-                    >
+                    /* Icon LEFT of the figure, horizontal at every width — this used to flip
+                       to icon-on-top at `xl`, which is the layout that did not match the
+                       reference. The number leads, big and bold; the label sits under it in
+                       the muted tone. */
+                    <li key={s.label} className={`flex items-center gap-4 ${i > 0 ? 'xl:pl-6' : ''}`}>
                       <span
                         aria-hidden
                         className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-primary/35 text-primary-dark"
                       >
-                        <Icon className="h-5 w-5" strokeWidth={1.5} />
+                        <Icon className="h-[22px] w-[22px]" strokeWidth={1.5} />
                       </span>
                       <div className="min-w-0">
-                        <p className="font-display text-2xl font-bold leading-none text-text">
+                        <p className="font-display text-3xl font-bold leading-none text-text">
                           <AnimatedCounter value={s.value} />
                         </p>
-                        <p className="mt-1.5 text-xs leading-snug text-ink">{s.label}</p>
+                        <p className="mt-1.5 text-xs leading-snug text-muted">{s.label}</p>
                       </div>
                     </li>
                   );
@@ -214,47 +261,14 @@ export default function About() {
         </div>
       </section>
 
-      {/* WHY KEAA STANDS APART */}
-      <section className="section-pad overflow-hidden">
-        <div className="container-page">
-        <div className={PANEL_CARD}>
-          {/* This used to be a `mt-16 border-t pt-12` divider inside the Who We Are panel.
-              That panel is now its own section, so the rule and top margin are gone — the
-              block opens its own card instead. */}
-          <div>
-            <Reveal className="max-w-3xl">
-              <span className="eyebrow text-primary-darker">
-                Why KEAA Stands Apart
-              </span>
-              <h3 className="mt-3 font-display text-2xl font-bold text-text">
-                Complete Production Control, In-House
-              </h3>
-              <p className="body-copy mt-3">
-                Unlike conventional manufacturers, KEAA controls the complete production process
-                in-house — ensuring consistent quality, faster lead times and dependable
-                performance across every product line.
-              </p>
-            </Reveal>
-            <StaggerGroup className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {manufacturingStrength.map((m) => (
-                <StaggerItem key={m}>
-                  {/* Flat inside the panel — see the note on the vision columns. */}
-                  <div className="flex h-full items-center gap-3">
-                    <p className="border-l-2 border-primary/40 pl-4 text-body-compact font-medium leading-snug text-text">{m}</p>
-                  </div>
-                </StaggerItem>
-              ))}
-            </StaggerGroup>
-          </div>
-        </div>
-        </div>
-      </section>
-
       {/* JOURNEY TIMELINE — the horizontal rail that used to sit on the Home page, moved here
           so the story lives in one place. Numbered steps run above a hairline, and each dot is
           punched out of that line by a ring in the section's own background colour, so the rail
           appears to break at the dot rather than run underneath it. Hence the explicit
-          `bg-surface-bright` — the ring has to match whatever is behind it. */}
+          `bg-surface-bright` — the ring has to match whatever is behind it.
+
+          Placed directly after "Built on Trust", ahead of "Why KEAA Stands Apart": the story
+          (who we became) reads before the capability claim (why we are different). */}
       <section id="journey" className="section-pad bg-surface-bright">
         <div className="container-page">
         <div className={PANEL_CARD}>
@@ -294,6 +308,42 @@ export default function About() {
             </ol>
           </Reveal>
         </div>
+        </div>
+        </div>
+      </section>
+
+      {/* WHY KEAA STANDS APART */}
+      <section className="section-pad overflow-hidden">
+        <div className="container-page">
+        <div className={PANEL_CARD}>
+          {/* This used to be a `mt-16 border-t pt-12` divider inside the Who We Are panel.
+              That panel is now its own section, so the rule and top margin are gone — the
+              block opens its own card instead. */}
+          <div>
+            <Reveal className="max-w-3xl">
+              <span className="eyebrow text-primary-darker">
+                Why KEAA Stands Apart
+              </span>
+              <h3 className="mt-3 font-display text-2xl font-bold text-text">
+                Complete Production Control, In-House
+              </h3>
+              <p className="body-copy mt-3">
+                Unlike conventional manufacturers, KEAA controls the complete production process
+                in-house, ensuring consistent quality, faster lead times and dependable
+                performance across every product line.
+              </p>
+            </Reveal>
+            <StaggerGroup className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {manufacturingStrength.map((m) => (
+                <StaggerItem key={m}>
+                  {/* Flat inside the panel — see the note on the vision columns. */}
+                  <div className="flex h-full items-center gap-3">
+                    <p className="border-l-2 border-primary/40 pl-4 text-body-compact font-medium leading-snug text-text">{m}</p>
+                  </div>
+                </StaggerItem>
+              ))}
+            </StaggerGroup>
+          </div>
         </div>
         </div>
       </section>
@@ -347,7 +397,7 @@ export default function About() {
             <div className="group overflow-hidden rounded-card ring-1 ring-text/[0.08]">
               <img
                 src={chairmanMessage.photo}
-                alt={`${chairmanMessage.name || 'Chairman'} — KEAA International`}
+                alt={`${chairmanMessage.name || 'Chairman'}, KEAA International`}
                 loading="lazy"
                 className="aspect-square w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
               />
@@ -364,11 +414,11 @@ export default function About() {
             <p className="mt-5 font-display font-semibold text-navy-800">
               {chairmanMessage.name ? (
                 <>
-                  — {chairmanMessage.name}
+                  {chairmanMessage.name}
                   <span className="block text-sm font-normal text-muted">{chairmanMessage.role}</span>
                 </>
               ) : (
-                <>— {chairmanMessage.role}</>
+                <>{chairmanMessage.role}</>
               )}
             </p>
           </Reveal>
@@ -402,7 +452,7 @@ export default function About() {
                       <div className="group overflow-hidden rounded-card ring-1 ring-text/[0.08]">
                         <img
                           src={m.photo}
-                          alt={`${m.name} — ${m.role}`}
+                          alt={`${m.name}, ${m.role}`}
                           loading="lazy"
                           className="aspect-square w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                         />
@@ -414,10 +464,9 @@ export default function About() {
                     <div className={flip ? 'lg:order-1' : ''}>
                       <span className="eyebrow text-primary-darker">{m.name}</span>
                       <p className="body-copy mt-4">{m.message}</p>
-                      <p className="mt-5 font-display font-semibold text-navy-800">
-                        — {m.name}
-                        <span className="block text-sm font-normal text-muted">{m.role}</span>
-                      </p>
+                      {/* Designation only — the name is already the eyebrow above this message,
+                          so repeating it here printed the name twice. */}
+                      <p className="mt-5 text-sm font-medium text-muted">{m.role}</p>
                       <div className="mt-4 flex items-center gap-3">
                         <a
                           href={m.linkedin}
@@ -523,16 +572,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* FINAL CTA. The old block carried a secondary "Contact Our Team" button in the
-          `outline` variant, which is white-on-dark and would vanish on this light card.
-          Contact is one click away from both the nav and the footer. */}
-      <CtaBand
-        title="Building Long-Term"
-        accent="Partnerships Worldwide"
-        desc="From concept to delivery, KEAA International combines engineering expertise, modern manufacturing and global export experience to provide reliable solutions trusted by customers across the world."
-        note="Built for Safety. Built to Last."
-        cta={{ label: 'Request a Quote', to: '/rfq' }}
-      />
     </>
   );
 }
