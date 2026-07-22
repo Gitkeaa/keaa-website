@@ -28,8 +28,13 @@ import {
   Settings,
   FolderTree,
   Image,
+  Video,
   Download,
   Languages,
+  Clock,
+  Calendar,
+  UserCheck,
+  XCircle,
 } from 'lucide-react';
 
 export const ADMIN_ICONS = {
@@ -50,6 +55,11 @@ export const ADMIN_ICONS = {
   Settings,
   FolderTree,
   Image,
+  Video,
   Download,
   Languages,
+  Clock,
+  Calendar,
+  UserCheck,
+  XCircle,
 };

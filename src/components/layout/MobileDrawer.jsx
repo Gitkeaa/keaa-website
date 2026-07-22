@@ -9,7 +9,6 @@ import { useLocale } from '../../i18n/LocaleContext';
 import { getLanguage } from '../../i18n/languages';
 import { useRegion } from '../../context/RegionContext';
 import { localeId } from '../../data/regions';
-import SignInModal from '../auth/SignInModal';
 import { useAdminAuth } from '../../admin/auth/AdminAuthContext';
 import { ROLE_LABELS } from '../../admin/auth/roles';
 
@@ -28,13 +27,11 @@ export default function MobileDrawer({ open, onClose }) {
   */
   const navigate = useNavigate();
   const { user, isAuthed, checking, logout } = useAdminAuth();
-  const [signInOpen, setSignInOpen] = useState(false);
-
+  // One login screen for the whole site: close the drawer and go to /admin/login (no in-drawer
+  // dialog), so mobile and desktop, signed-out and logged-out, all reach the same page.
   const openSignIn = () => {
-    // Close the drawer FIRST. Both are fixed overlays and the modal has to own the screen;
-    // leaving the drawer up behind it would also trap Tab in two dialogs at once.
     onClose();
-    setSignInOpen(true);
+    navigate('/admin/login');
   };
 
   const handleSignOut = async () => {
@@ -313,8 +310,6 @@ export default function MobileDrawer({ open, onClose }) {
           </motion.div>
         )}
       </AnimatePresence>
-
-      <SignInModal open={signInOpen} onClose={() => setSignInOpen(false)} />
     </>
   );
 }

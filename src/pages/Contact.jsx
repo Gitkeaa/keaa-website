@@ -16,7 +16,9 @@ import Button from '../components/ui/Button';
 import CountrySelect from '../components/ui/CountrySelect';
 import PhoneField from '../components/ui/PhoneField';
 import EmailField from '../components/ui/EmailField';
+import MultiSelect from '../components/ui/MultiSelect';
 import WordLimitTextarea from '../components/ui/WordLimitTextarea';
+import { getAllProductLines } from '../data/productLines';
 import Reveal from '../components/ui/Reveal';
 import { company } from '../data/company';
 import { img } from '../data/images';
@@ -151,6 +153,10 @@ const rideApps = [
   { name: 'Rapido', href: rideLinks.rapido, badge: 'R', badgeClass: 'bg-[#FFCC00] text-black' },
 ];
 
+/* Same product lines the RFQ form offers (catalogue categories + enquiry-only lines like
+   Safety Products), so a contact lead can flag which ones it is about. */
+const productCategoryOptions = getAllProductLines().map((c) => ({ value: c.name, label: c.name }));
+
 export default function Contact() {
   useSEO({
     title: 'Contact Us',
@@ -166,6 +172,7 @@ export default function Contact() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  const [categories, setCategories] = useState([]);
   const landlineNumbers = Array.isArray(company.landline) ? company.landline : [company.landline];
 
   const handleSubmit = async (e) => {
@@ -178,10 +185,16 @@ export default function Contact() {
       await submitPublicForm('/api/contact', {
         name: val('name'),
         email,
+        company: val('company'),
+        phone: `${country?.dial || ''} ${phone || ''}`.trim(),
         subject: val('subject'),
+        // Top-level country + category drive auto-assignment to the owning rep. The visitor may
+        // pick several categories; the first is used for matching, the full list rides in the body.
+        country: country?.name || '',
+        category: categories[0] || '',
         // The ContactMessage entity holds one message body; fold the extra context in
-        // so nothing the visitor typed is lost.
-        message: `${message}\n\nCompany: ${val('company') || 'N/A'} · Phone: ${country?.dial || ''} ${phone || 'N/A'} · Country: ${country?.name || 'N/A'}`,
+        // so nothing the visitor typed is lost — including the product categories they picked.
+        message: `${message}\n\nProduct interest: ${categories.length ? categories.join(', ') : 'N/A'}\nCompany: ${val('company') || 'N/A'} · Phone: ${country?.dial || ''} ${phone || 'N/A'} · Country: ${country?.name || 'N/A'}`,
       });
       setSubmitted(true);
     } catch {
@@ -260,17 +273,6 @@ export default function Contact() {
                 </div>
               </div>
             </div>
-
-            <div className="rounded-card border border-navy-100 bg-navy-50 p-6">
-              <h4 className="font-display text-sm font-semibold text-text">
-                {company.salesOffice.label}
-              </h4>
-              <p className="mt-1 text-body-compact text-ink">
-                {company.salesOffice.line1}, {company.salesOffice.line2}
-              </p>
-              <p className="mt-2 text-body-compact text-ink">{company.salesOffice.phone}</p>
-              <p className="text-body-compact text-ink">{company.salesOffice.email}</p>
-            </div>
           </Reveal>
 
           {/* FORM */}
@@ -328,6 +330,14 @@ export default function Contact() {
                   id="subject"
                   required
                   placeholder="e.g. Bulk order inquiry for Cuplock scaffolding"
+                />
+                <MultiSelect
+                  className="sm:col-span-2"
+                  label="Product Category"
+                  placeholder="Select one or more categories…"
+                  options={productCategoryOptions}
+                  value={categories}
+                  onChange={setCategories}
                 />
                 <WordLimitTextarea
                   className="sm:col-span-2"

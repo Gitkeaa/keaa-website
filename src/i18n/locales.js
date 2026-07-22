@@ -85,7 +85,7 @@ const en = {
      only the English strings moved. */
   'auth.signIn': 'Log in',
   'auth.signOut': 'Log out',
-  'auth.dashboard': 'Admin dashboard',
+  'auth.dashboard': 'Dashboard',
   'auth.eyebrow': 'Team access',
   'auth.title': 'Log in',
   'auth.subtitle': 'KEAA team members log in here to reach the admin console.',

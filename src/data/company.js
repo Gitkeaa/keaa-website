@@ -2,6 +2,8 @@
 // corporate catalogues (Scaffolding & Formworks, Livestock Housing Solutions,
 // Garden Hardware 2024).
 
+import { image } from "framer-motion/client";
+
 export const company = {
   name: 'KEAA International Pvt. Ltd.',
   shortName: 'KEAA',
@@ -18,13 +20,11 @@ export const company = {
     country: 'India',
   },
   salesOffice: {
-    label: 'Sales Office & Warehouse, Runi Industries B.V.',
+    label: 'Sales Office & Warehouse, Europe',
     line1: 'Park Forum 1005',
     line2: '5657 HJ Eindhoven, The Netherlands',
     country: 'Netherlands',
     phone: '+31 655 282 244',
-    email: 'info@runiindustries.eu',
-    site: 'www.runiindustries.eu',
   },
 
   phones: ['+91 98767 01926', '+91 98729 84707'],
@@ -131,7 +131,7 @@ export const company = {
   timeline: [
     { year: '2003', title: 'The Beginning', desc: 'KEAA International was established with a vision to deliver quality scaffolding and construction hardware.' },
     { year: '2008', title: 'Expanding Capabilities', desc: 'Added livestock housing and garden hardware lines alongside scaffolding and formwork.' },
-    { year: '2014', title: 'Going Global', desc: 'Opened Runi Industries B.V. in Eindhoven, the Netherlands, to better serve European clients.' },
+    { year: '2014', title: 'Going Global', desc: 'Opened a European sales office in Eindhoven, the Netherlands, to better serve European clients.' },
     { year: '2018', title: 'Excellence Recognised', desc: 'Achieved ISO 9001:2015, SLV welding certification and Sigma Karlsruhe Ü-mark conformity.' },
     { year: '2026', title: 'Future Forward', desc: 'Continuing to invest in automation, sustainability and new product development.' },
   ],
@@ -175,32 +175,31 @@ export const leadership = [
     role: 'Global Business Head',
     bio: 'Leads international trade compliance, global sales strategy, and client relations across 42+ countries.',
     linkedin: 'https://www.linkedin.com/in/bhupesh-gautam-13867a7b/',
+    image:''
   },
   {
-    name: 'Rajiv Madan',
-    role: 'Vice President',
-    bio: 'Manages organizational development, corporate planning, and strategic business units.',
-    linkedin: 'https://www.linkedin.com/in/rajiv-madan-632957b2',
+    name: 'Jaskamal Singh',
+    role: 'Sales Manager',
+    bio: 'Experienced Sales Manager responsible for managing customer relationships, handling RFQs, preparing quotations, and driving business growth across assigned international markets.',
+    linkedin: 'https://www.linkedin.com/in/jaskamal-singh-37b469377/',
   },
   {
-    name: 'Mandeep Singh',
-    role: 'General Manager Operations',
-    bio: 'Coordinates manufacturing operations, shop floor efficiency, and supply chain logistics.',
-    photo: '/images/mandeep-singh.jpg',
-    linkedin: 'https://www.linkedin.com/in/mandeep-singh-dhanda-473319229',
+    name: 'Vikram Singh',
+    role: 'Sales Manager',
+    bio: 'Results-driven Sales Manager specializing in export sales, client communication, quotation management, and successful deal execution for assigned regions and product categories.',
+    linkedin: 'https://www.linkedin.com/in/vikram-singh-panwar%E2%9C%A8/',
   },
   {
-    name: 'S. K. Rawat',
-    role: 'Assistant General Manager',
-    bio: 'Assists in operations management, quality control processes, and production scheduling.',
-    linkedin: 'https://www.linkedin.com/in/s-k-rawat',
+    name: 'Ajay Rana',
+    role: 'Sales Manager',
+    bio: 'Dedicated Sales Manager focused on developing international business opportunities, managing customer inquiries, coordinating negotiations, and delivering exceptional client support.',
+    linkedin: 'https://www.linkedin.com/in/ajay-rana-00410241/',
   },
   {
-    name: 'Harbansh Singh',
-    role: 'Human Resources (HR)',
-    bio: 'Manages talent acquisition, employee welfare, and organizational culture.',
-    photo: '/images/harbansh-singh.jpg',
-    linkedin: 'https://www.linkedin.com/in/harbansh-singh',
+    name: 'Sumeet Dogra',
+    role: 'Asst. Sales Manager',
+    bio: 'Assistant Sales Manager supporting customer inquiries, quotation preparation, follow-ups, and sales coordination while ensuring timely communication and efficient order processing.',
+    linkedin: 'https://www.linkedin.com/in/sumeet-dogra-20b575116/',
   },
 ];
 

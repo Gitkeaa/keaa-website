@@ -431,3 +431,27 @@ html, body {
   background: #0A2342;
   border-radius: 8px;
 }
+
+/* ------------------------------------------------------------------ *
+ *  Admin dark theme — scoped to the admin shell via `.admin-dark`, so
+ *  the public marketing site is never touched. A focused override of the
+ *  console's common surfaces (rather than a dark: variant on every
+ *  element), toggled from the topbar and remembered in localStorage.
+ * ------------------------------------------------------------------ */
+.admin-dark { background-color: #0b1120; }
+.admin-dark .bg-white { background-color: #131c31 !important; }
+.admin-dark .bg-slate-50,
+.admin-dark .bg-slate-50\/80,
+.admin-dark .bg-slate-50\/60 { background-color: #0b1120 !important; }
+.admin-dark .bg-slate-100 { background-color: #1e293b !important; }
+.admin-dark .text-navy-900,
+.admin-dark .text-navy-800,
+.admin-dark .text-navy-700 { color: #e2e8f0 !important; }
+.admin-dark .text-slate-600,
+.admin-dark .text-slate-500,
+.admin-dark .text-slate-400 { color: #94a3b8 !important; }
+.admin-dark .border-slate-200,
+.admin-dark .border-slate-100 { border-color: #24314b !important; }
+.admin-dark .shadow-sm,
+.admin-dark .shadow-lg,
+.admin-dark .shadow-xl { box-shadow: 0 1px 3px rgba(0,0,0,0.4) !important; }

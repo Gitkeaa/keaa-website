@@ -18,23 +18,27 @@
  */
 export const ROLES = {
   SUPER_ADMIN: 'SUPER_ADMIN',
+  SENIOR_ADMIN: 'SENIOR_ADMIN',
   ADMIN: 'ADMIN',
-  SALES: 'SALES',
-  MARKETING: 'MARKETING',
+  BUSINESS_DEVELOPMENT: 'BUSINESS_DEVELOPMENT',
   HR: 'HR',
   EMPLOYEE: 'EMPLOYEE',
 };
 
 export const ROLE_LABELS = {
   SUPER_ADMIN: 'Super Admin',
+  SENIOR_ADMIN: 'Senior Admin',
   ADMIN: 'Admin',
-  SALES: 'Sales',
-  MARKETING: 'Marketing',
+  BUSINESS_DEVELOPMENT: 'Business Development',
   HR: 'HR',
   EMPLOYEE: 'Employee',
 };
 
 const ALL_ROLES = Object.values(ROLES);
+// The two top tiers, the three admin tiers, and the same plus the Business Development desk.
+const SUPERS = [ROLES.SUPER_ADMIN, ROLES.SENIOR_ADMIN];
+const ADMINS = [...SUPERS, ROLES.ADMIN];
+const ADMINS_BD = [...ADMINS, ROLES.BUSINESS_DEVELOPMENT];
 
 /**
  * The COMPLETE admin module map — the whole panel the site is being built toward, not just
@@ -55,26 +59,29 @@ const ALL_ROLES = Object.values(ROLES);
 export const MODULES = [
   // ---- live today ----
   { key: 'dashboard', to: '/admin', label: 'Dashboard', icon: 'LayoutDashboard', end: true, implemented: true, roles: ALL_ROLES },
-  { key: 'users', to: '/admin/users', label: 'User Management', icon: 'Users', implemented: true, roles: [ROLES.SUPER_ADMIN] },
-  { key: 'products', to: '/admin/products', label: 'Products', icon: 'Package', implemented: true, roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.SALES, ROLES.MARKETING], viewOnly: [ROLES.SALES] },
-  { key: 'rfq', to: '/admin/rfq', label: 'RFQ Requests', icon: 'FileText', implemented: true, roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.SALES] },
-  { key: 'contacts', to: '/admin/contacts', label: 'Contact Messages', icon: 'Mail', implemented: true, roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.SALES, ROLES.MARKETING] },
-  { key: 'applications', to: '/admin/careers', label: 'Job Applications', icon: 'Briefcase', implemented: true, roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.HR] },
+  // User Management: Super/Senior manage; Admin + HR view-only (HR checks staff details).
+  { key: 'users', to: '/admin/users', label: 'User Management', icon: 'Users', implemented: true, roles: [...ADMINS, ROLES.HR], viewOnly: [ROLES.ADMIN, ROLES.HR] },
+  // Products: admin tiers manage, Business Development view-only.
+  { key: 'products', to: '/admin/products', label: 'Products', icon: 'Package', implemented: true, roles: ADMINS_BD, viewOnly: [ROLES.BUSINESS_DEVELOPMENT] },
+  // Lead pipeline: Super/Senior view, Admin assigns to BD, BD works its assigned leads.
+  { key: 'rfq', to: '/admin/rfq', label: 'RFQ Requests', icon: 'FileText', implemented: true, roles: ADMINS_BD, viewOnly: SUPERS },
+  { key: 'contacts', to: '/admin/contacts', label: 'Contact Messages', icon: 'Mail', implemented: true, roles: ADMINS_BD, viewOnly: SUPERS },
+  // Job Applications: admin tiers view, only HR edits status.
+  { key: 'applications', to: '/admin/careers', label: 'Job Applications', icon: 'Briefcase', implemented: true, roles: [...ADMINS, ROLES.HR], viewOnly: ADMINS },
 
   // ---- planned (matrix encoded now; pages/endpoints built in phases) ----
-  { key: 'roles', to: '/admin/roles', label: 'Roles & Permissions', icon: 'ShieldCheck', implemented: true, roles: [ROLES.SUPER_ADMIN] },
-  { key: 'product-categories', to: '/admin/product-categories', label: 'Product Categories', icon: 'FolderTree', implemented: true, roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MARKETING] },
-  { key: 'pages', to: '/admin/pages', label: 'Pages (CMS)', icon: 'LayoutTemplate', implemented: false, roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MARKETING] },
-  { key: 'blogs', to: '/admin/blogs', label: 'Blogs / News', icon: 'Newspaper', implemented: false, roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MARKETING] },
-  { key: 'media', to: '/admin/media', label: 'Gallery / Media', icon: 'Image', implemented: true, roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MARKETING] },
-  { key: 'downloads', to: '/admin/downloads', label: 'Downloads / Certificates', icon: 'Download', implemented: true, roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MARKETING] },
-  { key: 'export-inquiries', to: '/admin/export-inquiries', label: 'Export Inquiries', icon: 'Globe2', implemented: true, roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.SALES] },
-  { key: 'careers', to: '/admin/job-postings', label: 'Careers', icon: 'ClipboardList', implemented: false, roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.HR] },
-  { key: 'newsletter', to: '/admin/newsletter', label: 'Newsletter Subscribers', icon: 'Send', implemented: false, roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MARKETING] },
-  { key: 'seo', to: '/admin/seo', label: 'SEO Management', icon: 'Search', implemented: false, roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MARKETING] },
-  { key: 'analytics', to: '/admin/analytics', label: 'Analytics', icon: 'BarChart3', implemented: false, roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MARKETING, ROLES.SALES, ROLES.HR], viewOnly: [ROLES.SALES, ROLES.HR] },
-  { key: 'translations', to: '/admin/translations', label: 'Languages / Translations', icon: 'Languages', implemented: true, roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.MARKETING] },
-  { key: 'settings', to: '/admin/settings', label: 'Website Settings', icon: 'Settings', implemented: true, roles: [ROLES.SUPER_ADMIN] },
+  { key: 'roles', to: '/admin/roles', label: 'Roles & Permissions', icon: 'ShieldCheck', implemented: true, roles: SUPERS },
+  // Product Categories: Super/Senior manage, Admin + BD view-only.
+  { key: 'product-categories', to: '/admin/product-categories', label: 'Product Categories', icon: 'FolderTree', implemented: true, roles: ADMINS_BD, viewOnly: [ROLES.ADMIN, ROLES.BUSINESS_DEVELOPMENT] },
+  { key: 'pages', to: '/admin/pages', label: 'Pages (CMS)', icon: 'LayoutTemplate', implemented: false, roles: ADMINS_BD },
+  { key: 'blogs', to: '/admin/blogs', label: 'Blogs / News', icon: 'Newspaper', implemented: false, roles: ADMINS_BD },
+  // Gallery + Videos: admin tiers manage, Business Development view-only.
+  { key: 'media', to: '/admin/media', label: 'Gallery', icon: 'Image', implemented: true, roles: ADMINS_BD, viewOnly: [ROLES.BUSINESS_DEVELOPMENT] },
+  { key: 'videos', to: '/admin/videos', label: 'Videos', icon: 'Video', implemented: true, roles: ADMINS_BD, viewOnly: [ROLES.BUSINESS_DEVELOPMENT] },
+  { key: 'downloads', to: '/admin/downloads', label: 'Downloads / Certificates', icon: 'Download', implemented: true, roles: ADMINS_BD },
+  { key: 'export-inquiries', to: '/admin/export-inquiries', label: 'Export Inquiries', icon: 'Globe2', implemented: true, roles: ADMINS_BD, viewOnly: SUPERS },
+  { key: 'seo', to: '/admin/seo', label: 'SEO Management', icon: 'Search', implemented: false, roles: ADMINS },
+  { key: 'analytics', to: '/admin/analytics', label: 'Analytics', icon: 'BarChart3', implemented: false, roles: [...ADMINS_BD, ROLES.HR], viewOnly: [ROLES.BUSINESS_DEVELOPMENT, ROLES.HR] },
   { key: 'profile', to: '/admin/profile', label: 'Profile', icon: 'CircleUser', implemented: true, roles: ALL_ROLES },
   { key: 'notifications', to: '/admin/notifications', label: 'Notifications', icon: 'Bell', implemented: true, roles: ALL_ROLES },
 ];
@@ -88,6 +95,11 @@ export const navForRole = (role) => ADMIN_NAV.filter((item) => item.roles.includ
 /** The module that owns `path` — exact for the dashboard index, prefix for the rest. */
 const moduleForPath = (path) =>
   MODULES.find((m) => (m.end ? path === m.to : path === m.to || path.startsWith(`${m.to}/`)));
+
+/** The stable module key that owns `path` (e.g. '/admin/rfq' → 'rfq'), or null. This is the
+ *  `contextKey` the Contextual Help system binds a page's guide to, so a guide follows the
+ *  page regardless of the exact URL. */
+export const moduleKeyForPath = (path) => moduleForPath(path)?.key ?? null;
 
 /**
  * True if `role` may open `path`. Used by the route guard so a deep-link to a module the role

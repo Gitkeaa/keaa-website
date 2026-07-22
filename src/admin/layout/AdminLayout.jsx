@@ -6,6 +6,8 @@ import { useAdminAuth } from '../auth/AdminAuthContext';
 import { roleAllowsPath } from '../auth/roles';
 import AdminSidebar from './AdminSidebar';
 import AdminTopbar from './AdminTopbar';
+import { HelpProvider } from '../help/HelpContext';
+import WelcomeTour from '../help/WelcomeTour';
 
 /**
  * The protected admin shell. Guards the whole /admin/* subtree: an unauthenticated visitor
@@ -19,6 +21,13 @@ export default function AdminLayout() {
   const { isAuthed, checking, role } = useAdminAuth();
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [theme, setTheme] = useState(() => localStorage.getItem('keaa-admin-theme') || 'light');
+  const toggleTheme = () =>
+    setTheme((t) => {
+      const next = t === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('keaa-admin-theme', next);
+      return next;
+    });
 
   // Wait for the session-restore call before deciding — otherwise a refresh flashes the
   // login screen for an already-signed-in user.
@@ -42,7 +51,7 @@ export default function AdminLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-navy-900">
+    <div className={`min-h-screen bg-slate-50 text-navy-900 ${theme === 'dark' ? 'admin-dark' : ''}`}>
       {/* Desktop sidebar */}
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 lg:block">
         <AdminSidebar />
@@ -80,12 +89,40 @@ export default function AdminLayout() {
         )}
       </AnimatePresence>
 
-      {/* Content */}
-      <div className="lg:pl-64">
-        <AdminTopbar onOpenSidebar={() => setDrawerOpen(true)} />
-        <main className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8">
-          <Outlet />
-        </main>
+      {/* Faint KEAA cube mark behind every page — shows only through the empty areas, since the
+          module cards are opaque. Fixed + very low opacity so it never distracts. */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-0 hidden items-center justify-center opacity-[0.09] lg:flex lg:pl-64"
+      >
+        <svg viewBox="0 0 100 100" className="h-[32rem] w-[32rem]">
+          <defs>
+            <mask id="admin-bg-cube">
+              <rect x="0" y="0" width="100" height="100" fill="white" />
+              <line x1="50" y1="50" x2="5" y2="50" stroke="black" strokeWidth="5.5" />
+              <line x1="50" y1="50" x2="73" y2="10" stroke="black" strokeWidth="5.5" />
+              <line x1="50" y1="50" x2="73" y2="90" stroke="black" strokeWidth="5.5" />
+            </mask>
+          </defs>
+          <g mask="url(#admin-bg-cube)">
+            <polygon points="10,50 30,15.36 70,15.36 50,50" fill="#79c7f9" />
+            <polygon points="10,50 50,50 70,84.64 30,84.64" fill="#2b84da" />
+            <polygon points="50,50 70,15.36 90,50 70,84.64" fill="#2065be" />
+          </g>
+        </svg>
+      </div>
+
+      {/* Content. Wrapped in HelpProvider so the topbar Help button and every page share the
+          one contextual-help drawer. */}
+      <div className="relative z-10 lg:pl-64">
+        <HelpProvider>
+          <AdminTopbar onOpenSidebar={() => setDrawerOpen(true)} theme={theme} onToggleTheme={toggleTheme} />
+          <main className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8">
+            <Outlet />
+          </main>
+          {/* First-visit walkthrough — shows once, then never again. */}
+          <WelcomeTour />
+        </HelpProvider>
       </div>
     </div>
   );

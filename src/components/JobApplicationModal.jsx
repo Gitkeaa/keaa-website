@@ -10,6 +10,19 @@ import { submitPublicForm, submitPublicFormWithFile } from '../data/adminApi';
 
 const EXPERIENCE = ['Fresher (0–1 yr)', '1–3 years', '3–5 years', '5–10 years', '10+ years'];
 const NOTICE = ['Immediate', 'Within 15 days', '1 month', '2 months', 'Currently serving notice'];
+const QUALIFICATIONS = [
+  '10th / High School',
+  '12th / Higher Secondary',
+  'ITI',
+  'Diploma',
+  "Bachelor's Degree (B.E. / B.Tech)",
+  "Bachelor's Degree (Other)",
+  "Master's Degree (M.E. / M.Tech)",
+  "Master's Degree (Other)",
+  'MBA',
+  'Doctorate / PhD',
+  'Other',
+];
 const MAX_RESUME_MB = 5;
 
 const inputCls =
@@ -246,7 +259,7 @@ export default function JobApplicationModal({ job, onClose }) {
               <Field label="Current Location (City)" id="app-city" placeholder="e.g. Ludhiana" />
               <SelectField label="Total Experience" id="app-exp" required options={EXPERIENCE} />
               <Field label="Current / Recent Employer" id="app-company" placeholder="Company name" />
-              <Field label="Highest Qualification" id="app-qual" placeholder="e.g. B.Tech Mechanical" />
+              <SelectField label="Highest Qualification" id="app-qual" required options={QUALIFICATIONS} />
               <SelectField label="Notice Period / Availability" id="app-notice" required options={NOTICE} />
               <Field label="LinkedIn / Portfolio" id="app-linkedin" type="url" placeholder="Profile or portfolio URL" />
 

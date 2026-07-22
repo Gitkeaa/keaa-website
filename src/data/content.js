@@ -63,7 +63,7 @@ export const featuredProjects = [
     title: 'Export Distribution Hub',
     location: 'Eindhoven, Netherlands',
     category: 'International',
-    desc: 'Runi Industries supplied livestock housing structures for a regional distribution project.',
+    desc: 'KEAA supplied livestock housing structures for a regional distribution project.',
   },
   /*
    * Eight, not six. The gallery lays these out four across, so six left two empty cells on

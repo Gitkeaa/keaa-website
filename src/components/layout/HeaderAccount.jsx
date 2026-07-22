@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { User } from 'lucide-react';
-import SignInModal from '../auth/SignInModal';
 import { headerControlCls } from './headerControl';
 import { useAdminAuth } from '../../admin/auth/AdminAuthContext';
-import { ROLE_LABELS } from '../../admin/auth/roles';
+import { resolveUpload } from '../../admin/api/client';
 import { useT } from '../../i18n/LocaleContext';
 
 /**
@@ -31,7 +30,6 @@ export default function HeaderAccount() {
   const location = useLocation();
   const { user, isAuthed, logout } = useAdminAuth();
 
-  const [modalOpen, setModalOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const wrapRef = useRef(null);
 
@@ -65,15 +63,14 @@ export default function HeaderAccount() {
   const triggerCls = `${headerControlCls(menuOpen)} hidden sm:flex`;
 
   // `checking` counts as signed out here — see the note above on why this renders eagerly.
+  // One login screen for the whole site: this goes straight to /admin/login rather than opening
+  // an in-header dialog, so a signed-out visitor and a logged-out staffer see the same page.
   if (!isAuthed) {
     return (
-      <>
-        <button type="button" onClick={() => setModalOpen(true)} className={triggerCls}>
-          <User aria-hidden className="h-[18px] w-[18px] flex-shrink-0" strokeWidth={2} />
-          {t('auth.signIn')}
-        </button>
-        <SignInModal open={modalOpen} onClose={() => setModalOpen(false)} />
-      </>
+      <Link to="/admin/login" className={triggerCls}>
+        <User aria-hidden className="h-[18px] w-[18px] flex-shrink-0" strokeWidth={2} />
+        {t('auth.signIn')}
+      </Link>
     );
   }
 
@@ -99,7 +96,11 @@ export default function HeaderAccount() {
         aria-label={`${firstName}, ${t('auth.accountAria')}`}
         className={triggerCls}
       >
-        <User aria-hidden className="h-[18px] w-[18px] flex-shrink-0" strokeWidth={2} />
+        {user.avatarUrl ? (
+          <img src={resolveUpload(user.avatarUrl)} alt="" className="h-5 w-5 flex-shrink-0 rounded-full object-cover" />
+        ) : (
+          <User aria-hidden className="h-[18px] w-[18px] flex-shrink-0" strokeWidth={2} />
+        )}
         {firstName}
       </button>
 
@@ -107,8 +108,6 @@ export default function HeaderAccount() {
         <div className="absolute right-0 top-full z-50 mt-2 min-w-[13rem] rounded-card border border-border bg-white p-1.5 shadow-card">
           <div className="border-b border-border px-3 pb-2.5 pt-2">
             <p className="truncate text-sm font-semibold text-navy-900">{user.name}</p>
-            <p className="truncate text-xs text-muted">{ROLE_LABELS[user.role] || user.role}</p>
-            <p className="truncate text-xs text-muted">{user.email}</p>
           </div>
 
           <Link

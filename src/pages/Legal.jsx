@@ -24,7 +24,7 @@ const content = {
     sections: [
       {
         h: 'Who We Are',
-        p: `${company.name} (${company.manufacturing.line1}, ${company.manufacturing.line2}) is the controller of personal data collected through this website. For visitors in the European Union, our EU establishment is ${company.salesOffice.label.replace('Sales Office & Warehouse, ', '')}, ${company.salesOffice.line1}, ${company.salesOffice.line2}. You can reach us about any privacy matter at ${company.emails[0]}.`,
+        p: `${company.name} (${company.manufacturing.line1}, ${company.manufacturing.line2}) is the controller of personal data collected through this website. For visitors in the European Union, our EU establishment is our sales office and warehouse at ${company.salesOffice.line1}, ${company.salesOffice.line2}. You can reach us about any privacy matter at ${company.emails[0]}.`,
       },
       {
         h: 'Information We Collect',
@@ -73,7 +73,7 @@ const content = {
       },
       {
         h: 'Intellectual Property',
-        p: 'All content, branding and product imagery on this website are the property of KEAA International Pvt. Ltd. / Runi Industries B.V. and may not be reproduced without permission.',
+        p: 'All content, branding and product imagery on this website are the property of KEAA International Pvt. Ltd. and may not be reproduced without permission.',
       },
     ],
   },

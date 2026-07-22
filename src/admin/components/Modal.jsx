@@ -19,11 +19,11 @@ export default function Modal({ open, onClose, title, children, footer, maxWidth
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-            className={`relative z-10 w-full ${maxWidth} rounded-2xl bg-white shadow-xl`}
+            className={`relative z-10 flex max-h-[92vh] w-full ${maxWidth} flex-col rounded-2xl bg-white shadow-xl`}
             role="dialog"
             aria-modal="true"
           >
-            <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+            <div className="flex flex-shrink-0 items-center justify-between border-b border-slate-200 px-5 py-4">
               <h2 className="font-display text-lg font-bold text-navy-900">{title}</h2>
               <button
                 type="button"
@@ -34,8 +34,8 @@ export default function Modal({ open, onClose, title, children, footer, maxWidth
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <div className="px-5 py-4">{children}</div>
-            {footer && <div className="flex justify-end gap-2 border-t border-slate-200 px-5 py-3">{footer}</div>}
+            <div className="flex-1 overflow-y-auto px-5 py-4">{children}</div>
+            {footer && <div className="flex flex-shrink-0 justify-end gap-2 border-t border-slate-200 px-5 py-3">{footer}</div>}
           </motion.div>
         </div>
       )}

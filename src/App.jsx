@@ -39,15 +39,14 @@ const AdminRoles = lazy(() => import('./admin/pages/AdminRoles'));
 const AdminProducts = lazy(() => import('./admin/pages/AdminProducts'));
 const AdminProductCategories = lazy(() => import('./admin/pages/AdminProductCategories'));
 const AdminMedia = lazy(() => import('./admin/pages/AdminMedia'));
+const AdminVideos = lazy(() => import('./admin/pages/AdminVideos'));
 const AdminDownloads = lazy(() => import('./admin/pages/AdminDownloads'));
-const AdminTranslations = lazy(() => import('./admin/pages/AdminTranslations'));
 const AdminRFQ = lazy(() => import('./admin/pages/AdminRFQ'));
 const AdminExportInquiries = lazy(() => import('./admin/pages/AdminExportInquiries'));
 const AdminContacts = lazy(() => import('./admin/pages/AdminContacts'));
 const AdminCareers = lazy(() => import('./admin/pages/AdminCareers'));
 const AdminProfile = lazy(() => import('./admin/pages/AdminProfile'));
 const AdminNotifications = lazy(() => import('./admin/pages/AdminNotifications'));
-const AdminSettings = lazy(() => import('./admin/pages/AdminSettings'));
 
 export default function App() {
   return (
@@ -76,15 +75,14 @@ function AppShell() {
             <Route path="products" element={<AdminProducts />} />
             <Route path="product-categories" element={<AdminProductCategories />} />
             <Route path="media" element={<AdminMedia />} />
+            <Route path="videos" element={<AdminVideos />} />
             <Route path="downloads" element={<AdminDownloads />} />
-            <Route path="translations" element={<AdminTranslations />} />
             <Route path="rfq" element={<AdminRFQ />} />
             <Route path="export-inquiries" element={<AdminExportInquiries />} />
             <Route path="contacts" element={<AdminContacts />} />
             <Route path="careers" element={<AdminCareers />} />
             <Route path="profile" element={<AdminProfile />} />
             <Route path="notifications" element={<AdminNotifications />} />
-            <Route path="settings" element={<AdminSettings />} />
           </Route>
 
           {/* Public site. */}

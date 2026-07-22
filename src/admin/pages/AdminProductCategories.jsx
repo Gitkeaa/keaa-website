@@ -5,6 +5,8 @@ import DataTable from '../components/DataTable';
 import Modal from '../components/Modal';
 import { useApi } from '../api/useApi';
 import { api } from '../api/client';
+import { useAdminAuth } from '../auth/AdminAuthContext';
+import { moduleAccess } from '../auth/roles';
 
 /**
  * Product Categories — CRUD for the top-level catalogue categories (/api/categories).
@@ -14,6 +16,8 @@ import { api } from '../api/client';
 const EMPTY = { name: '', slug: '', description: '', sortOrder: 0, active: true };
 
 export default function AdminProductCategories() {
+  const { role } = useAdminAuth();
+  const canManage = moduleAccess(role, 'product-categories') === 'manage'; // Admin + BD view-only
   const { data, loading, error, setData } = useApi('/api/categories');
   const rows = data || [];
 
@@ -78,19 +82,21 @@ export default function AdminProductCategories() {
         </span>
       ),
     },
-    {
-      key: 'actions', label: '', align: 'right',
-      render: (c) => (
-        <div className="flex items-center justify-end gap-1">
-          <button type="button" onClick={() => openEdit(c)} aria-label={`Edit ${c.name}`} className="rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-primary-darker">
-            <Pencil className="h-4 w-4" />
-          </button>
-          <button type="button" onClick={() => setDeleteTarget(c)} aria-label={`Delete ${c.name}`} className="rounded-lg p-2 text-slate-500 transition-colors hover:bg-red-50 hover:text-red-600">
-            <Trash2 className="h-4 w-4" />
-          </button>
-        </div>
-      ),
-    },
+    ...(canManage
+      ? [{
+          key: 'actions', label: '', align: 'right',
+          render: (c) => (
+            <div className="flex items-center justify-end gap-1">
+              <button type="button" onClick={() => openEdit(c)} aria-label={`Edit ${c.name}`} className="rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-primary-darker">
+                <Pencil className="h-4 w-4" />
+              </button>
+              <button type="button" onClick={() => setDeleteTarget(c)} aria-label={`Delete ${c.name}`} className="rounded-lg p-2 text-slate-500 transition-colors hover:bg-red-50 hover:text-red-600">
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
+          ),
+        }]
+      : []),
   ];
 
   const field =
@@ -102,9 +108,11 @@ export default function AdminProductCategories() {
         title="Product Categories"
         subtitle="Top-level categories that organise the catalogue."
         actions={
-          <button type="button" onClick={openNew} className="inline-flex items-center gap-2 rounded-lg bg-primary-dark px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-darker">
-            <Plus className="h-4 w-4" /> Add category
-          </button>
+          canManage && (
+            <button type="button" onClick={openNew} className="inline-flex items-center gap-2 rounded-lg bg-primary-dark px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-darker">
+              <Plus className="h-4 w-4" /> Add category
+            </button>
+          )
         }
       />
 

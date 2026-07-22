@@ -7,9 +7,11 @@
  *   rows:    array of records
  *   keyField: unique field on each row (default 'id')
  *   onRowClick?(row)
- *   empty:    text for the empty state
+ *   empty:     headline for the empty state (e.g. 'No RFQs assigned yet')
+ *   emptyHint: optional second line explaining what will fill the table, so an empty screen
+ *              reads as "nothing here YET, and here is why" rather than looking broken
  */
-export default function DataTable({ columns, rows, keyField = 'id', onRowClick, empty = 'Nothing to show yet.' }) {
+export default function DataTable({ columns, rows, keyField = 'id', onRowClick, empty = 'Nothing to show yet.', emptyHint }) {
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
       <div className="overflow-x-auto">
@@ -32,8 +34,13 @@ export default function DataTable({ columns, rows, keyField = 'id', onRowClick, 
           <tbody className="divide-y divide-slate-100">
             {rows.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className="px-4 py-12 text-center text-slate-400">
-                  {empty}
+                <td colSpan={columns.length} className="px-4 py-14 text-center">
+                  <p className="text-sm font-medium text-slate-500">{empty}</p>
+                  {emptyHint && (
+                    <p className="mx-auto mt-1.5 max-w-sm text-sm leading-relaxed text-slate-400">
+                      {emptyHint}
+                    </p>
+                  )}
                 </td>
               </tr>
             ) : (

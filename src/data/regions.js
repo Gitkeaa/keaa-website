@@ -15,12 +15,12 @@ import { company } from './company';
 export const offices = {
   europe: {
     key: 'europe',
-    name: 'Runi Industries B.V.',
+    name: company.name,
     role: 'Sales Office & Warehouse, Europe',
     lines: [company.salesOffice.line1, company.salesOffice.line2],
     country: company.salesOffice.country,
     phones: [company.salesOffice.phone],
-    emails: [company.salesOffice.email],
+    emails: [],
   },
   hq: {
     key: 'hq',

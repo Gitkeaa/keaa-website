@@ -37,8 +37,16 @@ export async function submitPublicForm(path, data) {
  * Statuses that mean "this endpoint does not do multipart", as opposed to "your request was
  * bad". 404 no such route, 405 method/consumes mismatch, 415 unsupported media type, 501
  * not implemented. Anything else — 400, 413, 500 — is a real failure and must surface.
+ *
+ * 403 is here too, and it is the one that actually matters today: the live backend has no
+ * multipart handler, and its Spring Security chain answers the multipart POST with 403
+ * Forbidden (the plain JSON POST to the same public route returns 200). Without 403 in this
+ * set, every application that attaches a CV threw "Could not submit" instead of falling back
+ * to the JSON path — so the whole application was lost over a file the server was never going
+ * to store anyway. With it, the application still lands (file flagged as not received) and
+ * uploads begin working the moment the backend adds the multipart endpoint.
  */
-const MULTIPART_UNSUPPORTED = new Set([404, 405, 415, 501]);
+const MULTIPART_UNSUPPORTED = new Set([403, 404, 405, 415, 501]);
 
 /**
  * Submit a form WITH a file attached, as `multipart/form-data`.

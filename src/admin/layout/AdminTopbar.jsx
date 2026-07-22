@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Menu, LogOut, ChevronDown, ExternalLink } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Menu, LogOut, ChevronDown, ExternalLink, Sun, Moon, X } from 'lucide-react';
 import { useAdminAuth } from '../auth/AdminAuthContext';
 import { ROLE_LABELS } from '../auth/roles';
+import { resolveUpload } from '../api/client';
+import HelpButton from '../help/HelpButton';
 
-export default function AdminTopbar({ onOpenSidebar }) {
+export default function AdminTopbar({ onOpenSidebar, theme, onToggleTheme }) {
   const { user, role, logout } = useAdminAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -21,6 +23,12 @@ export default function AdminTopbar({ onOpenSidebar }) {
     navigate('/admin/login', { replace: true });
   };
 
+  // A one-line "finish your profile" nudge next to View site — shows only while the account is
+  // incomplete (no photo or phone), and a red cross dismisses it for the session.
+  const [nudgeHidden, setNudgeHidden] = useState(() => (user ? sessionStorage.getItem(`keaa-pb-${user.id}`) === '1' : true));
+  const profileIncomplete = user && (!user.avatarUrl || !user.phone);
+  const dismissNudge = () => { if (user) sessionStorage.setItem(`keaa-pb-${user.id}`, '1'); setNudgeHidden(true); };
+
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 sm:px-6">
       <button
@@ -33,6 +41,24 @@ export default function AdminTopbar({ onOpenSidebar }) {
       </button>
 
       <div className="ml-auto flex items-center gap-2">
+        <HelpButton />
+        {profileIncomplete && !nudgeHidden && (
+          <div className="hidden items-center gap-1.5 rounded-md bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700 md:flex">
+            <Link to="/admin/profile" className="hover:underline">Complete your profile</Link>
+            <button type="button" onClick={dismissNudge} aria-label="Dismiss" className="text-red-500 transition-colors hover:text-red-700">
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={onToggleTheme}
+          aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+          title="Toggle theme"
+          className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+        >
+          {theme === 'dark' ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
+        </button>
         <a
           href="/"
           target="_blank"
@@ -50,9 +76,13 @@ export default function AdminTopbar({ onOpenSidebar }) {
             aria-expanded={menuOpen}
             aria-haspopup="menu"
           >
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-navy-800 text-sm font-bold uppercase text-white">
-              {(user?.name || '?').charAt(0)}
-            </span>
+            {user?.avatarUrl ? (
+              <img src={resolveUpload(user.avatarUrl)} alt="" className="h-8 w-8 rounded-full object-cover" />
+            ) : (
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-navy-800 text-sm font-bold uppercase text-white">
+                {(user?.name || '?').charAt(0)}
+              </span>
+            )}
             <span className="hidden text-left leading-tight sm:block">
               <span className="block text-sm font-medium capitalize text-navy-900">{user?.name}</span>
               <span className="block text-[11px] text-slate-400">{ROLE_LABELS[role]}</span>

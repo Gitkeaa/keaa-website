@@ -19,9 +19,6 @@ import useSEO from '../hooks/useSEO';
 const TEAM_CARD_W =
   'w-[74%] sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] xl:w-[calc((100%-4.5rem)/4)]';
 
-/** Placeholder cards on the end of the rail, for team members not yet published. */
-const OPEN_SLOTS = 4;
-
 /**
  * The rail covers everyone except the CMD and the MDs. Those three carry the company's voice,
  * so they get a full message section with a large square portrait higher up the page rather
@@ -506,10 +503,7 @@ export default function About() {
               with no change here. */}
           <CardRail
             label="Leadership team"
-            labels={[
-              ...TEAM.map((l) => `Show ${l.name}`),
-              ...Array.from({ length: OPEN_SLOTS }, (_, i) => `Open position ${i + 1}`),
-            ]}
+            labels={TEAM.map((l) => `Show ${l.name}`)}
           >
             {TEAM.map((l) => (
                 <article key={l.name} className={`${TEAM_CARD_W} group flex flex-none snap-start flex-col overflow-hidden rounded-card ring-1 ring-text/[0.08] transition-all duration-300 hover:-translate-y-1 hover:ring-text/[0.16]`}>
@@ -548,25 +542,6 @@ export default function About() {
                     )}
                   </div>
                 </article>
-            ))}
-
-            {/* Empty slots for the people still to be added. They are marked aria-hidden and
-                carry no text, so a screen reader is never told about a person who is not there;
-                sighted visitors read them as "more to come" rather than as broken cards. */}
-            {Array.from({ length: OPEN_SLOTS }, (_, i) => (
-              <div
-                key={`slot-${i}`}
-                aria-hidden
-                className={`${TEAM_CARD_W} flex flex-none snap-start flex-col overflow-hidden rounded-card ring-1 ring-text/[0.06]`}
-              >
-                <span className="block aspect-[3/4] w-full bg-navy-50" />
-                <div className="flex flex-1 flex-col gap-2.5 bg-navy-50 p-5">
-                  <span className="block h-4 w-2/3 rounded-card bg-navy-100" />
-                  <span className="block h-2.5 w-1/3 rounded-card bg-navy-100" />
-                  <span className="mt-1.5 block h-2.5 w-full rounded-card bg-navy-100" />
-                  <span className="block h-2.5 w-5/6 rounded-card bg-navy-100" />
-                </div>
-              </div>
             ))}
           </CardRail>
         </div>

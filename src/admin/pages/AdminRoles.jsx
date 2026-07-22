@@ -1,4 +1,5 @@
-import { Check, X, Circle } from 'lucide-react';
+import { Check, X, Circle, Pencil } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import StatCard from '../components/StatCard';
 import { useApi } from '../api/useApi';
@@ -121,7 +122,12 @@ export default function AdminRoles() {
                       <p className="truncate text-sm font-medium text-navy-800">{u.name}</p>
                       <p className="truncate text-xs text-slate-400">{u.email}</p>
                     </div>
-                    {!u.active && <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-400">inactive</span>}
+                    <div className="flex flex-shrink-0 items-center gap-2">
+                      {!u.active && <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-400">inactive</span>}
+                      <Link to={`/admin/users?edit=${u.id}`} aria-label={`Edit ${u.name}`} title="Edit" className="rounded p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-primary-darker">
+                        <Pencil className="h-3.5 w-3.5" />
+                      </Link>
+                    </div>
                   </li>
                 ))}
               </ul>

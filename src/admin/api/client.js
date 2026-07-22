@@ -10,6 +10,10 @@
  */
 export const API_BASE = import.meta.env.VITE_ADMIN_API ?? 'http://localhost:8080';
 
+/** Resolve an uploaded-file path (e.g. an avatar's "/uploads/…") to a full URL; passes
+ *  through absolute URLs and returns null for empty input. */
+export const resolveUpload = (path) => (!path ? null : path.startsWith('http') ? path : `${API_BASE}${path}`);
+
 async function request(path, options = {}) {
   const res = await fetch(API_BASE + path, {
     credentials: 'include',
