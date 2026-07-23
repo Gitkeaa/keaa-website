@@ -294,6 +294,21 @@ export const careers = [
 // shared as "Anyone with the link — view" so public visitors can open it.
 export const downloadResources = [
   {
+    // Brand logos, self-hosted from /public/downloads. A grouped entry: the Downloads page
+    // shows one "Logos" row that expands to the files below. Each is a self-contained SVG
+    // (generated from the site's own logo artwork, Satoshi wordmark embedded) served
+    // same-origin with the `download` attribute, so a click saves the file directly.
+    // If official master logo files arrive, drop them into /public/downloads and update
+    // `url`/`filename` here.
+    title: 'KEAA Brand Logos',
+    type: 'Logos',
+    files: [
+      { label: 'KEAA Logo (Primary)', url: '/downloads/keaa-logo-primary.svg', filename: 'keaa-logo-primary.svg' },
+      { label: 'KEAA Logo (White)', url: '/downloads/keaa-logo-white.svg', filename: 'keaa-logo-white.svg' },
+      { label: 'KEAA Logo (Icon)', url: '/downloads/keaa-logo-icon.svg', filename: 'keaa-logo-icon.svg' },
+    ],
+  },
+  {
     title: 'Scaffolding & Formworks Catalogue',
     type: 'PDF',
     url: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/web_support_keaa-international_net/IQDrlCW9_78jTbaxSmZFAXVFAUp5tsZGw32rbgfqVylfnaA?e=iznXeZ',

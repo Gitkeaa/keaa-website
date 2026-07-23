@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Linkedin, ShieldCheck, Globe2, Factory, Handshake, Award, Maximize } from 'lucide-react';
+import { Linkedin, ShieldCheck, Globe2, Factory, Handshake } from 'lucide-react';
 import SectionHeading from '../components/ui/SectionHeading';
 import ImagePlaceholder from '../components/ui/ImagePlaceholder';
 import Reveal, { StaggerGroup, StaggerItem } from '../components/ui/Reveal';
@@ -38,7 +38,6 @@ const whoWeAre = [
 /* Icons are positional rather than a field on the objects above, so the copy stays free of
    presentation and the same four strings can be rendered without icons anywhere else. */
 const WHO_WE_ARE_ICONS = [ShieldCheck, Globe2, Factory, Handshake];
-const STAT_ICONS = [Award, Globe2, Factory, Maximize];
 
 /* The angled strip beside the copy. Four frames, ordered to read process → product →
    automation → output rather than as four interchangeable factory shots. Chosen for
@@ -229,29 +228,15 @@ export default function About() {
           <Reveal delay={0.1}>
             <div className="mt-12 rounded-card border border-navy-100 bg-white p-8 shadow-card">
               <ul className="grid gap-y-10 sm:grid-cols-2 xl:grid-cols-4 xl:divide-x xl:divide-navy-100">
-                {company.stats.slice(0, 4).map((s, i) => {
-                  const Icon = STAT_ICONS[i];
-                  return (
-                    /* Icon LEFT of the figure, horizontal at every width — this used to flip
-                       to icon-on-top at `xl`, which is the layout that did not match the
-                       reference. The number leads, big and bold; the label sits under it in
-                       the muted tone. */
-                    <li key={s.label} className={`flex items-center gap-4 ${i > 0 ? 'xl:pl-6' : ''}`}>
-                      <span
-                        aria-hidden
-                        className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-primary/35 text-primary-dark"
-                      >
-                        <Icon className="h-[22px] w-[22px]" strokeWidth={1.5} />
-                      </span>
-                      <div className="min-w-0">
-                        <p className="font-display text-3xl font-bold leading-none text-text">
-                          <AnimatedCounter value={s.value} />
-                        </p>
-                        <p className="mt-1.5 text-xs leading-snug text-muted">{s.label}</p>
-                      </div>
-                    </li>
-                  );
-                })}
+                {company.stats.slice(0, 4).map((s, i) => (
+                  /* Number leads, big and bold; the label sits under it in the muted tone. */
+                  <li key={s.label} className={`min-w-0 ${i > 0 ? 'xl:pl-6' : ''}`}>
+                    <p className="font-display text-3xl font-bold leading-none text-text">
+                      <AnimatedCounter value={s.value} />
+                    </p>
+                    <p className="mt-1.5 text-xs leading-snug text-muted">{s.label}</p>
+                  </li>
+                ))}
               </ul>
             </div>
           </Reveal>

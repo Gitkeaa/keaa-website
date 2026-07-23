@@ -2,8 +2,6 @@
 // corporate catalogues (Scaffolding & Formworks, Livestock Housing Solutions,
 // Garden Hardware 2024).
 
-import { image } from "framer-motion/client";
-
 export const company = {
   name: 'KEAA International Pvt. Ltd.',
   shortName: 'KEAA',
@@ -157,9 +155,6 @@ export const leadership = [
     name: 'Raveesh Moudgil',
     role: 'Chief Managing Director',
     bio: 'Drives the overall strategic vision, global partnerships, and long-term growth of Keaa International.',
-    // Same file the managing-directors message block uses. Repeated here because the team
-    // grid reads only this array — without it these two rendered as initials while their
-    // photograph sat a few sections further up the same page.
     photo: '/images/raveesh-moudgil.jpg',
     linkedin: 'https://www.linkedin.com/in/raveesh-moudgil-b0618642',
   },
@@ -174,31 +169,36 @@ export const leadership = [
     name: 'Bhupesh Gautam',
     role: 'Global Business Head',
     bio: 'Leads international trade compliance, global sales strategy, and client relations across 42+ countries.',
+    photo: '/images/Bhupesh.jpg',
     linkedin: 'https://www.linkedin.com/in/bhupesh-gautam-13867a7b/',
-    image:''
   },
   {
     name: 'Jaskamal Singh',
     role: 'Sales Manager',
     bio: 'Experienced Sales Manager responsible for managing customer relationships, handling RFQs, preparing quotations, and driving business growth across assigned international markets.',
+    photo: '/images/Jaskamal.jpg',
     linkedin: 'https://www.linkedin.com/in/jaskamal-singh-37b469377/',
   },
   {
     name: 'Vikram Singh',
     role: 'Sales Manager',
     bio: 'Results-driven Sales Manager specializing in export sales, client communication, quotation management, and successful deal execution for assigned regions and product categories.',
+    photo: '/images/Vikram.jpg',
     linkedin: 'https://www.linkedin.com/in/vikram-singh-panwar%E2%9C%A8/',
   },
+
   {
     name: 'Ajay Rana',
     role: 'Sales Manager',
     bio: 'Dedicated Sales Manager focused on developing international business opportunities, managing customer inquiries, coordinating negotiations, and delivering exceptional client support.',
+    photo: '/images/Ajay.jpg',
     linkedin: 'https://www.linkedin.com/in/ajay-rana-00410241/',
   },
   {
     name: 'Sumeet Dogra',
     role: 'Asst. Sales Manager',
     bio: 'Assistant Sales Manager supporting customer inquiries, quotation preparation, follow-ups, and sales coordination while ensuring timely communication and efficient order processing.',
+    photo: '/images/sumeet.jpg',
     linkedin: 'https://www.linkedin.com/in/sumeet-dogra-20b575116/',
   },
 ];
@@ -214,15 +214,6 @@ export const chairmanMessage = {
 // Managing Directors — shown together on the About page under one heading.
 export const managingDirectors = [
   {
-    name: 'Sumit Moudgil',
-    role: 'Managing Director, KEAA International Pvt. Ltd.',
-    message:
-      'Our focus at Keaa International is on manufacturing excellence and operational efficiency. By leveraging state-of-the-art machinery and certified processes at our Ludhiana plants, we ensure that every product meets the most stringent international quality benchmarks. We are dedicated to providing customized, high-performing solutions that drive value for our clients globally.',
-    photo: '/images/sumit.jpg',
-    linkedin: 'https://www.linkedin.com/in/sumit-moudgil',
-    whatsapp: 'https://wa.me/919872984707',
-  },
-  {
     name: 'Raveesh Moudgil',
     role: 'Managing Director, KEAA International Pvt. Ltd.',
     message:
@@ -230,6 +221,15 @@ export const managingDirectors = [
     photo: '/images/raveesh-moudgil.jpg',
     linkedin: 'https://www.linkedin.com/in/raveesh-moudgil-b0618642/',
     whatsapp: 'https://wa.me/919876701926',
+  },
+  {
+    name: 'Sumit Moudgil',
+    role: 'Managing Director, KEAA International Pvt. Ltd.',
+    message:
+      'Our focus at Keaa International is on manufacturing excellence and operational efficiency. By leveraging state-of-the-art machinery and certified processes at our Ludhiana plants, we ensure that every product meets the most stringent international quality benchmarks. We are dedicated to providing customized, high-performing solutions that drive value for our clients globally.',
+    photo: '/images/sumit.jpg',
+    linkedin: 'https://www.linkedin.com/in/sumit-moudgil',
+    whatsapp: 'https://wa.me/919872984707',
   },
 ];
 
