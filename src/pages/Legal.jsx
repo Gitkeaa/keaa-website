@@ -28,7 +28,7 @@ const content = {
       },
       {
         h: 'Information We Collect',
-        p: 'We collect information you provide directly to us, such as your name, company, email and phone number, when you submit an inquiry, request a quote, or apply for a role. If you use the AI assistant on this site, the messages you type are processed to generate a reply. We do not ask for, and ask that you do not send, confidential or special-category information through these channels.',
+        p: 'We collect information you provide directly to us, such as your name, company, email and phone number, when you submit an inquiry, request a quote, or apply for a role. If you send us feedback through the feedback panel, we receive your rating and message, and your name and email address only if you choose to give them. If you use the AI assistant on this site, the messages you type are processed to generate a reply. We do not ask for, and ask that you do not send, confidential or special-category information through these channels.',
       },
       {
         h: 'How We Use Your Information, and On What Basis',
@@ -36,7 +36,7 @@ const content = {
       },
       {
         h: 'Cookies and Local Storage',
-        p: 'This site sets no advertising or tracking cookies, and runs no analytics tool. It stores four small items in your browser: your cookie choice, the language you select, the sales region you select, and, only if you dismiss it, a note that a promotional message has been shown. All four are strictly necessary or set only because you asked for them, and none are shared with anyone. Separately, our Contact page can embed a Google Map; that is optional external content, it is switched off unless you allow it, and allowing it shares your IP address with Google. You can change or withdraw your choice at any time using the Cookie Preferences link at the bottom of every page. Your choice is remembered for 180 days, after which we ask again.',
+        p: 'This site sets no advertising or tracking cookies, and runs no analytics tool. It stores five small items in your browser: your cookie choice, the language you select, the sales region you select, and, once they have been shown, a note that a promotional message has appeared and a note that our feedback prompt has appeared. All five are strictly necessary or set only because you asked for them, none are shared with anyone, and the feedback note is cleared as soon as you close the browser tab. Separately, our Contact page can embed a Google Map; that is optional external content, it is switched off unless you allow it, and allowing it shares your IP address with Google. You can change or withdraw your choice at any time using the Cookie Preferences link at the bottom of every page. Your choice is remembered for 180 days, after which we ask again.',
       },
       {
         h: 'Third Parties and International Transfers',
@@ -80,7 +80,8 @@ const content = {
   /*
    * Cookie Policy. The facts here MUST stay in sync with the STORAGE keys and CATEGORIES in
    * src/components/CookieConsent.jsx AND with the "Cookies and Local Storage" section of the
-   * privacy policy above — the same four items are described in all three places.
+   * privacy policy above — the same five items are described in all three places. The fifth is
+   * the session-only feedback-nudge flag written by components/FeedbackWidget.jsx.
    */
   cookies: {
     title: 'Cookie Policy',
@@ -91,7 +92,7 @@ const content = {
       },
       {
         h: 'What We Store, and Why',
-        p: 'We keep four small items in your browser: your cookie choice, the language you select, the sales region you select, and — only if you dismiss it — a note that a promotional message has already been shown. All four are strictly necessary or set at your request, none contain personal profiles, and none are shared with anyone.',
+        p: 'We keep five small items in your browser: your cookie choice, the language you select, the sales region you select, and, once they have been shown, a note that a promotional message has already appeared and a note that our feedback prompt has already appeared. All five are strictly necessary or set at your request, none contain personal profiles, and none are shared with anyone. The feedback note lives only until you close the browser tab.',
       },
       {
         h: 'Optional: Google Maps',

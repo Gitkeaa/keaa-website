@@ -63,7 +63,7 @@ export const company = {
 
   facilities: {
     area: '25,000 sq. m.',
-    units: 2,
+    units: 5,
     /* Annual production capacity. Was a hard-coded literal on the Manufacturing page and the
        Home band; centralised here so the two can never disagree. TODO: client to confirm. */
     capacity: '5,000+ MT',

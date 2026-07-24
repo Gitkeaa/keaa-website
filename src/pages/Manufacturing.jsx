@@ -82,7 +82,7 @@ export default function Manufacturing() {
                 align="left"
                 eyebrow="Our Infrastructure"
                 title="World-Class Manufacturing Facilities"
-                desc="Two manufacturing units in Ludhiana, Punjab run the complete production process in-house, for precision engineering, consistent quality and on-time export delivery."
+                desc="Five manufacturing units in Ludhiana, Punjab run the complete production process in-house, for precision engineering, consistent quality and on-time export delivery."
                 className="!mx-0 max-w-none"
               />
               {/* The vertical-integration proof: the in-house capabilities, on the same
@@ -212,7 +212,7 @@ export default function Manufacturing() {
             />
           </Reveal>
 
-          <StaggerGroup className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <StaggerGroup className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {qaSteps.map((q, i) => (
               <StaggerItem key={q}>
                 <div className="h-full rounded-card border border-navy-100 p-6 shadow-card">

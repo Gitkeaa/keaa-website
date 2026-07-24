@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Loader2, X } from 'lucide-react';
@@ -8,10 +8,11 @@ import AdminSidebar from './AdminSidebar';
 import AdminTopbar from './AdminTopbar';
 import { HelpProvider } from '../help/HelpContext';
 import WelcomeTour from '../help/WelcomeTour';
+import { loadSops } from '../help/useSop';
 
 /**
- * The protected admin shell. Guards the whole /admin/* subtree: an unauthenticated visitor
- * is sent to /admin/login (remembering where they were headed). On desktop the sidebar is
+ * The protected admin shell. Guards the whole /portal/* subtree: an unauthenticated visitor
+ * is sent to /portal/login (remembering where they were headed). On desktop the sidebar is
  * fixed; on mobile it is a slide-over drawer.
  *
  * When the real backend lands, the only change here is that the auth check may first wait
@@ -21,6 +22,12 @@ export default function AdminLayout() {
   const { isAuthed, checking, role } = useAdminAuth();
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Load the DB-backed help/SOP content once the session is confirmed. Fails silently to the
+  // static fallback, so nothing here blocks or breaks when the backend is down.
+  useEffect(() => {
+    if (isAuthed) loadSops();
+  }, [isAuthed]);
   const [theme, setTheme] = useState(() => localStorage.getItem('keaa-admin-theme') || 'light');
   const toggleTheme = () =>
     setTheme((t) => {
@@ -40,14 +47,14 @@ export default function AdminLayout() {
   }
 
   if (!isAuthed) {
-    return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
+    return <Navigate to="/portal/login" replace state={{ from: location.pathname }} />;
   }
 
   // Role guard: a signed-in user who deep-links to a module their role cannot open is sent to
   // the dashboard (visible to every role) rather than a page whose data the backend will 403.
   // The sidebar already hides these links; this covers a typed URL or a stale bookmark.
   if (role && !roleAllowsPath(role, location.pathname)) {
-    return <Navigate to="/admin" replace />;
+    return <Navigate to="/portal" replace />;
   }
 
   return (

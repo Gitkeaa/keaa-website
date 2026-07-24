@@ -1,8 +1,11 @@
 # react-i18next migration plan
 
 A decision document. **No code has changed** — this describes what a migration would do, so you
-can choose before anything moves. `i18next` and `react-i18next` are installed (in `package.json`)
-but not wired into anything yet; today the app still runs entirely on the custom system.
+can choose before anything moves. Today the app runs entirely on the custom system.
+
+`i18next` and `react-i18next` were once installed speculatively but never imported by a single
+file, so they were dropped from `package.json` during a dead-code sweep. Step 1 of this migration
+is therefore `npm install i18next react-i18next` — nothing else about the plan below changes.
 
 ---
 
@@ -121,7 +124,8 @@ out here rather than discovered live.
 | Two systems live at once during the work | Low | Do it in one focused pass, not spread over days. |
 
 **Rollback is cheap:** all three i18n files are tracked in git, so `git checkout -- src/i18n/` (plus
-`npm remove i18next react-i18next`) returns you exactly to today. Keep that in mind if a step feels
+`npm remove i18next react-i18next`) returns you exactly to today — the state this document describes,
+where neither package is installed. Keep that in mind if a step feels
 wrong mid-way — nothing here is one-way.
 
 ---

@@ -73,11 +73,15 @@ export default function CandidateProfile({ app, open, onClose, canManage, by }) 
             <Info icon={GraduationCap} label="Qualification" value={p.qualification} />
             <Info icon={Clock} label="Notice Period" value={p.notice} />
             <Info icon={Building2} label="Current Employer" value={p.employer} />
+            {p.expectedSalary && <Info label="Expected Salary" value={p.expectedSalary} />}
+            {p.currentCtc && <Info label="Current CTC" value={p.currentCtc} />}
+            {p.expectedCtc && <Info label="Expected CTC" value={p.expectedCtc} />}
+            {p.languages && <Info label="Languages" value={p.languages} />}
             <Info icon={Briefcase} label="Applied For" value={app.position} />
             <Info label="Applied On" value={fmtDate(app.createdAt)} />
             {p.linkedin && (
               <div className="col-span-2 sm:col-span-3">
-                <dt className="text-xs text-slate-400">LinkedIn / Portfolio</dt>
+                <dt className="text-xs text-slate-400">LinkedIn</dt>
                 <dd>
                   {safeUrl(p.linkedin) ? (
                     <a href={safeUrl(p.linkedin)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-medium text-primary-dark hover:text-primary-darker"><Linkedin className="h-3.5 w-3.5" />{p.linkedin}</a>
@@ -87,6 +91,18 @@ export default function CandidateProfile({ app, open, onClose, canManage, by }) 
                 </dd>
               </div>
             )}
+            {p.portfolio && (
+              <div className="col-span-2 sm:col-span-3">
+                <dt className="text-xs text-slate-400">Portfolio</dt>
+                <dd>{safeUrl(p.portfolio) ? <a href={safeUrl(p.portfolio)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-medium text-primary-dark hover:text-primary-darker"><ExternalLink className="h-3.5 w-3.5" />{p.portfolio}</a> : <span className="break-all text-slate-700">{p.portfolio}</span>}</dd>
+              </div>
+            )}
+            {p.github && (
+              <div className="col-span-2 sm:col-span-3">
+                <dt className="text-xs text-slate-400">Github</dt>
+                <dd>{safeUrl(p.github) ? <a href={safeUrl(p.github)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-medium text-primary-dark hover:text-primary-darker"><ExternalLink className="h-3.5 w-3.5" />{p.github}</a> : <span className="break-all text-slate-700">{p.github}</span>}</dd>
+              </div>
+            )}
           </dl>
 
           {/* Cover message */}
@@ -94,6 +110,25 @@ export default function CandidateProfile({ app, open, onClose, canManage, by }) 
             <div>
               <p className="mb-1 text-sm font-semibold text-navy-900">Cover Message</p>
               <p className="whitespace-pre-line rounded-lg bg-slate-50 p-3 text-sm text-slate-600">{p.message}</p>
+            </div>
+          )}
+
+          {/* Screening answers (from the multi-step application) */}
+          {(p.whyKeaa || p.whyRole || p.relocate || p.passport || p.travel || p.certificates) && (
+            <div>
+              <p className="mb-1.5 text-sm font-semibold text-navy-900">Screening Answers</p>
+              <div className="space-y-3 rounded-lg bg-slate-50 p-3 text-sm">
+                {p.whyKeaa && <div><p className="text-xs text-slate-400">Why KEAA</p><p className="whitespace-pre-line text-slate-700">{p.whyKeaa}</p></div>}
+                {p.whyRole && <div><p className="text-xs text-slate-400">Why this role</p><p className="whitespace-pre-line text-slate-700">{p.whyRole}</p></div>}
+                {(p.relocate || p.passport || p.travel) && (
+                  <div className="flex flex-wrap gap-x-6 gap-y-1 text-xs">
+                    {p.relocate && <span><span className="text-slate-400">Relocate:</span> <span className="font-medium text-navy-800">{p.relocate}</span></span>}
+                    {p.passport && <span><span className="text-slate-400">Passport:</span> <span className="font-medium text-navy-800">{p.passport}</span></span>}
+                    {p.travel && <span><span className="text-slate-400">Travel ready:</span> <span className="font-medium text-navy-800">{p.travel}</span></span>}
+                  </div>
+                )}
+                {p.certificates && <div><p className="text-xs text-slate-400">Certificates</p><p className="text-slate-700">{p.certificates}</p></div>}
+              </div>
             </div>
           )}
 

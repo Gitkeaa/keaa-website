@@ -46,3 +46,27 @@ export function cldSrcSet(publicId, widths = [480, 768, 1200, 1600, 2000]) {
 export function cldVideoPoster(publicId, { so = 0, w = 960 } = {}) {
   return `${BASE}/video/upload/so_${so},w_${w},q_auto,f_auto/${encodeId(publicId)}.jpg`;
 }
+
+/**
+ * Optimised, progressive video delivery.
+ *
+ * `q_auto,f_auto` re-encodes the upload to the smallest quality that still looks right and
+ * hands the browser the best codec/container it accepts. Cloudinary serves that result
+ * web-optimised — the moov atom is at the front (faststart) and it honours HTTP range
+ * requests — so the <video> STREAMS: it starts on the first chunk instead of waiting for the
+ * whole file, and a phone only pulls the bytes it actually plays. That is the "45s that plays
+ * on mobile" trick; the duration never mattered, the delivery did.
+ *
+ * `w` caps the width with `c_limit` (never upscales): pass 720 for phones, 1920 for desktop,
+ * so a metered phone gets a genuinely smaller rendition of the same clip.
+ *
+ * REQUIRES "Strict transformations" OFF in the Cloudinary account — otherwise every video
+ * transform URL 404s. While it is still ON, pass `raw: true` to deliver the untouched upload
+ * (no resize, and faststart only if the source file already had it).
+ */
+export function cldVideo(publicId, { w, raw = false } = {}) {
+  if (raw) return `${BASE}/video/upload/${encodeId(publicId)}.mp4`;
+  const t = ['q_auto', 'f_auto'];
+  if (w) t.push(`w_${w}`, 'c_limit');
+  return `${BASE}/video/upload/${t.join(',')}/${encodeId(publicId)}.mp4`;
+}

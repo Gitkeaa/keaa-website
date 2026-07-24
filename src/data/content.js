@@ -1,30 +1,40 @@
 import { img } from './images.js';
-import { cldVideoPoster } from './cloudinary.js';
+import { cldVideo, cldVideoPoster } from './cloudinary.js';
 
+/**
+ * Customer testimonials, shown on the FAQ page ("What Our Customers Say").
+ *
+ * `rating` is out of 5 and drives the star row. It is a field rather than a hard-coded five
+ * so a future testimonial can carry an honest score without touching the component.
+ */
 export const testimonials = [
   {
     quote:
       'KEAA scaffolding systems are of premium quality and durable. Their team support is excellent and responsive on every order.',
     name: 'Ahmed Al Mansoori',
     company: 'Al Mansoori Group, UAE',
+    rating: 5,
   },
   {
     quote:
       'We have been using KEAA formwork accessories for years. Consistent quality and on-time delivery, every single shipment.',
     name: 'Rajesh Kumar',
     company: 'BuildTech Constructors, India',
+    rating: 5,
   },
   {
     quote:
       'KEAA products are reliable, safe and meet all international standards. Highly recommended for export-grade scaffolding.',
     name: 'David Williams',
     company: 'ProBuild Industries, UK',
+    rating: 5,
   },
   {
     quote:
       'Strong and long-lasting products. KEAA is truly a trustworthy partner for our infrastructure projects.',
     name: 'Carlos Mendez',
     company: 'Mendez Construcciones, Mexico',
+    rating: 5,
   },
 ];
 
@@ -105,91 +115,50 @@ export const featuredProjectImages = [
   img.metalBuilding,
 ];
 
-export const galleryCategories = ['All', 'Factory', 'Products', 'Projects', 'Exhibitions'];
-
-export const galleryItems = [
-  { id: 1, category: 'Factory', label: 'CNC pipe cutting line' },
-  { id: 2, category: 'Factory', label: 'Forging press shop floor' },
-  { id: 3, category: 'Factory', label: 'Robotic welding station' },
-  { id: 4, category: 'Factory', label: 'Hot dip galvanizing bath' },
-  { id: 5, category: 'Products', label: 'Ringlock scaffolding stack' },
-  { id: 6, category: 'Products', label: 'Formwork prop range' },
-  { id: 7, category: 'Products', label: 'Cattle shed structure' },
-  { id: 8, category: 'Products', label: 'Garden hardware connectors' },
-  { id: 9, category: 'Projects', label: 'Metro rail scaffolding deployment' },
-  { id: 10, category: 'Projects', label: 'High rise formwork installation' },
-  { id: 11, category: 'Exhibitions', label: 'bauma trade fair booth' },
-  { id: 12, category: 'Exhibitions', label: 'Excon India exhibition stand' },
-];
-
-// Premium curated photography mapped to each gallery tile (see src/data/images.js).
-// Swap any entry for an official KEAA photo later -- the keys (tile ids) won't change.
-export const galleryImages = {
-  1: img.metalSparks,
-  2: img.factoryMachines,
-  3: img.weldersFactory,
-  4: img.metalPour,
-  5: img.heroScaffoldTower,
-  6: img.steelFrame,
-  7: img.cattleHerdBarn,
-  8: img.woodenFrameBrown,
-  9: img.scaffoldCrane,
-  10: img.scaffoldHighRise,
-  11: img.scaffoldWorker2,
-  12: img.scaffoldLadder,
-};
+/* The gallery's own categories, photos and alt text live in src/data/gallery.js, keyed to the
+   real Cloudinary uploads. An earlier placeholder set (12 invented tiles mapped to stock
+   photography) used to sit here; it was never read once the real gallery landed. */
 
 /**
- * The hero background films, delivered from Cloudinary — nothing is stored in the repo.
+ * The single homepage hero background film — Lely-style: one ambient loop behind the copy,
+ * no slideshow. Delivered from Cloudinary; nothing is stored in the repo.
  *
- * Why not the SharePoint links (`droneFilmUrl` below)? Each is a *share page*, not a file:
- * it answers `text/html`, an anonymous visitor is bounced to login.microsoftonline.com,
- * and it sends `X-Frame-Options: SAMEORIGIN`. So it can be neither played by <video> nor
- * framed. Cloudinary's delivery URL, by contrast, returns real `video/mp4` bytes with
+ * TO ADD THE FILM: upload the clip to Cloudinary, then set HERO_VIDEO_ID to its public_id.
+ * Leave it null and the hero simply shows the photograph (no film, no dots), so the site is
+ * never broken while the video is still being made in Canva.
+ *
+ * Why Cloudinary and not the SharePoint links (`droneFilmUrl` below)? Each SharePoint link is
+ * a *share page*, not a file: it answers `text/html`, bounces an anonymous visitor to
+ * login.microsoftonline.com, and sends `X-Frame-Options: SAMEORIGIN`, so it can be neither
+ * played by <video> nor framed. Cloudinary returns real `video/mp4` bytes with
  * `Access-Control-Allow-Origin: *` and range support — exactly what <video> needs.
  *
- * Fields:
- *   src    — Cloudinary delivery URL. A film that 404s (deleted / renamed) drops out and
- *            the hero falls back to the photograph, so a stale id degrades quietly.
- *   poster — a still pulled from the film by Cloudinary (`so_N` seconds in, past any logo),
- *            so nothing — not even the poster — is stored in the repo.
- *   clip   — [start, end] in seconds, trimmed at playback so a logo card at either end
- *            never flashes in the loop; null loops the whole file.
+ * DELIVERY is progressive + web-optimised via cldVideo(): `q_auto,f_auto` shrinks and
+ * re-encodes the clip and Cloudinary serves it faststart, so even a 45s film starts instantly
+ * and a phone streams only the bytes it plays. Desktop gets w_1920; phones get a genuinely
+ * smaller w_720 of the same clip (see `srcMobile`, chosen in HomeHeroBrandTest).
  *
- * `src` points at the *original* upload because the account blocks *video* transcodes
- * ("Strict transformations"), so `.mp4` resize/optimise URLs 404. Image output from a
- * video is allowed, though, which is why the posters can come from the CDN. To also shrink
- * the video: Cloudinary → Settings → Security → turn OFF "Strict transformations", then
- * use e.g. `.../upload/so_5,eo_67,w_960,q_auto,f_auto/hero1_a0hnen.mp4`.
+ * REQUIRES "Strict transformations" OFF in Cloudinary (Settings → Security). Until it is off,
+ * video transform URLs 404 — set HERO_VIDEO_RAW = true to serve the untouched upload, but then
+ * the clip MUST be exported small (720p, ~8 MB, faststart) since Cloudinary won't shrink it.
+ * Once Strict is off, set this back to false to unlock the mobile rendition.
  */
-const VID = 'https://res.cloudinary.com/keaa-assets/video/upload';
+const HERO_VIDEO_ID = 'hero-keaa-cinematic_takmbk'; // Cloudinary public_id (Strict transformations is OFF)
+const HERO_VIDEO_RAW = false; // true ONLY while "Strict transformations" is still ON
 
-export const heroFilms = [
-  {
-    id: 'film',
-    src: `${VID}/hero1_a0hnen.mp4`,
-    poster: cldVideoPoster('hero1_a0hnen', { so: 6 }), // past the 0–4s logo card
-    clip: [5, 67], // white logo card 0–4s; footage runs to the end
-    label: 'the aerial film',
-    alt: 'Aerial view of the KEAA International manufacturing plant in Ludhiana',
-  },
-  {
-    id: 'rass',
-    src: `${VID}/Rass_wixfl0.mp4`,
-    poster: cldVideoPoster('Rass_wixfl0', { so: 8 }),
-    clip: null, // no logo bookends; loops end to end
-    label: 'the Raass Industries film',
-    alt: 'Aerial film of the Raass Industries site',
-  },
-  {
-    id: 'highlight',
-    src: `${VID}/My_Video-highlight_sk4vj4.mp4`,
-    poster: cldVideoPoster('My_Video-highlight_sk4vj4', { so: 3 }),
-    clip: null, // 15s highlight, no bookends
-    label: 'the highlights film',
-    alt: 'Highlights film of KEAA International’s manufacturing and projects',
-  },
-];
+export const heroFilms = HERO_VIDEO_ID
+  ? [
+      {
+        id: 'hero',
+        src: cldVideo(HERO_VIDEO_ID, { w: 1920, raw: HERO_VIDEO_RAW }),
+        srcMobile: cldVideo(HERO_VIDEO_ID, { w: 720, raw: HERO_VIDEO_RAW }),
+        poster: cldVideoPoster(HERO_VIDEO_ID, { so: 1, w: 1280 }),
+        clip: null, // a single loop-ready clip; no logo bookends to trim
+        label: 'the KEAA film',
+        alt: 'KEAA International manufacturing and projects film',
+      },
+    ]
+  : [];
 
 // KEAA aerial / drone film (SharePoint). Single source of truth for the share
 // link — used by the Home hero and the Projects & Gallery page. SharePoint can't
@@ -289,78 +258,116 @@ export const careers = [
   },
 ];
 
-// Downloadable resources (SharePoint PowerPoint files). `url` opens the file in
-// a new tab where visitors can view and download it. NOTE: each link must be
-// shared as "Anyone with the link — view" so public visitors can open it.
-export const downloadResources = [
-  {
-    // Brand logos, self-hosted from /public/downloads. A grouped entry: the Downloads page
-    // shows one "Logos" row that expands to the files below. Each is a self-contained SVG
-    // (generated from the site's own logo artwork, Satoshi wordmark embedded) served
-    // same-origin with the `download` attribute, so a click saves the file directly.
-    // If official master logo files arrive, drop them into /public/downloads and update
-    // `url`/`filename` here.
-    title: 'KEAA Brand Logos',
-    type: 'Logos',
-    files: [
-      { label: 'KEAA Logo (Primary)', url: '/downloads/keaa-logo-primary.svg', filename: 'keaa-logo-primary.svg' },
-      { label: 'KEAA Logo (White)', url: '/downloads/keaa-logo-white.svg', filename: 'keaa-logo-white.svg' },
-      { label: 'KEAA Logo (Icon)', url: '/downloads/keaa-logo-icon.svg', filename: 'keaa-logo-icon.svg' },
-    ],
-  },
+/* ------------------------------------------------------------------ *
+ * Downloadable resources
+ *
+ * Two audiences, one shape. `catalogueDownloads` is everything the PUBLIC site offers —
+ * product catalogues only. Everything else (brand artwork, company and product decks) is
+ * internal and reachable solely from the portal's Resource Library, which serves
+ * `portalDownloads` (catalogues + internal) to every signed-in role.
+ *
+ * Entry shape: `url` opens the file in a new tab, where it can be viewed and downloaded.
+ * A `files` array instead makes it a GROUPED entry — one labelled row that expands to the
+ * individual files, each saved directly via the `download` attribute.
+ *
+ * NOTE: every SharePoint link below must be shared as "Anyone with the link — view", or the
+ * public catalogues 403 for visitors.
+ * ------------------------------------------------------------------ */
+
+/** Public: the product catalogues shown on the Downloads Center and in the mega-menu. */
+export const catalogueDownloads = [
   {
     title: 'Scaffolding & Formworks Catalogue',
     type: 'PDF',
+    group: 'Catalogues',
     url: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/web_support_keaa-international_net/IQDrlCW9_78jTbaxSmZFAXVFAUp5tsZGw32rbgfqVylfnaA?e=iznXeZ',
   },
   {
     title: 'Livestock Housing Solutions Catalogue',
     type: 'PDF',
+    group: 'Catalogues',
     url: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/web_support_keaa-international_net/IQAE1nDX1LiORZ7UEr7sRjleARl-qf2YieMmzVUTsdis4qI?e=s1QADa',
   },
   {
     title: 'Wood Connectors / Garden Hardware Catalogue',
     type: 'PDF',
+    group: 'Catalogues',
     url: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/web_support_keaa-international_net/IQDZg2UkpJN-RaIAwbR0rsxeATkSWko0PsjqrFR1SWLZMWc?e=DPhLYa',
   },
+];
+
+/** Portal only: company / product presentations. Not linked anywhere on the public site. */
+export const presentationDownloads = [
   {
     title: 'KEAA India: Company Presentation (Updated)',
     type: 'PPTX',
+    group: 'Presentations',
     url: 'https://itkeaainternational-my.sharepoint.com/:p:/g/personal/kishlay_keaa-international_net/IQAIL-4QLo7cQ4_Zi9Vp46cJAcBzAl8BLrUb5lGjbjtWvvo?e=2bzLyl',
   },
   {
     title: 'KEAA India: Company Presentation',
     type: 'PPTX',
+    group: 'Presentations',
     url: 'https://itkeaainternational-my.sharepoint.com/:p:/g/personal/kishlay_keaa-international_net/IQDE-onHfdcgQrsvQ8CrqWjbATZUjIc-dhP31racQeN6Eg8?e=GcPDin',
   },
   {
     title: 'Formwork & Props',
     type: 'PPTX',
+    group: 'Presentations',
     url: 'https://itkeaainternational-my.sharepoint.com/:p:/g/personal/kishlay_keaa-international_net/IQDIHriNJfelTr27f-FJ-fNdAThwVaDF_58EI64tByuOxWQ?e=yNP2Fh',
   },
   {
     title: 'Aluminium Range (Ref. 24391)',
     type: 'PPTX',
+    group: 'Presentations',
     url: 'https://itkeaainternational-my.sharepoint.com/:p:/g/personal/kishlay_keaa-international_net/IQABidWLeTDuQ4y3JEJq7oYdAc3rv5FxPwsPmlQ5AsZ86oo?e=yxEgG4',
   },
   {
     title: 'Aluminium Products',
     type: 'PPTX',
+    group: 'Presentations',
     url: 'https://itkeaainternational-my.sharepoint.com/:p:/g/personal/kishlay_keaa-international_net/IQBJPEmZWyIKS6hXH4-oJbg_AdfQJRxbQbr3BTejuSrzcWU?e=4yPKTu',
   },
   {
     title: 'Threading Machine',
     type: 'PPTX',
+    group: 'Presentations',
     url: 'https://itkeaainternational-my.sharepoint.com/:p:/g/personal/kishlay_keaa-international_net/IQDRbWwpOAsZT6FIsdhjMRaNAe8K7mr8BiCaJy4NIfOvuUc?e=nWb62I',
   },
   {
     title: 'Sample Products',
     type: 'PPTX',
+    group: 'Presentations',
     url: 'https://itkeaainternational-my.sharepoint.com/:p:/g/personal/kishlay_keaa-international_net/IQCfRsZaLLVRQbMDBC5fSDpdAeg17vN53maxhYt27ZRn6Q4?e=rdq3jF',
   },
   {
     title: 'Tobler Range (Art. 45079652256030)',
     type: 'PPTX',
+    group: 'Presentations',
     url: 'https://itkeaainternational-my.sharepoint.com/:p:/g/personal/kishlay_keaa-international_net/IQD2_tC2P9tqSoDLZdIz8A5cARy5fKPgzEX_MVp7o9jxiBw?e=Auh98E',
   },
 ];
+
+/**
+ * Portal only: brand artwork, self-hosted from /public/downloads. A grouped entry — the
+ * Resource Library shows one "Logos" row that expands to the files below. Each is a
+ * transparent PNG (rasterised from the site's own logo artwork: lockups at 1560x480, icon at
+ * 1024x1024) served same-origin with the `download` attribute, so a click saves the file
+ * directly. If official master logo files arrive, drop them into /public/downloads and update
+ * `url`/`filename` here.
+ */
+export const brandDownloads = [
+  {
+    title: 'KEAA Brand Logos',
+    type: 'Logos',
+    group: 'Brand Assets',
+    files: [
+      { label: 'KEAA Logo (Primary)', url: '/downloads/keaa-logo-primary.png', filename: 'keaa-logo-primary.png' },
+      { label: 'KEAA Logo (White)', url: '/downloads/keaa-logo-white.png', filename: 'keaa-logo-white.png' },
+      { label: 'KEAA Logo (Icon)', url: '/downloads/keaa-logo-icon.png', filename: 'keaa-logo-icon.png' },
+    ],
+  },
+];
+
+/** Everything the portal's Resource Library offers, in display order. */
+export const portalDownloads = [...catalogueDownloads, ...presentationDownloads, ...brandDownloads];

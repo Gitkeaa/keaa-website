@@ -20,7 +20,7 @@ export default function AdminTopbar({ onOpenSidebar, theme, onToggleTheme }) {
 
   const onLogout = () => {
     logout();
-    navigate('/admin/login', { replace: true });
+    navigate('/portal/login', { replace: true });
   };
 
   // A one-line "finish your profile" nudge next to View site — shows only while the account is
@@ -44,7 +44,7 @@ export default function AdminTopbar({ onOpenSidebar, theme, onToggleTheme }) {
         <HelpButton />
         {profileIncomplete && !nudgeHidden && (
           <div className="hidden items-center gap-1.5 rounded-md bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700 md:flex">
-            <Link to="/admin/profile" className="hover:underline">Complete your profile</Link>
+            <Link to="/portal/profile" className="hover:underline">Complete your profile</Link>
             <button type="button" onClick={dismissNudge} aria-label="Dismiss" className="text-red-500 transition-colors hover:text-red-700">
               <X className="h-3.5 w-3.5" />
             </button>
@@ -99,6 +99,18 @@ export default function AdminTopbar({ onOpenSidebar, theme, onToggleTheme }) {
                 <p className="truncate text-sm font-medium capitalize text-navy-900">{user?.name}</p>
                 <p className="truncate text-xs text-slate-400">{user?.email}</p>
               </div>
+              {/* The standalone "View site" link beside the avatar is hidden below sm, so the
+                  same exit lives here in the menu — the only path to the website on mobile. */}
+              <a
+                href="/"
+                target="_blank"
+                rel="noopener noreferrer"
+                role="menuitem"
+                onClick={() => setMenuOpen(false)}
+                className="flex w-full items-center gap-2.5 border-b border-slate-100 px-4 py-2.5 text-left text-sm text-slate-600 hover:bg-slate-50"
+              >
+                <ExternalLink className="h-4 w-4" /> View site
+              </a>
               <button
                 type="button"
                 onClick={onLogout}

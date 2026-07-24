@@ -1,28 +1,39 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import GalleryHero from '../components/gallery/GalleryHero';
-import { heroSlides } from '../data/heroSlides';
 import SectionHeading from '../components/ui/SectionHeading';
-import ImagePlaceholder from '../components/ui/ImagePlaceholder';
+import Reveal from '../components/ui/Reveal';
 import Button from '../components/ui/Button';
 import JobApplicationModal from '../components/JobApplicationModal';
 import { careers } from '../data/content';
-import { img } from '../data/images';
+import { company } from '../data/company';
 import useSEO from '../hooks/useSEO';
 import CtaBand from '../components/CtaBand';
 
 const perks = [
   { title: 'Growth Opportunities', desc: 'Clear paths to grow within production, quality, exports and management.' },
-  { title: 'Competitive Benefits', desc: 'Fair compensation and benefits aligned with industry standards.' },
   { title: 'Learning & Development', desc: 'On-the-job training across our certified manufacturing processes.' },
+  { title: 'Competitive Benefits', desc: 'Fair compensation and benefits aligned with industry standards.' },
   { title: 'Safe & Inclusive Workplace', desc: 'A culture built on safety, respect and teamwork on the shop floor.' },
 ];
+
+// Headline figures for the careers banner, read from company.js so they can never drift
+// from the About page. The supplied mock-up carried placeholder numbers (500+ employees,
+// 30+ countries, 40+ years); these are the real ones on record.
+const statValue = (label) => company.stats.find((s) => s.label === label)?.value;
+
+const bannerStats = [
+  { value: statValue('Skilled Employees'), label: 'Skilled Employees', sub: 'A team that grows together' },
+  { value: statValue('Years of Experience'), label: 'Years of Excellence', sub: 'A legacy of quality and trust' },
+  { value: statValue('Countries Exported'), label: 'Countries Served', sub: 'Global reach, local impact' },
+  { value: statValue('Manufacturing Facilities'), label: 'Manufacturing Units', sub: 'State-of-the-art facilities' },
+].filter((s) => s.value);
 
 export default function Careers() {
   useSEO({
     title: 'Careers',
     description:
-      'Join KEAA International\'s team -- explore current openings in production, quality, exports and more.',
+      'Join KEAA International\'s team: explore current openings in production, quality, exports and more.',
   });
 
   const [activeJob, setActiveJob] = useState(null);
@@ -30,34 +41,108 @@ export default function Careers() {
 
   return (
     <>
-      <GalleryHero
-        eyebrow="Careers"
-        crumbs={[{ label: 'Home', to: '/' }, { label: 'Careers' }]}
-        slides={heroSlides.careers}
-        scrollTo="content"
-      />
+      {/* --------------------------------------------------------------------- hero
+          Rebuilt to match the framed GalleryHero used on every other interior page: one
+          full-bleed team photo shown whole and bright, the breadcrumb top-left, and just
+          the headline + a single "View Open Positions" button over a light bottom fade.
+          The old split cropped the five-person group into a narrow right column and two
+          navy gradients muted it; here the photo stays centred and light. The real KEAA
+          figures moved out of the hero into the slim band directly below. The photo loads
+          eagerly as the LCP image. */}
+      <section className="px-3 sm:px-5 lg:px-6">
+        <div className="relative isolate flex min-h-[460px] overflow-hidden rounded-3xl sm:min-h-[520px] lg:min-h-[600px]">
+          <img
+            src="/images/Career.jpg"
+            alt="The KEAA team on the factory floor in branded uniform and safety gear"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover object-[center_30%]"
+          />
+          {/* Bottom-weighted scrim only: the headline reads over the lower frame while the
+              faces in the upper-middle stay bright. Far lighter than the old split's navy fade. */}
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/25 to-transparent"
+          />
+          {/* short top scrim so the breadcrumb stays legible over the bright factory ceiling */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 z-[5] h-20 bg-gradient-to-b from-navy-950/65 to-transparent"
+          />
 
-      <section id="content" className="section-pad">
-        <div className="container-page grid items-center gap-10 lg:grid-cols-2">
-          <ImagePlaceholder src={img.scaffoldWorker2} label="Life at KEAA, our manufacturing team" ratio="aspect-[4/3]" />
-          <div>
-            <span className="eyebrow text-primary-darker">
-              Why Work With Us
-            </span>
-            <h2 className="mt-3 font-display text-2xl font-bold text-text">Build Your Career. Build the Future.</h2>
-            <div className="mt-6 grid gap-5 sm:grid-cols-2">
-              {perks.map((p) => (
-                <div key={p.title}>
-                  <h4 className="text-sm font-semibold text-text">{p.title}</h4>
-                  <p className="mt-0.5 text-xs text-ink">{p.desc}</p>
-                </div>
-              ))}
+          <nav
+            aria-label="Breadcrumb"
+            className="absolute left-6 top-5 z-10 flex items-center gap-1.5 text-xs text-white/85 sm:left-10 sm:top-8 lg:left-12"
+          >
+            <Link to="/" className="border-b border-transparent pb-0.5 transition-colors hover:border-white/70">
+              Home
+            </Link>
+            <span aria-hidden className="text-white/45">/</span>
+            <span aria-current="page">Careers</span>
+          </nav>
+
+          <div className="relative z-10 mt-auto w-full p-6 sm:p-10 lg:p-12">
+            <div className="max-w-2xl">
+              <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-[-0.02em] text-white sm:text-5xl lg:text-6xl">
+                Build Your Career.
+                <span className="block text-primary-light">Build the Future.</span>
+              </h1>
+              <Button href="#openings" variant="primary" className="mt-7">
+                View Open Positions
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
+      {/* real headline figures — moved out of the hero card into their own slim band so the
+          hero itself stays light. Same width and gutter as the hero so the two read as a pair. */}
+      <section className="px-3 sm:px-5 lg:px-6">
+        <div className="mt-3 rounded-3xl border border-navy-100 bg-white px-6 py-7 shadow-card sm:mt-5 sm:px-10 lg:mt-6 lg:px-12">
+          <ul className="grid grid-cols-2 gap-y-6 sm:grid-cols-4">
+            {bannerStats.map((s, i) => (
+              <li
+                key={s.label}
+                className={`text-center sm:text-left ${
+                  i > 0 ? 'sm:border-l sm:border-navy-100 sm:pl-6' : ''
+                }`}
+              >
+                <div className="font-display text-3xl font-bold leading-none text-primary-darker sm:text-4xl">
+                  {s.value}
+                </div>
+                <div className="mt-2 text-sm font-semibold text-text">{s.label}</div>
+                <div className="mt-0.5 text-xs text-muted">{s.sub}</div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------- why work with us */}
       <section className="section-pad">
+        <div className="container-page">
+          <Reveal>
+            <SectionHeading
+              eyebrow="Why Work With Us"
+              title="A Career You Can Build On"
+              desc="Join an Indo-Dutch manufacturer trusted across 42+ countries, built on advanced machinery, certified processes and a team that puts safety and quality first."
+            />
+          </Reveal>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {perks.map((p, i) => (
+              <Reveal key={p.title} delay={i * 0.08}>
+                <div className="group h-full rounded-card border border-navy-100 bg-white p-6 shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-cardHover">
+                  <h4 className="font-display text-base font-semibold text-text">{p.title}</h4>
+                  <p className="mt-1.5 text-body-compact text-muted">{p.desc}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="openings" className="section-pad scroll-mt-24">
         <div className="container-page">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <SectionHeading align="left" eyebrow="Open Positions" title="Current Openings" className="!mx-0" />

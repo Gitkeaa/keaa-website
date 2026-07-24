@@ -70,8 +70,8 @@ const MULTIPART_UNSUPPORTED = new Set([403, 404, 405, 415, 501]);
  *   and cap the size server-side; the client checks both but a client check is not a
  *   control.
  *
- * Returns `{ uploaded: boolean }` so the caller can tell the applicant the truth about
- * whether their file actually made it.
+ * Returns `{ uploaded: boolean, data }` — `uploaded` tells the applicant the truth about whether
+ * their file actually made it, and `data` is the created application row (for its id / App ID).
  */
 export async function submitPublicFormWithFile(path, data, file, onFallback) {
   const body = new FormData();
@@ -88,15 +88,19 @@ export async function submitPublicFormWithFile(path, data, file, onFallback) {
   } catch {
     // Network-level failure. Try the plain path before giving up — the applicant losing
     // their whole application to a flaky upload would be the worst outcome here.
-    await onFallback();
-    return { uploaded: false };
+    const data = await onFallback();
+    return { uploaded: false, data };
   }
 
-  if (res.ok) return { uploaded: true };
+  if (res.ok) {
+    // Also hand back the created row, so the caller can show the real Application ID.
+    const data = await res.json().catch(() => ({}));
+    return { uploaded: true, data };
+  }
 
   if (MULTIPART_UNSUPPORTED.has(res.status)) {
-    await onFallback();
-    return { uploaded: false };
+    const data = await onFallback();
+    return { uploaded: false, data };
   }
 
   throw new Error(`Submission failed (${res.status})`);

@@ -122,7 +122,7 @@ export default function Header({ onOpenDrawer }) {
           is nothing left open behind the new route.
         */}
         <nav
-          className={`hidden items-center gap-7 transition-opacity duration-200 xl:flex ${
+          className={`hidden items-center gap-5 transition-opacity duration-200 lg:flex xl:gap-7 ${
             searchOpen ? 'pointer-events-none opacity-0' : 'opacity-100'
           }`}
         >
@@ -212,7 +212,7 @@ export default function Header({ onOpenDrawer }) {
           <button
             type="button"
             onClick={onOpenDrawer}
-            className={`${headerControl} text-[13px] font-bold uppercase tracking-[0.12em] xl:hidden`}
+            className={`${headerControl} text-[13px] font-bold uppercase tracking-[0.12em] lg:hidden`}
             aria-label={t('header.menuAria')}
           >
             {t('header.menu')}

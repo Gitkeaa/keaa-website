@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { User } from 'lucide-react';
-import { headerControlCls } from './headerControl';
+import { headerControl, headerControlCls } from './headerControl';
 import { useAdminAuth } from '../../admin/auth/AdminAuthContext';
 import { resolveUpload } from '../../admin/api/client';
 import { useT } from '../../i18n/LocaleContext';
@@ -63,14 +63,26 @@ export default function HeaderAccount() {
   const triggerCls = `${headerControlCls(menuOpen)} hidden sm:flex`;
 
   // `checking` counts as signed out here — see the note above on why this renders eagerly.
-  // One login screen for the whole site: this goes straight to /admin/login rather than opening
+  // One login screen for the whole site: this goes straight to /portal/login rather than opening
   // an in-header dialog, so a signed-out visitor and a logged-out staffer see the same page.
   if (!isAuthed) {
     return (
-      <Link to="/admin/login" className={triggerCls}>
-        <User aria-hidden className="h-[18px] w-[18px] flex-shrink-0" strokeWidth={2} />
-        {t('auth.signIn')}
-      </Link>
+      <>
+        {/* Mobile: an icon-only sign-in beside the search icon, so login is one tap from any
+            page instead of buried at the foot of the drawer. Same styling as the search
+            button; hidden at sm+, where the worded link below takes over. */}
+        <Link
+          to="/portal/login"
+          aria-label={t('auth.signIn')}
+          className={`${headerControl} justify-center sm:hidden`}
+        >
+          <User aria-hidden className="h-[18px] w-[18px]" strokeWidth={2} />
+        </Link>
+        <Link to="/portal/login" className={triggerCls}>
+          <User aria-hidden className="h-[18px] w-[18px] flex-shrink-0" strokeWidth={2} />
+          {t('auth.signIn')}
+        </Link>
+      </>
     );
   }
 
@@ -79,54 +91,69 @@ export default function HeaderAccount() {
   const firstName = user.name?.split(' ')[0] || user.name;
 
   return (
-    <div ref={wrapRef} className="relative hidden sm:block">
-      {/* No chevron. An item with a panel looks identical to one without in this header —
-          see the note above the nav in Header.jsx. `aria-expanded` carries the state to
-          anyone who needs it announced. */}
-      <button
-        type="button"
-        onClick={() => setMenuOpen((v) => !v)}
-        aria-expanded={menuOpen}
-        aria-haspopup="menu"
-        // The name FIRST, then the purpose. `aria-label` replaces the element's contents in
-        // the accessible name, so a bare "Account menu" would throw away the one word the
-        // control visibly shows — speech input ("click Kishlay") would find nothing to match,
-        // and a screen reader would never say which account is signed in. Same superset shape
-        // as RegionLanguageSwitcher's srLabel, em dash included.
-        aria-label={`${firstName}, ${t('auth.accountAria')}`}
-        className={triggerCls}
+    <>
+      {/* Mobile: icon-only shortcut into the portal, in the same slot as the signed-out
+          sign-in icon. It opens the dashboard; the drawer still carries sign-out. */}
+      <Link
+        to="/portal"
+        aria-label={t('auth.dashboard')}
+        className={`${headerControl} justify-center sm:hidden`}
       >
         {user.avatarUrl ? (
-          <img src={resolveUpload(user.avatarUrl)} alt="" className="h-5 w-5 flex-shrink-0 rounded-full object-cover" />
+          <img src={resolveUpload(user.avatarUrl)} alt="" className="h-5 w-5 rounded-full object-cover" />
         ) : (
-          <User aria-hidden className="h-[18px] w-[18px] flex-shrink-0" strokeWidth={2} />
+          <User aria-hidden className="h-[18px] w-[18px]" strokeWidth={2} />
         )}
-        {firstName}
-      </button>
+      </Link>
+      <div ref={wrapRef} className="relative hidden sm:block">
+        {/* No chevron. An item with a panel looks identical to one without in this header —
+            see the note above the nav in Header.jsx. `aria-expanded` carries the state to
+            anyone who needs it announced. */}
+        <button
+          type="button"
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-expanded={menuOpen}
+          aria-haspopup="menu"
+          // The name FIRST, then the purpose. `aria-label` replaces the element's contents in
+          // the accessible name, so a bare "Account menu" would throw away the one word the
+          // control visibly shows — speech input ("click Kishlay") would find nothing to match,
+          // and a screen reader would never say which account is signed in. Same superset shape
+          // as RegionLanguageSwitcher's srLabel, em dash included.
+          aria-label={`${firstName}, ${t('auth.accountAria')}`}
+          className={triggerCls}
+        >
+          {user.avatarUrl ? (
+            <img src={resolveUpload(user.avatarUrl)} alt="" className="h-5 w-5 flex-shrink-0 rounded-full object-cover" />
+          ) : (
+            <User aria-hidden className="h-[18px] w-[18px] flex-shrink-0" strokeWidth={2} />
+          )}
+          {firstName}
+        </button>
 
-      {menuOpen && (
-        <div className="absolute right-0 top-full z-50 mt-2 min-w-[13rem] rounded-card border border-border bg-white p-1.5 shadow-card">
-          <div className="border-b border-border px-3 pb-2.5 pt-2">
-            <p className="truncate text-sm font-semibold text-navy-900">{user.name}</p>
+        {menuOpen && (
+          <div className="absolute right-0 top-full z-50 mt-2 min-w-[13rem] rounded-card border border-border bg-white p-1.5 shadow-card">
+            <div className="border-b border-border px-3 pb-2.5 pt-2">
+              <p className="truncate text-sm font-semibold text-navy-900">{user.name}</p>
+            </div>
+
+            <Link
+              to="/portal"
+              onClick={() => setMenuOpen(false)}
+              className="block rounded-card px-3 py-2 text-sm font-medium text-ink transition-colors hover:bg-navy-50 hover:text-navy-900"
+            >
+              {t('auth.dashboard')}
+            </Link>
+
+            <button
+              type="button"
+              onClick={handleSignOut}
+              className="block w-full rounded-card px-3 py-2 text-left text-sm font-medium text-ink transition-colors hover:bg-navy-50 hover:text-navy-900"
+            >
+              {t('auth.signOut')}
+            </button>
           </div>
-
-          <Link
-            to="/admin"
-            onClick={() => setMenuOpen(false)}
-            className="block rounded-card px-3 py-2 text-sm font-medium text-ink transition-colors hover:bg-navy-50 hover:text-navy-900"
-          >
-            {t('auth.dashboard')}
-          </Link>
-
-          <button
-            type="button"
-            onClick={handleSignOut}
-            className="block w-full rounded-card px-3 py-2 text-left text-sm font-medium text-ink transition-colors hover:bg-navy-50 hover:text-navy-900"
-          >
-            {t('auth.signOut')}
-          </button>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }

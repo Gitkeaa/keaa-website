@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { Lock, Mail, Loader2, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import { useAdminAuth } from '../auth/AdminAuthContext';
+import { developer } from '../../data/company';
 
 /** The KEAA cube mark — same three faces the public Logo uses. */
 function CubeMark({ className = 'h-11 w-11' }) {
@@ -28,7 +29,7 @@ export default function AdminLogin() {
   const { login, loginTwoFactor, loading, isAuthed, checking } = useAdminAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from || '/admin';
+  const from = location.state?.from || '/portal';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -176,12 +177,12 @@ export default function AdminLogin() {
           <p className="mt-1.5 text-sm text-muted">
             Designed &amp; developed by{' '}
             <a
-              href="https://www.linkedin.com/in/kishlay-raj"
+              href={developer.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               className="font-semibold text-primary-dark transition-colors hover:text-primary-darker hover:underline"
             >
-              Kishlay Raj
+              {developer.name}
             </a>
           </p>
         </div>

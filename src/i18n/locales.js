@@ -481,6 +481,3 @@ const hi = {
 };
 
 export const strings = { en, nl, de, fr, es, it, pt, pl, ru, tr, ar, hi };
-
-/** Every key the UI may request — `en` is the contract other locales fall back to. */
-export const STRING_KEYS = Object.keys(en);

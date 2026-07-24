@@ -27,11 +27,11 @@ export default function MobileDrawer({ open, onClose }) {
   */
   const navigate = useNavigate();
   const { user, isAuthed, checking, logout } = useAdminAuth();
-  // One login screen for the whole site: close the drawer and go to /admin/login (no in-drawer
+  // One login screen for the whole site: close the drawer and go to /portal/login (no in-drawer
   // dialog), so mobile and desktop, signed-out and logged-out, all reach the same page.
   const openSignIn = () => {
     onClose();
-    navigate('/admin/login');
+    navigate('/portal/login');
   };
 
   const handleSignOut = async () => {
@@ -188,7 +188,7 @@ export default function MobileDrawer({ open, onClose }) {
                           </p>
                         </div>
                         <Link
-                          to="/admin"
+                          to="/portal"
                           onClick={onClose}
                           className="group flex items-center rounded-card px-3 py-2.5 text-sm font-medium text-ink hover:bg-navy-50"
                         >

@@ -75,7 +75,7 @@ export default function ManufacturingBand() {
               Advanced Manufacturing, Strong Production Capability
             </h2>
             <p className="body-copy mt-5 max-w-xl">
-              Two integrated units in Ludhiana (laser cutting, robotic welding, in-house
+              Five integrated units in Ludhiana (laser cutting, robotic welding, in-house
               hot-dip galvanizing and powder coating) engineered for precision, consistency
               and scale on every order.
             </p>

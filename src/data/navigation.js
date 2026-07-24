@@ -76,15 +76,15 @@ export const mainNav = [
     categories: true,
     children: [
       { label: 'All Products', to: '/products', desc: 'Every line we manufacture' },
-      { label: 'Downloads Center', to: '/downloads', desc: 'Catalogues and datasheets' },
+      { label: 'Downloads Center', to: '/downloads', desc: 'Full product catalogues' },
       { label: 'Certifications', to: '/certifications', desc: 'Standards every product meets' },
       /* FAQ sits under Products because almost every question on it — MOQ, finishes, lead
          times, samples, export documentation — is asked while evaluating what to buy. */
-      { label: 'FAQ', to: '/faq', desc: 'Ordering, finishes, lead times and export' },
+      { label: 'FAQ & Testimonials', to: '/faq', desc: 'Ordering, finishes, lead times, export and customer reviews' },
     ],
     feature: {
       eyebrow: 'Downloads',
-      title: 'Every catalogue and datasheet, in one place',
+      title: 'Every product catalogue, in one place',
       image: 'scaffoldRacks',
       cta: { label: 'Open Downloads', to: '/downloads' },
     },
@@ -117,7 +117,6 @@ export const mainNav = [
       { label: 'Featured Projects', to: '/projects-gallery#projects', desc: 'Completed work by sector' },
       { label: 'Factory & Product Gallery', to: '/projects-gallery#gallery', desc: 'Photography from the floor' },
       { label: 'Films', to: '/projects-gallery#videos', desc: 'Manufacturing and product footage' },
-      { label: 'Customer Success Stories', to: '/success-stories', desc: 'Case studies and testimonials' },
     ],
     feature: {
       eyebrow: 'Track record',
@@ -133,7 +132,7 @@ export const megaMenuItems = [
   {
     n: 1,
     title: 'Downloads Center',
-    desc: 'Access all essential KEAA resources in one place, including company brochures, product catalogues, technical datasheets, certifications, presentations, and installation guides to support your projects and purchasing decisions.',
+    desc: 'Download the complete KEAA product catalogues, scaffolding and formworks, livestock housing solutions, and wood connectors and garden hardware, with the full range, item codes and sizes to support your projects and purchasing decisions.',
     to: '/downloads',
     icon: Download,
     color: 'bg-sky-500',
@@ -148,9 +147,9 @@ export const megaMenuItems = [
   },
   {
     n: 4,
-    title: 'Customer Success Stories',
-    desc: "Discover how contractors, distributors, and industrial partners worldwide have successfully completed projects using KEAA's reliable engineering solutions through real customer testimonials and project case studies.",
-    to: '/success-stories',
+    title: 'FAQ & Testimonials',
+    desc: 'Answers on products, manufacturing, certifications, ordering and export, alongside what contractors, distributors and industrial partners say about working with KEAA.',
+    to: '/faq',
     icon: Star,
     color: 'bg-amber-500',
   },
@@ -183,19 +182,16 @@ export const footerLinks = {
   ],
   /**
    * This column is the ONLY desktop route to these pages. The header's "Explore KEAA"
-   * mega-menu used to carry the same five destinations, and when its trigger was removed
-   * the footer became the sole desktop entry point — but Customer Success Stories was
-   * missing here, so it was left with no link anywhere on desktop at all (it survived only
-   * in the mobile drawer, which still renders `megaMenuItems`). It is listed now.
+   * mega-menu used to carry the same destinations, and when its trigger was removed the
+   * footer became the sole desktop entry point, so anything missing here is unreachable for
+   * a desktop visitor.
    *
-   * Keep this in step with `megaMenuItems` above: anything that appears there and not here
-   * is unreachable for desktop visitors.
+   * Keep this in step with `megaMenuItems` above.
    */
   resources: [
     { label: 'Downloads Center', to: '/downloads' },
     { label: 'Certifications', to: '/certifications' },
-    { label: 'Customer Success Stories', to: '/success-stories' },
-    { label: 'FAQ', to: '/faq' },
+    { label: 'FAQ & Testimonials', to: '/faq' },
     { label: 'Careers', to: '/careers' },
     { label: 'Request a Quote', to: '/rfq' },
   ],

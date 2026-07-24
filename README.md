@@ -46,18 +46,18 @@ can leak into the bundle.
 ```
 src/
 ├── components/
-│   ├── layout/          Header, TopBar, MegaMenu, MobileDrawer, Footer, Logo
-│   ├── ui/              Button, Card, Badge, SectionHeading, PageHero, Reveal,
+│   ├── layout/          Header, NavPanel, HeaderSearch, MobileDrawer, Footer, Logo
+│   ├── ui/              Button, CardRail, Badge, SectionHeading, PageHero, Reveal,
 │   │                    AnimatedCounter, ImagePlaceholder, BrandTexture,
 │   │                    CountrySelect, EmailField, PhoneField, WordLimitTextarea
 │   ├── home/            HomeHeroBrandTest (the live homepage hero), CoreSolutions,
-│   │                    HeroMediaNav
-│   ├── products/        ProductCard, CatalogSidebar, CatalogHelpBand
+│   │                    ProductsShowcase, ManufacturingBand
+│   ├── products/        ProductCard, CatalogSidebar
 │   ├── Layout.jsx       Page shell (header + outlet + footer + overlays)
-│   ├── PageLoader.jsx   Intro splash — an overlay, not a gate (see below)
 │   └── AiChat.jsx       Chat widget; talks to server.js
+├── admin/               The /portal console — pages, layout, RBAC, help/SOP system
 ├── data/                Company info, catalogue, navigation, content, images
-├── hooks/               useSEO, useSplash
+├── hooks/               useSEO
 ├── pages/               One file per route (15 pages, 17 routes)
 ├── App.jsx              Route definitions
 ├── main.jsx             App entry point

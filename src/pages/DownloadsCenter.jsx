@@ -1,22 +1,28 @@
-import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Download } from 'lucide-react';
+import { lazy, Suspense, useState } from 'react';
 import GalleryHero from '../components/gallery/GalleryHero';
 import { heroSlides } from '../data/heroSlides';
 import SectionHeading from '../components/ui/SectionHeading';
 import Button from '../components/ui/Button';
-import { downloadResources } from '../data/content';
+import { catalogueDownloads } from '../data/content';
 import useSEO from '../hooks/useSEO';
+
+/**
+ * Every catalogue here is gated: the visitor fills a short form and the file opens on submit.
+ * That turns an anonymous download into a qualified lead in the admin console (see
+ * components/CatalogueRequestModal.jsx). The modal is lazy — it pulls in the country picker
+ * and the phone/email fields, which no one needs until they click Download.
+ */
+const CatalogueRequestModal = lazy(() => import('../components/CatalogueRequestModal'));
 
 export default function DownloadsCenter() {
   useSEO({
     title: 'Downloads & Resources',
     description:
-      'Download KEAA\'s corporate brochure, product catalogues, technical datasheets and installation guides.',
+      "Download KEAA's product catalogues: scaffolding and formworks, livestock housing solutions, and wood connectors and garden hardware.",
   });
 
-  // Which grouped entry (e.g. the brand logos) is currently expanded. Only one at a time.
-  const [openGroup, setOpenGroup] = useState(null);
+  // The catalogue the visitor asked for, or null when the gate is closed.
+  const [requested, setRequested] = useState(null);
 
   return (
     <>
@@ -29,97 +35,41 @@ export default function DownloadsCenter() {
 
       <section id="content" className="section-pad">
         <div className="container-page">
-          <SectionHeading eyebrow="All Downloads" title="Download Files" />
+          <SectionHeading eyebrow="Catalogues" title="Download Our Catalogues" />
           <div className="mt-10 divide-y divide-navy-100 rounded-card border border-navy-100 bg-white">
-            {downloadResources.map((d) => {
-              // Grouped entry (e.g. the brand logos): one labelled row whose "Download"
-              // button expands to the individual files. Each file is served same-origin from
-              // /public/downloads with the `download` attribute, so a click saves it under
-              // its own filename (see downloadResources in content.js).
-              if (d.files) {
-                const expanded = openGroup === d.title;
-                return (
-                  <div key={d.title} className="px-6 py-4">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
-                          {d.type}
-                        </p>
-                        <p className="mt-1 text-body-compact font-medium text-text">{d.title}</p>
-                        <p className="text-xs text-muted">
-                          {d.files.length} {d.files.length === 1 ? 'file' : 'files'}
-                        </p>
-                      </div>
-                      <Button
-                        onClick={() => setOpenGroup(expanded ? null : d.title)}
-                        variant="outlineNavy"
-                        size="sm"
-                        aria-expanded={expanded}
-                        className="text-[13px] font-bold uppercase tracking-[0.12em]"
-                      >
-                        {expanded ? 'Close' : 'Download'}
-                      </Button>
-                    </div>
-
-                    <AnimatePresence initial={false}>
-                      {expanded && (
-                        <motion.ul
-                          key="files"
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                          className="mt-4 overflow-hidden rounded-card border border-navy-100 bg-navy-50 divide-y divide-navy-100"
-                        >
-                          {d.files.map((f) => (
-                            <li
-                              key={f.url}
-                              className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
-                            >
-                              <span className="text-body-compact font-medium text-text">{f.label}</span>
-                              <a
-                                href={f.url}
-                                download={f.filename}
-                                className="inline-flex items-center gap-1.5 rounded-card border border-primary/55 bg-white px-3.5 py-1.5 text-[13px] font-bold uppercase tracking-[0.12em] text-primary-dark transition-colors hover:border-primary-dark hover:bg-primary-dark hover:text-white"
-                              >
-                                <Download className="h-3.5 w-3.5" strokeWidth={2} />
-                                Download
-                              </a>
-                            </li>
-                          ))}
-                        </motion.ul>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                );
-              }
-
-              // Single-file entry: a straight link to the resource (unchanged).
-              return (
-                <div key={d.title} className="flex flex-wrap items-center justify-between gap-3 px-6 py-4">
-                  <div>
-                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
-                      {d.type}
-                    </p>
-                    <p className="mt-1 text-body-compact font-medium text-text">{d.title}</p>
-                    {d.size && <p className="text-xs text-muted font-mono">{d.size}</p>}
-                  </div>
-                  <Button
-                    href={d.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    variant="outlineNavy"
-                    size="sm"
-                    className="text-[13px] font-bold uppercase tracking-[0.12em]"
-                  >
-                    Open / Download
-                  </Button>
+            {/* Catalogues only. Brand artwork and company presentations are internal and live
+                in the portal's Resource Library (admin/components/ResourceLibrary.jsx). */}
+            {catalogueDownloads.map((d) => (
+              <div key={d.title} className="flex flex-wrap items-center justify-between gap-3 px-6 py-4">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
+                    {d.type}
+                  </p>
+                  <p className="mt-1 text-body-compact font-medium text-text">{d.title}</p>
                 </div>
-              );
-            })}
+                <Button
+                  onClick={() => setRequested(d)}
+                  variant="outlineNavy"
+                  size="sm"
+                  className="text-[13px] font-bold uppercase tracking-[0.12em]"
+                >
+                  Download
+                </Button>
+              </div>
+            ))}
           </div>
+          <p className="mt-4 text-xs text-muted">
+            Catalogues are free. We ask for your details so our team can follow up with pricing,
+            samples or technical support if you need them.
+          </p>
         </div>
       </section>
+
+      {requested && (
+        <Suspense fallback={null}>
+          <CatalogueRequestModal item={requested} onClose={() => setRequested(null)} />
+        </Suspense>
+      )}
     </>
   );
 }

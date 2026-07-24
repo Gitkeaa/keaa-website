@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { ExternalLink } from 'lucide-react';
 import { ADMIN_ICONS as Icons } from '../adminIcons';
 import { navForRole, ROLE_LABELS } from '../auth/roles';
 import { useAdminAuth } from '../auth/AdminAuthContext';
@@ -68,6 +69,19 @@ export default function AdminSidebar({ onNavigate }) {
           );
         })}
       </nav>
+
+      {/* The way back to the public website. The sidebar is the primary menu on mobile, where
+          the topbar's "View site" link is hidden — so the exit to the site lives here too. It
+          reads like a nav item and opens the site in a new tab, keeping the portal open behind it. */}
+      <a
+        href="/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mx-3 mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+      >
+        <ExternalLink className="h-[18px] w-[18px] flex-shrink-0" strokeWidth={2} />
+        Visit website
+      </a>
 
       {/* User footer */}
       <div className="border-t border-white/10 px-4 py-3">

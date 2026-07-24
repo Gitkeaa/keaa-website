@@ -23,7 +23,7 @@ const STEPS = [
   },
   {
     title: 'This is your dashboard',
-    body: 'Your territory, your SOP checklist, and the inquiries waiting on you — all in one place, updated live.',
+    body: 'Your territory, your SOP checklist, and the inquiries waiting on you, all in one place and updated live.',
   },
   {
     title: 'Your SOP, always in view',
@@ -31,7 +31,7 @@ const STEPS = [
   },
   {
     title: 'Help on every screen',
-    body: 'The Help button, top-right, explains whatever page you are on. That is it — you are ready to go.',
+    body: 'The Help button, top-right, explains whatever page you are on. That is it, you are ready to go.',
   },
 ];
 

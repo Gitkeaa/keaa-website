@@ -71,7 +71,7 @@ export default function AdminUsers() {
   };
   const close = () => setEditing(undefined);
 
-  // Deep-link from the Roles & Permissions matrix: /admin/users?edit=<id> opens that user's edit.
+  // Deep-link from the Roles & Permissions matrix: /portal/users?edit=<id> opens that user's edit.
   const [searchParams, setSearchParams] = useSearchParams();
   useEffect(() => {
     const editId = searchParams.get('edit');

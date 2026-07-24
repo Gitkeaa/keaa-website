@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Star } from 'lucide-react';
 import GalleryHero from '../components/gallery/GalleryHero';
 import { heroSlides } from '../data/heroSlides';
 import Reveal from '../components/ui/Reveal';
+import SectionHeading from '../components/ui/SectionHeading';
 import Button from '../components/ui/Button';
 import { PANEL_CARD } from '../components/ui/panelCard';
 import { faqs, allFaqs } from '../data/faqs';
+import { testimonials } from '../data/content';
 import useSEO from '../hooks/useSEO';
 
 /**
@@ -43,10 +46,10 @@ export default function FAQ() {
     });
 
   useSEO({
-    title: 'Frequently Asked Questions',
+    title: 'FAQ & Customer Testimonials',
     description:
-      'Answers on KEAA International’s products, manufacturing, certifications, export markets, ordering and quotations.',
-    breadcrumbs: [{ label: 'Home', to: '/' }, { label: 'FAQ' }],
+      'Answers on KEAA International’s products, manufacturing, certifications, export markets, ordering and quotations, plus what our customers say about working with us.',
+    breadcrumbs: [{ label: 'Home', to: '/' }, { label: 'FAQ & Testimonials' }],
     /**
      * FAQPage structured data. Google can surface these as expandable answers directly in
      * the results, which is the single highest-yield schema type for a page like this.
@@ -67,8 +70,8 @@ export default function FAQ() {
   return (
     <>
       <GalleryHero
-        eyebrow="Help & Support"
-        crumbs={[{ label: 'Home', to: '/' }, { label: 'FAQ' }]}
+        eyebrow="FAQ & Testimonials"
+        crumbs={[{ label: 'Home', to: '/' }, { label: 'FAQ & Testimonials' }]}
         slides={heroSlides.faq}
         scrollTo="content"
       />
@@ -81,7 +84,10 @@ export default function FAQ() {
                   these work with the browser's own history and are copyable links. */}
               <Reveal>
                 <p className="eyebrow text-primary-darker">On this page</p>
-                <ul className="mt-5 space-y-3">
+                {/* Two columns while the list is full-width (phone/tablet), so the jump links
+                    fill the row instead of stacking down the left. At `lg` it becomes the narrow
+                    sidebar again — a single vertical column, unchanged. */}
+                <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 lg:block lg:space-y-3">
                   {faqs.map((g) => (
                     <li key={g.group}>
                       <a
@@ -145,7 +151,7 @@ export default function FAQ() {
 
                 <Reveal>
                   <p className="text-body-compact text-muted">
-                    Looking for technical documents instead?{' '}
+                    Looking for the full product catalogues instead?{' '}
                     <Link
                       to="/downloads"
                       className="border-b border-transparent font-semibold text-primary-dark transition-colors hover:border-primary hover:text-primary-darker"
@@ -161,7 +167,56 @@ export default function FAQ() {
         </div>
       </section>
 
+      {/* Testimonials. They used to be the top half of a separate Customer Success Stories
+          page; that page is gone and they live here, where a visitor weighing up an order is
+          already reading. `#testimonials` is a stable anchor for the nav and the footer. */}
+      <section id="testimonials" className="section-pad pt-0">
+        <div className="container-page">
+          <SectionHeading eyebrow="What Our Customers Say" title="Testimonials" />
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {testimonials.map((t) => (
+              <Reveal key={t.name}>
+                <figure className="h-full rounded-card border border-navy-100 bg-white p-6 shadow-card">
+                  <Rating value={t.rating} />
+                  <blockquote className="mt-4 text-body-compact leading-relaxed text-ink">
+                    &ldquo;{t.quote}&rdquo;
+                  </blockquote>
+                  <figcaption className="mt-4">
+                    <p className="font-display text-body-compact font-semibold text-text">{t.name}</p>
+                    <p className="text-xs text-muted">{t.company}</p>
+                  </figcaption>
+                </figure>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
     </>
+  );
+}
+
+/**
+ * A five-star rating row.
+ *
+ * The stars are decorative (`aria-hidden`) and the score is carried by one screen-reader
+ * sentence beside them, so the rating is never communicated by colour or shape alone — and a
+ * screen reader announces "Rated 5 out of 5" once instead of the word "star" five times.
+ */
+const MAX_STARS = 5;
+
+function Rating({ value = MAX_STARS }) {
+  return (
+    <p className="flex items-center gap-0.5">
+      {Array.from({ length: MAX_STARS }, (_, i) => (
+        <Star
+          key={i}
+          aria-hidden
+          className={`h-4 w-4 ${i < value ? 'fill-accent text-accent' : 'fill-navy-100 text-navy-100'}`}
+          strokeWidth={0}
+        />
+      ))}
+      <span className="sr-only">Rated {value} out of {MAX_STARS}</span>
+    </p>
   );
 }
 

@@ -5,6 +5,20 @@ separate from this frontend. Once applied, HR can preview and download every app
 admin ATS. **No further frontend change is needed** (the client already sends the file and is
 Cloudinary-ready).
 
+> **STATUS: implemented.** The change below is live in `career/JobApplicationController.java`
+> (multipart handler + `uploadResume`, inline rather than a separate service) and
+> `application.properties` (`cloudinary.resume-folder`). It compiles. The code snippets here are
+> the reference; the one thing still needed is the account setting in the next box.
+>
+> **REQUIRED Cloudinary account setting.** PDF delivery is OFF by default on this account, so every
+> resume URL returns **HTTP 401** until you enable it: **Console → Settings → Security → "Allow
+> delivery of PDF and ZIP files" → ON**. Verified by test: raw and image PDF URLs both 401 while it
+> is off; a rasterised page (pg_1, jpg) delivers 200. This cannot be toggled via the API.
+>
+> **`resource_type` is `auto`, not `raw`.** `auto` stores a PDF as an IMAGE asset, so the Cloudinary
+> Media Library shows a real page preview and the file downloads as a PDF; a Word doc still lands as
+> raw. (`raw` would download fine but never previews.)
+
 ---
 
 ## Current state (why download does not work yet)
@@ -78,7 +92,7 @@ public class ResumeStorage {
   /** Upload a CV to Cloudinary as a RAW asset (PDF/doc, not an image) and return its https URL. */
   public String upload(MultipartFile file) throws IOException {
     Map<?, ?> res = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
-        "resource_type", "raw",           // PDF / DOCX are raw, not images
+        "resource_type", "auto",          // PDF -> image (previewable); DOCX -> raw
         "folder", "keaa/resumes",
         "use_filename", true,
         "unique_filename", true,

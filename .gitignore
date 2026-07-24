@@ -14,3 +14,6 @@ yarn-error.log*
 # local dev logs
 *.log
 devserver.log
+
+# throwaway scratch scripts (screenshot runners etc) — regenerated on demand
+*.tmp.mjs

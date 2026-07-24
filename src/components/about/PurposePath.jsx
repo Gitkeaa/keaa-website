@@ -356,7 +356,7 @@ export default function PurposePath() {
                   so the reset repeats per row instead of only clearing the very first item —
                   :first-child would leave a stray rule hanging at the left of the second row.
                   Per-item borders, not divide-x, because divide-x misbehaves once a grid wraps. */}
-              <ul className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-0 lg:gap-y-10">
+              <ul className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-0 lg:gap-y-10">
                 {values.map(({ raw, lead, rest }) => (
                   <li
                     key={raw}

@@ -4,7 +4,9 @@ import PageHeader from '../components/PageHeader';
 import StatCard from '../components/StatCard';
 import StatusPill from '../components/StatusPill';
 import InquiryManager from '../components/InquiryManager';
+import AdminCharts from '../components/AdminCharts';
 import SopCard from '../components/SopCard';
+import ResourceLibrary from '../components/ResourceLibrary';
 import { useAdminAuth } from '../auth/AdminAuthContext';
 import { useApi } from '../api/useApi';
 import { ROLES, moduleAccess } from '../auth/roles';
@@ -12,10 +14,10 @@ import { ROLES, moduleAccess } from '../auth/roles';
 // Each quick action names its module; a `manage` action is hidden unless the role can actually
 // do it (so e.g. Admin, who can only VIEW users, never sees a dead "Add a team member").
 const QUICK = [
-  { label: 'Review RFQ requests', to: '/admin/rfq', icon: 'FileText', module: 'rfq' },
-  { label: 'Read contact messages', to: '/admin/contacts', icon: 'Mail', module: 'contacts' },
-  { label: 'Manage products', to: '/admin/products', icon: 'Package', module: 'products', manage: true },
-  { label: 'Add a team member', to: '/admin/users', icon: 'UserPlus', module: 'users', manage: true },
+  { label: 'Review RFQ requests', to: '/portal/rfq', icon: 'FileText', module: 'rfq' },
+  { label: 'Read contact messages', to: '/portal/contacts', icon: 'Mail', module: 'contacts' },
+  { label: 'Manage products', to: '/portal/products', icon: 'Package', module: 'products', manage: true },
+  { label: 'Add a team member', to: '/portal/users', icon: 'UserPlus', module: 'users', manage: true },
 ];
 const quickFor = (role) =>
   QUICK.filter((q) => (q.manage ? moduleAccess(role, q.module) === 'manage' : moduleAccess(role, q.module) != null));
@@ -66,6 +68,11 @@ function RepDashboard({ user }) {
         <h2 className="mb-3 font-display text-base font-bold text-navy-900">My Inquiries</h2>
         <InquiryManager />
       </div>
+
+      {/* Every catalogue, deck and logo file, downloadable by any role. */}
+      <div className="mt-6">
+        <ResourceLibrary />
+      </div>
     </>
   );
 }
@@ -100,12 +107,15 @@ function ManagerDashboard({ user }) {
           : tiles.map(({ id, ...t }) => <StatCard key={id} {...t} />)}
       </div>
 
+      {/* Pictorial overview — monthly inquiry volume + current pipeline split. */}
+      <AdminCharts inquiries={rfq || []} />
+
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
             <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
               <h2 className="font-display text-base font-bold text-navy-900">Recent Inquiries</h2>
-              <Link to="/admin/rfq" className="text-sm font-medium text-primary-darker hover:underline">View all</Link>
+              <Link to="/portal/rfq" className="text-sm font-medium text-primary-darker hover:underline">View all</Link>
             </div>
             <ul className="divide-y divide-slate-100">
               {recent.length === 0 && <li className="px-5 py-8 text-center text-sm text-slate-400">No inquiries yet.</li>}
@@ -141,6 +151,11 @@ function ManagerDashboard({ user }) {
           )}
           <SopCard />
         </div>
+      </div>
+
+      {/* Every catalogue, deck and logo file, downloadable by any role. */}
+      <div className="mt-6">
+        <ResourceLibrary />
       </div>
     </>
   );

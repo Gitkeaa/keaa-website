@@ -117,8 +117,11 @@ export default function Footer() {
           style={{ background: 'radial-gradient(circle, rgb(var(--color-primary) / 0.30), transparent 68%)' }}
         />
 
-        <div className="container-page relative z-10 grid gap-x-8 gap-y-12 py-14 sm:grid-cols-2 lg:grid-cols-[1.25fr_1fr_1.15fr_1fr_1.35fr] lg:py-16">
-          <div className="sm:col-span-2 lg:col-span-1">
+        {/* Phone gets two columns (was a single tall stack): the logo block spans both, the
+            four link/contact blocks fall into a clean 2x2. `sm` and up are unchanged — the same
+            2-up then 5-up desktop grid as before. */}
+        <div className="container-page relative z-10 grid grid-cols-2 gap-x-8 gap-y-12 py-14 lg:grid-cols-[1.25fr_1fr_1.15fr_1fr_1.35fr] lg:py-16">
+          <div className="col-span-2 lg:col-span-1">
             <Logo light />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/55">{company.description}</p>
 
@@ -160,9 +163,11 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
+          {/* Phone: full width with its links in two columns, so it never sits alone on the
+              left with an empty half beside it. `sm` up is the original single column. */}
+          <div className="col-span-2 sm:col-span-1">
             <ColumnHeading>Resources</ColumnHeading>
-            <ul className="mt-8 space-y-3 text-sm">
+            <ul className="mt-8 grid grid-cols-2 gap-x-6 gap-y-3 text-sm sm:block sm:space-y-3">
               {footerLinks.resources.map((l) => (
                 <NavLinkRow key={l.to} to={l.to}>
                   {l.label}
@@ -171,9 +176,12 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
+          {/* Phone: the contact block spans the full width and its rows sit in a 2-col grid,
+              so Address|Mobile and Telephone|Email run in parallel instead of one tall stack.
+              From `sm` up it is the original vertical list — desktop is untouched. */}
+          <div className="col-span-2 sm:col-span-1">
             <ColumnHeading>Contact Us</ColumnHeading>
-            <ul className="mt-8 space-y-4 text-sm">
+            <ul className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4 text-sm sm:block sm:space-y-4">
               <ContactRow label="Address">
                 <span className="block">
                   {company.manufacturing.line1}

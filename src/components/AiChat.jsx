@@ -1,6 +1,174 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+
+/* ------------------------------------------------------------------ *
+ * Dragging
+ *
+ * The assistant can be picked up and parked anywhere — by its header when open, by the
+ * launcher when closed — because it otherwise sits on top of whatever is in the
+ * bottom-right corner of the page the visitor is actually reading.
+ *
+ * The position is stored as an offset from the RIGHT and BOTTOM edges, not left/top. That
+ * is what keeps the panel growing upward out of the launcher exactly as it does in its
+ * default corner; anchoring by top would push the launcher off the bottom of the screen the
+ * moment the panel opened.
+ * ------------------------------------------------------------------ */
+const POS_KEY = 'keaa:chat-position';
+/** Pointer travel, in px, that makes a press a drag rather than a click on the launcher. */
+const DRAG_SLOP = 4;
+/** However far it is dragged, this much of the launcher stays on screen. */
+const KEEP_VISIBLE = 72;
+const EDGE = 8;
+
+/** Both guarded: storage throws outright in a privacy-locked browser, and a parked
+ *  assistant is a convenience that must never take the widget down with it. */
+function readPos() {
+  try {
+    const raw = window.localStorage.getItem(POS_KEY);
+    const p = raw ? JSON.parse(raw) : null;
+    return p && Number.isFinite(p.right) && Number.isFinite(p.bottom) ? p : null;
+  } catch {
+    return null;
+  }
+}
+
+function writePos(p) {
+  try {
+    if (p) window.localStorage.setItem(POS_KEY, JSON.stringify(p));
+    else window.localStorage.removeItem(POS_KEY);
+  } catch {
+    /* full, disabled or private mode — the position still holds for this session */
+  }
+}
+
+function useDraggable(ref) {
+  // null = the default corner, which also tracks the consent bar. A dragged widget opts
+  // out of that and holds wherever it was put.
+  const [pos, setPos] = useState(null);
+  /**
+   * Where the visitor actually PUT it, kept separate from `pos`, which is that position
+   * clamped to whatever the widget currently measures. The two differ whenever the panel is
+   * open: the launcher is 56px tall and the open panel is over 600, so a spot that is fine
+   * for the closed launcher can push the panel off the top of the screen. Clamping for
+   * display and remembering the intent separately means it returns to the chosen spot when
+   * the panel closes, instead of creeping down the screen every time it is opened.
+   */
+  const desired = useRef(null);
+  const moved = useRef(false);
+
+  const clamp = useCallback(
+    (p) => {
+      const el = ref.current;
+      const w = el?.offsetWidth ?? KEEP_VISIBLE;
+      const h = el?.offsetHeight ?? KEEP_VISIBLE;
+      return {
+        right: Math.min(Math.max(EDGE, p.right), Math.max(EDGE, window.innerWidth - w - EDGE)),
+        bottom: Math.min(Math.max(EDGE, p.bottom), Math.max(EDGE, window.innerHeight - h - EDGE)),
+      };
+    },
+    [ref],
+  );
+
+  /** Re-apply the clamp against the widget's current size. */
+  const reclamp = useCallback(() => {
+    if (!desired.current) return;
+    setPos(clamp(desired.current));
+  }, [clamp]);
+
+  // Read on mount, not in the initialiser: localStorage does not exist during prerender,
+  // and starting from null keeps the server markup and the first client render identical.
+  useEffect(() => {
+    const stored = readPos();
+    if (stored) {
+      desired.current = stored;
+      setPos(clamp(stored));
+    }
+  }, [clamp]);
+
+  // A rotate or a resize must not strand the widget off-screen.
+  useEffect(() => {
+    if (!pos) return undefined;
+    window.addEventListener('resize', reclamp);
+    return () => window.removeEventListener('resize', reclamp);
+  }, [pos, reclamp]);
+
+  /**
+   * Window-level listeners rather than setPointerCapture: capturing on the wrapper can
+   * retarget the click that follows, which would stop the launcher opening the chat.
+   */
+  const onPointerDown = (e) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    const el = ref.current;
+    if (!el) return;
+
+    const r = el.getBoundingClientRect();
+    const offR = r.right - e.clientX;
+    const offB = r.bottom - e.clientY;
+    const x0 = e.clientX;
+    const y0 = e.clientY;
+    moved.current = false;
+
+    const onMove = (ev) => {
+      if (!moved.current && Math.hypot(ev.clientX - x0, ev.clientY - y0) < DRAG_SLOP) return;
+      moved.current = true;
+      // Held to the viewport with only the launcher's footprint in mind, so a drag past the
+      // edge parks it AT the edge instead of storing a wild offset that a later, larger
+      // screen would honour literally.
+      const raw = {
+        right: window.innerWidth - (ev.clientX + offR),
+        bottom: window.innerHeight - (ev.clientY + offB),
+      };
+      desired.current = {
+        right: Math.min(Math.max(EDGE, raw.right), Math.max(EDGE, window.innerWidth - KEEP_VISIBLE)),
+        bottom: Math.min(Math.max(EDGE, raw.bottom), Math.max(EDGE, window.innerHeight - KEEP_VISIBLE)),
+      };
+      setPos(clamp(desired.current));
+    };
+
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onUp);
+      if (moved.current) writePos(desired.current);
+    };
+
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', onUp);
+  };
+
+  /** Send it back to the default corner. Bound to a double-click on either handle. */
+  const reset = () => {
+    desired.current = null;
+    setPos(null);
+    writePos(null);
+  };
+
+  /**
+   * True once the widget has been parked in the left half of the screen. The launcher row
+   * mirrors itself when it is: the "Ask keaa" pill belongs on the side with room for it, and
+   * its little pointer has to keep pointing AT the button, not away from it.
+   */
+  const onLeft =
+    pos != null && typeof window !== 'undefined' && pos.right > window.innerWidth / 2;
+
+  return {
+    pos,
+    onLeft,
+    reset,
+    reclamp,
+    /** True if the press that just ended was a drag — the launcher uses it to swallow the click. */
+    wasDragged: () => moved.current,
+    handleProps: {
+      onPointerDown,
+      onDoubleClick: reset,
+      // touch-none stops a drag from scrolling the page under it.
+      className: 'cursor-grab touch-none select-none active:cursor-grabbing',
+      title: 'Drag to move · double-click to reset',
+    },
+  };
+}
 
 export default function AiChat() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +183,14 @@ export default function AiChat() {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
+  const wrapRef = useRef(null);
+  const { pos, onLeft, wasDragged, handleProps, reclamp } = useDraggable(wrapRef);
+
+  // Opening turns a 56px launcher into a 600px panel. Re-clamp once that has rendered, or a
+  // widget parked high on the screen would open straight off the top of the viewport.
+  useEffect(() => {
+    reclamp();
+  }, [isOpen, reclamp]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -110,22 +286,38 @@ export default function AiChat() {
        normal case. Without this the bar covered the launcher on exactly the visit where a
        first-time visitor is most likely to want it. */
     <div
-      className="fixed right-6 z-50 transition-[bottom] duration-300"
-      style={{ bottom: 'calc(1.5rem + var(--consent-bar-h, 0px))' }}
+      ref={wrapRef}
+      /* The bottom transition belongs to the consent bar only. Once the widget has been
+         dragged it must follow the pointer exactly, so the transition comes off. */
+      className={`fixed right-6 z-50 ${pos ? '' : 'transition-[bottom] duration-300'}`}
+      style={
+        pos
+          ? { right: `${pos.right}px`, bottom: `${pos.bottom}px` }
+          : { bottom: 'calc(1.5rem + var(--consent-bar-h, 0px))' }
+      }
     >
       {/* Chat Window */}
       {isOpen && (
         <div className="bg-white rounded-card shadow-2xl w-96 h-[600px] flex flex-col border border-gray-200 mb-4">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 rounded-t-card flex justify-between items-center">
+          {/* Header. The brand red itself (`signal`, #E11D2A) — flat, not a darkened gradient,
+              so it reads as the same red as the hero's play badge rather than maroon. White on
+              it measures 4.76:1, which passes AA but leaves no room to fade the "Online" line,
+              so that stays solid white. Doubles as the drag handle while the panel is open. */}
+          <div
+            {...handleProps}
+            className={`bg-signal text-white p-4 rounded-t-card flex justify-between items-center ${handleProps.className}`}
+          >
             <div>
               <h3 className="font-semibold">KEAA AI Assistant</h3>
-              <p className="text-xs text-blue-100">Online</p>
+              <p className="text-xs text-white">Online</p>
             </div>
             <button
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                if (wasDragged()) return; // the header is the drag handle; a move is not a click
+                setIsOpen(false);
+              }}
               aria-label="Close KEAA assistant"
-              className="rounded-card px-2 py-1 text-[13px] font-bold uppercase tracking-[0.12em] transition hover:bg-blue-800"
+              className="cursor-pointer rounded-card px-2 py-1 text-[13px] font-bold uppercase tracking-[0.12em] transition hover:bg-white/15"
             >
               Close
             </button>
@@ -141,7 +333,7 @@ export default function AiChat() {
                 <div
                   className={`max-w-[17rem] px-4 py-2 rounded-card ${
                     message.sender === 'user'
-                      ? 'bg-blue-600 text-white rounded-br-none'
+                      ? 'bg-signal text-white rounded-br-none'
                       : 'bg-navy-50 text-text rounded-bl-none'
                   }`}
                 >
@@ -155,7 +347,7 @@ export default function AiChat() {
                         [&_ol]:my-1.5 [&_ol]:list-decimal [&_ol]:pl-4
                         [&_li]:mb-1 [&_li]:marker:text-gray-400
                         [&_strong]:font-semibold [&_strong]:text-gray-900
-                        [&_a]:text-blue-600 [&_a]:underline
+                        [&_a]:text-primary-deep [&_a]:underline
                         [&_h1]:mt-1 [&_h1]:mb-1.5 [&_h1]:font-semibold
                         [&_h2]:mt-1 [&_h2]:mb-1.5 [&_h2]:font-semibold
                         [&_h3]:mt-1 [&_h3]:mb-1 [&_h3]:font-semibold
@@ -206,13 +398,13 @@ export default function AiChat() {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                 placeholder="Type your message..."
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-card focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-card focus:outline-none focus:ring-2 focus:ring-signal text-sm"
               />
               <button
                 onClick={handleSendMessage}
                 disabled={isLoading || !inputValue.trim()}
                 aria-label="Send message"
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white px-3 py-2 rounded-card transition flex items-center gap-2 text-[13px] font-bold uppercase tracking-[0.12em]"
+                className="bg-signal hover:bg-signal-dark disabled:bg-gray-300 text-white px-3 py-2 rounded-card transition flex items-center gap-2 text-[13px] font-bold uppercase tracking-[0.12em]"
               >
                 Send
               </button>
@@ -221,57 +413,77 @@ export default function AiChat() {
         </div>
       )}
 
-      {/* Chat Toggle Button */}
-      <div className="flex justify-end">
+      {/* Chat Toggle Button. Hugs whichever edge the widget has been parked against. */}
+      <div className={`flex ${onLeft ? 'justify-start' : 'justify-end'}`}>
         {isOpen ? (
           <button
             onClick={() => setIsOpen(false)}
             aria-label="Close KEAA assistant"
-            className="relative flex h-14 w-14 items-center justify-center rounded-full border border-primary/60 bg-navy-900 text-primary-light shadow-xl transition-transform hover:scale-105"
+            className="relative flex h-14 w-14 items-center justify-center rounded-full border border-signal/60 bg-navy-900 text-white shadow-xl transition-transform hover:scale-105"
           >
             <span className="text-[13px] font-bold uppercase tracking-[0.12em]">
               Close
             </span>
           </button>
         ) : (
-          <div className="flex items-center gap-2.5">
-            {/* "Ask keaa" label */}
+          /* Closed, this whole row is the drag handle. The launcher inside it still opens the
+             chat: a press only becomes a drag past DRAG_SLOP, and the click is swallowed below
+             when it does, so a normal tap is never eaten by the drag.
+
+             Parked on the left, the row reverses so the pill sits to the RIGHT of the button —
+             on that side there is no room for it to the left, and it was being squeezed against
+             the edge until it wrapped onto two lines. */
+          <div
+            {...handleProps}
+            className={`flex items-center gap-2.5 ${onLeft ? 'flex-row-reverse' : ''} ${handleProps.className}`}
+          >
+            {/* "Ask keaa" label. `whitespace-nowrap` is load-bearing: the widget is anchored
+                from one edge, so near the opposite edge the available width collapses and the
+                label would wrap, which in turn shrank the row and let it drift further out. */}
             <div className="relative rounded-full bg-navy-800 px-3.5 py-2 shadow-lg">
-              <span className="text-sm font-semibold tracking-wide text-white">
-                Ask <span className="text-primary-light">keaa</span>
+              <span className="whitespace-nowrap text-sm font-semibold tracking-wide text-white">
+                Ask keaa
               </span>
-              {/* pointer toward the button */}
-              <span className="absolute -right-1 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rotate-45 bg-navy-800" />
+              {/* pointer toward the button, on whichever side the button now is */}
+              <span
+                className={`absolute top-1/2 h-2.5 w-2.5 -translate-y-1/2 rotate-45 bg-navy-800 ${
+                  onLeft ? '-left-1' : '-right-1'
+                }`}
+              />
             </div>
 
-            {/* Launcher button with gold radiation ring */}
+            {/* Launcher button with the brand radiation ring */}
             <button
-              onClick={() => setIsOpen(true)}
+              onClick={() => {
+                if (wasDragged()) return; // the press that just ended was a move, not a tap
+                setIsOpen(true);
+              }}
               aria-label="Open KEAA assistant"
-              className="group relative h-14 w-14 shrink-0 transition-transform hover:scale-105"
+              className="group relative h-14 w-14 shrink-0 cursor-pointer transition-transform hover:scale-105"
             >
-              {/* rotating gold radiation ring */}
+              {/* Rotating signal ring. Built from the palette variables rather than pasted hex
+                  values, so it follows the token instead of drifting from it. */}
               <span
                 className="absolute -inset-[3px] rounded-full animate-spin motion-reduce:animate-none"
                 style={{
                   animationDuration: '4s',
                   background:
-                    'conic-gradient(from 0deg, transparent 0deg, rgba(58,134,198,0.12) 130deg, #3A86C6 300deg, #8CCDF3 345deg, transparent 360deg)',
+                    'conic-gradient(from 0deg, transparent 0deg, rgb(var(--color-signal) / 0.12) 130deg, rgb(var(--color-signal)) 300deg, rgb(var(--color-signal-light)) 345deg, transparent 360deg)',
                 }}
               />
               {/* pulsing halo */}
               <span
-                className="absolute inset-0 rounded-full bg-primary/30 animate-ping motion-reduce:animate-none"
+                className="absolute inset-0 rounded-full bg-signal/30 animate-ping motion-reduce:animate-none"
                 style={{ animationDuration: '2.6s' }}
               />
               {/* navy circle with the control word */}
-              <span className="absolute inset-0 flex items-center justify-center rounded-full border border-primary/60 bg-navy-900 shadow-xl">
-                <span className="text-[13px] font-bold uppercase tracking-[0.12em] text-primary-light">
+              <span className="absolute inset-0 flex items-center justify-center rounded-full border border-signal/60 bg-navy-900 shadow-xl">
+                <span className="text-[13px] font-bold uppercase tracking-[0.12em] text-white">
                   Ask
                 </span>
               </span>
               {/* notification badge */}
-              <span className="absolute -right-0.5 -top-0.5 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-primary-dark text-[11px] font-bold text-white ring-2 ring-white">
+              <span className="absolute -right-0.5 -top-0.5 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-signal text-[11px] font-bold text-white ring-2 ring-white">
                 1
               </span>
             </button>

@@ -8,7 +8,6 @@ import CoreSolutions from '../components/home/CoreSolutions';
 import ProductsShowcase from '../components/home/ProductsShowcase';
 import ManufacturingBand from '../components/home/ManufacturingBand';
 import ProjectCarousel from '../components/home/ProjectCarousel';
-import CtaBand from '../components/CtaBand';
 import useSEO from '../hooks/useSEO';
 import { company } from '../data/company';
 import { featuredProjects, featuredProjectImages } from '../data/content';
@@ -133,7 +132,7 @@ export default function Home() {
             <p className="mt-2 text-body-compact leading-relaxed text-ink">
               Independently audited and certified by TÜV Rheinland and the Government of India.
             </p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <div className="mt-6 grid grid-cols-2 gap-3">
               {company.certifications.map((c) => (
                 <a
                   key={c.name}
@@ -153,9 +152,6 @@ export default function Home() {
           </Reveal>
         </div>
       </section>
-
-      {/* FINAL CTA */}
-      <CtaBand />
     </>
   );
 }

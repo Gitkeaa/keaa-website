@@ -14,8 +14,9 @@
  *    page that nobody at KEAA agreed to. Those questions are answered honestly ("it depends,
  *    ask us") and point at the quotation form.
  *
- * `answersToConfirm` below lists the ones where a real figure would serve the customer
- * better than a redirect. Fill those in with the commercial team, then delete the flag.
+ * `needsRealAnswer: true` marks the questions where a real figure would serve the customer
+ * better than a redirect. It is an authoring note, not something the UI reads. Fill those in
+ * with the commercial team, then delete the flag.
  */
 import { company } from './company';
 
@@ -105,20 +106,12 @@ export const faqs = [
         a: 'Yes, distributors, wholesalers, importers, contractors and project developers all form part of our customer base, and we offer OEM and private-label options for partners building their own range.',
       },
       {
-        q: 'Where can I download catalogues and datasheets?',
-        a: 'Our Downloads Center holds the company brochure, product catalogues, technical datasheets, certifications and installation guides.',
+        q: 'Where can I download your catalogues?',
+        a: 'Our Downloads Center holds the full product catalogues: scaffolding and formworks, livestock housing solutions, and wood connectors and garden hardware. For a datasheet, certificate or any document not published there, contact our team and we will send it across.',
       },
     ],
   },
 ];
-
-/**
- * The questions whose answers are deliberately non-committal because the real figure is a
- * commercial decision, not a fact in this repository. Anything listed here should be
- * replaced with a genuine answer once the commercial team confirms it.
- */
-export const answersToConfirm = faqs
-  .flatMap((g) => g.items.filter((i) => i.needsRealAnswer).map((i) => i.q));
 
 /** Flat list, for the FAQPage structured data. */
 export const allFaqs = faqs.flatMap((g) => g.items);

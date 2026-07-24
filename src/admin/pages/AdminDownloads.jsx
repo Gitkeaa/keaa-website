@@ -5,6 +5,7 @@ import DataTable from '../components/DataTable';
 import Modal from '../components/Modal';
 import { useApi } from '../api/useApi';
 import { api, API_BASE } from '../api/client';
+import { fmtSize } from '../formatSize';
 
 /**
  * Downloads / Certificates — upload and manage the files offered on the public site.
@@ -15,13 +16,6 @@ import { api, API_BASE } from '../api/client';
  * the file endpoint — a top-level GET that carries the admin cookie.
  */
 const CATEGORIES = ['Catalogue', 'Certificate', 'Datasheet', 'Brochure'];
-
-function fmtSize(bytes) {
-  if (!bytes) return '—';
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
-  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
-}
 
 export default function AdminDownloads() {
   const { data, loading, error, setData } = useApi('/api/downloads');
@@ -105,7 +99,7 @@ export default function AdminDownloads() {
     <>
       <PageHeader
         title="Downloads / Certificates"
-        subtitle="Catalogues, datasheets and certificates available on the public site."
+        subtitle="Catalogues, datasheets and certificates. Anything uploaded here appears in the dashboard's Resource Library."
         actions={
           <button type="button" onClick={openNew} className="inline-flex items-center gap-2 rounded-lg bg-primary-dark px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-darker">
             <Plus className="h-4 w-4" /> Upload file

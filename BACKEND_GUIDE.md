@@ -253,7 +253,7 @@ Entity `com.keaa.adminapi.rfq.RfqRequest`.
 | `country` | `varchar(255)` null | `country.name` — the display name, not an ISO code | `AdminRFQ.jsx` "Country" |
 | `category` | `varchar(255)` null | `<select id="product">` — the option **text**, not a code | `AdminRFQ.jsx` "Category" |
 | `message` | `TEXT` | requirement details + port of destination + sales region, **joined into one blob** | **never displayed** |
-| `status` | `varchar(20)`, Java default `"new"` | `PATCH /api/rfq/{id}/status` from `StatusSelect` | `AdminRFQ.jsx` "Status"; dashboard counts `status = "new"` |
+| `status` | `varchar(20)`, Java default `"new"` | `PATCH /api/rfq/{id}/status` from `InquiryManager` | `AdminRFQ.jsx` "Status"; dashboard counts `status = "new"` |
 | `createdAt` | `Instant`, `updatable=false`, `@PrePersist` | Java on insert | `AdminRFQ.jsx` "Received" |
 
 **Not one column is `NOT NULL` and there is no validation on the controller.** `POST {}` writes
@@ -583,7 +583,7 @@ The table renders only seven columns (`AdminRFQ.jsx:25-39`):
 | Country | `r.country` |
 | Category | `r.category` |
 | Received | `(r.createdAt \|\| '').slice(0, 10)` |
-| Status | `StatusSelect` |
+| Status | `InquiryManager` status control |
 
 **`email`, `phone` and `message` are never rendered.** Everything the visitor actually typed —
 the requirement, the port, the region, how to contact them — is invisible in the console.

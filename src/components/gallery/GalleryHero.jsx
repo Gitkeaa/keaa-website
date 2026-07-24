@@ -37,7 +37,7 @@ export default function GalleryHero({ slides = [], crumbs = [], cta, interval = 
     'flex h-9 w-9 items-center justify-center rounded-full bg-white/12 text-lg text-white backdrop-blur-sm transition-colors hover:bg-white/25';
 
   return (
-    <section className="px-3 pt-3 sm:px-5 sm:pt-5 lg:px-6 lg:pt-6">
+    <section className="px-3 sm:px-5 lg:px-6">
       <div className="relative isolate flex min-h-[520px] overflow-hidden rounded-3xl lg:min-h-[600px]">
         {/* ---- crossfading photography ---- */}
         {slides.map((s, i) => (

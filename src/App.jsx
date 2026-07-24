@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Layout from './components/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
 import { AdminAuthProvider } from './admin/auth/AdminAuthContext';
@@ -15,7 +15,6 @@ const Contact = lazy(() => import('./pages/Contact'));
 
 const DownloadsCenter = lazy(() => import('./pages/DownloadsCenter'));
 const Certifications = lazy(() => import('./pages/Certifications'));
-const CustomerSuccessStories = lazy(() => import('./pages/CustomerSuccessStories'));
 const Careers = lazy(() => import('./pages/Careers'));
 const FAQ = lazy(() => import('./pages/FAQ'));
 const RequestQuotation = lazy(() => import('./pages/RequestQuotation'));
@@ -27,6 +26,10 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 // page keeps that weight off the initial bundle — the floating button just appears a
 // moment later.
 const AiChat = lazy(() => import('./components/AiChat'));
+
+// Feedback tab + drawer. Lazy for the same reason: nothing about a first paint needs it,
+// and its trigger is a permanent tab that can appear a moment after the page.
+const FeedbackWidget = lazy(() => import('./components/FeedbackWidget'));
 
 // Admin console — lazy so its bundle (and the mock data / catalogue it pulls in) never
 // touches the public site's entry chunk. Its own shell provides header/nav/footer, so it
@@ -43,6 +46,7 @@ const AdminVideos = lazy(() => import('./admin/pages/AdminVideos'));
 const AdminDownloads = lazy(() => import('./admin/pages/AdminDownloads'));
 const AdminRFQ = lazy(() => import('./admin/pages/AdminRFQ'));
 const AdminExportInquiries = lazy(() => import('./admin/pages/AdminExportInquiries'));
+const AdminCatalogueRequests = lazy(() => import('./admin/pages/AdminCatalogueRequests'));
 const AdminContacts = lazy(() => import('./admin/pages/AdminContacts'));
 const AdminCareers = lazy(() => import('./admin/pages/AdminCareers'));
 const AdminProfile = lazy(() => import('./admin/pages/AdminProfile'));
@@ -60,18 +64,22 @@ export default function App() {
 
 function AppShell() {
   const location = useLocation();
-  const isAdmin = location.pathname.startsWith('/admin');
+  const isAdmin = location.pathname.startsWith('/portal');
 
   return (
     <ErrorBoundary>
       <Suspense fallback={null}>
         <Routes>
           {/* Admin console — its own shell, guarded by AdminLayout. */}
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin" element={<AdminLayout />}>
+          <Route path="/portal/login" element={<AdminLogin />} />
+          <Route path="/portal" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="users" element={<AdminUsers />} />
             <Route path="roles" element={<AdminRoles />} />
+            {/* SOP & Help Management moved into Roles & Responsibilities as a tab; keep the old
+                deep-link working by redirecting it there. */}
+            <Route path="guides" element={<Navigate to="/portal/roles?tab=sop" replace />} />
+            <Route path="guides/*" element={<Navigate to="/portal/roles?tab=sop" replace />} />
             <Route path="products" element={<AdminProducts />} />
             <Route path="product-categories" element={<AdminProductCategories />} />
             <Route path="media" element={<AdminMedia />} />
@@ -79,6 +87,7 @@ function AppShell() {
             <Route path="downloads" element={<AdminDownloads />} />
             <Route path="rfq" element={<AdminRFQ />} />
             <Route path="export-inquiries" element={<AdminExportInquiries />} />
+            <Route path="catalogue-requests" element={<AdminCatalogueRequests />} />
             <Route path="contacts" element={<AdminContacts />} />
             <Route path="careers" element={<AdminCareers />} />
             <Route path="profile" element={<AdminProfile />} />
@@ -99,7 +108,10 @@ function AppShell() {
 
             <Route path="downloads" element={<DownloadsCenter />} />
             <Route path="certifications" element={<Certifications />} />
-            <Route path="success-stories" element={<CustomerSuccessStories />} />
+            {/* Customer Success Stories was retired; its testimonials moved to the FAQ page.
+                The route is kept as a redirect so the links already indexed for it land on
+                that content instead of a 404. */}
+            <Route path="success-stories" element={<Navigate to="/faq#testimonials" replace />} />
             <Route path="careers" element={<Careers />} />
             <Route path="faq" element={<FAQ />} />
             <Route path="rfq" element={<RequestQuotation />} />
@@ -116,6 +128,7 @@ function AppShell() {
       {!isAdmin && (
         <Suspense fallback={null}>
           <AiChat />
+          <FeedbackWidget />
         </Suspense>
       )}
       {/* Certification "Globally Certified" pop-up (FloatingPromos) is temporarily

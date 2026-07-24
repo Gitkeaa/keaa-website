@@ -53,16 +53,9 @@ export const heroSlides = {
     { id: 'DJI_0082_p2qmld', title: 'Talk to', accent: 'KEAA.', desc: 'Sales in Eindhoven, manufacturing in Ludhiana.' },
   ]),
 
-  customerSuccess: build([
-    { id: 'image_large_x3tifr', title: 'Trusted', accent: 'Worldwide.', desc: 'Real results from real projects.' },
-    { id: 'image_large_2_gi4d42', title: 'Built to', accent: 'Perform.', desc: 'Products that hold up on the toughest sites.' },
-    { id: 'DJI_0082_p2qmld', title: '42+ Countries,', accent: 'One Standard.', desc: 'Consistent quality, everywhere we ship.' },
-    { id: 'DSC_6057_x8jy1k', title: 'Partners, Not', accent: 'Just Suppliers.', desc: 'Long-term relationships built on trust.' },
-  ]),
-
   downloads: build([
-    { id: 'IMG_9471_rxoaxo', title: 'Downloads &', accent: 'Resources.', desc: 'Brochures, catalogues and datasheets in one place.' },
-    { id: 'IMG_9646_fegbtz', title: 'Every', accent: 'Spec.', desc: 'Technical sheets and installation guides.' },
+    { id: 'IMG_9471_rxoaxo', title: 'Downloads &', accent: 'Resources.', desc: 'Every product catalogue in one place.' },
+    { id: 'IMG_9646_fegbtz', title: 'Every', accent: 'Range.', desc: 'Item codes, sizes and finishes in full.' },
     { id: 'DJI_0083_1_w7zuxk', title: 'Know the', accent: 'Product.', desc: 'Everything you need before you order.' },
     { id: 'IMG_9641_pi3mja', title: 'Ready to', accent: 'Reference.', desc: 'Up-to-date documentation, free to download.' },
   ]),
@@ -76,7 +69,7 @@ export const heroSlides = {
 
   manufacturing: build([
     { id: 'IMG_9471_rxoaxo', title: 'Advanced Manufacturing.', accent: 'Built on Precision.', desc: 'Laser cutting, robotic welding and forming under one roof.' },
-    { id: 'IMG_9646_fegbtz', title: 'Engineered', accent: 'In-House.', desc: '25,000 sq. m across two integrated units.' },
+    { id: 'IMG_9646_fegbtz', title: 'Engineered', accent: 'In-House.', desc: '25,000 sq. m across five integrated units.' },
     { id: 'hot_dip_u4t1vc', title: 'Finished', accent: 'to Last.', desc: 'In-house hot-dip galvanizing per DIN EN 1461.' },
     { id: 'IMG_9389_pndzst', title: 'Scale &', accent: 'Consistency.', desc: '5,000+ MT annual capacity for global demand.' },
   ]),

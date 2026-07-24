@@ -23,6 +23,16 @@ export default {
           deep: 'rgb(var(--color-primary-deep) / <alpha-value>)',
         },
         accent: 'rgb(var(--color-accent) / <alpha-value>)',
+        /**
+         * Signal red. Reserved for the two floating controls (the hero's film badge and the
+         * AI assistant) — see the note in index.css before using it anywhere else.
+         */
+        signal: {
+          light: 'rgb(var(--color-signal-light) / <alpha-value>)',
+          DEFAULT: 'rgb(var(--color-signal) / <alpha-value>)',
+          dark: 'rgb(var(--color-signal-dark) / <alpha-value>)',
+          deep: 'rgb(var(--color-signal-deep) / <alpha-value>)',
+        },
         surface: {
           DEFAULT: 'rgb(var(--color-surface) / <alpha-value>)',
           raised: 'rgb(var(--color-surface-raised) / <alpha-value>)',

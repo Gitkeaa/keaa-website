@@ -134,31 +134,52 @@ export const EMAIL_TEMPLATES = [
  * `notes` string, one "Label: value" per line (see src/components/JobApplicationModal.jsx).
  * Parse them back out so the profile can show them as structured data.
  */
+// Maps a notes label (lowercased) to the parsed-output key. Keep in step with the labels the
+// public multi-step form writes (src/components/JobApplicationModal.jsx `buildNotes`).
+const NOTE_LABELS = {
+  message: 'message',
+  'why keaa': 'whyKeaa',
+  'why this role': 'whyRole',
+  qualification: 'qualification',
+  notice: 'notice',
+  'current employer': 'employer',
+  'expected salary': 'expectedSalary',
+  'current ctc': 'currentCtc',
+  'expected ctc': 'expectedCtc',
+  linkedin: 'linkedin',
+  'linkedin/portfolio': 'linkedin', // older applications used this combined label
+  portfolio: 'portfolio',
+  github: 'github',
+  certificates: 'certificates',
+  relocate: 'relocate',
+  passport: 'passport',
+  'travel ready': 'travel',
+  languages: 'languages',
+  'resume file': 'resumeFlag',
+};
+// Free-text fields are multi-line (textareas): capture every following line until the next
+// recognised label, so newlines survive and a later "Label:" line is not swallowed.
+const LONG_FIELDS = new Set(['message', 'whyKeaa', 'whyRole']);
+
 export function parseNotes(notes) {
-  const out = { message: '', qualification: '', notice: '', employer: '', linkedin: '', resumeFlag: '' };
+  const out = {
+    message: '', whyKeaa: '', whyRole: '', qualification: '', notice: '', employer: '',
+    expectedSalary: '', currentCtc: '', expectedCtc: '', linkedin: '', portfolio: '', github: '',
+    certificates: '', relocate: '', passport: '', travel: '', languages: '', resumeFlag: '',
+  };
   if (!notes) return out;
-  // The cover Message is a multi-line textarea, so capture it AND every following line until the
-  // next recognised label. This keeps newlines in the message and stops a later "Label:" line
-  // from being swallowed into the wrong field.
-  const KNOWN = new Set(['message', 'qualification', 'notice', 'current employer', 'linkedin/portfolio', 'linkedin', 'resume file']);
   let current = null;
   for (const line of String(notes).split('\n')) {
     const m = line.match(/^\s*([^:]+):\s*(.*)$/);
-    const key = m ? m[1].trim().toLowerCase() : null;
-    if (key && KNOWN.has(key)) {
-      const val = m[2].trim();
-      current = null;
-      if (key === 'message') { out.message = val; current = 'message'; }
-      else if (key === 'qualification') out.qualification = val;
-      else if (key === 'notice') out.notice = val;
-      else if (key === 'current employer') out.employer = val;
-      else if (key.startsWith('linkedin')) out.linkedin = val;
-      else if (key === 'resume file') out.resumeFlag = val;
-    } else if (current === 'message') {
-      out.message += (out.message ? '\n' : '') + line;
+    const key = m ? NOTE_LABELS[m[1].trim().toLowerCase()] : null;
+    if (key) {
+      out[key] = m[2].trim();
+      current = LONG_FIELDS.has(key) ? key : null;
+    } else if (current) {
+      out[current] += (out[current] ? '\n' : '') + line;
     }
   }
-  out.message = out.message.trim();
+  LONG_FIELDS.forEach((k) => { out[k] = out[k].trim(); });
   return out;
 }
 

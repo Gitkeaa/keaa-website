@@ -36,10 +36,11 @@ const STATIC_ROUTES = [
   '/certifications',
   '/faq',
   '/downloads',
-  '/success-stories',
   '/careers',
   '/privacy-policy',
   '/terms',
+  // Prerendered so the search index carries it: it is a real page a visitor may look for.
+  '/cookie-policy',
 ];
 
 export function getPrerenderRoutes({ includeProducts = false } = {}) {

@@ -75,9 +75,15 @@ const loadIndex = () => {
 /**
  * Rank a page against the query. Every term must appear somewhere (AND), so "scaffold
  * galvanized" narrows instead of widening; where a term appears decides the score.
+ *
+ * The ROUTE counts as searchable text, and scores just under the title. A visitor types what
+ * they call the page, which is often the word in the URL rather than the wording on it:
+ * "faq" finds a page titled "Frequently Asked Questions", "terms" and "privacy" find the
+ * legal pages, "rfq" finds "Request a Quotation". Without this those queries returned nothing.
  */
 function scorePage(page, terms) {
   const title = (page.t || '').toLowerCase();
+  const route = (page.r || '').toLowerCase().replace(/[-/]+/g, ' ').trim();
   const desc = (page.d || '').toLowerCase();
   const heads = (page.h || []).join(' ').toLowerCase();
   const body = (page.x || '').toLowerCase();
@@ -85,6 +91,7 @@ function scorePage(page, terms) {
   let score = 0;
   for (const term of terms) {
     if (title.includes(term)) score += 100;
+    else if (route.includes(term)) score += 80;
     else if (heads.includes(term)) score += 50;
     else if (desc.includes(term)) score += 30;
     else if (body.includes(term)) score += 10;

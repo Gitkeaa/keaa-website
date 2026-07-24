@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
-  User as UserIcon, Shield, SlidersHorizontal, Activity, Plug, KeyRound, Check, X,
-  LogOut, Download, Monitor, Smartphone, Fingerprint, Bell, Clock, AlertTriangle, Lock,
+  User as UserIcon, Shield, SlidersHorizontal, Activity, Plug, KeyRound, Check,
+  LogOut, Download, Monitor, Smartphone, Clock, AlertTriangle, Lock,
   Eye, EyeOff,
 } from 'lucide-react';
 import { jsPDF } from 'jspdf';
@@ -39,6 +39,7 @@ const NOTIFS = [
 
 const ACTIVITY_META = {
   LOGIN: { label: 'Signed in', icon: LogOut, tone: 'text-primary-darker bg-primary/10' },
+  LOGOUT: { label: 'Signed out', icon: LogOut, tone: 'text-slate-600 bg-slate-100' },
   PASSWORD_CHANGED: { label: 'Changed password', icon: KeyRound, tone: 'text-amber-700 bg-amber-100' },
   PROFILE_UPDATED: { label: 'Updated profile', icon: UserIcon, tone: 'text-emerald-700 bg-emerald-100' },
   LOGOUT_ALL: { label: 'Logged out everywhere', icon: Shield, tone: 'text-red-700 bg-red-100' },
@@ -95,6 +96,9 @@ export default function AdminProfile() {
   const [profile, setProfile] = useState(null);
   const [activity, setActivity] = useState([]);
   const [tab, setTab] = useState('overview');
+  const [actFrom, setActFrom] = useState('');
+  const [actTo, setActTo] = useState('');
+  const [actPage, setActPage] = useState(1);
   const [error, setError] = useState('');
 
   // Personal edit
@@ -132,7 +136,7 @@ export default function AdminProfile() {
       });
       setPForm({ name: p.name || '', phone: p.phone || '', avatarUrl: p.avatarUrl || '' });
     }).catch((e) => setError(e.message || 'Could not load profile.'));
-    api.get('/api/profile/activity?limit=30').then(setActivity).catch(() => {});
+    api.get('/api/profile/activity?limit=500').then(setActivity).catch(() => {});
   };
   useEffect(load, []);
 
@@ -230,23 +234,44 @@ export default function AdminProfile() {
     doc.save('keaa-profile.pdf');
   };
 
+  // Exports exactly the From/To range currently in view (defaults to the last 3 months).
   const downloadActivityLog = () => {
     const doc = new jsPDF();
     pdfHeader(doc, 'Activity log — ' + (profile.name || ''));
-    let y = 46;
+    doc.setFontSize(9); doc.setTextColor(120, 120, 120);
+    doc.text(`Range: ${fmt(rangeFrom, false)} to ${fmt(rangeTo, false)}`, 18, 41);
+    let y = 50;
     doc.setFontSize(10);
-    if (activity.length === 0) { doc.setTextColor(150, 150, 150); doc.text('No activity recorded.', 18, y); }
-    activity.forEach((e) => {
+    if (filteredActivity.length === 0) { doc.setTextColor(150, 150, 150); doc.text('No activity in this range.', 18, y); }
+    filteredActivity.forEach((e) => {
       if (y > 280) { doc.addPage(); y = 22; }
-      doc.setFontSize(11); doc.setTextColor(30, 30, 30); doc.text(e.detail || e.type, 18, y);
+      const label = e.detail || (ACTIVITY_META[e.type] && ACTIVITY_META[e.type].label) || e.type;
+      doc.setFontSize(11); doc.setTextColor(30, 30, 30); doc.text(String(label), 18, y);
       doc.setFontSize(8); doc.setTextColor(150, 150, 150); doc.text(fmt(e.at) + (e.ip ? '   ·   ' + e.ip : ''), 18, y + 5);
       y += 13;
     });
-    doc.save('keaa-activity-log.pdf');
+    doc.save(`keaa-activity-${rangeFrom}_to_${rangeTo}.pdf`);
   };
 
   const initials = (profile?.name || user?.name || '?').split(' ').map((n) => n[0]).slice(0, 2).join('');
   const loginHistory = useMemo(() => activity.filter((a) => a.type === 'LOGIN'), [activity]);
+
+  // Activity Timeline shows a rolling 3-month window (a hard floor: the From picker cannot go
+  // before it). Within that, the From/To calendar narrows the view, and the same range drives
+  // the PDF download. Ten entries per page.
+  const isoDay = (d) => d.toISOString().slice(0, 10);
+  const threeMonthsAgo = useMemo(() => { const d = new Date(); d.setMonth(d.getMonth() - 3); return isoDay(d); }, []);
+  const todayIso = isoDay(new Date());
+  const rangeFrom = actFrom && actFrom > threeMonthsAgo ? actFrom : threeMonthsAgo;
+  const rangeTo = actTo || todayIso;
+  const ACT_PER_PAGE = 10;
+  const filteredActivity = useMemo(
+    () => activity.filter((e) => { const day = String(e.at || '').slice(0, 10); return day && day >= rangeFrom && day <= rangeTo; }),
+    [activity, rangeFrom, rangeTo]
+  );
+  const actPageCount = Math.max(1, Math.ceil(filteredActivity.length / ACT_PER_PAGE));
+  const actSafePage = Math.min(actPage, actPageCount);
+  const pagedActivity = filteredActivity.slice((actSafePage - 1) * ACT_PER_PAGE, actSafePage * ACT_PER_PAGE);
   const availableNotifs = NOTIFS.filter((n) => !n.module || moduleAccess(role, n.module));
 
   const TABS = [
@@ -508,7 +533,6 @@ export default function AdminProfile() {
           <Card title="Data & Account">
             <div className="flex flex-wrap gap-2">
               <button type="button" onClick={downloadProfilePdf} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-navy-700 hover:bg-slate-50"><Download className="h-4 w-4" /> Download my profile (PDF)</button>
-              <button type="button" onClick={downloadActivityLog} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-navy-700 hover:bg-slate-50"><Download className="h-4 w-4" /> Download activity log (PDF)</button>
               <button type="button" onClick={logoutAll} disabled={loggingOut} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-navy-700 hover:bg-slate-50 disabled:opacity-60"><LogOut className="h-4 w-4" /> Log out everywhere</button>
             </div>
             {isSuper && (
@@ -524,23 +548,60 @@ export default function AdminProfile() {
 
       {/* ---------------- ACTIVITY ---------------- */}
       {tab === 'activity' && (
-        <Card title="Activity Timeline" desc="Your recent account activity.">
-          {activity.length === 0 ? (
-            <p className="text-sm text-slate-400">No activity recorded yet.</p>
+        <Card title="Activity Timeline" desc="Your account activity from the last 3 months.">
+          {/* Date filter (calendar) + range download. The From picker is floored at 3 months ago,
+              so nobody can page back further; the same range is what the PDF exports. */}
+          <div className="mb-4 flex flex-wrap items-end gap-3 border-b border-slate-100 pb-4">
+            <div>
+              <label className="mb-1 block text-xs font-medium text-slate-500">From</label>
+              <input type="date" value={rangeFrom} min={threeMonthsAgo} max={rangeTo}
+                onChange={(e) => { setActFrom(e.target.value); setActPage(1); }}
+                className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-navy-800 outline-none focus:border-primary" />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-slate-500">To</label>
+              <input type="date" value={rangeTo} min={rangeFrom} max={todayIso}
+                onChange={(e) => { setActTo(e.target.value); setActPage(1); }}
+                className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-navy-800 outline-none focus:border-primary" />
+            </div>
+            {(actFrom || actTo) && (
+              <button type="button" onClick={() => { setActFrom(''); setActTo(''); setActPage(1); }}
+                className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50">Reset</button>
+            )}
+            <button type="button" onClick={downloadActivityLog}
+              className="ml-auto inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3.5 py-1.5 text-sm font-semibold text-navy-700 hover:bg-slate-50">
+              <Download className="h-4 w-4" /> Download (PDF)
+            </button>
+          </div>
+
+          {filteredActivity.length === 0 ? (
+            <p className="text-sm text-slate-400">No activity in this date range.</p>
           ) : (
-            <ol className="relative ml-2 border-l border-slate-200">
-              {activity.map((e, i) => {
-                const meta = ACTIVITY_META[e.type] || { label: e.type, icon: Activity, tone: 'text-slate-500 bg-slate-100' };
-                const Icon = meta.icon;
-                return (
-                  <li key={i} className="mb-5 ml-6 last:mb-0">
-                    <span className={`absolute -left-[13px] flex h-6 w-6 items-center justify-center rounded-full ring-4 ring-white ${meta.tone}`}><Icon className="h-3.5 w-3.5" /></span>
-                    <p className="text-sm font-medium text-navy-800">{e.detail || meta.label}</p>
-                    <p className="text-xs text-slate-400">{fmt(e.at)}{e.ip ? ` · ${e.ip}` : ''}</p>
-                  </li>
-                );
-              })}
-            </ol>
+            <>
+              <ol className="relative ml-2 border-l border-slate-200">
+                {pagedActivity.map((e, i) => {
+                  const meta = ACTIVITY_META[e.type] || { label: e.type, icon: Activity, tone: 'text-slate-500 bg-slate-100' };
+                  const Icon = meta.icon;
+                  return (
+                    <li key={i} className="mb-5 ml-6 last:mb-0">
+                      <span className={`absolute -left-[13px] flex h-6 w-6 items-center justify-center rounded-full ring-4 ring-white ${meta.tone}`}><Icon className="h-3.5 w-3.5" /></span>
+                      <p className="text-sm font-medium text-navy-800">{e.detail || meta.label}</p>
+                      <p className="text-xs text-slate-400">{fmt(e.at)}{e.ip ? ` · ${e.ip}` : ''}</p>
+                    </li>
+                  );
+                })}
+              </ol>
+              {actPageCount > 1 && (
+                <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-3 text-sm">
+                  <span className="text-slate-500">{filteredActivity.length} entries</span>
+                  <div className="flex items-center gap-1">
+                    <button type="button" onClick={() => setActPage((p) => Math.max(1, p - 1))} disabled={actSafePage <= 1} className="rounded-lg border border-slate-200 px-3 py-1.5 font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40">Prev</button>
+                    <span className="px-2 text-slate-500">Page {actSafePage} of {actPageCount}</span>
+                    <button type="button" onClick={() => setActPage((p) => Math.min(actPageCount, p + 1))} disabled={actSafePage >= actPageCount} className="rounded-lg border border-slate-200 px-3 py-1.5 font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40">Next</button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </Card>
       )}

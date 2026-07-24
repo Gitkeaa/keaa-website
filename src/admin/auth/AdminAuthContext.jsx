@@ -44,7 +44,7 @@ export function AdminAuthProvider({ children }) {
       return { ok: true };
     } catch (e) {
       // A CODE, not just a sentence. This used to return English prose, which was fine while
-      // /admin/login was the only caller — an internal console, English-only, staffed by people
+      // /portal/login was the only caller — an internal console, English-only, staffed by people
       // who know what port 8080 is. It is now also reachable from the PUBLIC header in twelve
       // languages, where "Is the backend running on port 8080?" is both untranslated and an
       // internal detail no visitor should ever be shown. Callers map the code to their own copy;

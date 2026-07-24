@@ -32,6 +32,3 @@ export const DEFAULT_LANGUAGE = 'en';
 export function getLanguage(code) {
   return languages.find((l) => l.code === code) || languages[0];
 }
-
-/** The switcher groups by trade region, in this order. */
-export const LANGUAGE_REGIONS = ['Global', 'Europe', 'Middle East', 'Asia'];

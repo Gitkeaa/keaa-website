@@ -13,7 +13,7 @@ import {
 import Logo from './Logo';
 import { megaMenuItems } from '../../data/navigation';
 import { company, countries } from '../../data/company';
-import { downloadResources } from '../../data/content';
+import { catalogueDownloads } from '../../data/content';
 
 const gridStagger = {
   hidden: {},
@@ -197,7 +197,7 @@ export default function MegaMenu({ open, onClose }) {
                   <span className="text-xs font-semibold uppercase tracking-widest text-muted">
                     Quick Access
                   </span>
-                  {downloadResources.slice(0, 3).map((d) => (
+                  {catalogueDownloads.map((d) => (
                     <a
                       key={d.title}
                       href={d.url}

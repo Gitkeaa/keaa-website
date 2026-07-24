@@ -271,13 +271,17 @@ export default function ProductsShowcase() {
               {/* Inside the card, behind a hairline — evidence for the category on show, not
                   a panel of its own. The border flips from top to left at `lg`, where the
                   column moves from under the stage to beside it. */}
-              <ul className="flex flex-col justify-center border-t border-border px-5 py-1 xl:border-l xl:border-t-0">
+              {/* Phone: a 2x2 grid so the four figures fill the width instead of running down
+                  a tall single column. From `sm` up it is the original vertical list with the
+                  hairlines between rows — desktop is untouched. */}
+              <ul className="grid grid-cols-2 gap-x-6 border-t border-border px-5 py-1 sm:flex sm:flex-col sm:justify-center xl:border-l xl:border-t-0">
                 {STATS.map((s, i) => (
                   <li
                     key={s.label}
-                    /* Hairlines BETWEEN the figures only — a rule under the last one would
-                       read as the start of something that never comes. */
-                    className={`py-4 ${i > 0 ? 'border-t border-border' : ''}`}
+                    /* Hairlines BETWEEN the figures only, and only in the vertical (sm+) list —
+                       a rule under the last one would read as the start of something that never
+                       comes, and in the phone grid the gap does the separating instead. */
+                    className={`py-3 sm:py-4 ${i > 0 ? 'sm:border-t sm:border-border' : ''}`}
                   >
                     <div className="font-display text-xl font-bold leading-none text-text">
                       {s.value}

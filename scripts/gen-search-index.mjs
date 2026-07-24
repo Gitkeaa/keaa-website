@@ -26,8 +26,12 @@ const DIST = join(ROOT, 'dist');
 /** Chrome, nav and boilerplate that appears on every page would match everything. */
 const STRIP_SELECTOR_TAGS = ['script', 'style', 'noscript', 'svg', 'header', 'footer', 'nav'];
 
-/** Routes whose text is chrome or legal boilerplate rather than findable content. */
-const SKIP_ROUTES = new Set(['/privacy-policy', '/terms']);
+/**
+ * Nothing is skipped. The legal pages used to be excluded here as "boilerplate", which meant
+ * a visitor searching "privacy", "cookies" or "terms" got no result for the very pages that
+ * answer them. If a page is on the site and a visitor can read it, it is findable.
+ */
+const SKIP_ROUTES = new Set();
 
 const decodeEntities = (s) =>
   s
@@ -95,7 +99,11 @@ if (!existsSync(DIST)) {
   process.exit(0);
 }
 
+/** Per-page body-text cap. See the note on `x` below. */
+const TEXT_CAP = 16000;
+
 const entries = [];
+const truncated = [];
 for (const file of walk(DIST)) {
   const rel = relative(DIST, dirname(file)).split(sep).filter(Boolean).join('/');
   const route = rel ? `/${rel}` : '/';
@@ -109,13 +117,25 @@ for (const file of walk(DIST)) {
     t: title,
     d: description,
     h: headings,
-    // Capped: the index is downloaded by the visitor, and a match past ~4 000 characters
-    // is deep enough into a page that surfacing it as a result is noise anyway.
-    x: text.slice(0, 4000),
+    /**
+     * Capped so the index the visitor downloads stays small. It was 4 000, which quietly
+     * truncated the one page that most needs full coverage: the FAQ runs well past that, so
+     * its later answers (and now the testimonials under them) were simply not searchable.
+     * At 16 000 every page on this site is indexed whole; revisit only if the index grows
+     * uncomfortable, and log it rather than truncating in silence.
+     */
+    x: text.slice(0, TEXT_CAP),
   });
+  if (text.length > TEXT_CAP) {
+    truncated.push(`${route} (${text.length} chars)`);
+  }
 }
 
 writeFileSync(join(DIST, 'search-index.json'), JSON.stringify(entries));
 
 const kb = (statSync(join(DIST, 'search-index.json')).size / 1024).toFixed(1);
 console.log(`search-index.json: ${entries.length} pages, ${kb} KB`);
+// Never truncate silently: a clipped page looks fully indexed but is not searchable to the end.
+if (truncated.length) {
+  console.warn(`[search-index] body text clipped at ${TEXT_CAP} chars on: ${truncated.join(', ')}`);
+}

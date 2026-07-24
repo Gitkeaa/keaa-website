@@ -160,7 +160,7 @@ function buildKnowledgeBase(data) {
     testimonials,
     featuredProjects,
     careers,
-    downloadResources,
+    catalogueDownloads,
   } = data;
 
   const list = (arr, fn) => arr.map(fn).join('\n');
@@ -211,8 +211,8 @@ ${list(leadership, (l) => `- ${l.name} — ${l.role}: ${l.bio}${l.linkedin ? ` (
 OPEN CAREERS:
 ${list(careers, (c) => `- ${c.title} — ${c.location} (${c.type})`)}
 
-DOWNLOADABLE RESOURCES:
-${list(downloadResources, (d) => `- ${d.title} (${d.type}, ${d.size})`)}
+DOWNLOADABLE RESOURCES (the Downloads Center at /downloads offers these catalogues and nothing else):
+${list(catalogueDownloads, (d) => `- ${d.title} (${d.type})`)}
 
 CUSTOMER TESTIMONIALS:
 ${list(testimonials, (t) => `- "${t.quote}" — ${t.name}, ${t.company}`)}
@@ -266,7 +266,7 @@ async function loadKnowledge(reason = 'startup') {
       testimonials: contentMod.testimonials,
       featuredProjects: contentMod.featuredProjects,
       careers: contentMod.careers,
-      downloadResources: contentMod.downloadResources,
+      catalogueDownloads: contentMod.catalogueDownloads,
     });
 
     FULL_INSTRUCTION = `${SYSTEM_PROMPT}\n${knowledge}`;

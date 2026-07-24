@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Linkedin, ShieldCheck, Globe2, Factory, Handshake } from 'lucide-react';
 import SectionHeading from '../components/ui/SectionHeading';
-import ImagePlaceholder from '../components/ui/ImagePlaceholder';
 import Reveal, { StaggerGroup, StaggerItem } from '../components/ui/Reveal';
 import CardRail from '../components/ui/CardRail';
 import { PANEL_CARD } from '../components/ui/panelCard';
@@ -154,7 +153,7 @@ export default function About() {
                 than four loose tiles. Navy is also what lets the icons carry real colour:
                 `primary` is only 3.89:1 on white but 4.75:1 here. */}
             <div className="mt-10 rounded-card bg-surface-deep p-6 sm:p-8">
-              <ul className="grid gap-x-8 gap-y-8 sm:grid-cols-2 xl:grid-cols-4 xl:divide-x xl:divide-white/10">
+              <ul className="grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-2 xl:grid-cols-4 xl:divide-x xl:divide-white/10">
                 {whoWeAre.map((w, i) => {
                   const Icon = WHO_WE_ARE_ICONS[i];
                   return (
@@ -227,7 +226,7 @@ export default function About() {
 
           <Reveal delay={0.1}>
             <div className="mt-12 rounded-card border border-navy-100 bg-white p-8 shadow-card">
-              <ul className="grid gap-y-10 sm:grid-cols-2 xl:grid-cols-4 xl:divide-x xl:divide-navy-100">
+              <ul className="grid grid-cols-2 gap-y-10 sm:grid-cols-2 xl:grid-cols-4 xl:divide-x xl:divide-navy-100">
                 {company.stats.slice(0, 4).map((s, i) => (
                   /* Number leads, big and bold; the label sits under it in the muted tone. */
                   <li key={s.label} className={`min-w-0 ${i > 0 ? 'xl:pl-6' : ''}`}>
@@ -269,7 +268,7 @@ export default function About() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <ol className="relative grid gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-5">
+            <ol className="relative grid grid-cols-2 gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-5">
               {/* The rail the dots sit on. Desktop only — stacked items need no connector.
                   46px = step index (20) + mt-5 (20) + half the 12px dot. */}
               <span aria-hidden className="absolute inset-x-0 top-[46px] hidden h-px bg-navy-200 lg:block" />

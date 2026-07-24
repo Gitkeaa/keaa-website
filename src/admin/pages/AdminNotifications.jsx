@@ -18,25 +18,25 @@ import { api } from '../api/client';
 const SOURCES = [
   {
     moduleKey: 'rfq', path: '/api/rfq', icon: FileText, tone: 'text-primary-darker bg-primary/10',
-    to: '/admin/rfq', filter: (r) => r.type !== 'export',
+    to: '/portal/rfq', filter: (r) => r.type !== 'export',
     title: (r) => `New RFQ from ${r.name || 'a visitor'}`,
     subtitle: (r) => [r.company, r.country].filter(Boolean).join(' · '),
   },
   {
     moduleKey: 'rfq', path: '/api/rfq', icon: Globe2, tone: 'text-amber-700 bg-amber-100',
-    to: '/admin/export-inquiries', filter: (r) => r.type === 'export',
+    to: '/portal/export-inquiries', filter: (r) => r.type === 'export',
     title: (r) => `Export inquiry from ${r.name || 'a visitor'}`,
     subtitle: (r) => [r.company, r.country].filter(Boolean).join(' · '),
   },
   {
     moduleKey: 'contacts', path: '/api/contact', icon: Mail, tone: 'text-emerald-700 bg-emerald-100',
-    to: '/admin/contacts',
+    to: '/portal/contacts',
     title: (r) => `Message from ${r.name || 'a visitor'}`,
     subtitle: (r) => r.subject || r.email,
   },
   {
     moduleKey: 'applications', path: '/api/careers', icon: Briefcase, tone: 'text-navy-700 bg-navy-100',
-    to: '/admin/careers',
+    to: '/portal/careers',
     title: (r) => `Application: ${r.name || 'a candidate'}`,
     subtitle: (r) => [r.position, r.location].filter(Boolean).join(' · '),
   },

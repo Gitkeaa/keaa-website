@@ -64,7 +64,9 @@ export default function CoreSolutions() {
               across more than 42 countries worldwide.
             </p>
 
-            <dl className="mt-9 grid gap-8 sm:grid-cols-3 sm:gap-6">
+            {/* Phone: two columns so the three pillars fill the width instead of stacking into
+                a tall single file. Desktop is untouched — `sm:` still drives the 3-up row. */}
+            <dl className="mt-9 grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-3 sm:gap-6">
               {PILLARS.map(({ title, desc }) => (
                 <div key={title}>
                   <dt className="whitespace-pre-line font-display text-[15px] font-bold leading-snug text-text">
