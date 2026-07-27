@@ -9,7 +9,14 @@ import { careers } from '../data/content';
 import { company } from '../data/company';
 import useSEO from '../hooks/useSEO';
 import CtaBand from '../components/CtaBand';
+import { EASE } from '../lib/motion';
 
+/**
+ * Careers page: hero, a KEAA stats band, perks, and expandable job listings with an apply modal.
+ *
+ * Rendered at the public /careers route, lazy-loaded in App.jsx. Openings come from data/content.js
+ * and the stat figures from data/company.js; edit those to change what this page shows.
+ */
 const perks = [
   { title: 'Growth Opportunities', desc: 'Clear paths to grow within production, quality, exports and management.' },
   { title: 'Learning & Development', desc: 'On-the-job training across our certified manufacturing processes.' },
@@ -204,7 +211,7 @@ export default function Careers() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{ duration: 0.3, ease: EASE }}
                         className="overflow-hidden"
                       >
                         <p className="mt-3 max-w-3xl text-body-compact leading-relaxed text-ink">

@@ -19,10 +19,10 @@ export const heroSlides = {
   ]),
 
   products: build([
-    { id: 'DSC_6057_x8jy1k', title: 'Engineered for Strength.', accent: 'Built for Performance.', desc: 'Scaffolding, formwork, safety, livestock housing and garden hardware.' },
+    { id: 'image_large_3_hxtwtf', title: 'Engineered for Strength.', accent: 'Built for Performance.', desc: 'Scaffolding, formwork, safety, livestock housing and garden hardware.' },
     { id: 'image_large_x3tifr', title: 'Systems that', accent: 'Fit Together.', desc: 'Complete scaffolding & formwork solutions for any project.' },
     { id: 'image_large_2_gi4d42', title: 'Built to', accent: 'Global Standards.', desc: 'ISO, CE and EN-conformant across the range.' },
-    { id: 'DSC_6058_fev55g', title: 'The Full', accent: 'Range.', desc: '355+ products in one catalogue.' },
+    { id: 'IMG_9524_qcbtn4', title: 'The Full', accent: 'Range.', desc: '355+ products in one catalogue.' },
   ]),
 
   about: build([
@@ -78,6 +78,6 @@ export const heroSlides = {
     { id: 'image_9a3a7917-5b5e-474f-b8f7-cd170a7ca8f620230407_115549_rrzguh', title: 'Request a', accent: 'Quote.', desc: 'Tell us what you need — we reply within 24 hours.' },
     { id: 'image_large_x3tifr', title: 'The Right', accent: 'Solution.', desc: 'Tailored specs and pricing for your project.' },
     { id: 'IMG_9524_qcbtn4', title: 'Any Volume,', accent: 'Any Market.', desc: 'From single orders to bulk export.' },
-    { id: 'DSC_6058_fev55g', title: "Let's Get", accent: 'Started.', desc: 'Share your requirement and our team takes it from there.' },
+    { id: 'IMG_9483_xgkajt', title: "Let's Get", accent: 'Started.', desc: 'Share your requirement and our team takes it from there.' },
   ]),
 };

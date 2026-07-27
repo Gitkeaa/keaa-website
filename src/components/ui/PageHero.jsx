@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import AnimatedCounter from './AnimatedCounter';
+import { EASE } from '../../lib/motion';
 
 /**
  * The interior-page hero, rebuilt to match the homepage: a light stage with the
@@ -24,8 +25,6 @@ import AnimatedCounter from './AnimatedCounter';
  *     steel, amber dusk — and the `color` blend rewrites hue while keeping luminance,
  *     so eight different pages read as one brand.
  */
-
-const EASE = [0.22, 1, 0.36, 1];
 
 /**
  * The stock photographs are warm — orange steel, amber dusk — the literal complement of

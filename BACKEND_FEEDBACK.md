@@ -2,15 +2,25 @@
 
 The public feedback widget (`src/components/FeedbackWidget.jsx`) posts to `POST /api/feedback`.
 
-> **STATUS: BUILT AND VERIFIED.** The endpoint exists and submissions save. Everything in sections
-> 1 to 3 below is implemented in the Spring Boot project
-> **`c:\Users\Web-Pc\IdeaProjects\keaa-admin-api`**, package `com.keaa.adminapi.feedback`
-> (`Feedback.java`, `FeedbackRepository.java`, `FeedbackController.java`) plus two lines in
-> `config/SecurityConfig.java`. Compiles clean, and a submission driven through the real widget in
-> a browser returned HTTP 200 and landed a row in the `feedback` table. **Section 4 is the part
-> still outstanding** — there is no admin screen to read any of it yet.
+> **STATUS: COMPLETE AND VERIFIED, END TO END.** A visitor submits through the drawer, the row
+> saves, and the team reads and triages it in the admin console. Every section below is built.
 >
-> The project is not in git. A backup of `src`, `pom.xml` and `uploads` was taken at
+> Backend (`c:\Users\Web-Pc\IdeaProjects\keaa-admin-api`, package `com.keaa.adminapi.feedback`):
+> `Feedback.java`, `FeedbackRepository.java`, `FeedbackController.java`, two lines in
+> `config/SecurityConfig.java` (public POST + authenticated read), and a `newFeedback` /
+> `avgRating` pair added to `DashboardController.Summary`. Compiles clean.
+>
+> Frontend (this repo): `feedback` flipped to `implemented: true` in `src/admin/auth/roles.js`;
+> `MessageSquare` + `Star` added to `src/admin/adminIcons.js`; `src/admin/pages/AdminFeedback.jsx`
+> and its route in `src/App.jsx`; a "Recent Site Feedback" panel and a "New Feedback" KPI tile on
+> `src/admin/pages/AdminDashboard.jsx` via `src/admin/components/FeedbackCard.jsx`.
+>
+> Verified in a browser across three roles: Super Admin (view-only), Business Development (full
+> triage, status change persists across a reload), and HR (no tile, no card, no sidebar item, no
+> 403, deep-link redirects). A public POST driven through the real widget returned 200 and landed
+> a row.
+>
+> The backend project is not in git. A backup of `src`, `pom.xml` and `uploads` was taken at
 > `c:\Users\Web-Pc\IdeaProjects\keaa-admin-api-backup-before-feedback` before these edits.
 
 This file stays as the reference for what was built and, more importantly, **why** it was built
@@ -136,24 +146,29 @@ which mirrors the `feedback` entry in `src/admin/auth/roles.js`. Note that rule 
 public POST matcher, so an anonymous `POST /api/feedback` still succeeds while an anonymous
 `GET /api/feedback` returns 403 (verified).
 
-A `GET /api/feedback/summary` returning the average rating and a count per `type` would let the
-dashboard show a satisfaction tile, but it is not required for the module to work.
+The dashboard satisfaction tile is fed NOT by a separate `/summary` route but by two fields added
+to the existing `GET /api/dashboard/summary` — `newFeedback` (count of `status = "new"`) and
+`avgRating` (mean stars, **null** on an empty table so the tile shows a dash rather than "0.0").
+See `DashboardController.Summary`.
 
-## 4. Frontend work still outstanding once this lands
+## 4. Frontend — BUILT
 
-1. Flip `implemented: false` to `true` on the `feedback` entry in
-   [src/admin/auth/roles.js](src/admin/auth/roles.js). That alone puts it in the sidebar for the
-   right roles and turns a deep-link into a real page rather than a redirect.
-2. Add `MessageSquare` to [src/admin/adminIcons.js](src/admin/adminIcons.js) so the sidebar can
-   resolve the icon name already declared on the module.
-3. Build `src/admin/pages/AdminFeedback.jsx` and register its route in
-   [src/App.jsx](src/App.jsx), following `AdminContacts.jsx`. The list wants: rating, type,
-   message, page, whether a reply was invited, and the status control.
+All three steps below are done; kept here as the map of what was touched.
 
-Until step 1 happens the module is invisible in the console. Feedback is now being **collected and
-stored**, but nobody on the team can read it from the admin panel yet — `GET /api/feedback` works,
-there is simply no screen calling it. Until that page exists, the only way to see submissions is a
-direct query:
+1. `feedback` is `implemented: true` in [src/admin/auth/roles.js](src/admin/auth/roles.js), which
+   puts it in the sidebar for Super Admin, Senior Admin, Admin and Business Development (the top two
+   tiers view-only), and turns a deep-link into a real page instead of a redirect.
+2. `MessageSquare` and `Star` are in [src/admin/adminIcons.js](src/admin/adminIcons.js).
+3. [src/admin/pages/AdminFeedback.jsx](src/admin/pages/AdminFeedback.jsx) renders the list (rating,
+   type, message, sender, page, received, status) with search + status/type filters and a detail
+   modal; its route is registered in [src/App.jsx](src/App.jsx). It is **not** an `InquiryManager`,
+   deliberately — same reason the entity is not an `Inquiry`.
+
+Plus one thing beyond the original three steps: a "Recent Site Feedback" panel and a "New Feedback"
+KPI tile on the dashboard, via [src/admin/components/FeedbackCard.jsx](src/admin/components/FeedbackCard.jsx),
+shown on both the manager and rep dashboards for any role that has the module.
+
+A direct query remains a useful fallback for a DBA:
 
 ```sql
 SELECT rating, type, message, name, email, contact_consent, page_url, created_at

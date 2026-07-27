@@ -74,6 +74,8 @@ export default function Layout() {
             open={drawerOpen}
             onClose={() => setDrawerOpen(false)}
           />
+          {/* Desktop only (hidden below sm): on mobile the chat launcher moves to the
+              bottom-left corner this button occupies, so it steps aside there. */}
           <BackToTop />
           {/* Site-wide on every public page. Portals itself to <body>. */}
           <CookieConsent />

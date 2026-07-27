@@ -18,7 +18,7 @@
  * better than a redirect. It is an authoring note, not something the UI reads. Fill those in
  * with the commercial team, then delete the flag.
  */
-import { company } from './company';
+import { company } from './company.js';
 
 export const faqs = [
   {

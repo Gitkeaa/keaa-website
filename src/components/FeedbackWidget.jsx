@@ -7,6 +7,10 @@ import EmailField from './ui/EmailField';
 import WordLimitTextarea from './ui/WordLimitTextarea';
 import { submitPublicForm } from '../data/adminApi';
 import { getCookieConsent, CONSENT_EVENT } from './CookieConsent';
+import { EASE } from '../lib/motion';
+import { isPrerender } from '../lib/prerender';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 /**
  * Site-wide visitor feedback: a permanent right-edge tab, a once-per-session nudge, and the
@@ -15,21 +19,18 @@ import { getCookieConsent, CONSENT_EVENT } from './CookieConsent';
  * Mounted once in App.jsx behind the `!isAdmin` gate, alongside AiChat — the admin console
  * has its own SOP/help channel and must never show a public feedback form.
  *
- * WHY THE TRIGGER IS A RIGHT-EDGE TAB AND NOT A BOTTOM-RIGHT BUTTON
- * -----------------------------------------------------------------
- * The bottom-right corner is full. AiChat's launcher (z-50) and BackToTop (z-40) are BOTH
- * `fixed right-6` at `bottom: calc(1.5rem + var(--consent-bar-h))`, and the consent bar runs
- * across the bottom on a first visit. HeroMediaNav.jsx already documents that corner as
- * unusable for anything else. A third control parked there would stack on the chat launcher,
- * so the persistent trigger is a slim tab pinned to the middle of the right edge instead,
- * which collides with nothing.
+ * WHY THE TRIGGER IS A RIGHT-EDGE TAB
+ * -----------------------------------
+ * A slim tab pinned to the middle of the right edge collides with nothing: it clears the
+ * bottom corners (chat launcher, back-to-top and this widget's own nudge) and the consent bar
+ * that runs across the bottom on a first visit. See HeroMediaNav.jsx for the shared-corner notes.
  *
- * WHY THE NUDGE IS BOTTOM-LEFT
- * ----------------------------
- * Same reason, plus one more: an open chat window is `w-96 h-[600px]` in the bottom-right, so
- * a card parked above the launcher would land on top of it mid-conversation. Bottom-left is
- * free (FloatingPromos, currently disabled, was anchored there for exactly this reason) and
- * the nudge can never cover the chat.
+ * WHY THE NUDGE IS BOTTOM-LEFT, AND WHY IT SITS ABOVE A BUTTON HEIGHT
+ * ------------------------------------------------------------------
+ * The bottom-left corner always holds a floating button: back-to-top on desktop, and the chat
+ * launcher on mobile (where back-to-top is hidden and the launcher moves left). Either way the
+ * nudge shares that corner, so it is lifted by roughly one button's worth of height (NUDGE_LIFT)
+ * to stack cleanly ABOVE it. Drop NUDGE_LIFT back to 0 if that corner ever clears.
  *
  * PRERENDER
  * ---------
@@ -55,6 +56,13 @@ const NUDGE_KEY = 'keaa:feedback-nudge';
 const DWELL_MS = 150000; // 2.5 minutes
 const SCROLL_TRIGGER = 0.7; // 70% of the page
 
+/**
+ * How far the nudge is lifted off the bottom edge so it clears the bottom-left button beneath
+ * it (an h-12/h-14 button at bottom-6 → its top is ~5rem up; this leaves a small gap above).
+ * See the note at the top of the file.
+ */
+const NUDGE_LIFT = '4.75rem';
+
 const MAX_WORDS = 200;
 
 const FEEDBACK_TYPES = [
@@ -66,12 +74,6 @@ const FEEDBACK_TYPES = [
 
 /** Spoken form of each star count, announced to screen readers and shown beside the row. */
 const RATING_LABELS = ['Poor', 'Fair', 'Good', 'Very good', 'Excellent'];
-
-const EASE = [0.22, 1, 0.36, 1];
-
-/** True only while the build-time prerenderer is snapshotting. See the note above. */
-const isPrerender = () =>
-  typeof window !== 'undefined' && Boolean(window.__PRERENDER_INJECTED?.prerender);
 
 const readNudgeState = () => {
   try {
@@ -192,54 +194,11 @@ export default function FeedbackWidget() {
     else document.getElementById('main-content')?.focus();
   }, []);
 
-  /* Escape closes; Tab is TRAPPED inside the panel. The panel declares `aria-modal="true"`,
-     which tells assistive tech the rest of the page is inert — this is what makes that
-     declaration true rather than merely claimed. Same cycle as the consent dialog. */
-  useEffect(() => {
-    if (!open) return undefined;
-
-    const onKey = (e) => {
-      if (e.key === 'Escape') {
-        closeDrawer();
-        return;
-      }
-      if (e.key !== 'Tab' || !panelRef.current) return;
-
-      const focusable = [
-        ...panelRef.current.querySelectorAll(
-          'a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])'
-        ),
-      ].filter((el) => el.offsetParent !== null);
-      if (focusable.length === 0) return;
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      const target = document.activeElement;
-
-      if (e.shiftKey && (target === first || target === panelRef.current)) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && target === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [open, closeDrawer]);
-
-  /* Lock scroll while the drawer is open, restoring whatever Layout had set rather than
-     clearing it outright — Layout owns `body.overflow` for the mobile drawer. */
-  useEffect(() => {
-    if (!open) return undefined;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    panelRef.current?.focus();
-    return () => {
-      document.body.style.overflow = previous;
-    };
-  }, [open]);
+  /* Escape closes, Tab cycles within the panel, and the page behind is scroll-locked — what
+     makes the panel's aria-modal="true" actually true. Layout also owns body.overflow (mobile
+     drawer), so the lock restores the previous value rather than clearing it. */
+  useBodyScrollLock(open);
+  useFocusTrap(panelRef, { active: open, onEscape: closeDrawer });
 
   /** Where to send focus for each thing that can be wrong, in the order the form asks for it. */
   const ERROR_TARGETS = [
@@ -357,9 +316,10 @@ export default function FeedbackWidget() {
           transition={{ duration: 0.35, ease: EASE }}
           role="status"
           aria-live="polite"
-          /* `--consent-bar-h` is published by CookieConsent while the bar is up and removed
+          /* Lifted by NUDGE_LIFT so it stacks above the bottom-left button. And
+             `--consent-bar-h` is published by CookieConsent while the bar is up and removed
              once a decision is stored, so the 0px fallback is the normal case. */
-          style={{ bottom: 'calc(1.5rem + var(--consent-bar-h, 0px))' }}
+          style={{ bottom: `calc(1.5rem + ${NUDGE_LIFT} + var(--consent-bar-h, 0px))` }}
           className="fixed left-4 z-40 w-[320px] max-w-[calc(100vw-2rem)] rounded-card border border-border bg-white p-5 shadow-cardHover transition-[bottom] duration-300 sm:left-6"
         >
           <p className="font-display text-body-compact font-bold leading-snug text-text">

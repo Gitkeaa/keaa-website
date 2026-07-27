@@ -13,6 +13,7 @@ import {
   Clock,
 } from 'lucide-react';
 import { moduleLabel } from '../auth/roles';
+import { EASE } from '../../lib/motion';
 
 /**
  * The contextual help drawer — a right-hand slide-over that renders one guide object from
@@ -103,7 +104,7 @@ export default function HelpDrawer({ guide, onClose, onOpenRelated }) {
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.28, ease: EASE }}
             role="dialog"
             aria-modal="true"
             aria-label={`${guide.title} guide`}
@@ -180,7 +181,7 @@ export default function HelpDrawer({ guide, onClose, onOpenRelated }) {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{ duration: 0.28, ease: EASE }}
                         className="space-y-5 overflow-hidden"
                       >
                         {more.map((s) => (

@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import Button from '../ui/Button';
 import { PANEL_CARD } from '../ui/panelCard';
 import { cldImage, cldSrcSet } from '../../data/cloudinary';
+import { EASE } from '../../lib/motion';
 
 /**
  * The Home page's "Who We Are" band: the overview copy and its three pillars, beside a
@@ -14,8 +15,6 @@ import { cldImage, cldSrcSet } from '../../data/cloudinary';
  *  - `whitespace-pre-line` plus `\n` in the pillar titles keeps their two-line break
  *    identical at every width, rather than letting it reflow.
  */
-
-const EASE = [0.22, 1, 0.36, 1];
 
 /** Cloudinary public_id for the works photograph that sits beside the copy. */
 const WHO_WE_ARE = 'About_us_2_cd9rr8';

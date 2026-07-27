@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import BrandTexture from './ui/BrandTexture';
+import { EASE } from '../lib/motion';
 
 /**
  * A row of supporting promises -- Products' perks, Contact's help strip -- rendered as a
@@ -15,8 +16,6 @@ import BrandTexture from './ui/BrandTexture';
  * three items claim their full content width and squeeze the heading into a two-word
  * ribbon.
  */
-
-const EASE = [0.22, 1, 0.36, 1];
 
 export default function FeatureStrip({ items, lead, photo = true, className = '' }) {
   const reduce = useReducedMotion();

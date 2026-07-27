@@ -1,5 +1,11 @@
 import Button from '../components/ui/Button';
 
+/**
+ * 404 page: the catch-all "page not found" screen with a link back home.
+ *
+ * Rendered by App.jsx on the wildcard route (path="*"), so it shows for any
+ * URL that matches no other route. Edit the copy or the Back to Home link here.
+ */
 export default function NotFound() {
   return (
     <section className="flex min-h-[60vh] items-center justify-center bg-surface">

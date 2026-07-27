@@ -11,6 +11,14 @@ import { img } from '../data/images';
 import useSEO from '../hooks/useSEO';
 
 /**
+ * The public About page at /about: KEAA's story, leadership and managing directors, the
+ * chairman's message, purpose and values, and company stats.
+ *
+ * Rendered by App.jsx on the /about route. Content is read from data/company.js (company,
+ * leadership, managingDirectors, chairmanMessage); edit the copy there and reorder sections below.
+ */
+
+/**
  * How wide a leadership card sits on the rail: just under a full screen on a phone so the next
  * one peeks in and the rail is discoverable, then 2 / 3 / 4 across. The `calc` subtracts the
  * 1.5rem gaps so the cards land flush with the container edges.
@@ -297,9 +305,6 @@ export default function About() {
       <section className="section-pad overflow-hidden">
         <div className="container-page">
         <div className={PANEL_CARD}>
-          {/* This used to be a `mt-16 border-t pt-12` divider inside the Who We Are panel.
-              That panel is now its own section, so the rule and top margin are gone — the
-              block opens its own card instead. */}
           <div>
             <Reveal className="max-w-3xl">
               <span className="eyebrow text-primary-darker">
@@ -476,15 +481,13 @@ export default function About() {
               run, so a second "Our Leadership Team / Experienced Leaders" title restated it.
               The rail still carries its own accessible name (`label` on CardRail), so the
               `/about#team` link from the nav panel lands on a labelled region. */}
-          {/* Photo-led cards on a scrolling rail. Every name in the leadership list rides it,
-              including the CMD and the MDs — they used to be filtered out here because they
-              already have a message section above, but that left the rail reading as "everyone
-              except the people in charge".
+          {/* Photo-led cards on a scrolling rail carrying every name in the leadership list,
+              including the CMD and the MDs.
 
-              Some of these people have no photograph on file yet. Rather than leave a hole, the
-              same block renders their initials on the brand ground at the identical aspect
-              ratio. Drop a file into that person's `photo` in data/company.js and it takes over
-              with no change here. */}
+              Some people have no photograph on file yet. Rather than leave a hole, the same
+              block renders their initials on the brand ground at the identical aspect ratio.
+              Drop a file into that person's `photo` in data/company.js and it takes over with
+              no change here. */}
           <CardRail
             label="Leadership team"
             labels={TEAM.map((l) => `Show ${l.name}`)}

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useInView, animate } from 'framer-motion';
+import { EASE } from '../../lib/motion';
 
 const DURATION = 1.4;
 
@@ -30,7 +31,7 @@ export default function AnimatedCounter({ value, className = '' }) {
     if (!inView || !countable) return;
     const controls = animate(0, numeric, {
       duration: DURATION,
-      ease: [0.22, 1, 0.36, 1],
+      ease: EASE,
       onUpdate: (v) => setDisplay(v),
     });
     return () => controls.stop();

@@ -4,6 +4,7 @@ import Button from '../ui/Button';
 import { getAllCategories, TOTAL_PRODUCTS } from '../../data/categories';
 import { img } from '../../data/images';
 import { company } from '../../data/company';
+import { EASE } from '../../lib/motion';
 
 /**
  * "Products at KEAA" — the catalogue's shop window on the home page, sitting directly under
@@ -40,8 +41,6 @@ import { company } from '../../data/company';
  * brand blue is the one accent (the design's gold is not used). Arrows are text characters,
  * as they already are on ProjectCard.
  */
-
-const EASE = [0.22, 1, 0.36, 1];
 
 /* How far the photograph's frame leans. One constant, used twice with opposite signs — the
    counter-skew on the <img> must always be the exact negation or the picture shears. */

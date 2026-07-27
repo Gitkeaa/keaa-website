@@ -4,6 +4,13 @@ import SectionHeading from '../components/ui/SectionHeading';
 import { company } from '../data/company';
 import useSEO from '../hooks/useSEO';
 
+/**
+ * Certifications & Compliance page: hero, a grid of certificate cards from company.certifications,
+ * and the in-house testing plus certified-workforce blurbs.
+ *
+ * Rendered at the /certifications route (lazy-loaded in App.jsx) and linked from the main
+ * navigation. Edit the certificate list in src/data/company.js; adjust layout and copy here.
+ */
 export default function Certifications() {
   useSEO({
     title: 'Certifications & Compliance',

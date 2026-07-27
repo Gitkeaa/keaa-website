@@ -13,7 +13,7 @@ const closesKey = `${BASE_KEY}:closes`;
 const readCloses = () => {
   try {
     return parseInt(sessionStorage.getItem(closesKey) || '0', 10) || 0;
-  } catch (_) {
+  } catch {
     return 0;
   }
 };
@@ -81,7 +81,7 @@ export default function FloatingPromos() {
     const count = readCloses() + 1;
     try {
       sessionStorage.setItem(closesKey, String(count));
-    } catch (_) {
+    } catch {
       /* ignore */
     }
     if (count >= MAX_CLOSES) {

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatDateTime as fmt } from '../../lib/format';
 import { ShieldCheck, ShieldOff, Smartphone, Copy, Check } from 'lucide-react';
 import Modal from './Modal';
 import { api } from '../api/client';
@@ -10,7 +11,6 @@ import { api } from '../api/client';
  *
  * `profile` supplies the current status; `onChange` reloads it after any change.
  */
-const fmt = (iso) => (iso ? new Date(iso).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—');
 
 function CodesList({ codes }) {
   const [copied, setCopied] = useState(false);

@@ -36,6 +36,8 @@ import {
   Calendar,
   UserCheck,
   XCircle,
+  MessageSquare,
+  Star,
 } from 'lucide-react';
 
 export const ADMIN_ICONS = {
@@ -64,4 +66,6 @@ export const ADMIN_ICONS = {
   Calendar,
   UserCheck,
   XCircle,
+  MessageSquare,
+  Star,
 };

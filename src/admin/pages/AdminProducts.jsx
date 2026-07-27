@@ -7,6 +7,7 @@ import { useApi } from '../api/useApi';
 import { api, API_BASE, resolveUpload } from '../api/client';
 import { useAdminAuth } from '../auth/AdminAuthContext';
 import { moduleAccess } from '../auth/roles';
+import { inputCls } from '../adminStyles';
 import { getAllCategories } from '../../data/categories';
 
 /**
@@ -285,6 +286,3 @@ export default function AdminProducts() {
     </>
   );
 }
-
-const inputCls =
-  'mt-1.5 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-navy-800 outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20';

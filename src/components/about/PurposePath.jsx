@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { company } from '../../data/company';
 import { img, atWidth } from '../../data/images';
+import { EASE } from '../../lib/motion';
 
 /**
  * OUR PURPOSE — the vision / mission / core-values band on the About page.
@@ -207,7 +208,7 @@ export default function PurposePath() {
     initial: reduce ? false : { opacity: 0, y: 24 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, margin: '-60px' },
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.6, ease: EASE },
   };
 
   const values = company.values.values.map((raw) => {

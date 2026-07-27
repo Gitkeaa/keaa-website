@@ -30,8 +30,6 @@
  * changes. It was generated to mirror the seeded guides.
  */
 
-/* eslint-disable */
-
 export const ROLE_SOPS = {
   "SUPER_ADMIN": {
     "title": "Super Admin SOP",

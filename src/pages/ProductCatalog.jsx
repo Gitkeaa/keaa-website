@@ -17,6 +17,13 @@ import {
   SORTS,
 } from '../data/productHelpers';
 
+/**
+ * Product listing page for a category and optional subcategory: sidebar filters, search,
+ * sort, pagination, and the Gallery, Overview, and Downloads tabs.
+ *
+ * Rendered by the `products/:categorySlug` and `products/:categorySlug/:subSlug` routes in
+ * App.jsx. Product data and filtering come from data/productHelpers; change behaviour there.
+ */
 const PER_PAGE_OPTIONS = [12, 20, 40, 60];
 const TABS = [
   { key: 'gallery', label: 'Gallery' },

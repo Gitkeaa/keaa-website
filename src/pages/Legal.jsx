@@ -2,6 +2,13 @@ import PageHero from '../components/ui/PageHero';
 import { company } from '../data/company';
 import useSEO from '../hooks/useSEO';
 
+/**
+ * Legal content pages: one component switched by a `type` prop to render the Privacy Policy,
+ * Terms & Conditions, or Cookie Policy from the `content` and `seo` maps below.
+ * Mounted by three routes in App.jsx (/privacy-policy, /terms, /cookie-policy). Edit those
+ * maps to change the wording or the per-page SEO metadata.
+ */
+
 /* The site's own domain, without the www., shown after each legal title in the hero
    accent ("Privacy Policy for keaainternational.com"). Read from company.js so it
    never drifts from the address used elsewhere. */

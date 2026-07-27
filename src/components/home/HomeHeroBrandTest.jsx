@@ -149,8 +149,10 @@ export default function HomeHeroBrandTest() {
             title="Watch the KEAA aerial film"
             className="group absolute right-6 top-6 z-20 inline-flex items-center gap-2.5 rounded-full bg-black/25 py-1.5 pl-1.5 pr-3.5 backdrop-blur-sm transition-all duration-300 hover:bg-black/40 sm:right-8 sm:top-8"
           >
-            {/* `bg-signal` is the shared red token — the same one the AI assistant uses, so the
-                two floating controls stay identical. It replaced a hardcoded #e11d2a here. */}
+            {/* `bg-signal` is the shared red token (#E11D2A), replacing a hardcoded hex here.
+                The film badge is now the ONLY thing on the site that uses it — the assistant
+                went back to the brand blue — so if this badge ever changes colour, retire the
+                token in index.css with it. */}
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-signal transition-transform duration-300 group-hover:scale-110">
               <Play className="h-3.5 w-3.5 translate-x-[1px] fill-white text-white" strokeWidth={0} />
             </span>

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import Button from '../ui/Button';
+import { EASE } from '../../lib/motion';
 
 /**
  * The framed hero carousel used on every interior page except Home — in the style of the
@@ -83,7 +84,7 @@ export default function GalleryHero({ slides = [], crumbs = [], cta, interval = 
             key={slide}
             initial={reduce ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.5, ease: EASE }}
             className="max-w-2xl"
           >
             {/* Just the heading and the line under it — the eyebrow and the stats row were

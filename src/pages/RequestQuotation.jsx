@@ -15,7 +15,14 @@ import { getAllProductLines } from '../data/productLines';
 import { defaultCountry } from '../data/countriesData';
 import { submitPublicForm } from '../data/adminApi';
 import useSEO from '../hooks/useSEO';
+import { EASE } from '../lib/motion';
 
+/**
+ * Request for Quotation page: the tabbed RFQ and Export Inquiry form that posts leads to /api/rfq.
+ *
+ * Rendered at the /rfq route (App.jsx) and linked from the header region switcher. Adjust the
+ * offered product lines via getAllProductLines, and the submit payload or lead routing in handleSubmit.
+ */
 const tabs = [
   { id: 'rfq', label: 'RFQ Form' },
   { id: 'export', label: 'Export Inquiry' },
@@ -223,7 +230,7 @@ export default function RequestQuotation() {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 0.35, ease: EASE }}
                   className="overflow-hidden"
                 >
                   <div className="mt-4 rounded-card border border-primary/20 bg-primary/[0.05] p-5">

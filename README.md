@@ -34,8 +34,8 @@ Copy `.env.example` to `.env` and fill it in:
 
 | Variable | Required | Notes |
 | --- | --- | --- |
-| `GEMINI_API_KEY` | yes | Google Gemini key. Get one at <https://aistudio.google.com/app/apikey>. Read only by `server.js`; it is never exposed to the browser. |
-| `GEMINI_MODEL` | no | Overrides the primary model. Defaults to the chain in `server.js`. |
+| `ANTHROPIC_API_KEY` | yes | Claude API key for the chat widget. Create one at <https://console.anthropic.com/settings/keys>; the account needs credit. Read only by `server.js`; it is never exposed to the browser. Without it the widget still answers, but from site data only. |
+| `ANTHROPIC_MODEL` | no | Overrides the model. Defaults to `claude-haiku-4-5`. |
 | `PORT` | no | API server port. Defaults to `3001`. |
 
 There is no client-side env surface: nothing in `src/` reads `import.meta.env`, so no key

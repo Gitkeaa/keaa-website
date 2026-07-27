@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { EASE } from '../../lib/motion';
 
 /**
  * Wraps any content in a graceful scroll-reveal animation. Animates once when
@@ -11,7 +12,7 @@ export default function Reveal({ children, delay = 0, y = 24, x = 0, className =
       initial={{ opacity: 0, y, x }}
       whileInView={{ opacity: 1, y: 0, x: 0 }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.6, delay, ease: EASE }}
       className={className}
       {...rest}
     >
@@ -44,7 +45,7 @@ export function StaggerItem({ children, className = '', y = 20, ...rest }) {
     <motion.div
       variants={{
         hidden: { opacity: 0, y },
-        show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+        show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } },
       }}
       className={className}
       {...rest}

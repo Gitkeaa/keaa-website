@@ -20,7 +20,10 @@
  * script above) just needs a `{ id, category }` line — if its category is not in
  * `galleryCategories` it still shows under "All", it just gets no filter button.
  */
-export const galleryCategories = ['All', 'Manufacturing', 'Aerial', 'Exhibitions'];
+// 'Exhibitions' was removed: every photo in it was shot at a competitor's ("Tobler India")
+// trade-show booth, so the whole category showed another brand's name and products. If real
+// KEAA-booth exhibition photos arrive, re-add the category here and tag them 'Exhibitions'.
+export const galleryCategories = ['All', 'Manufacturing', 'Aerial'];
 
 export const galleryPhotos = [
   { id: '9bdbb5065c_q2bd6m', category: 'Manufacturing' },
@@ -35,13 +38,11 @@ export const galleryPhotos = [
   { id: 'DJI_0158_d1lz3h', category: 'Manufacturing' },
   { id: 'DJI_0159_jbk0dl', category: 'Manufacturing' },
   { id: 'DJI_0164_efaxki', category: 'Manufacturing' },
-  { id: 'DSC_6055_h7jzgq', category: 'Exhibitions' },
-  { id: 'DSC_6057_x8jy1k', category: 'Exhibitions' },
-  { id: 'DSC_6058_fev55g', category: 'Exhibitions' },
+  // The four 'Exhibitions' photos that sat here (DSC_6055/6057/6058/6220) were removed — each
+  // showed the "Tobler India" competitor booth, not KEAA's. See galleryCategories above.
   { id: 'DSC_6129_n49y89', category: 'Team' },
   { id: 'DSC_6153_y9498s', category: 'Team' },
   { id: 'DSC_6190_jj6nsi', category: 'Team' },
-  { id: 'DSC_6220_hfmkmr', category: 'Exhibitions' },
   { id: 'DSC_6380_afmt2n', category: 'Team' },
   { id: 'DSC_6403_urjq3q', category: 'Team' },
   { id: 'DSC_6475_k8tzs5', category: 'Team' },
@@ -86,7 +87,6 @@ export const galleryPhotos = [
 const ALT = {
   Manufacturing: 'KEAA International manufacturing and products',
   Aerial: 'Aerial view of KEAA International’s manufacturing facility',
-  Exhibitions: 'KEAA International at an industry exhibition',
   Team: 'The KEAA International team',
 };
 export const galleryAlt = (id) => {

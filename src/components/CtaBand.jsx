@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import Button from './ui/Button';
 import BrandTexture from './ui/BrandTexture';
 import { company } from '../data/company';
+import { EASE } from '../lib/motion';
 
 /**
  * The closing call-to-action, sitting between the last page section and the footer.
@@ -22,8 +23,6 @@ const PROMISES = [
   { title: 'Expert\nSupport' },
   { title: 'Best\nSolutions' },
 ];
-
-const EASE = [0.22, 1, 0.36, 1];
 
 export default function CtaBand({
   title = 'Looking for Reliable',

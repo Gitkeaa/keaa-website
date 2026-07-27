@@ -7,6 +7,9 @@ import PhoneField from './ui/PhoneField';
 import EmailField from './ui/EmailField';
 import { defaultCountry } from '../data/countriesData';
 import { submitPublicForm } from '../data/adminApi';
+import { EASE } from '../lib/motion';
+import { EMAIL_RE, fieldCls } from '../lib/forms';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
 /**
  * The catalogue download gate.
@@ -28,11 +31,6 @@ import { submitPublicForm } from '../data/adminApi';
  *
  * Rendered only while open, so the prerenderer never bakes a dead dialog into the HTML.
  */
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-const fieldCls =
-  'mt-1.5 w-full rounded-card border border-navy-100 px-3.5 py-2.5 text-sm text-text outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/15';
-
 export default function CatalogueRequestModal({ item, onClose }) {
   const reduce = useReducedMotion();
   const [form, setForm] = useState({ name: '', company: '', email: '', phone: '' });
@@ -42,16 +40,13 @@ export default function CatalogueRequestModal({ item, onClose }) {
 
   const set = (k) => (v) => setForm((f) => ({ ...f, [k]: typeof v === 'string' ? v : v.target.value }));
 
-  // Escape closes, and the page behind must not scroll while the dialog is up.
+  useBodyScrollLock(true);
+
+  // Escape closes the dialog.
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && onClose();
     document.addEventListener('keydown', onKey);
-    const { overflow } = document.body.style;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = overflow;
-    };
+    return () => document.removeEventListener('keydown', onKey);
   }, [onClose]);
 
   const submit = (e) => {
@@ -89,7 +84,7 @@ export default function CatalogueRequestModal({ item, onClose }) {
           initial={reduce ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 16 }}
-          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.25, ease: EASE }}
           role="dialog"
           aria-modal="true"
           aria-labelledby="catalogue-gate-title"

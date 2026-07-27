@@ -1,6 +1,9 @@
-import { useState, useCallback } from 'react';
-import Cropper from 'react-easy-crop';
+import { lazy, Suspense, useState, useCallback } from 'react';
 import Modal from './Modal';
+
+// react-easy-crop is only needed once a photo is actually being cropped, so it is loaded on
+// demand instead of shipping in the chunk of every admin page that mounts this modal.
+const Cropper = lazy(() => import('react-easy-crop'));
 
 /** Crop the chosen area of `src` to a square JPEG blob via canvas. */
 async function getCroppedBlob(src, area) {
@@ -48,17 +51,19 @@ export default function AvatarCropModal({ src, onClose, onSave }) {
       <div className="px-5 py-5">
         <div className="relative h-64 w-full overflow-hidden rounded-lg bg-slate-900">
           {src && (
-            <Cropper
-              image={src}
-              crop={crop}
-              zoom={zoom}
-              aspect={1}
-              cropShape="round"
-              showGrid={false}
-              onCropChange={setCrop}
-              onZoomChange={setZoom}
-              onCropComplete={onComplete}
-            />
+            <Suspense fallback={null}>
+              <Cropper
+                image={src}
+                crop={crop}
+                zoom={zoom}
+                aspect={1}
+                cropShape="round"
+                showGrid={false}
+                onCropChange={setCrop}
+                onZoomChange={setZoom}
+                onCropComplete={onComplete}
+              />
+            </Suspense>
           )}
         </div>
         <div className="mt-4 flex items-center gap-3">

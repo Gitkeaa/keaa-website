@@ -9,6 +9,15 @@ import { company } from '../data/company';
 import { img } from '../data/images';
 import useSEO from '../hooks/useSEO';
 
+/**
+ * Manufacturing page for the /manufacturing route: facilities and output figures, the
+ * seven-stage process, advanced machinery and quality standards.
+ *
+ * Lazy-loaded and routed in App.jsx, and linked from data/navigation.js, whose in-page links
+ * target the #stats, #process, #machinery and #quality anchors rendered below. Section copy
+ * and figures derive from data/company.js and data/images, so change content there.
+ */
+
 /** Read a headline figure out of company.stats by its label, so nothing is retyped here. */
 const statValue = (label) => company.stats.find((s) => s.label === label)?.value;
 

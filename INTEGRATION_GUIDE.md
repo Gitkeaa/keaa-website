@@ -2,18 +2,20 @@
 
 How the KEAA chat widget works, and how to run it.
 
-> **Note:** an earlier version of this guide documented **Anthropic Claude** — the API key,
-> the SDK, the console URL, the troubleshooting steps, all of it. That was wrong. This
-> project has never used Anthropic: `server.js` runs **Google Gemini** via
-> `@google/generative-ai`, and `@anthropic-ai/sdk` is not in the lockfile. Following the
-> old guide produced a dead chat widget. This document describes what the code does.
+> **Provider history.** This widget ran on **Google Gemini's free tier** until 2026-07-27,
+> when it broke for the second time in three days: Google permanently denied the project
+> behind the key (`403 "Your project has been denied access"`), first on the original
+> account and then again on a brand-new one. Free-tier keys are not a foundation a
+> customer-facing widget can stand on, so `server.js` now runs on the **Claude API**
+> (`@anthropic-ai/sdk`), which bills per token instead of handing out revocable quota.
+> `@google/generative-ai` has been removed from the project.
 
 ## Architecture
 
 | Piece | File | Role |
 | --- | --- | --- |
 | Chat widget | `src/components/AiChat.jsx` | Floating button + panel. `POST`s to `/api/chat`. Renders replies with `react-markdown`. |
-| API server | `server.js` | Express on port 3001. Holds the Gemini key, builds the knowledge base, calls the model. |
+| API server | `server.js` | Express on port 3001. Holds the Claude key, builds the knowledge base, calls the model, and answers offline from site data when the model is unreachable. |
 | Dev proxy | `vite.config.js` | Forwards `/api` → `localhost:3001`. **Dev only.** |
 | Knowledge base | `src/data/*.js` | `server.js` reads `company.js`, `products.js` and `content.js` and folds them into the system prompt. |
 
@@ -22,9 +24,10 @@ no client-side environment surface at all.
 
 ## Setup
 
-### 1. Get a Gemini API key
+### 1. Get a Claude API key
 
-Visit <https://aistudio.google.com/app/apikey> and create one.
+Create one at <https://console.anthropic.com/settings/keys>. The account needs credit on
+it; there is no free tier.
 
 ### 2. Configure the environment
 
@@ -35,9 +38,9 @@ cp .env.example .env
 Then set:
 
 ```
-GEMINI_API_KEY=your-actual-key
-# GEMINI_MODEL=gemini-2.5-flash-lite   # optional — overrides the default model chain
-# PORT=3001                            # optional
+ANTHROPIC_API_KEY=your-actual-key
+# ANTHROPIC_MODEL=claude-haiku-4-5   # optional, this is the default
+# PORT=3001                          # optional
 ```
 
 `.env` is gitignored. Never commit it.
@@ -58,18 +61,23 @@ on Node 18 or 20.10 — the server throws at boot on those versions.
 
 ## How the knowledge base works
 
-`loadKnowledge()` in `server.js` imports `src/data/company.js`, `src/data/products.js` and
-`src/data/content.js`, renders them into a text block, and appends it to the system prompt.
-A file watcher re-runs this whenever those files change, so content edits take effect
-**without a restart**.
+`loadKnowledge()` in `server.js` reads `company.js`, `products.js`, `content.js`,
+`enquiryLines.js`, `faqs.js`, `products.json` and `categories.json` from `src/data/`,
+renders them into a text block, and appends it to the system prompt. A file watcher re-runs
+this whenever those files change, so content edits take effect **without a restart**. It
+also keeps a structured copy of the same data in memory for offline mode.
 
-⚠️ **The bot's catalogue is not the website's catalogue.** The knowledge base comes from
-`src/data/products.js` — a 5-category marketing taxonomy (Scaffolding Systems, Formwork
-Accessories, Safety Products, Livestock Housing, Wood Connectors) with curated item codes.
-The catalogue *pages* come from `src/data/products.json` — a 3-category scrape of 355 real
-products that contains **no PPE at all**. So the bot can describe safety harnesses the
-catalogue has no page for, and cannot cite the 355 real item codes the catalogue does have.
-Neither source is complete. Resolve this before relying on the bot's product answers.
+**Both product sources are fed to the bot, deliberately.** `products.json` is the 355
+browsable products, each with a real page the bot can link (`/product/13`). `products.js` is
+the 60 curated item codes from the printed catalogues, with size ranges, and is the only
+place Safety Products appears. Only 16 entries overlap, so feeding either one alone loses
+real information. Safety Products has no catalogue page yet, so the system prompt routes
+those enquiries to the RFQ form rather than to a URL that would 404.
+
+⚠️ `server.js` imports `src/data/*.js` under **raw Node, not Vite**. Those files, and any
+file they import, must use explicit `.js` extensions. An extensionless import throws at
+load time, `loadKnowledge()` catches it, and the bot silently falls back to the bare system
+prompt with no knowledge base at all.
 
 ## The API
 
@@ -85,17 +93,41 @@ Neither source is complete. Resolve this before relying on the bot's product ans
 }
 ```
 
-- Success → `200 { "reply": "..." }`
-- Failure → `503` / `429` / `500` with `{ "error": "<human-readable message>" }`
+- Success → `200 { "message": "..." }`
+- Offline fallback → `200 { "message": "...", "offline": true }` (see below)
+- Total failure → `503 { "error": "<human-readable message>" }`
 
-`server.js` walks a chain of models (`MODEL_CHAIN`) and retries on transient upstream
-errors, so one request can produce more than one call to Google.
+The Anthropic SDK retries `429` and `5xx` upstream errors itself with backoff
+(`maxRetries: 3`), so one request can produce more than one call to the API.
+
+### Model cost and prompt caching
+
+The knowledge base is roughly 85 kB of text, about 22k tokens, and it is identical on every
+request. `server.js` sends it as a **cached prefix** (`cache_control: ephemeral` on the
+system block), so the first message of a conversation writes the cache and every follow-up
+reads it back at about a tenth of the input price. On `claude-haiku-4-5` that works out to
+roughly 3 US cents for a conversation's first message and well under half a cent for each
+follow-up.
+
+Caching is a **prefix match**: putting anything volatile in the system block (a timestamp, a
+visitor id) invalidates it on every request and you pay full price forever. If
+`cache_read_input_tokens` in the server log stays at 0 across a conversation, that is what
+has happened.
+
+### Offline mode
+
+If the Claude API cannot be reached for any reason (missing or invalid key, no credit, rate
+limit, outage, no network), the request does **not** fail. `offlineAnswer()` searches the
+same site data the model would have used and returns a real answer: matching products with
+their catalogue links, contact details, certifications, downloads, open roles, leadership,
+or the closest FAQ entries. The reply is prefixed with a line telling the visitor the AI is
+offline, and the response carries `"offline": true` so the client can tell the two apart.
 
 ### `GET /health`
 
-Returns `200` unconditionally. **It does not check the API key** — the server starts and
-logs green with a missing or invalid `GEMINI_API_KEY`, and you only find out when a chat
-request fails.
+Returns `200` unconditionally. **It does not check the API key.** The startup log does:
+`verifyApiKey()` pings the API at boot and prints either `✓ Claude API key verified` or a
+`⚠` with the real HTTP status, so a dead key is visible at boot rather than an hour later.
 
 ## Deploying
 
@@ -117,23 +149,24 @@ To ship it, pick one:
 
 ## Before this goes to production
 
-`server.js` is currently a **wide-open, unauthenticated proxy to KEAA's paid Gemini key**:
+`server.js` is currently a **wide-open, unauthenticated proxy to KEAA's paid Claude key**:
 
 - `app.use(cors())` — every origin allowed.
 - No authentication, no rate limiting, no CAPTCHA.
 - No cap on message length beyond body-parser's implicit ~100 kb default.
-- `conversationHistory` is taken from the client, and any non-`user` role is coerced into a
-  model turn — so a caller can forge the assistant's own prior replies.
-- Upstream Google error text is reflected back to the caller in a `details` field.
+- `conversationHistory` is taken from the client, and any non-`user` role is coerced into an
+  assistant turn, so a caller can forge the assistant's own prior replies.
+- Upstream error text is reflected back to the caller in a `details` field.
 
-Anyone who finds the endpoint can run up your Gemini bill. Lock this down before exposing
-it publicly.
+Anyone who finds the endpoint can run up your Anthropic bill. This matters more now than it
+did on a free tier: every request is metered. Lock it down before exposing it publicly, and
+set a spend limit in the Anthropic console as a backstop.
 
 ## Troubleshooting
 
 | Symptom | Cause |
 | --- | --- |
 | Server exits at boot with a `dirname` `TypeError` | Node < 20.11. Upgrade. |
-| Chat says the assistant is unavailable | `GEMINI_API_KEY` missing or invalid. `/health` still returns OK — check the server logs. |
+| Replies start with "The AI assistant is offline right now" | The Claude API was unreachable, so offline mode answered. The boot log and the `[chat] Claude API error:` line give the real HTTP status: `401` means a bad key, `429` means rate limited or out of credit. |
 | Chat works in dev, dead in production | The Vite `/api` proxy is dev-only. See **Deploying**. |
-| Bot describes products with no catalogue page | Known. See **How the knowledge base works**. |
+| Every request bills full price, `cache_read_input_tokens` stays 0 | Something volatile got into the system block and broke the cache prefix. See **Model cost and prompt caching**. |

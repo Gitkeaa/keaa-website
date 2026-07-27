@@ -183,7 +183,7 @@ export const leadership = [
     name: 'Vikram Singh',
     role: 'Sales Manager',
     bio: 'Results-driven Sales Manager specializing in export sales, client communication, quotation management, and successful deal execution for assigned regions and product categories.',
-    photo: '/images/Vikram.jpg',
+    photo: '/images/vikram.jpg',
     linkedin: 'https://www.linkedin.com/in/vikram-singh-panwar%E2%9C%A8/',
   },
 
@@ -233,7 +233,6 @@ export const managingDirectors = [
   },
 ];
 
-// Website credit — single source of truth for the footer line and the AI assistant.
 export const developer = {
   name: 'Kishlay Raj',
   linkedin: 'https://www.linkedin.com/in/kishlay258/',

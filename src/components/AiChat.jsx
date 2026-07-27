@@ -19,7 +19,20 @@ const POS_KEY = 'keaa:chat-position';
 const DRAG_SLOP = 4;
 /** However far it is dragged, this much of the launcher stays on screen. */
 const KEEP_VISIBLE = 72;
-const EDGE = 8;
+/**
+ * Smallest gap between the widget and the edge it is pushed against. Zero, so it parks
+ * genuinely flush instead of stopping short with a sliver of page showing beside it — that
+ * leftover strip reads as a bug rather than a margin. The launcher's glow ring sits 3px
+ * outside the button and gets trimmed by the viewport at this point, which is the intended
+ * look for something pushed hard against the edge.
+ */
+const EDGE = 0;
+/**
+ * The gap the open panel keeps either side of it once it is as wide as the screen allows.
+ * Matches the panel's own `w-[calc(100vw-3rem)]` gutter and the default `right-6` inset, so
+ * the three cannot disagree and leave one side wider than the other.
+ */
+const PANEL_MIN_SIDE = 24;
 
 /** Both guarded: storage throws outright in a privacy-locked browser, and a parked
  *  assistant is a convenience that must never take the widget down with it. */
@@ -62,9 +75,21 @@ function useDraggable(ref) {
       const el = ref.current;
       const w = el?.offsetWidth ?? KEEP_VISIBLE;
       const h = el?.offsetHeight ?? KEEP_VISIBLE;
+      const bottom = Math.min(Math.max(EDGE, p.bottom), Math.max(EDGE, window.innerHeight - h - EDGE));
+
+      /**
+       * Once the open panel is as wide as the screen allows there is no meaningful left or
+       * right any more — dragging it can only make one margin bigger than the other, which is
+       * what made it look lopsided on a narrow window. At that width it centres instead, so
+       * the gap either side is identical.
+       */
+      if (w >= window.innerWidth - 2 * PANEL_MIN_SIDE) {
+        return { right: Math.max(0, Math.round((window.innerWidth - w) / 2)), bottom };
+      }
+
       return {
         right: Math.min(Math.max(EDGE, p.right), Math.max(EDGE, window.innerWidth - w - EDGE)),
-        bottom: Math.min(Math.max(EDGE, p.bottom), Math.max(EDGE, window.innerHeight - h - EDGE)),
+        bottom,
       };
     },
     [ref],
@@ -146,9 +171,10 @@ function useDraggable(ref) {
   };
 
   /**
-   * True once the widget has been parked in the left half of the screen. The launcher row
-   * mirrors itself when it is: the "Ask keaa" pill belongs on the side with room for it, and
-   * its little pointer has to keep pointing AT the button, not away from it.
+   * True when a DRAGGED widget sits in the left half of the screen; it drives which way the
+   * open panel's toggle row aligns. The un-dragged home position is responsive (left on
+   * mobile, right from `sm` up) and is handled with CSS at the row instead, so this stays
+   * false until the widget is actually moved.
    */
   const onLeft =
     pos != null && typeof window !== 'undefined' && pos.right > window.innerWidth / 2;
@@ -235,7 +261,7 @@ export default function AiChat() {
         try {
           const errData = await response.json();
           friendly = errData?.error || errData?.details || '';
-        } catch (_) {
+        } catch {
           /* body wasn't JSON — ignore */
         }
         const err = new Error(`Server responded ${response.status}. ${friendly}`);
@@ -288,24 +314,36 @@ export default function AiChat() {
     <div
       ref={wrapRef}
       /* The bottom transition belongs to the consent bar only. Once the widget has been
-         dragged it must follow the pointer exactly, so the transition comes off. */
-      className={`fixed right-6 z-50 ${pos ? '' : 'transition-[bottom] duration-300'}`}
+         dragged it must follow the pointer exactly, so the transition comes off. Home corner
+         is bottom-LEFT on mobile and bottom-RIGHT from `sm` up; those insets apply only while
+         un-dragged, so a dragged position (stored as a right/bottom offset) never fights them. */
+      className={`fixed z-50 ${
+        pos ? '' : 'left-6 sm:left-auto sm:right-6 transition-[bottom] duration-300'
+      }`}
       style={
         pos
           ? { right: `${pos.right}px`, bottom: `${pos.bottom}px` }
           : { bottom: 'calc(1.5rem + var(--consent-bar-h, 0px))' }
       }
     >
-      {/* Chat Window */}
+      {/*
+        Chat Window.
+
+        Below `sm` it takes the full width minus one 24px gutter each side — 24px being exactly
+        the inset the widget parks at — so the gap left of the panel matches the gap right of
+        it. A fixed 384px panel could not do that: anchored from one edge it left 24px on that
+        side and whatever remained on the other, which is what made it look lopsided on a phone.
+        From `sm` up it goes back to a 384px corner widget. The height is capped the same way so
+        a short window never crops it.
+      */}
       {isOpen && (
-        <div className="bg-white rounded-card shadow-2xl w-96 h-[600px] flex flex-col border border-gray-200 mb-4">
-          {/* Header. The brand red itself (`signal`, #E11D2A) — flat, not a darkened gradient,
-              so it reads as the same red as the hero's play badge rather than maroon. White on
-              it measures 4.76:1, which passes AA but leaves no room to fade the "Online" line,
-              so that stays solid white. Doubles as the drag handle while the panel is open. */}
+        <div className="bg-white rounded-card shadow-2xl w-[calc(100vw-3rem)] sm:w-96 h-[min(600px,calc(100vh-8rem))] flex flex-col border border-gray-200 mb-4">
+          {/* Header. The brand blue (`primary-dark`), flat rather than a gradient. White on it
+              measures 4.87:1, which passes AA but leaves no room to fade the "Online" line, so
+              that stays solid white. Doubles as the drag handle while the panel is open. */}
           <div
             {...handleProps}
-            className={`bg-signal text-white p-4 rounded-t-card flex justify-between items-center ${handleProps.className}`}
+            className={`bg-primary-dark text-white p-4 rounded-t-card flex justify-between items-center ${handleProps.className}`}
           >
             <div>
               <h3 className="font-semibold">KEAA AI Assistant</h3>
@@ -333,7 +371,7 @@ export default function AiChat() {
                 <div
                   className={`max-w-[17rem] px-4 py-2 rounded-card ${
                     message.sender === 'user'
-                      ? 'bg-signal text-white rounded-br-none'
+                      ? 'bg-primary-dark text-white rounded-br-none'
                       : 'bg-navy-50 text-text rounded-bl-none'
                   }`}
                 >
@@ -398,13 +436,13 @@ export default function AiChat() {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                 placeholder="Type your message..."
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-card focus:outline-none focus:ring-2 focus:ring-signal text-sm"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-card focus:outline-none focus:ring-2 focus:ring-primary text-sm"
               />
               <button
                 onClick={handleSendMessage}
                 disabled={isLoading || !inputValue.trim()}
                 aria-label="Send message"
-                className="bg-signal hover:bg-signal-dark disabled:bg-gray-300 text-white px-3 py-2 rounded-card transition flex items-center gap-2 text-[13px] font-bold uppercase tracking-[0.12em]"
+                className="bg-primary-dark hover:bg-primary-darker disabled:bg-gray-300 text-white px-3 py-2 rounded-card transition flex items-center gap-2 text-[13px] font-bold uppercase tracking-[0.12em]"
               >
                 Send
               </button>
@@ -413,45 +451,29 @@ export default function AiChat() {
         </div>
       )}
 
-      {/* Chat Toggle Button. Hugs whichever edge the widget has been parked against. */}
-      <div className={`flex ${onLeft ? 'justify-start' : 'justify-end'}`}>
+      {/* Chat Toggle Button. Hugs whichever edge the widget has been parked against. Un-dragged,
+          that edge is responsive: left on mobile, right from `sm` up. */}
+      <div
+        className={`flex ${
+          pos == null ? 'justify-start sm:justify-end' : onLeft ? 'justify-start' : 'justify-end'
+        }`}
+      >
         {isOpen ? (
           <button
             onClick={() => setIsOpen(false)}
             aria-label="Close KEAA assistant"
-            className="relative flex h-14 w-14 items-center justify-center rounded-full border border-signal/60 bg-navy-900 text-white shadow-xl transition-transform hover:scale-105"
+            className="relative flex h-14 w-14 items-center justify-center rounded-full border border-primary/60 bg-navy-900 text-white shadow-xl transition-transform hover:scale-105"
           >
             <span className="text-[13px] font-bold uppercase tracking-[0.12em]">
               Close
             </span>
           </button>
         ) : (
-          /* Closed, this whole row is the drag handle. The launcher inside it still opens the
-             chat: a press only becomes a drag past DRAG_SLOP, and the click is swallowed below
-             when it does, so a normal tap is never eaten by the drag.
-
-             Parked on the left, the row reverses so the pill sits to the RIGHT of the button —
-             on that side there is no room for it to the left, and it was being squeezed against
-             the edge until it wrapped onto two lines. */
-          <div
-            {...handleProps}
-            className={`flex items-center gap-2.5 ${onLeft ? 'flex-row-reverse' : ''} ${handleProps.className}`}
-          >
-            {/* "Ask keaa" label. `whitespace-nowrap` is load-bearing: the widget is anchored
-                from one edge, so near the opposite edge the available width collapses and the
-                label would wrap, which in turn shrank the row and let it drift further out. */}
-            <div className="relative rounded-full bg-navy-800 px-3.5 py-2 shadow-lg">
-              <span className="whitespace-nowrap text-sm font-semibold tracking-wide text-white">
-                Ask keaa
-              </span>
-              {/* pointer toward the button, on whichever side the button now is */}
-              <span
-                className={`absolute top-1/2 h-2.5 w-2.5 -translate-y-1/2 rotate-45 bg-navy-800 ${
-                  onLeft ? '-left-1' : '-right-1'
-                }`}
-              />
-            </div>
-
+          /* Closed, this is the drag handle. The launcher still opens the chat: a press only
+             becomes a drag past DRAG_SLOP, and the click is swallowed below when it does, so a
+             normal tap is never eaten by the drag. Just the round "Ask" button now — the
+             "Ask keaa" label pill was removed. */
+          <div {...handleProps}>
             {/* Launcher button with the brand radiation ring */}
             <button
               onClick={() => {
@@ -459,31 +481,31 @@ export default function AiChat() {
                 setIsOpen(true);
               }}
               aria-label="Open KEAA assistant"
-              className="group relative h-14 w-14 shrink-0 cursor-pointer transition-transform hover:scale-105"
+              className="group relative h-12 w-12 sm:h-14 sm:w-14 shrink-0 cursor-pointer transition-transform hover:scale-105"
             >
-              {/* Rotating signal ring. Built from the palette variables rather than pasted hex
+              {/* Rotating brand ring. Built from the palette variables rather than pasted hex
                   values, so it follows the token instead of drifting from it. */}
               <span
                 className="absolute -inset-[3px] rounded-full animate-spin motion-reduce:animate-none"
                 style={{
                   animationDuration: '4s',
                   background:
-                    'conic-gradient(from 0deg, transparent 0deg, rgb(var(--color-signal) / 0.12) 130deg, rgb(var(--color-signal)) 300deg, rgb(var(--color-signal-light)) 345deg, transparent 360deg)',
+                    'conic-gradient(from 0deg, transparent 0deg, rgb(var(--color-primary) / 0.12) 130deg, rgb(var(--color-primary)) 300deg, rgb(var(--color-primary-light)) 345deg, transparent 360deg)',
                 }}
               />
               {/* pulsing halo */}
               <span
-                className="absolute inset-0 rounded-full bg-signal/30 animate-ping motion-reduce:animate-none"
+                className="absolute inset-0 rounded-full bg-primary/30 animate-ping motion-reduce:animate-none"
                 style={{ animationDuration: '2.6s' }}
               />
               {/* navy circle with the control word */}
-              <span className="absolute inset-0 flex items-center justify-center rounded-full border border-signal/60 bg-navy-900 shadow-xl">
-                <span className="text-[13px] font-bold uppercase tracking-[0.12em] text-white">
+              <span className="absolute inset-0 flex items-center justify-center rounded-full border border-primary/60 bg-navy-900 shadow-xl">
+                <span className="text-[11px] sm:text-[13px] font-bold uppercase tracking-[0.12em] text-white">
                   Ask
                 </span>
               </span>
               {/* notification badge */}
-              <span className="absolute -right-0.5 -top-0.5 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-signal text-[11px] font-bold text-white ring-2 ring-white">
+              <span className="absolute -right-0.5 -top-0.5 z-10 flex h-4 w-4 sm:h-5 sm:w-5 items-center justify-center rounded-full bg-primary-dark text-[10px] sm:text-[11px] font-bold text-white ring-2 ring-white">
                 1
               </span>
             </button>

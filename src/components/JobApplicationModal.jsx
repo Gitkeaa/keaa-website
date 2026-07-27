@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Check, ChevronDown, UploadCloud, Copy } from 'lucide-react';
 import Button from './ui/Button';
@@ -7,6 +7,9 @@ import PhoneField from './ui/PhoneField';
 import EmailField from './ui/EmailField';
 import { defaultCountry } from '../data/countriesData';
 import { submitPublicForm, submitPublicFormWithFile } from '../data/adminApi';
+import { EASE } from '../lib/motion';
+import { EMAIL_RE, fieldCls } from '../lib/forms';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
 /*
  * Full-screen, multi-step job application — an enterprise recruitment journey (Personal →
@@ -30,9 +33,7 @@ const QUALIFICATIONS = [
 ];
 const MAX_RESUME_MB = 5;
 
-// Format checks for step 1. This modal is not a native <form>, so the inputs' own `type="email"`
-// / `required` never validate on submit — these are the only gate before contact details reach HR.
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// EMAIL_RE lives in lib/forms (shared with CatalogueRequestModal); phone is digits-only.
 const phoneDigits = (v) => (v || '').replace(/\D/g, '');
 
 const STEP_TITLE = ['Personal Information', 'Qualification Details', 'Professional Information', 'Resume & Links', 'A Few Questions', 'Review & Submit'];
@@ -47,8 +48,41 @@ const STEP_DESC = [
 ];
 const STEP_COUNT = STEP_TITLE.length;
 
-const fieldCls =
-  'mt-1.5 w-full rounded-card border border-navy-100 px-3.5 py-2.5 text-sm text-text outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/15';
+/**
+ * The KEAA cube, faint and oversized in the bottom-right corner, so the otherwise blank white
+ * application fills with the brand instead of empty space.
+ *
+ * It is the modal's own SVG cube (see layout/Logo.jsx) at ~5% opacity, `aria-hidden` and
+ * `pointer-events-none` so it is invisible to assistive tech and never intercepts a click. The
+ * parent clips it (`overflow-hidden`) so the off-corner overhang adds no scrollbars, and the
+ * form sits ABOVE it on its own `z-10` layer — the watermark can never land behind a field's
+ * text. The three tonal-blue facets survive faintly at this opacity, which keeps it reading as
+ * the real logo rather than a flat blob.
+ */
+function BrandWatermark() {
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <svg
+        viewBox="0 0 100 100"
+        className="absolute -bottom-16 -right-16 h-[clamp(320px,42vw,560px)] w-[clamp(320px,42vw,560px)] opacity-[0.05]"
+      >
+        <defs>
+          <mask id="apply-cube-gap-mask">
+            <rect x="0" y="0" width="100" height="100" fill="white" />
+            <line x1="50" y1="50" x2="5" y2="50" stroke="black" strokeWidth="5.5" strokeLinecap="butt" />
+            <line x1="50" y1="50" x2="73" y2="10" stroke="black" strokeWidth="5.5" strokeLinecap="butt" />
+            <line x1="50" y1="50" x2="73" y2="90" stroke="black" strokeWidth="5.5" strokeLinecap="butt" />
+          </mask>
+        </defs>
+        <g mask="url(#apply-cube-gap-mask)">
+          <polygon points="10,50 30,15.36 70,15.36 50,50" fill="#79c7f9" />
+          <polygon points="10,50 50,50 70,84.64 30,84.64" fill="#2b84da" />
+          <polygon points="50,50 70,15.36 90,50 70,84.64" fill="#2065be" />
+        </g>
+      </svg>
+    </div>
+  );
+}
 
 const EMPTY = {
   // Personal
@@ -254,7 +288,7 @@ function ReviewSection({ title, step, goTo, rows, reduce }) {
       </div>
       <AnimatePresence initial={false}>
         {open && (
-          <motion.div initial={reduce ? false : { height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }} transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }} className="overflow-hidden">
+          <motion.div initial={reduce ? false : { height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }} transition={{ duration: 0.22, ease: EASE }} className="overflow-hidden">
             <dl className="grid grid-cols-1 gap-x-6 gap-y-2.5 px-4 pb-4 text-sm sm:grid-cols-2">
               {shown.length === 0 ? (
                 <p className="text-slate-400 sm:col-span-2">Nothing entered.</p>
@@ -360,11 +394,7 @@ export default function JobApplicationModal({ job, onClose }) {
 
   // Full-screen dialog: keep the page behind it from scrolling while it is open, so a mobile
   // visitor's swipes move the form's own scroll area, not the careers page underneath it.
-  useEffect(() => {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = prev; };
-  }, []);
+  useBodyScrollLock(true);
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
@@ -486,8 +516,12 @@ export default function JobApplicationModal({ job, onClose }) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}
       className="fixed inset-0 z-[90] flex flex-col bg-white" role="dialog" aria-modal="true" aria-label={`Apply for ${job.title}`}>
+      {/* Faint KEAA cube filling the empty background. Behind everything (z-0); the sections
+          below carry `relative z-10` so it never sits over a field. */}
+      <BrandWatermark />
+
       {/* Header */}
-      <header className="border-b border-navy-100 px-4 py-4 sm:px-6">
+      <header className="relative z-10 border-b border-navy-100 px-4 py-4 sm:px-6">
         <div className="mx-auto flex max-w-2xl items-start justify-between gap-4">
           <div>
             <span className="eyebrow text-primary-darker">Application</span>
@@ -511,7 +545,7 @@ export default function JobApplicationModal({ job, onClose }) {
       </header>
 
       {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="relative z-10 flex-1 overflow-y-auto">
         <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
           {submitted ? (
             <SuccessScreen appId={appId} job={job} resumeName={resumeName} resumeUploaded={resumeUploaded} onClose={onClose} reduce={reduce} />
@@ -519,7 +553,7 @@ export default function JobApplicationModal({ job, onClose }) {
             <AnimatePresence mode="wait">
               <motion.div key={step}
                 initial={reduce ? false : { opacity: 0, x: 14 }} animate={{ opacity: 1, x: 0 }} exit={reduce ? { opacity: 0 } : { opacity: 0, x: -14 }}
-                transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}>
+                transition={{ duration: 0.25, ease: EASE }}>
                 <h2 className="font-display text-xl font-bold text-text">{STEP_TITLE[step - 1]}</h2>
                 <p className="mb-6 mt-1 text-sm text-muted">{STEP_DESC[step - 1]}</p>
                 {step === 1 && <PersonalStep form={form} set={set} country={country} setCountry={setCountry} />}
@@ -536,7 +570,7 @@ export default function JobApplicationModal({ job, onClose }) {
 
       {/* Sticky footer nav */}
       {!submitted && (
-        <footer className="border-t border-navy-100 bg-white px-4 py-4 sm:px-6">
+        <footer className="relative z-10 border-t border-navy-100 bg-white px-4 py-4 sm:px-6">
           <div className="mx-auto max-w-2xl">
             {(stepError || sendError) && <p role="alert" className="mb-2 text-sm font-medium text-red-600">{sendError || stepError}</p>}
             <div className="flex items-center justify-between gap-3">

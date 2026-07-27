@@ -12,6 +12,13 @@ import useSEO from '../hooks/useSEO';
 import { company } from '../data/company';
 import { featuredProjects, featuredProjectImages } from '../data/content';
 
+/**
+ * The public home page at the index route "/": assembles the landing sections in order.
+ *
+ * Rendered by App.jsx as the index route. The sections live in components/home/* and
+ * data/*, so change their content there and reorder them in the JSX returned below.
+ */
+
 const certificationCards = [
   { name: 'ISO 9001:2015', body: 'TÜV Rheinland' },
   { name: 'CE Certified', body: 'European Union' },
@@ -97,6 +104,8 @@ export default function Home() {
                 src="/images/global-presence-map.png"
                 alt="KEAA global presence, export markets across 42+ countries"
                 loading="lazy"
+                width={1200}
+                height={355}
                 className="w-full transition-transform duration-500 ease-out group-hover:scale-[1.04]"
               />
             </div>

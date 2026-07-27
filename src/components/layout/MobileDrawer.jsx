@@ -11,7 +11,15 @@ import { useRegion } from '../../context/RegionContext';
 import { localeId } from '../../data/regions';
 import { useAdminAuth } from '../../admin/auth/AdminAuthContext';
 import { ROLE_LABELS } from '../../admin/auth/roles';
+import { EASE } from '../../lib/motion';
 
+/**
+ * Mobile slide-over navigation drawer for small screens: main nav, team sign-in rows, the
+ * region and language chooser, and the request-quote CTA.
+ *
+ * Rendered once by components/Layout.jsx and opened by the Header hamburger; controlled via
+ * the open and onClose props. Edit the drawer's contents and behaviour here.
+ */
 // Closing on route change is owned by Layout, which closes this drawer and the search
 // palette together (see Layout.jsx). Do not re-implement it here.
 export default function MobileDrawer({ open, onClose }) {
@@ -81,7 +89,7 @@ export default function MobileDrawer({ open, onClose }) {
                 closed: { x: '100%' },
                 open: { x: 0 }
               }}
-              transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.32, ease: EASE }}
               className="absolute inset-y-0 right-0 z-10 flex w-full max-w-sm flex-col bg-white shadow-2xl pointer-events-auto"
             >
               <div className="flex items-center justify-between border-b border-border px-5 py-4">

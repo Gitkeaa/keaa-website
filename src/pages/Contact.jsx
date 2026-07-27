@@ -26,6 +26,7 @@ import { defaultCountry } from '../data/countriesData';
 import { submitPublicForm } from '../data/adminApi';
 import { useConsent, openCookiePreferences } from '../components/CookieConsent';
 import useSEO from '../hooks/useSEO';
+import { EASE } from '../lib/motion';
 
 /**
  * Filtered on `href` for the same reason as the footer's row: these render as large,
@@ -298,7 +299,7 @@ export default function Contact() {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 0.35, ease: EASE }}
                   className="overflow-hidden"
                 >
                   <p className="mt-4 rounded-card border border-primary/20 bg-primary/[0.05] p-4 text-body-compact leading-relaxed text-ink">

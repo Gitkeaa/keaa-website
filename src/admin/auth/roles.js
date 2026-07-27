@@ -85,11 +85,11 @@ export const MODULES = [
   // because the dashboard's Resource Library offers every file to the whole team.
   { key: 'downloads', to: '/portal/downloads', label: 'Downloads / Certificates', icon: 'Download', implemented: true, roles: ADMINS_BD },
   { key: 'export-inquiries', to: '/portal/export-inquiries', label: 'Export Inquiries', icon: 'Globe2', implemented: true, roles: ADMINS_BD, viewOnly: SUPERS },
-  // Site Feedback: the public feedback drawer (components/FeedbackWidget.jsx) posts here.
-  // The widget ships now; the page and `GET /api/feedback` are specified in BACKEND_FEEDBACK.md
-  // and land in a later phase, so this stays unimplemented and out of the sidebar until then.
-  // Same desk shape as Contact Messages: the admin tiers and BD work it, Super/Senior observe.
-  { key: 'feedback', to: '/portal/feedback', label: 'Site Feedback', icon: 'MessageSquare', implemented: false, roles: ADMINS_BD, viewOnly: SUPERS },
+  // Site Feedback: what the public feedback drawer (components/FeedbackWidget.jsx) collects.
+  // NOT part of the lead pipeline — feedback is its own table, not an Inquiry (see the note on
+  // the Feedback entity in the backend, and BACKEND_FEEDBACK.md). Same desk shape as Contact
+  // Messages: the admin tiers and BD triage it, Super/Senior observe.
+  { key: 'feedback', to: '/portal/feedback', label: 'Site Feedback', icon: 'MessageSquare', implemented: true, roles: ADMINS_BD, viewOnly: SUPERS },
   // Leads captured by the catalogue download gate on the public Downloads Center. Same stream
   // model as RFQ and Export: they are CATALOGUE-type inquiries, not a separate table.
   { key: 'catalogue-requests', to: '/portal/catalogue-requests', label: 'Catalogue Requests', icon: 'BookOpen', implemented: true, roles: ADMINS_BD, viewOnly: SUPERS },

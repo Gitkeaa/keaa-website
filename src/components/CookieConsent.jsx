@@ -3,6 +3,10 @@ import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import Button from './ui/Button';
+import { EASE } from '../lib/motion';
+import { isPrerender } from '../lib/prerender';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 /**
  * Site-wide cookie consent: a full-bleed bottom bar plus a granular preferences dialog.
@@ -68,19 +72,6 @@ export function openCookiePreferences() {
   window.dispatchEvent(new Event(OPEN_PREFERENCES_EVENT));
 }
 
-/**
- * True only while the build-time prerenderer is snapshotting the page.
- *
- * This component portals into <body>, i.e. OUTSIDE #root. On a real visit React replaces
- * only #root, so anything portalled that got captured into the prerendered HTML would stay
- * behind as dead markup with no handlers — a second cookie bar, permanently undismissable,
- * under the live one. Rendering nothing during the snapshot avoids that entirely; the bar
- * is client-only anyway, and it must not appear in HTML crawlers read.
- *
- * The flag is injected by @prerenderer/renderer-puppeteer — see `inject` in vite.config.js.
- */
-const isPrerender = () =>
-  typeof window !== 'undefined' && Boolean(window.__PRERENDER_INJECTED?.prerender);
 
 /**
  * A decision that is still valid, or null. Null means "ask again" and, for every gate,
@@ -179,8 +170,6 @@ const CATEGORIES = [
     desc: 'Lets us show content hosted by others, currently the Google Map on our Contact page. Turning this on shares your IP address with Google. With it off, we show the address and a plain link instead.',
   },
 ];
-
-const EASE = [0.22, 1, 0.36, 1];
 
 /**
  * Accessible on/off switch. `role="switch"` so screen readers announce the state.
@@ -304,59 +293,16 @@ export default function CookieConsent() {
 
   const saveDraft = useCallback(() => decide(draft), [decide, draft]);
 
-  /**
-   * Escape closes; Tab is TRAPPED inside the panel.
-   *
-   * The panel already declared `aria-modal="true"`, which tells assistive tech the rest of
-   * the page is inert — but nothing enforced it, so Tab walked straight out into the page
-   * behind while the backdrop still swallowed clicks. A keyboard user could reach controls
-   * they could not see or activate. The cycle below is what makes the declaration true.
-   */
-  useEffect(() => {
-    if (!prefsOpen) return undefined;
-
-    const onKey = (e) => {
-      if (e.key === 'Escape') {
-        closePreferences();
-        return;
-      }
-      if (e.key !== 'Tab' || !panelRef.current) return;
-
-      const focusable = [
-        ...panelRef.current.querySelectorAll(
-          'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        ),
-      ].filter((el) => el.offsetParent !== null);
-      if (focusable.length === 0) return;
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      const target = document.activeElement;
-
-      if (e.shiftKey && (target === first || target === panelRef.current)) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && target === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [prefsOpen, closePreferences]);
-
-  // Lock scroll while the dialog is open, restoring whatever Layout had set (it locks the
-  // body for the mega-menu and mobile drawer) instead of clearing it outright.
-  useEffect(() => {
-    if (!prefsOpen) return undefined;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    panelRef.current?.focus();
-    return () => {
-      document.body.style.overflow = previous;
-    };
-  }, [prefsOpen]);
+  /* Escape closes, Tab cycles within the panel, and the page behind is scroll-locked — what
+     makes the panel's aria-modal="true" actually true. This dialog counts disabled inputs as
+     focusable (plain `input`), so it passes its own selector. Layout also owns body.overflow
+     (mega-menu, mobile drawer), so the lock restores the previous value rather than clearing it. */
+  useBodyScrollLock(prefsOpen);
+  useFocusTrap(panelRef, {
+    active: prefsOpen,
+    onEscape: closePreferences,
+    selector: 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])',
+  });
 
   /**
    * Publish the bar's height as `--consent-bar-h` so the fixed bottom-right widgets can sit

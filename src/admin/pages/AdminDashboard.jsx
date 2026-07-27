@@ -6,6 +6,7 @@ import StatusPill from '../components/StatusPill';
 import InquiryManager from '../components/InquiryManager';
 import AdminCharts from '../components/AdminCharts';
 import SopCard from '../components/SopCard';
+import FeedbackCard from '../components/FeedbackCard';
 import ResourceLibrary from '../components/ResourceLibrary';
 import { useAdminAuth } from '../auth/AdminAuthContext';
 import { useApi } from '../api/useApi';
@@ -16,6 +17,7 @@ import { ROLES, moduleAccess } from '../auth/roles';
 const QUICK = [
   { label: 'Review RFQ requests', to: '/portal/rfq', icon: 'FileText', module: 'rfq' },
   { label: 'Read contact messages', to: '/portal/contacts', icon: 'Mail', module: 'contacts' },
+  { label: 'Review site feedback', to: '/portal/feedback', icon: 'MessageSquare', module: 'feedback' },
   { label: 'Manage products', to: '/portal/products', icon: 'Package', module: 'products', manage: true },
   { label: 'Add a team member', to: '/portal/users', icon: 'UserPlus', module: 'users', manage: true },
 ];
@@ -30,6 +32,8 @@ export default function AdminDashboard() {
 
 /* ---------------- Sales / Marketing rep ---------------- */
 function RepDashboard({ user }) {
+  const { role } = useAdminAuth();
+  const seesFeedback = moduleAccess(role, 'feedback') != null;
   const { data: profile } = useApi('/api/profile');
   const list = (csv) => (csv ? csv.split(',').map((s) => s.trim()).filter(Boolean) : []);
   const countries = list(profile?.assignedCountries);
@@ -69,6 +73,15 @@ function RepDashboard({ user }) {
         <InquiryManager />
       </div>
 
+      {/* Site feedback is NOT an inquiry and is never assigned to a territory, so it sits outside
+          "My Inquiries" above — it is the whole site's feedback, shown to this desk because they
+          are the ones who act on it. Mounted only when the role may read it (see FeedbackCard). */}
+      {seesFeedback && (
+        <div className="mt-6">
+          <FeedbackCard />
+        </div>
+      )}
+
       {/* Every catalogue, deck and logo file, downloadable by any role. */}
       <div className="mt-6">
         <ResourceLibrary />
@@ -81,6 +94,7 @@ function RepDashboard({ user }) {
 function ManagerDashboard({ user }) {
   const { role } = useAdminAuth();
   const quick = quickFor(role);
+  const seesFeedback = moduleAccess(role, 'feedback') != null;
   const { data: summary, loading, error } = useApi('/api/dashboard/summary');
   const { data: rfq } = useApi('/api/inquiries');
 
@@ -90,6 +104,19 @@ function ManagerDashboard({ user }) {
         { id: 'contacts', label: 'Unread Messages', value: summary.unreadMessages, icon: 'Mail', tone: 'gold' },
         { id: 'applications', label: 'New Applications', value: summary.newApplications, icon: 'Briefcase', tone: 'emerald' },
         { id: 'products', label: 'Catalogue Products', value: summary.products, icon: 'Package', tone: 'navy' },
+        // Feedback carries two numbers that only mean something together: how many nobody has
+        // looked at, and what visitors actually think. The count is the value, the average rides
+        // in the delta line, so it stays one tile. `avgRating` is null (not 0) on an empty table.
+        ...(seesFeedback
+          ? [{
+              id: 'feedback',
+              label: 'New Feedback',
+              value: summary.newFeedback ?? 0,
+              delta: summary.avgRating != null ? `Average rating ${summary.avgRating} out of 5` : 'No ratings yet',
+              icon: 'MessageSquare',
+              tone: 'primary',
+            }]
+          : []),
       ]
     : [];
 
@@ -101,9 +128,11 @@ function ManagerDashboard({ user }) {
 
       {error && <p role="alert" className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {/* Both column counts are written out in full: Tailwind scans source as text, so a class
+          assembled from a variable is never generated. */}
+      <div className={`grid gap-4 sm:grid-cols-2 ${seesFeedback ? 'xl:grid-cols-5' : 'xl:grid-cols-4'}`}>
         {loading && !summary
-          ? Array.from({ length: 4 }).map((_, i) => <div key={i} className="h-[104px] animate-pulse rounded-xl border border-slate-200 bg-white" />)
+          ? Array.from({ length: seesFeedback ? 5 : 4 }).map((_, i) => <div key={i} className="h-[104px] animate-pulse rounded-xl border border-slate-200 bg-white" />)
           : tiles.map(({ id, ...t }) => <StatCard key={id} {...t} />)}
       </div>
 
@@ -111,7 +140,7 @@ function ManagerDashboard({ user }) {
       <AdminCharts inquiries={rfq || []} />
 
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+        <div className="space-y-6 lg:col-span-2">
           <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
             <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
               <h2 className="font-display text-base font-bold text-navy-900">Recent Inquiries</h2>
@@ -130,6 +159,11 @@ function ManagerDashboard({ user }) {
               ))}
             </ul>
           </div>
+
+          {/* Sits under Recent Inquiries rather than beside it: feedback is a stream to read, so
+              it wants the same width as the inquiry list, not the narrow sidebar column. Mounted
+              only when the role may read it (see FeedbackCard). */}
+          {seesFeedback && <FeedbackCard />}
         </div>
 
         <div className="space-y-6">

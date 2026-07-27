@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { formatDateTime as fmt } from '../../lib/format';
 import { Mail, Phone } from 'lucide-react';
 import PageHeader from './PageHeader';
 import DataTable from './DataTable';
@@ -28,7 +29,6 @@ const BADGE = {
   NEGOTIATION: 'bg-purple-100 text-purple-700', WON: 'bg-emerald-100 text-emerald-700',
   LOST: 'bg-red-100 text-red-700', CLOSED: 'bg-slate-100 text-slate-600',
 };
-const fmt = (iso) => (iso ? new Date(iso).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—');
 
 function StatusBadge({ status }) {
   return <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${BADGE[status] || BADGE.CLOSED}`}>{LABEL[status] || status}</span>;
@@ -250,7 +250,7 @@ function OutlookIcon({ className }) {
  * mail app, Outlook opens a web compose, WhatsApp / Call use the phone number. Each only shows
  * when the underlying value exists.
  */
-function ContactActions({ email, phone, name }) {
+function ContactActions({ email, phone }) {
   const digits = (phone || '').replace(/[^\d]/g, '');
   const items = [
     email && { key: 'mail', title: `Email ${email}`, href: `mailto:${email}`, external: false, cls: 'text-slate-600', icon: <Mail className="h-4 w-4" /> },

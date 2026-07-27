@@ -47,6 +47,7 @@ const AdminDownloads = lazy(() => import('./admin/pages/AdminDownloads'));
 const AdminRFQ = lazy(() => import('./admin/pages/AdminRFQ'));
 const AdminExportInquiries = lazy(() => import('./admin/pages/AdminExportInquiries'));
 const AdminCatalogueRequests = lazy(() => import('./admin/pages/AdminCatalogueRequests'));
+const AdminFeedback = lazy(() => import('./admin/pages/AdminFeedback'));
 const AdminContacts = lazy(() => import('./admin/pages/AdminContacts'));
 const AdminCareers = lazy(() => import('./admin/pages/AdminCareers'));
 const AdminProfile = lazy(() => import('./admin/pages/AdminProfile'));
@@ -89,6 +90,7 @@ function AppShell() {
             <Route path="export-inquiries" element={<AdminExportInquiries />} />
             <Route path="catalogue-requests" element={<AdminCatalogueRequests />} />
             <Route path="contacts" element={<AdminContacts />} />
+            <Route path="feedback" element={<AdminFeedback />} />
             <Route path="careers" element={<AdminCareers />} />
             <Route path="profile" element={<AdminProfile />} />
             <Route path="notifications" element={<AdminNotifications />} />

@@ -1,4 +1,8 @@
-import Chart from 'react-apexcharts';
+import { lazy, Suspense } from 'react';
+
+// react-apexcharts pulls in the heavy apexcharts core, so it loads on demand. The chart boxes
+// reserve their height (300px), so deferring it never shifts the dashboard layout.
+const Chart = lazy(() => import('react-apexcharts'));
 
 /**
  * Dashboard visualisations (ApexCharts). Two charts off the same /api/inquiries list the
@@ -84,12 +88,20 @@ export default function AdminCharts({ inquiries = [] }) {
       <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-2">
         <h2 className="font-display text-base font-bold text-navy-900">Inquiries over time</h2>
         <p className="mt-0.5 text-sm text-slate-500">Monthly volume by channel, last 6 months.</p>
-        {inquiries.length ? <Chart options={trendOptions} series={trendSeries} type="bar" height={300} /> : <Empty />}
+        {inquiries.length ? (
+          <Suspense fallback={<div className="h-[300px]" />}>
+            <Chart options={trendOptions} series={trendSeries} type="bar" height={300} />
+          </Suspense>
+        ) : <Empty />}
       </div>
       <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="font-display text-base font-bold text-navy-900">Pipeline status</h2>
         <p className="mt-0.5 text-sm text-slate-500">Where inquiries currently sit.</p>
-        {statuses.length ? <Chart options={donutOptions} series={donutSeries} type="donut" height={300} /> : <Empty />}
+        {statuses.length ? (
+          <Suspense fallback={<div className="h-[300px]" />}>
+            <Chart options={donutOptions} series={donutSeries} type="donut" height={300} />
+          </Suspense>
+        ) : <Empty />}
       </div>
     </div>
   );

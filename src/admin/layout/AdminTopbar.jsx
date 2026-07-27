@@ -6,6 +6,12 @@ import { ROLE_LABELS } from '../auth/roles';
 import { resolveUpload } from '../api/client';
 import HelpButton from '../help/HelpButton';
 
+/**
+ * Sticky top bar for the admin console: sidebar toggle, Help button, profile nudge, theme switch, and avatar menu.
+ *
+ * Rendered once by admin/layout/AdminLayout.jsx inside HelpProvider; edit the topbar
+ * controls and the avatar menu here, while layout, routing, and auth live in the parent.
+ */
 export default function AdminTopbar({ onOpenSidebar, theme, onToggleTheme }) {
   const { user, role, logout } = useAdminAuth();
   const navigate = useNavigate();

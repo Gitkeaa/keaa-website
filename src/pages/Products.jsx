@@ -12,7 +12,14 @@ import ProductCard from '../components/products/ProductCard';
 import { getAllCategories, getProductsByCategory, TOTAL_PRODUCTS } from '../data/productHelpers';
 import { heroSlides } from '../data/heroSlides';
 import useSEO from '../hooks/useSEO';
+import { EASE } from '../lib/motion';
 
+/**
+ * Products landing page: the public catalogue overview at /products. Renders the gallery
+ * hero, a browse-by-category grid, one featured rail per category, a perks strip and a CTA.
+ *
+ * Lazy-loaded in App.jsx as the `/products` route; product data comes from data/productHelpers.
+ */
 const perks = [
   { title: 'Custom Solutions', desc: 'We also offer custom manufacturing as per your project requirements.' },
   { title: 'Bulk Orders', desc: 'Competitive pricing and on-time delivery for all bulk requirements.' },
@@ -71,7 +78,7 @@ export default function Products() {
                 key={cat.slug}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.4, delay: i * 0.06, ease: EASE }}
               >
                 <Link
                   to={`/products/${cat.slug}`}

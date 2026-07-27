@@ -10,8 +10,17 @@ import { api } from '../api/client';
 import { ROLES, ROLE_LABELS, moduleAccess } from '../auth/roles';
 import { useAdminAuth } from '../auth/AdminAuthContext';
 import { pwStrength, STRENGTH_LABEL, STRENGTH_COLOR, suggestStrongPassword, PW_HINT } from '../passwordUtils';
+import { inputCls } from '../adminStyles';
 import { countriesData } from '../../data/countriesData';
 import { getAllCategories } from '../../data/categories';
+
+/**
+ * Admin User Management page: lists console users and runs the create, edit, delete, and
+ * force-logout flows, including role, HR fields, and Sales/Marketing territory assignment.
+ *
+ * Lazy-loaded in App.jsx at the admin "users" route (/portal/users). Change user fields or
+ * validation in save() and the modal form below; shared input styling lives in adminStyles.js.
+ */
 
 const COUNTRY_OPTS = countriesData.map((c) => c.name);
 const CATEGORY_OPTS = getAllCategories().map((c) => c.name);
@@ -382,9 +391,6 @@ export default function AdminUsers() {
     </>
   );
 }
-
-const inputCls =
-  'mt-1.5 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-navy-800 outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20';
 
 function Field({ label, children }) {
   return (

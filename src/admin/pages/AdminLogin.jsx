@@ -4,6 +4,13 @@ import { Lock, Mail, Loader2, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import { useAdminAuth } from '../auth/AdminAuthContext';
 import { developer } from '../../data/company';
 
+/**
+ * KEAA admin portal login page: renders the email/password sign-in form and the two-factor code step.
+ *
+ * Rendered at the /portal/login route (lazy-loaded in App.jsx); redirects to the requested page once authed.
+ * Sign-in and 2FA logic live in AdminAuthContext (login, loginTwoFactor); this file owns only the form UI.
+ */
+
 /** The KEAA cube mark — same three faces the public Logo uses. */
 function CubeMark({ className = 'h-11 w-11' }) {
   return (

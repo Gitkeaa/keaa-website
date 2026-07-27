@@ -19,6 +19,14 @@ import { galleryPhotos, galleryCategories, galleryAlt } from '../data/gallery';
 import { cldImage, cldSrcSet, cldVideoPoster } from '../data/cloudinary';
 import useSEO from '../hooks/useSEO';
 
+/**
+ * Projects & Gallery page: a hero, a featured-projects rail, a filterable and paginated
+ * photo gallery with a lightbox, and a paginated videos grid.
+ *
+ * Lazy-loaded in App.jsx and rendered at the public /projects-gallery route. Content comes
+ * from data/content.js and data/gallery.js; page sizes are the PER_PAGE constants below.
+ */
+
 // Video thumbnails use KEAA's OWN gallery photography (real facility, aerial and product
 // shots from Cloudinary), not stock imagery — the stock stand-ins read as generic / AI.
 // A true frame-grab from each film is not possible: the films are SharePoint share pages,

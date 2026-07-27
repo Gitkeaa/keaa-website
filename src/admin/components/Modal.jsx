@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
+import { EASE } from '../../lib/motion';
 
 /** A small centered modal used by the admin forms and confirmations. */
 export default function Modal({ open, onClose, title, children, footer, maxWidth = 'max-w-md' }) {
@@ -18,7 +19,7 @@ export default function Modal({ open, onClose, title, children, footer, maxWidth
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.18, ease: EASE }}
             className={`relative z-10 flex max-h-[92vh] w-full ${maxWidth} flex-col rounded-2xl bg-white shadow-xl`}
             role="dialog"
             aria-modal="true"

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
+import { EASE } from '../../lib/motion';
 
 /**
  * KEAA button system.
@@ -18,7 +19,6 @@ import { motion, useReducedMotion } from 'framer-motion';
  * Anywhere text sits on or in the brand blue, the surface steps one shade darker.
  * Change SURFACE back to #3A86C6 and every primary CTA on the site drops below AA.
  */
-const EASE = [0.22, 1, 0.36, 1];
 
 /**
  * These class strings must stay literal. Tailwind scans the source as plain text, so a

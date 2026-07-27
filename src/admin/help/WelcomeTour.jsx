@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
+import { EASE } from '../../lib/motion';
 
 /**
  * A one-time welcome walkthrough, shown on the first visit to the console and never again.
@@ -73,7 +74,7 @@ export default function WelcomeTour() {
             initial={{ opacity: 0, y: 16, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
-            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.28, ease: EASE }}
             role="dialog"
             aria-modal="true"
             aria-label="Welcome tour"

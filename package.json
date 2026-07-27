@@ -11,10 +11,11 @@
     "gen:sitemap": "node scripts/gen-categories.mjs && node scripts/gen-sitemap.mjs",
     "prebuild": "node scripts/gen-categories.mjs && node scripts/gen-sitemap.mjs",
     "build": "vite build && node scripts/gen-search-index.mjs",
+    "check:secrets": "node scripts/check-secrets.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.21.0",
+    "@anthropic-ai/sdk": "^0.115.0",
     "apexcharts": "^6.5.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -31,6 +32,7 @@
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
     "@prerenderer/renderer-puppeteer": "^1.2.4",
     "@prerenderer/rollup-plugin": "^0.3.12",
     "@types/react": "^18.3.3",
@@ -38,6 +40,10 @@
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.19",
     "concurrently": "^8.2.2",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "globals": "^17.7.0",
     "postcss": "^8.4.40",
     "tailwindcss": "^3.4.7",
     "vite": "^5.3.4"

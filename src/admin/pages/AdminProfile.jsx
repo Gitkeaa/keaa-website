@@ -4,7 +4,6 @@ import {
   LogOut, Download, Monitor, Smartphone, Clock, AlertTriangle, Lock,
   Eye, EyeOff,
 } from 'lucide-react';
-import { jsPDF } from 'jspdf';
 import PageHeader from '../components/PageHeader';
 import TwoFactorCard from '../components/TwoFactorCard';
 import AvatarCropModal from '../components/AvatarCropModal';
@@ -121,7 +120,6 @@ export default function AdminProfile() {
 
   // Logout-all
   const [loggingOut, setLoggingOut] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const load = () => {
     api.get('/api/profile').then((p) => {
@@ -210,7 +208,8 @@ export default function AdminProfile() {
     doc.setDrawColor(220, 220, 220); doc.line(18, 34, 192, 34);
   };
 
-  const downloadProfilePdf = () => {
+  const downloadProfilePdf = async () => {
+    const { jsPDF } = await import('jspdf');
     const doc = new jsPDF();
     pdfHeader(doc, 'Profile summary');
     let y = 46;
@@ -235,7 +234,8 @@ export default function AdminProfile() {
   };
 
   // Exports exactly the From/To range currently in view (defaults to the last 3 months).
-  const downloadActivityLog = () => {
+  const downloadActivityLog = async () => {
+    const { jsPDF } = await import('jspdf');
     const doc = new jsPDF();
     pdfHeader(doc, 'Activity log — ' + (profile.name || ''));
     doc.setFontSize(9); doc.setTextColor(120, 120, 120);

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { formatDateTime } from '../../lib/format';
 import {
   Pencil,
   Eye,
@@ -35,16 +36,7 @@ import { HELP_MODULES, moduleLabel, canEditDocs, canDoSopHelp } from '../auth/ro
  */
 const linesToArr = (text) => text.split('\n').map((s) => s.trim()).filter(Boolean);
 const arrToLines = (arr) => (arr || []).join('\n');
-const fmt = (iso) =>
-  iso
-    ? new Date(iso).toLocaleString('en-GB', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      })
-    : '-';
+const fmt = (iso) => formatDateTime(iso, '-');
 
 const LIST_FIELDS = [
   { key: 'workflow', label: 'Workflow', hint: 'One stage per line, shown as a vertical timeline in the drawer.' },

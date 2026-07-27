@@ -96,13 +96,12 @@
   /* Gold. Badges on dark surfaces only. */
   --color-accent: 231 179 33; /* #E7B321 */
 
-  /* Signal red — the two floating controls only: the hero's film badge and the AI
-     assistant. It is not a section colour and must never fill a page band; its job is to
-     be the one thing on screen that is not blue, so a visitor finds "play" and "ask"
-     instantly. Kept as a token so those two controls cannot drift apart.
-     `signal` (#E11D2A) carries white text at 4.76:1; `signal-dark` (#B71420) at 6.70:1 is
-     the hover/pressed state; `signal-deep` (#8E0F19) ends the assistant's header gradient;
-     `signal-light` (#FF8A91) is the only one legible as text on the navy launcher. */
+  /* Signal red — the hero's film badge, and nothing else. It is not a section colour and must
+     never fill a page band; its job is to be the one thing on screen that is not blue, so a
+     visitor finds "play" instantly. The AI assistant briefly used it too and is back on the
+     brand blue, so this is a single-use token: retire it if the badge ever changes.
+     `signal` (#E11D2A) carries white text at 4.76:1; the other three are the hover state, a
+     gradient end and a tint legible on the navy ground. */
   --color-signal-light: 255 138 145; /* #FF8A91  text on the navy ground */
   --color-signal: 225 29 42; /* #E11D2A  fills with white text */
   --color-signal-dark: 183 20 32; /* #B71420  hover / pressed */

@@ -6,6 +6,7 @@
  *
  * Status keys are lowercase-hyphenated to match the existing careers convention and StatusPill.
  */
+import { formatDateTime, formatDate } from '../../lib/format';
 
 export const STATUSES = [
   { key: 'new', label: 'New', badge: 'bg-blue-100 text-blue-700 ring-blue-600/20' },
@@ -95,7 +96,7 @@ export const EMAIL_TEMPLATES = [
   {
     key: 'interview',
     label: 'Interview Invitation',
-    subject: (c) => `Interview invitation, KEAA International`,
+    subject: () => `Interview invitation, KEAA International`,
     body: (c) => {
       const iv = c.interview || {};
       const when = [iv.date, iv.time].filter(Boolean).join(' at ');
@@ -194,7 +195,5 @@ export const safeUrl = (u) => (/^https?:\/\//i.test(String(u || '')) ? String(u)
 export const initials = (name) =>
   String(name || '?').trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase() || '?';
 
-export const fmtDateTime = (iso) =>
-  iso ? new Date(iso).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
-export const fmtDate = (iso) =>
-  iso ? new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+export const fmtDateTime = (iso) => formatDateTime(iso, '');
+export const fmtDate = (iso) => formatDate(iso, '');

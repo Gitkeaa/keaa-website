@@ -1,6 +1,13 @@
 import { Component } from 'react';
 import Button from './ui/Button';
 
+/**
+ * App-wide error boundary: catches render-time errors from the whole tree and shows a
+ * recoverable fallback with a Back to Home link instead of a blank white screen.
+ *
+ * Wraps every route (admin and public) in AppShell in App.jsx. Edit the fallback markup in
+ * render() below to change what a crashed page looks like.
+ */
 export default class ErrorBoundary extends Component {
   constructor(props) {
     super(props);

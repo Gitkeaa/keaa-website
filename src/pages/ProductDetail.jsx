@@ -9,6 +9,13 @@ import useSEO, { absoluteUrl } from '../hooks/useSEO';
 import { getProductById, getRelatedProducts, publicIdFromCloudinaryUrl } from '../data/productHelpers';
 import { cldImage } from '../data/cloudinary';
 
+/**
+ * Product detail page: image gallery, key facts, specifications and related products for a single
+ * catalogue item, plus the Product and BreadcrumbList structured data that earns rich results.
+ *
+ * Lazy-loaded in App.jsx as the `product/:id` route, resolving the id via getProductById. Edit the
+ * page layout here; product content lives in src/data/productHelpers and the schema in the block below.
+ */
 const optimized = (url, opts) => {
   const pid = publicIdFromCloudinaryUrl(url);
   return pid ? cldImage(pid, opts) : null;
