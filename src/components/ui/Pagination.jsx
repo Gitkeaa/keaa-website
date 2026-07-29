@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useLT } from '../../i18n/LocaleContext';
 
 /**
  * Prev / numbered pages / next, with a "Show N per page" selector and a "Page X of Y"
@@ -31,6 +32,7 @@ export default function Pagination({
   onPage,
   onPerPage,
 }) {
+  const lt = useLT('common');
   const totalPages = Math.max(1, Math.ceil(total / perPage));
   const items = useMemo(() => pageList(page, totalPages), [page, totalPages]);
   if (total === 0) return null;
@@ -43,14 +45,14 @@ export default function Pagination({
 
   return (
     <div className="mt-10 flex flex-col items-center justify-between gap-4 sm:flex-row">
-      <nav aria-label="Pagination" className="flex flex-wrap items-center justify-center gap-1.5">
+      <nav aria-label={lt('pagination.nav', 'Pagination')} className="flex flex-wrap items-center justify-center gap-1.5">
         <button
           type="button"
           onClick={() => go(page - 1)}
           disabled={page <= 1}
           className={`${cell} ${quiet} ${disabled} tracking-wide`}
         >
-          PREV
+          {lt('pagination.prev', 'PREV')}
         </button>
 
         {items.map((n, i) =>
@@ -64,7 +66,7 @@ export default function Pagination({
               type="button"
               onClick={() => go(n)}
               aria-current={n === page ? 'page' : undefined}
-              aria-label={`Page ${n}`}
+              aria-label={lt('pagination.page', 'Page {n}', { n })}
               className={`${cell} ${
                 n === page ? 'border-navy-700 bg-navy-700 text-white' : quiet
               }`}
@@ -80,18 +82,18 @@ export default function Pagination({
           disabled={page >= totalPages}
           className={`${cell} ${quiet} ${disabled} tracking-wide`}
         >
-          NEXT
+          {lt('pagination.next', 'NEXT')}
         </button>
       </nav>
 
       <div className="flex items-center gap-3 text-sm text-ink">
         <label className="flex items-center gap-2">
-          Show
+          {lt('pagination.show', 'Show')}
           <select
             value={perPage}
             onChange={(e) => onPerPage(Number(e.target.value))}
             className="rounded-lg border border-navy-100 bg-white px-2 py-1.5 text-sm text-ink focus:border-navy-300 focus:outline-none"
-            aria-label="Items per page"
+            aria-label={lt('pagination.itemsPerPage', 'Items per page')}
           >
             {perPageOptions.map((n) => (
               <option key={n} value={n}>
@@ -99,10 +101,10 @@ export default function Pagination({
               </option>
             ))}
           </select>
-          per page
+          {lt('pagination.perPage', 'per page')}
         </label>
         <span className="whitespace-nowrap text-muted">
-          Page {page} of {totalPages}
+          {lt('pagination.pageOf', 'Page {page} of {total}', { page, total: totalPages })}
         </span>
       </div>
     </div>

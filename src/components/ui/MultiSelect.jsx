@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useLT } from '../../i18n/LocaleContext';
 
 /**
  * A dropdown that lets the visitor pick MORE THAN ONE option — a checklist behind a select-
@@ -13,10 +14,11 @@ export default function MultiSelect({
   options = [],
   value = [],
   onChange,
-  placeholder = 'Select…',
+  placeholder,
   required = false,
   className = '',
 }) {
+  const lt = useLT('common');
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -37,7 +39,11 @@ export default function MultiSelect({
   const toggle = (v) => onChange(value.includes(v) ? value.filter((x) => x !== v) : [...value, v]);
   const labelOf = (v) => options.find((o) => o.value === v)?.label || v;
   const summary =
-    value.length === 0 ? placeholder : value.length === 1 ? labelOf(value[0]) : `${value.length} selected`;
+    value.length === 0
+      ? (placeholder ?? lt('multiSelect.placeholder', 'Select…'))
+      : value.length === 1
+        ? labelOf(value[0])
+        : lt('multiSelect.count', '{n} selected', { n: value.length });
 
   return (
     <div className={`relative ${className}`} ref={ref}>
@@ -71,7 +77,7 @@ export default function MultiSelect({
               <button
                 type="button"
                 onClick={() => toggle(v)}
-                aria-label={`Remove ${labelOf(v)}`}
+                aria-label={lt('multiSelect.remove', 'Remove {label}', { label: labelOf(v) })}
                 className="text-muted transition-colors hover:text-text"
               >
                 &times;

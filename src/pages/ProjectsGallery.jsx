@@ -18,6 +18,7 @@ import {
 import { galleryPhotos, galleryCategories, galleryAlt } from '../data/gallery';
 import { cldImage, cldSrcSet, cldVideoPoster } from '../data/cloudinary';
 import useSEO from '../hooks/useSEO';
+import { useLT } from '../i18n/LocaleContext';
 
 /**
  * Projects & Gallery page: a hero, a featured-projects rail, a filterable and paginated
@@ -66,10 +67,11 @@ const PER_PAGE_DEFAULT = 8;
 const PER_PAGE_OPTIONS = [8, 20, 40, 80];
 
 export default function ProjectsGallery() {
+  const lt = useLT('gallery');
   useSEO({
-    title: 'Projects & Gallery',
+    title: lt('seo.title', 'Projects & Gallery'),
     description:
-      '500+ completed projects across 42+ countries. Browse KEAA\'s featured projects, factory gallery and product photography.',
+      lt('seo.desc', '500+ completed projects across 42+ countries. Browse KEAA\'s featured projects, factory gallery and product photography.'),
   });
 
   // Photo gallery: category filter + pagination + a click-to-open lightbox.
@@ -101,8 +103,13 @@ export default function ProjectsGallery() {
           photography behind it, copy bottom-left, Explore hint bottom-right. */}
       <GalleryHero
         eyebrow="Projects & Gallery"
-        crumbs={[{ label: 'Home', to: '/' }, { label: 'Projects & Gallery' }]}
-        slides={heroSlides.gallery}
+        crumbs={[{ label: lt('crumbs.home', 'Home'), to: '/' }, { label: lt('crumbs.page', 'Projects & Gallery') }]}
+        slides={heroSlides.gallery.map((s, i) => ({
+          ...s,
+          title: lt(`hero.${i}.title`, s.title),
+          accent: s.accent && lt(`hero.${i}.accent`, s.accent),
+          desc: s.desc && lt(`hero.${i}.desc`, s.desc),
+        }))}
         scrollTo="projects"
       />
 
@@ -110,7 +117,7 @@ export default function ProjectsGallery() {
       <section id="projects" className="section-pad">
         <div className="container-page">
           <Reveal>
-            <SectionHeading align="left" eyebrow="Featured Projects" title="Trusted by Clients Worldwide" className="!mx-0" />
+            <SectionHeading align="left" eyebrow={lt('featured.eyebrow', 'Featured Projects')} title={lt('featured.title', 'Trusted by Clients Worldwide')} className="!mx-0" />
           </Reveal>
 
           {/* The same rail as the Home page — a snap-scrolling row of cards with the
@@ -120,11 +127,20 @@ export default function ProjectsGallery() {
               rail does on its own. No `to` here — there is still no project-detail route — and
               `withDesc` because this is the page where projects are actually read, not teased.
               Card widths mirror the Home rail exactly so the two read as one component. */}
-          <CardRail label="Featured projects" labels={projects.map((p) => `Show ${p.title}`)}>
-            {projects.map((p) => (
+          <CardRail
+            label={lt('featured.railLabel', 'Featured projects')}
+            labels={projects.map((p, i) => lt('featured.show', 'Show {title}', { title: lt(`projects.${i}.title`, p.title) }))}
+          >
+            {projects.map((p, i) => (
               <ProjectCard
                 key={p.title}
-                project={p}
+                project={{
+                  ...p,
+                  title: lt(`projects.${i}.title`, p.title),
+                  location: lt(`projects.${i}.location`, p.location),
+                  category: lt(`projects.${i}.category`, p.category),
+                  desc: lt(`projects.${i}.desc`, p.desc),
+                }}
                 image={p.image}
                 withDesc
                 className="w-[82%] flex-none snap-start sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
@@ -140,11 +156,11 @@ export default function ProjectsGallery() {
       <section id="gallery" className="section-pad">
         <div className="container-page">
           <Reveal>
-            <SectionHeading align="left" eyebrow="Gallery" title="Factory, Product & Project Gallery" className="!mx-0" />
+            <SectionHeading align="left" eyebrow={lt('photos.eyebrow', 'Gallery')} title={lt('photos.title', 'Factory, Product & Project Gallery')} className="!mx-0" />
           </Reveal>
 
           <div className="mt-6 flex flex-wrap gap-2">
-            {galleryCategories.map((c) => (
+            {galleryCategories.map((c, i) => (
               <button
                 key={c}
                 onClick={() => {
@@ -157,7 +173,7 @@ export default function ProjectsGallery() {
                     : 'border-navy-100 text-ink hover:border-navy-300'
                 }`}
               >
-                {c}
+                {lt(`filters.${i}`, c)}
               </button>
             ))}
           </div>
@@ -175,7 +191,7 @@ export default function ProjectsGallery() {
                 <button
                   type="button"
                   onClick={() => setLightboxIndex(galleryStart + i)}
-                  aria-label="Open image in full-screen viewer"
+                  aria-label={lt('photos.open', 'Open image in full-screen viewer')}
                   className="group block w-full overflow-hidden rounded-card ring-1 ring-border"
                 >
                   <img
@@ -190,7 +206,7 @@ export default function ProjectsGallery() {
                        and the lightbox placeholder, so it is generated once and reused. */
                     srcSet={cldSrcSet(p.id, [400, 800])}
                     sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    alt={galleryAlt(p.id)}
+                    alt={lt(`photoAlt.${p.category}`, galleryAlt(p.id))}
                     loading="lazy"
                     decoding="async"
                     className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -220,14 +236,14 @@ export default function ProjectsGallery() {
         index={lightboxIndex}
         onClose={() => setLightboxIndex(null)}
         onIndex={setLightboxIndex}
-        alt={galleryAlt}
+        alt={(id) => lt(`photoAlt.${galleryPhotos.find((g) => g.id === id)?.category}`, galleryAlt(id))}
       />
 
       {/* VIDEOS */}
       <section id="videos" className="section-pad">
         <div className="container-page">
           <Reveal>
-            <SectionHeading align="left" eyebrow="Videos" title="Watch Our Manufacturing Process & Product Applications" className="!mx-0" />
+            <SectionHeading align="left" eyebrow={lt('videos.eyebrow', 'Videos')} title={lt('videos.title', 'Watch Our Manufacturing Process & Product Applications')} className="!mx-0" />
           </Reveal>
 
           {/* The KEAA factory film is no longer a full-width hero above the grid — it is now
@@ -248,7 +264,7 @@ export default function ProjectsGallery() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group relative block overflow-hidden rounded-card shadow-card"
-                  aria-label={`Watch ${v.title} (opens in a new tab)`}
+                  aria-label={lt('videos.watch', 'Watch {title} (opens in a new tab)', { title: v.title })}
                 >
                   <img
                     src={v.thumb}

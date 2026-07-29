@@ -3,6 +3,21 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import Layout from './components/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
 import { AdminAuthProvider } from './admin/auth/AdminAuthContext';
+import { localePrefixOf } from './i18n/languages';
+import { LocaleProvider } from './i18n/LocaleContext';
+
+/**
+ * Locale URLs (/de/about, /fr/contact) are served by giving the router that prefix as its
+ * basename, so the ONE route tree below answers every language and every <Link to="/about">
+ * automatically renders as /de/about while inside German. Nothing per-language is declared.
+ *
+ * Read once at module load on purpose: a basename cannot change on a mounted router, so
+ * switching to a live language is a full navigation (see setLanguage in LocaleContext) —
+ * the reload re-runs this line and the router comes up in the new language's URL space.
+ * While no locale is live, the prefix is always '' and the router behaves exactly as before
+ * ('/de/about' falls to the catch-all 404 like any unknown URL).
+ */
+const LOCALE_PREFIX = localePrefixOf(window.location.pathname);
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -55,7 +70,7 @@ const AdminNotifications = lazy(() => import('./admin/pages/AdminNotifications')
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={LOCALE_PREFIX || '/'}>
       <AdminAuthProvider>
         <AppShell />
       </AdminAuthProvider>
@@ -126,11 +141,16 @@ function AppShell() {
         </Routes>
       </Suspense>
 
-      {/* Public-only chrome — never rendered inside the admin console. */}
+      {/* Public-only chrome — never rendered inside the admin console. Wrapped in its OWN
+          LocaleProvider: these widgets mount beside the public tree, not inside Layout's
+          provider, and useLT throws without one. A second provider instance is safe — it
+          renders no markup and reads the same URL/localStorage language. */}
       {!isAdmin && (
         <Suspense fallback={null}>
-          <AiChat />
-          <FeedbackWidget />
+          <LocaleProvider>
+            <AiChat />
+            <FeedbackWidget />
+          </LocaleProvider>
         </Suspense>
       )}
       {/* Certification "Globally Certified" pop-up (FloatingPromos) is temporarily

@@ -10,6 +10,7 @@ import { submitPublicForm } from '../data/adminApi';
 import { EASE } from '../lib/motion';
 import { EMAIL_RE, fieldCls } from '../lib/forms';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
+import { useLT } from '../i18n/LocaleContext';
 
 /**
  * The catalogue download gate.
@@ -32,6 +33,7 @@ import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
  * Rendered only while open, so the prerenderer never bakes a dead dialog into the HTML.
  */
 export default function CatalogueRequestModal({ item, onClose }) {
+  const lt = useLT('product');
   const reduce = useReducedMotion();
   const [form, setForm] = useState({ name: '', company: '', email: '', phone: '' });
   const [country, setCountry] = useState(defaultCountry);
@@ -51,8 +53,8 @@ export default function CatalogueRequestModal({ item, onClose }) {
 
   const submit = (e) => {
     e.preventDefault();
-    if (!form.name.trim()) return setError('Please tell us your name.');
-    if (!EMAIL_RE.test(form.email.trim())) return setError('Please enter a valid email address.');
+    if (!form.name.trim()) return setError(lt('catalogue.form.nameError', 'Please tell us your name.'));
+    if (!EMAIL_RE.test(form.email.trim())) return setError(lt('catalogue.form.emailError', 'Please enter a valid email address.'));
     setError('');
 
     // Fire and forget — see the note above on why the download never waits for this.
@@ -97,41 +99,40 @@ export default function CatalogueRequestModal({ item, onClose }) {
                 <Check className="h-6 w-6 text-primary-dark" strokeWidth={2.5} />
               </span>
               <h2 id="catalogue-gate-title" className="mt-4 font-display text-xl font-bold text-text">
-                Your catalogue is opening
+                {lt('catalogue.done.title', 'Your catalogue is opening')}
               </h2>
               <p className="mt-2 text-body-compact text-ink">
-                {item.title} has opened in a new tab. If your browser blocked it,{' '}
+                {lt('catalogue.done.openedA', '{title} has opened in a new tab. If your browser blocked it,', { title: item.title })}{' '}
                 <a
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-semibold text-primary-dark underline"
                 >
-                  open it here
+                  {lt('catalogue.done.openLink', 'open it here')}
                 </a>
-                . Our team will be in touch if you would like pricing or samples.
+                {lt('catalogue.done.openedB', '. Our team will be in touch if you would like pricing or samples.')}
               </p>
               <Button onClick={onClose} variant="outlineNavy" size="sm" className="mt-6">
-                Close
+                {lt('catalogue.done.close', 'Close')}
               </Button>
             </div>
           ) : (
             <form onSubmit={submit} className="p-6 sm:p-8">
               <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
-                Download catalogue
+                {lt('catalogue.eyebrow', 'Download catalogue')}
               </p>
               <h2 id="catalogue-gate-title" className="mt-1 font-display text-xl font-bold text-text">
                 {item.title}
               </h2>
               <p className="mt-2 text-body-compact text-ink">
-                Tell us who you are and the catalogue opens straight away. We use this only to
-                answer your enquiry, never to sell your details on.
+                {lt('catalogue.intro', 'Tell us who you are and the catalogue opens straight away. We use this only to answer your enquiry, never to sell your details on.')}
               </p>
 
               <div className="mt-6 space-y-4">
                 <div>
                   <label htmlFor="cg-name" className="text-sm font-medium text-navy-800">
-                    Full Name <span className="text-red-500">*</span>
+                    {lt('catalogue.form.name', 'Full Name ')}<span className="text-red-500">*</span>
                   </label>
                   <input
                     id="cg-name"
@@ -139,21 +140,21 @@ export default function CatalogueRequestModal({ item, onClose }) {
                     onChange={set('name')}
                     required
                     autoComplete="name"
-                    placeholder="Your name"
+                    placeholder={lt('catalogue.form.namePh', 'Your name')}
                     className={fieldCls}
                   />
                 </div>
 
                 <div>
                   <label htmlFor="cg-company" className="text-sm font-medium text-navy-800">
-                    Company
+                    {lt('catalogue.form.company', 'Company')}
                   </label>
                   <input
                     id="cg-company"
                     value={form.company}
                     onChange={set('company')}
                     autoComplete="organization"
-                    placeholder="Company name"
+                    placeholder={lt('catalogue.form.companyPh', 'Company name')}
                     className={fieldCls}
                   />
                 </div>
@@ -174,10 +175,10 @@ export default function CatalogueRequestModal({ item, onClose }) {
 
               <div className="mt-6 flex flex-wrap justify-end gap-3">
                 <Button type="button" onClick={onClose} variant="outlineNavy" size="sm">
-                  Cancel
+                  {lt('catalogue.form.cancel', 'Cancel')}
                 </Button>
                 <Button type="submit" size="sm">
-                  Get the catalogue
+                  {lt('catalogue.form.submit', 'Get the catalogue')}
                 </Button>
               </div>
             </form>

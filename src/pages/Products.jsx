@@ -12,6 +12,7 @@ import ProductCard from '../components/products/ProductCard';
 import { getAllCategories, getProductsByCategory, TOTAL_PRODUCTS } from '../data/productHelpers';
 import { heroSlides } from '../data/heroSlides';
 import useSEO from '../hooks/useSEO';
+import { useLT } from '../i18n/LocaleContext';
 import { EASE } from '../lib/motion';
 
 /**
@@ -42,12 +43,15 @@ const featuredByCategory = getAllCategories()
   .filter((group) => group.items.length > 0);
 
 export default function Products() {
+  const lt = useLT('catalog');
   const categories = getAllCategories();
 
   useSEO({
-    title: 'Products',
-    description:
-      'Explore KEAA’s full product catalogue: scaffolding & formwork systems, livestock housing solutions and wood connectors, with specifications and images.',
+    title: lt('seo.title', 'Products'),
+    description: lt(
+      'seo.desc',
+      'Explore KEAA’s full product catalogue: scaffolding & formwork systems, livestock housing solutions and wood connectors, with specifications and images.'
+    ),
   });
 
   return (
@@ -55,13 +59,18 @@ export default function Products() {
       {/* Framed hero carousel (see components/gallery/GalleryHero) — real KEAA product
           photography with the copy changing per slide. */}
       <GalleryHero
-        eyebrow="Our Products"
-        crumbs={[{ label: 'Home', to: '/' }, { label: 'Products' }]}
-        slides={heroSlides.products}
+        eyebrow={lt('hero.eyebrow', 'Our Products')}
+        crumbs={[{ label: lt('crumbs.home', 'Home'), to: '/' }, { label: lt('crumbs.products', 'Products') }]}
+        slides={heroSlides.products.map((s, i) => ({
+          ...s,
+          title: lt(`hero.slides.${i}.title`, s.title),
+          accent: lt(`hero.slides.${i}.accent`, s.accent),
+          desc: lt(`hero.slides.${i}.desc`, s.desc),
+        }))}
         stats={[
-          { value: `${TOTAL_PRODUCTS}+`, label: 'Products in Catalogue' },
-          { value: `${categories.length}`, label: 'Product Categories' },
-          { value: 'DIN EN 1461', label: 'Hot Dip Galvanizing' },
+          { value: `${TOTAL_PRODUCTS}+`, label: lt('stats.catalogue', 'Products in Catalogue') },
+          { value: `${categories.length}`, label: lt('stats.categories', 'Product Categories') },
+          { value: 'DIN EN 1461', label: lt('stats.galvanizing', 'Hot Dip Galvanizing') },
         ]}
         scrollTo="browse"
       />
@@ -70,7 +79,7 @@ export default function Products() {
       <section id="browse" className="section-pad">
         <div className="container-page">
           <Reveal>
-            <SectionHeading eyebrow="Our Product Range" title="Browse by Category" />
+            <SectionHeading eyebrow={lt('browse.eyebrow', 'Our Product Range')} title={lt('browse.title', 'Browse by Category')} />
           </Reveal>
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {categories.map((cat, i) => (
@@ -96,27 +105,27 @@ export default function Products() {
                     <div className="absolute inset-0 bg-gradient-to-t from-navy-900/85 via-navy-800/30 to-transparent" />
                     <div className="absolute inset-x-0 bottom-0 flex items-center gap-3 p-5">
                       <div>
-                        <h3 className="font-display text-lg font-bold leading-tight text-white">{cat.name}</h3>
-                        <p className="text-xs text-white/75">{cat.count} products · {cat.subcategories.length} categories</p>
+                        <h3 className="font-display text-lg font-bold leading-tight text-white">{lt(`cat.${cat.slug}.name`, cat.name)}</h3>
+                        <p className="text-xs text-white/75">{lt('browse.cardMeta', '{count} products · {subs} categories', { count: cat.count, subs: cat.subcategories.length })}</p>
                       </div>
                     </div>
                   </div>
                   <div className="flex flex-1 flex-col p-5">
-                    <p className="flex-1 text-body-compact leading-relaxed text-ink">{cat.short}</p>
+                    <p className="flex-1 text-body-compact leading-relaxed text-ink">{lt(`cat.${cat.slug}.short`, cat.short)}</p>
                     <div className="mt-4 flex flex-wrap gap-1.5">
                       {cat.subcategories.slice(0, 4).map((s) => (
                         <span key={s.slug} className="rounded-full bg-navy-50 px-2.5 py-1 text-[11px] text-navy-700">
-                          {s.name}
+                          {lt(`sub.${s.slug}.name`, s.name)}
                         </span>
                       ))}
                       {cat.subcategories.length > 4 && (
                         <span className="rounded-full bg-navy-50 px-2.5 py-1 text-[11px] text-muted">
-                          +{cat.subcategories.length - 4} more
+                          {lt('browse.moreSubs', '+{n} more', { n: cat.subcategories.length - 4 })}
                         </span>
                       )}
                     </div>
                     <span className="mt-5 inline-flex self-start border-b border-transparent pb-0.5 text-sm font-semibold text-primary-dark transition-colors group-hover:border-primary group-hover:text-primary-darker">
-                      View products
+                      {lt('browse.viewProducts', 'View products')}
                     </span>
                   </div>
                 </Link>
@@ -133,7 +142,7 @@ export default function Products() {
         <section className="section-pad">
           <div className="container-page">
             <Reveal>
-              <SectionHeading eyebrow="Featured Products" title="From Our Catalogue" />
+              <SectionHeading eyebrow={lt('featured.eyebrow', 'Featured Products')} title={lt('featured.title', 'From Our Catalogue')} />
             </Reveal>
 
             {/* Each of the three category groups sits in its own PANEL_CARD, matching the
@@ -143,17 +152,17 @@ export default function Products() {
                 <Reveal key={category.slug}>
                   <div className={PANEL_CARD}>
                     <div className="flex items-baseline justify-between gap-4">
-                      <h3 className="font-display text-xl font-semibold text-text">{category.name}</h3>
+                      <h3 className="font-display text-xl font-semibold text-text">{lt(`cat.${category.slug}.name`, category.name)}</h3>
                       <Link
                         to={`/products/${category.slug}`}
                         className="flex-shrink-0 border-b border-transparent pb-0.5 text-sm font-semibold text-primary-dark transition-colors hover:border-primary hover:text-primary-darker"
                       >
-                        View all
+                        {lt('featured.viewAll', 'View all')}
                       </Link>
                     </div>
                     <CardRail
-                      label={`${category.name} products`}
-                      labels={items.map((p) => `Show ${p.name}`)}
+                      label={lt('featured.railLabel', '{name} products', { name: lt(`cat.${category.slug}.name`, category.name) })}
+                      labels={items.map((p) => lt('featured.showProduct', 'Show {name}', { name: p.name }))}
                     >
                       {items.map((p) => (
                         <div
@@ -171,20 +180,28 @@ export default function Products() {
 
             <div className="mt-12 text-center">
               <Button to={`/products/${categories[0]?.slug || ''}`} variant="outlineNavy">
-                Explore Full Catalogue
+                {lt('featured.exploreCta', 'Explore Full Catalogue')}
               </Button>
             </div>
           </div>
         </section>
       )}
 
-      <FeatureStrip items={perks} photo={false} className="pb-0" />
+      <FeatureStrip
+        items={perks.map((p, i) => ({
+          ...p,
+          title: lt(`perks.${i}.title`, p.title),
+          desc: lt(`perks.${i}.desc`, p.desc),
+        }))}
+        photo={false}
+        className="pb-0"
+      />
 
       <CtaBand
-        title="Need Help Choosing"
-        accent="the Right Product?"
-        desc="Our experts are here to help you find the best solution for your project."
-        cta={{ label: 'Request a Quote', to: '/rfq' }}
+        title={lt('cta.title', 'Need Help Choosing')}
+        accent={lt('cta.accent', 'the Right Product?')}
+        desc={lt('cta.desc', 'Our experts are here to help you find the best solution for your project.')}
+        cta={{ label: lt('cta.label', 'Request a Quote'), to: '/rfq' }}
       />
     </>
   );

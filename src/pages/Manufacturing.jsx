@@ -8,6 +8,7 @@ import AnimatedCounter from '../components/ui/AnimatedCounter';
 import { company } from '../data/company';
 import { img } from '../data/images';
 import useSEO from '../hooks/useSEO';
+import { useLT } from '../i18n/LocaleContext';
 
 /**
  * Manufacturing page for the /manufacturing route: facilities and output figures, the
@@ -60,17 +61,20 @@ const qaSteps = [
 ];
 
 export default function Manufacturing() {
+  const lt = useLT('manufacturing');
   useSEO({
-    title: 'Manufacturing',
-    description:
-      "Inside KEAA's 25,000 sq. m manufacturing facilities: advanced machinery, certified welders and ISO 9001:2015 quality control.",
+    title: lt('seo.title', 'Manufacturing'),
+    description: lt(
+      'seo.description',
+      "Inside KEAA's 25,000 sq. m manufacturing facilities: advanced machinery, certified welders and ISO 9001:2015 quality control."
+    ),
   });
 
   return (
     <>
       <GalleryHero
         eyebrow="Manufacturing"
-        crumbs={[{ label: 'Home', to: '/' }, { label: 'Manufacturing' }]}
+        crumbs={[{ label: lt('crumbs.home', 'Home'), to: '/' }, { label: lt('crumbs.current', 'Manufacturing') }]}
         slides={heroSlides.manufacturing}
         stats={[
           { value: '5', label: 'Manufacturing Facilities' },
@@ -89,18 +93,18 @@ export default function Manufacturing() {
             <Reveal>
               <SectionHeading
                 align="left"
-                eyebrow="Our Infrastructure"
-                title="World-Class Manufacturing Facilities"
-                desc="Five manufacturing units in Ludhiana, Punjab run the complete production process in-house, for precision engineering, consistent quality and on-time export delivery."
+                eyebrow={lt('infra.eyebrow', 'Our Infrastructure')}
+                title={lt('infra.title', 'World-Class Manufacturing Facilities')}
+                desc={lt('infra.desc', 'Five manufacturing units in Ludhiana, Punjab run the complete production process in-house, for precision engineering, consistent quality and on-time export delivery.')}
                 className="!mx-0 max-w-none"
               />
               {/* The vertical-integration proof: the in-house capabilities, on the same
                   blue-hairline motif the quality list below uses, so the page reads as one
                   system. */}
               <ul className="mt-8 space-y-3">
-                {CAPABILITIES.map((c) => (
+                {CAPABILITIES.map((c, i) => (
                   <li key={c} className="border-l-2 border-primary/40 pl-4 text-body-compact text-ink">
-                    {c}
+                    {lt(`infra.capabilities.${i}`, c)}
                   </li>
                 ))}
               </ul>
@@ -111,7 +115,7 @@ export default function Manufacturing() {
             <Reveal delay={0.1}>
               <ImagePlaceholder
                 src={img.metalBuilding}
-                label="Manufacturing plant, Ludhiana, Punjab"
+                label={lt('infra.plantAlt', 'Manufacturing plant, Ludhiana, Punjab')}
                 ratio="aspect-[3/4]"
                 className="shadow-xl"
               />
@@ -123,12 +127,12 @@ export default function Manufacturing() {
               and these figures ARE the output at scale. */}
           <div id="stats" className="mt-14 border-t border-navy-100 pt-10">
             <StaggerGroup className="grid grid-cols-2 gap-8 lg:grid-cols-4">
-              {OUTPUT_FIGURES.map((f) => (
+              {OUTPUT_FIGURES.map((f, i) => (
                 <StaggerItem key={f.label}>
                   <p className="font-display text-3xl font-bold text-text sm:text-4xl">
                     <AnimatedCounter value={f.value} />
                   </p>
-                  <p className="mt-2 text-body-compact text-ink">{f.label}</p>
+                  <p className="mt-2 text-body-compact text-ink">{lt(`figures.${i}.label`, f.label)}</p>
                 </StaggerItem>
               ))}
             </StaggerGroup>
@@ -147,9 +151,9 @@ export default function Manufacturing() {
               <SectionHeading
                 light
                 align="left"
-                eyebrow="Our Manufacturing Process"
-                title="From Raw Material to Reliable Products"
-                desc="Seven controlled stages, every one in-house, from raw steel to dispatch."
+                eyebrow={lt('process.eyebrow', 'Our Manufacturing Process')}
+                title={lt('process.title', 'From Raw Material to Reliable Products')}
+                desc={lt('process.desc', 'Seven controlled stages, every one in-house, from raw steel to dispatch.')}
                 className="!mx-0 max-w-none"
               />
             </Reveal>
@@ -171,8 +175,8 @@ export default function Manufacturing() {
                     {s.step}
                   </span>
                   <div className="min-w-0">
-                    <h3 className="font-display text-lg font-semibold text-white">{s.title}</h3>
-                    <p className="mt-2 text-body-compact leading-relaxed text-white/70">{s.desc}</p>
+                    <h3 className="font-display text-lg font-semibold text-white">{lt(`process.steps.${i}.title`, s.title)}</h3>
+                    <p className="mt-2 text-body-compact leading-relaxed text-white/70">{lt(`process.steps.${i}.desc`, s.desc)}</p>
                   </div>
                 </StaggerItem>
               ))}
@@ -186,21 +190,26 @@ export default function Manufacturing() {
       <section id="machinery" className="section-pad">
         <div className="container-page">
           <Reveal>
-            <SectionHeading eyebrow="Advanced Machinery" title="Powerful Machines. Precision Output." />
+            <SectionHeading
+              eyebrow={lt('machinery.eyebrow', 'Advanced Machinery')}
+              title={lt('machinery.title', 'Powerful Machines. Precision Output.')}
+            />
           </Reveal>
           <CardRail
-            label="Advanced machinery"
-            labels={company.machinery.map((m) => `Show ${m.name}`)}
+            label={lt('machinery.railLabel', 'Advanced machinery')}
+            labels={company.machinery.map((m, i) =>
+              lt('machinery.show', 'Show {name}', { name: lt(`machinery.items.${i}.name`, m.name) })
+            )}
           >
             {company.machinery.map((m, i) => (
               <div
                 key={m.name}
                 className="w-[82%] flex-none snap-start overflow-hidden rounded-card border border-navy-100 shadow-card transition-shadow hover:shadow-cardHover sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
               >
-                <ImagePlaceholder src={machineryImages[i]} label={m.name} ratio="aspect-[4/3]" />
+                <ImagePlaceholder src={machineryImages[i]} label={lt(`machinery.items.${i}.name`, m.name)} ratio="aspect-[4/3]" />
                 <div className="p-5">
-                  <h4 className="font-display text-sm font-semibold text-text">{m.name}</h4>
-                  <p className="mt-1.5 text-body-compact text-ink">{m.desc}</p>
+                  <h4 className="font-display text-sm font-semibold text-text">{lt(`machinery.items.${i}.name`, m.name)}</h4>
+                  <p className="mt-1.5 text-body-compact text-ink">{lt(`machinery.items.${i}.desc`, m.desc)}</p>
                 </div>
               </div>
             ))}
@@ -215,9 +224,9 @@ export default function Manufacturing() {
         <div className="container-page">
           <Reveal>
             <SectionHeading
-              eyebrow="Quality & Standards"
-              title="Quality in Every Step"
-              desc="Stringent quality control at every stage of manufacturing, backed by in-house tensile, compression, bend and weld-penetration testing, so every product meets global standards."
+              eyebrow={lt('quality.eyebrow', 'Quality & Standards')}
+              title={lt('quality.title', 'Quality in Every Step')}
+              desc={lt('quality.desc', 'Stringent quality control at every stage of manufacturing, backed by in-house tensile, compression, bend and weld-penetration testing, so every product meets global standards.')}
             />
           </Reveal>
 
@@ -228,7 +237,7 @@ export default function Manufacturing() {
                   <span className="font-display text-2xl font-bold text-primary-dark">
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <p className="mt-3 text-body-compact text-ink">{q}</p>
+                  <p className="mt-3 text-body-compact text-ink">{lt(`quality.steps.${i}`, q)}</p>
                 </div>
               </StaggerItem>
             ))}
@@ -236,7 +245,7 @@ export default function Manufacturing() {
 
           <Reveal>
             <p className="mx-auto mt-10 max-w-3xl text-center text-body-compact text-ink">
-              {company.facilities.welders}. {company.facilities.quality}.
+              {lt('quality.welders', company.facilities.welders)}. {lt('quality.accreditations', company.facilities.quality)}.
             </p>
           </Reveal>
         </div>

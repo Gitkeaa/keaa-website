@@ -27,6 +27,7 @@ import { submitPublicForm } from '../data/adminApi';
 import { useConsent, openCookiePreferences } from '../components/CookieConsent';
 import useSEO from '../hooks/useSEO';
 import { EASE } from '../lib/motion';
+import { useLT } from '../i18n/LocaleContext';
 
 /**
  * Filtered on `href` for the same reason as the footer's row: these render as large,
@@ -58,6 +59,7 @@ const socials = [
  * the preferences dialog unmounts the iframe immediately rather than at the next reload.
  */
 function ConsentedMap() {
+  const lt = useLT('contact');
   const allowed = useConsent('embeds');
   const [loadedOnce, setLoadedOnce] = useState(false);
 
@@ -69,7 +71,7 @@ function ConsentedMap() {
   if (allowed || loadedOnce) {
     return (
       <iframe
-        title="KEAA International location map"
+        title={lt('map.iframeTitle', 'KEAA International location map')}
         src={mapEmbedSrc}
         className="aspect-[16/6] w-full"
         style={{ border: 0 }}
@@ -94,11 +96,11 @@ function ConsentedMap() {
       />
       <div aria-hidden className="absolute inset-0 -z-10 bg-navy-950/70" />
       <p className="max-w-md text-body-compact text-white/85">
-        The interactive map is hosted by Google. Loading it shares your IP address with Google.
+        {lt('map.consentNote', 'The interactive map is hosted by Google. Loading it shares your IP address with Google.')}
       </p>
       <div className="flex flex-wrap items-center justify-center gap-3">
         <Button variant="primary" size="sm" onClick={() => setLoadedOnce(true)}>
-          Load map
+          {lt('map.load', 'Load map')}
         </Button>
         {/* A plain link sets nothing until it is clicked, so it is always safe to show. */}
         <a
@@ -109,7 +111,7 @@ function ConsentedMap() {
           rel="noopener noreferrer"
           className="border-b border-transparent pb-0.5 text-sm font-semibold text-white transition-colors hover:border-white/70"
         >
-          Open in Google Maps
+          {lt('map.openExternal', 'Open in Google Maps')}
         </a>
       </div>
       <button
@@ -117,7 +119,7 @@ function ConsentedMap() {
         onClick={openCookiePreferences}
         className="text-xs font-semibold text-white/70 underline underline-offset-2 transition-colors hover:text-white"
       >
-        Always allow embedded content
+        {lt('map.allowEmbeds', 'Always allow embedded content')}
       </button>
     </div>
   );
@@ -159,10 +161,11 @@ const rideApps = [
 const productCategoryOptions = getAllProductLines().map((c) => ({ value: c.name, label: c.name }));
 
 export default function Contact() {
+  const lt = useLT('contact');
   useSEO({
-    title: 'Contact Us',
+    title: lt('seo.title', 'Contact Us'),
     description:
-      'Get in touch with KEAA International for inquiries, quotes and partnership opportunities. Manufacturing plant in Ludhiana, Punjab, India.',
+      lt('seo.description', 'Get in touch with KEAA International for inquiries, quotes and partnership opportunities. Manufacturing plant in Ludhiana, Punjab, India.'),
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -199,7 +202,7 @@ export default function Contact() {
       });
       setSubmitted(true);
     } catch {
-      setSendError('Could not send your message. Please try again, or email us directly.');
+      setSendError(lt('form.sendError', 'Could not send your message. Please try again, or email us directly.'));
     } finally {
       setSending(false);
     }
@@ -208,8 +211,8 @@ export default function Contact() {
   return (
     <>
       <GalleryHero
-        eyebrow="Contact Us"
-        crumbs={[{ label: 'Home', to: '/' }, { label: 'Contact Us' }]}
+        eyebrow={lt('hero.eyebrow', 'Contact Us')}
+        crumbs={[{ label: lt('crumbs.home', 'Home'), to: '/' }, { label: lt('crumbs.contact', 'Contact Us') }]}
         slides={heroSlides.contact}
         scrollTo="content"
       />
@@ -219,13 +222,13 @@ export default function Contact() {
           {/* GET IN TOUCH */}
           <Reveal className="space-y-5">
             <span className="eyebrow text-primary-darker">
-              Get in Touch
+              {lt('info.eyebrow', 'Get in Touch')}
             </span>
             <div className="rounded-card border border-navy-100 p-6 shadow-card">
               <div>
                 <div>
                   <h4 className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
-                    {company.manufacturing.label}
+                    {lt('info.addressLabel', company.manufacturing.label)}
                   </h4>
                   <p className="mt-1 text-body-compact text-ink">
                     {company.manufacturing.line1}
@@ -236,7 +239,7 @@ export default function Contact() {
               </div>
               <div className="mt-5">
                 <div>
-                  <h4 className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">Phone</h4>
+                  <h4 className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">{lt('info.phone', 'Phone')}</h4>
                   {company.phones.map((p) => (
                     <p key={p} className="text-body-compact text-ink">
                       <a href={`tel:${p}`} className="hover:text-navy-700">
@@ -247,16 +250,16 @@ export default function Contact() {
                   {landlineNumbers.map((line) => (
                     <p key={line} className="text-body-compact text-ink">
                       <a href={`tel:${line.replace(/[^\d+]/g, '')}`} className="hover:text-navy-700">
-                        Tel: {line}
+                        {lt('info.tel', 'Tel: {line}', { line })}
                       </a>
                     </p>
                   ))}
-                  <p className="text-body-compact text-ink">Fax: {company.fax}</p>
+                  <p className="text-body-compact text-ink">{lt('info.fax', 'Fax: {fax}', { fax: company.fax })}</p>
                 </div>
               </div>
               <div className="mt-5">
                 <div>
-                  <h4 className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">Email</h4>
+                  <h4 className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">{lt('info.email', 'Email')}</h4>
                   {company.emails.map((e) => (
                     <p key={e} className="text-body-compact text-ink break-all">
                       <a href={`mailto:${e}`} className="hover:text-navy-700">
@@ -268,9 +271,9 @@ export default function Contact() {
               </div>
               <div className="mt-5">
                 <div>
-                  <h4 className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">Business Hours</h4>
-                  <p className="text-body-compact text-ink">Monday – Saturday</p>
-                  <p className="text-body-compact text-ink">9:00 AM – 6:00 PM (IST)</p>
+                  <h4 className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">{lt('info.hours', 'Business Hours')}</h4>
+                  <p className="text-body-compact text-ink">{lt('info.hoursDays', 'Monday – Saturday')}</p>
+                  <p className="text-body-compact text-ink">{lt('info.hoursTime', '9:00 AM – 6:00 PM (IST)')}</p>
                 </div>
               </div>
             </div>
@@ -280,14 +283,14 @@ export default function Contact() {
           <Reveal delay={0.1} className="relative rounded-card border border-navy-100 p-7 shadow-card">
             <div>
               <div>
-                <h3 className="font-display text-xl font-bold text-text">Send Us a Message</h3>
+                <h3 className="font-display text-xl font-bold text-text">{lt('form.title', 'Send Us a Message')}</h3>
                 <button
                   type="button"
                   onClick={() => setShowConsult((v) => !v)}
                   aria-expanded={showConsult}
                   className="mt-0.5 inline-block border-b border-transparent pb-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary-darker transition-colors hover:border-primary hover:text-primary-deep"
                 >
-                  Request a Consultation
+                  {lt('form.consultToggle', 'Request a Consultation')}
                 </button>
               </div>
             </div>
@@ -303,10 +306,7 @@ export default function Contact() {
                   className="overflow-hidden"
                 >
                   <p className="mt-4 rounded-card border border-primary/20 bg-primary/[0.05] p-4 text-body-compact leading-relaxed text-ink">
-                    Planning your next construction or industrial project? Tell us about your
-                    requirements, and our specialists will recommend the right products, pricing, and
-                    manufacturing solutions tailored to your business. From initial inquiry to final
-                    delivery, we&rsquo;re committed to supporting your success.
+                    {lt('form.consultBody', 'Planning your next construction or industrial project? Tell us about your requirements, and our specialists will recommend the right products, pricing, and manufacturing solutions tailored to your business. From initial inquiry to final delivery, we’re committed to supporting your success.')}
                   </p>
                 </motion.div>
               )}
@@ -314,28 +314,28 @@ export default function Contact() {
 
             {submitted ? (
               <div className="mt-8 rounded-card bg-navy-50 p-8 text-center">
-                <p className="font-display text-lg font-semibold text-text">Message Sent</p>
+                <p className="font-display text-lg font-semibold text-text">{lt('form.sentTitle', 'Message Sent')}</p>
                 <p className="mt-2 text-body-compact text-ink">
-                  Thank you for reaching out. Our team will get back to you within 24 hours.
+                  {lt('form.sentBody', 'Thank you for reaching out. Our team will get back to you within 24 hours.')}
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="mt-6 grid gap-5 sm:grid-cols-2">
-                <Field label="Your Name" id="name" required />
-                <Field label="Company Name" id="company" />
+                <Field label={lt('form.name', 'Your Name')} id="name" required />
+                <Field label={lt('form.company', 'Company Name')} id="company" />
                 <EmailField value={email} onChange={setEmail} required />
                 <CountrySelect value={country} onChange={setCountry} required />
                 <PhoneField country={country} value={phone} onChange={setPhone} />
                 <Field
-                  label="Subject"
+                  label={lt('form.subject', 'Subject')}
                   id="subject"
                   required
-                  placeholder="e.g. Bulk order inquiry for Cuplock scaffolding"
+                  placeholder={lt('form.subjectPlaceholder', 'e.g. Bulk order inquiry for Cuplock scaffolding')}
                 />
                 <MultiSelect
                   className="sm:col-span-2"
-                  label="Product Category"
-                  placeholder="Select one or more categories…"
+                  label={lt('form.category', 'Product Category')}
+                  placeholder={lt('form.categoryPlaceholder', 'Select one or more categories…')}
                   options={productCategoryOptions}
                   value={categories}
                   onChange={setCategories}
@@ -343,12 +343,12 @@ export default function Contact() {
                 <WordLimitTextarea
                   className="sm:col-span-2"
                   id="message"
-                  label="Message"
+                  label={lt('form.message', 'Message')}
                   value={message}
                   onChange={setMessage}
                   required
                   maxWords={250}
-                  placeholder="Tell us how we can help: product, quantity, timeline, destination…"
+                  placeholder={lt('form.messagePlaceholder', 'Tell us how we can help: product, quantity, timeline, destination…')}
                 />
                 <div className="sm:col-span-2">
                   {sendError && (
@@ -357,7 +357,7 @@ export default function Contact() {
                     </p>
                   )}
                   <Button type="submit" disabled={sending}>
-                    {sending ? 'Sending…' : 'Send Message'}
+                    {sending ? lt('form.sending', 'Sending…') : lt('form.submit', 'Send Message')}
                   </Button>
                 </div>
               </form>
@@ -371,7 +371,7 @@ export default function Contact() {
         <div className="container-page">
           <Reveal>
             <span className="eyebrow text-primary-darker">
-              Our Location
+              {lt('location.eyebrow', 'Our Location')}
             </span>
             <h3 className="mt-2 font-display text-xl font-semibold text-text">
               {company.manufacturing.line1}, {company.manufacturing.line2}
@@ -390,9 +390,9 @@ export default function Contact() {
           <div className="grid gap-x-12 gap-y-12 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
             {/* Book Your Ride */}
             <Reveal>
-              <span className="eyebrow text-primary-darker">Book Your Ride</span>
+              <span className="eyebrow text-primary-darker">{lt('ride.eyebrow', 'Book Your Ride')}</span>
               <h3 className="mt-2 font-display text-xl font-semibold text-text">
-                Get to KEAA International, Dehlon Road, Ludhiana, Punjab, India
+                {lt('ride.title', 'Get to KEAA International, Dehlon Road, Ludhiana, Punjab, India')}
               </h3>
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
                 {rideApps.map((r) => (
@@ -416,9 +416,9 @@ export default function Contact() {
 
             {/* Follow Us — icons on one horizontal line under the heading. */}
             <Reveal delay={0.1}>
-              <span className="eyebrow text-primary-darker">Follow Us</span>
+              <span className="eyebrow text-primary-darker">{lt('social.eyebrow', 'Follow Us')}</span>
               <h3 className="mt-2 font-display text-xl font-semibold text-text">
-                Find Us on Social Media
+                {lt('social.title', 'Find Us on Social Media')}
               </h3>
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
                 {socials.map((s) => (

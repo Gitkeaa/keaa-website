@@ -6,6 +6,7 @@ import CtaBand from '../components/CtaBand';
 import ImagePlaceholder from '../components/ui/ImagePlaceholder';
 import Button from '../components/ui/Button';
 import useSEO, { absoluteUrl } from '../hooks/useSEO';
+import { useLT } from '../i18n/LocaleContext';
 import {
   getCategory,
   getProductsByCategory,
@@ -32,6 +33,7 @@ const TABS = [
 ];
 
 export default function ProductCatalog() {
+  const lt = useLT('catalog');
   const { categorySlug, subSlug } = useParams();
   const category = useMemo(() => getCategory(categorySlug), [categorySlug]);
 
@@ -120,8 +122,14 @@ export default function ProductCatalog() {
     : undefined;
 
   useSEO({
-    title: category ? `${activeSub ? activeSub.name : category.name}, Products` : 'Products',
-    description: category?.short,
+    title: category
+      ? lt('seo.listTitle', '{name}, Products', {
+          name: activeSub
+            ? lt(`sub.${activeSub.slug}.name`, activeSub.name)
+            : lt(`cat.${category.slug}.name`, category.name),
+        })
+      : lt('seo.title', 'Products'),
+    description: category?.short ? lt(`cat.${category.slug}.short`, category.short) : undefined,
     breadcrumbs,
     schema: collectionSchema,
   });
@@ -129,10 +137,10 @@ export default function ProductCatalog() {
   if (!category) {
     return (
       <section className="container-page py-24 text-center">
-        <h1 className="font-display text-2xl font-bold text-text">Category not found</h1>
-        <p className="body-copy mx-auto text-center mt-2">This product category doesn’t exist.</p>
+        <h1 className="font-display text-2xl font-bold text-text">{lt('notFound.catTitle', 'Category not found')}</h1>
+        <p className="body-copy mx-auto text-center mt-2">{lt('notFound.catDesc', 'This product category doesn’t exist.')}</p>
         <Button to="/products" className="mt-6">
-          Back to Products
+          {lt('notFound.backAll', 'Back to Products')}
         </Button>
       </section>
     );
@@ -141,10 +149,10 @@ export default function ProductCatalog() {
   if (subSlug && !activeSub) {
     return (
       <section className="container-page py-24 text-center">
-        <h1 className="font-display text-2xl font-bold text-text">Subcategory not found</h1>
-        <p className="body-copy mx-auto text-center mt-2">This subcategory doesn’t exist in {category.name}.</p>
+        <h1 className="font-display text-2xl font-bold text-text">{lt('notFound.subTitle', 'Subcategory not found')}</h1>
+        <p className="body-copy mx-auto text-center mt-2">{lt('notFound.subDesc', 'This subcategory doesn’t exist in {name}.', { name: lt(`cat.${category.slug}.name`, category.name) })}</p>
         <Button to={`/products/${category.slug}`} className="mt-6">
-          Back to {category.name}
+          {lt('notFound.backCat', 'Back to {name}', { name: lt(`cat.${category.slug}.name`, category.name) })}
         </Button>
       </section>
     );
@@ -200,16 +208,16 @@ export default function ProductCatalog() {
             {/* Main column */}
             <div className="min-w-0" ref={gridTopRef}>
               {/* Breadcrumb */}
-              <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-xs text-text-strong">
-                <Link to="/" className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">Home</Link>
+              <nav aria-label={lt('crumbs.label', 'Breadcrumb')} className="flex flex-wrap items-center gap-2 text-xs text-text-strong">
+                <Link to="/" className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">{lt('crumbs.home', 'Home')}</Link>
                 <span aria-hidden className="text-primary">/</span>
-                <Link to="/products" className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">Products</Link>
+                <Link to="/products" className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">{lt('crumbs.products', 'Products')}</Link>
                 <span aria-hidden className="text-primary">/</span>
-                <Link to={`/products/${category.slug}`} className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">{category.name}</Link>
+                <Link to={`/products/${category.slug}`} className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">{lt(`cat.${category.slug}.name`, category.name)}</Link>
                 {activeSub && (
                   <>
                     <span aria-hidden className="text-primary">/</span>
-                    <span className="font-medium text-text" aria-current="page">{activeSub.name}</span>
+                    <span className="font-medium text-text" aria-current="page">{lt(`sub.${activeSub.slug}.name`, activeSub.name)}</span>
                   </>
                 )}
               </nav>
@@ -218,16 +226,16 @@ export default function ProductCatalog() {
               <div className="mt-3 flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
                 <div className="max-w-2xl">
                   <h1 className="font-display text-2xl font-bold text-text sm:text-3xl">
-                    {activeSub ? activeSub.name : category.name}
+                    {activeSub ? lt(`sub.${activeSub.slug}.name`, activeSub.name) : lt(`cat.${category.slug}.name`, category.name)}
                   </h1>
-                  <p className="body-copy mt-2">{category.short}</p>
+                  <p className="body-copy mt-2">{lt(`cat.${category.slug}.short`, category.short)}</p>
                 </div>
                 {category.badges?.length > 0 && (
                   <div className="grid flex-shrink-0 grid-cols-2 gap-x-5 gap-y-3 lg:max-w-xs">
-                    {category.badges.map((b) => (
+                    {category.badges.map((b, i) => (
                       <div key={b.title} className="leading-tight">
-                        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">{b.title}</p>
-                        <p className="mt-1 text-[11px] text-text-muted">{b.sub}</p>
+                        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">{lt(`cat.${category.slug}.badges.${i}.title`, b.title)}</p>
+                        <p className="mt-1 text-[11px] text-text-muted">{lt(`cat.${category.slug}.badges.${i}.sub`, b.sub)}</p>
                       </div>
                     ))}
                   </div>
@@ -235,7 +243,7 @@ export default function ProductCatalog() {
               </div>
 
               {/* Tabs */}
-              <div role="tablist" aria-label="Product views" className="mt-6 flex items-center gap-6 border-b border-navy-100">
+              <div role="tablist" aria-label={lt('tabs.label', 'Product views')} className="mt-6 flex items-center gap-6 border-b border-navy-100">
                 {TABS.map((t) => (
                   <button
                     key={t.key}
@@ -249,7 +257,7 @@ export default function ProductCatalog() {
                         : 'border-transparent text-text-muted hover:text-navy-800'
                     }`}
                   >
-                    {t.label}
+                    {lt(`tabs.${t.key}`, t.label)}
                   </button>
                 ))}
               </div>
@@ -264,10 +272,10 @@ export default function ProductCatalog() {
                   className="flex w-full items-center justify-between rounded-card border border-navy-200 bg-white px-4 py-2.5 text-sm font-medium text-navy-800"
                 >
                   <span>
-                    Categories & Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
+                    {lt('mobile.toggle', 'Categories & Filters')}{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
                   </span>
                   <span aria-hidden className="text-[13px] font-bold uppercase tracking-[0.12em] text-primary-dark">
-                    {mobileNavOpen ? 'Close' : 'Open'}
+                    {mobileNavOpen ? lt('mobile.close', 'Close') : lt('mobile.open', 'Open')}
                   </span>
                 </button>
                 {mobileNavOpen && (
@@ -284,7 +292,7 @@ export default function ProductCatalog() {
                   pageItems={pageItems}
                   query={query}
                   onSearch={onSearch}
-                  searchScope={activeSub ? activeSub.name : category.name}
+                  searchScope={activeSub ? lt(`sub.${activeSub.slug}.name`, activeSub.name) : lt(`cat.${category.slug}.name`, category.name)}
                   view={view}
                   setView={setView}
                   sort={sort}
@@ -308,10 +316,10 @@ export default function ProductCatalog() {
       </section>
 
       <CtaBand
-        title="Need Help Choosing"
-        accent="the Right Product?"
-        desc="Our experts are here to help you find the best solution for your project."
-        cta={{ label: 'Request a Quote', to: '/rfq' }}
+        title={lt('cta.title', 'Need Help Choosing')}
+        accent={lt('cta.accent', 'the Right Product?')}
+        desc={lt('cta.desc', 'Our experts are here to help you find the best solution for your project.')}
+        cta={{ label: lt('cta.label', 'Request a Quote'), to: '/rfq' }}
       />
     </>
   );
@@ -322,6 +330,7 @@ function GalleryTab({
   visible, pageItems, query, onSearch, searchScope, view, setView, sort, setSort, perPage, setPerPage, perPageOptions,
   start, currentPage, totalPages, goToPage, activeFilterCount, onClearFilters,
 }) {
+  const lt = useLT('catalog');
   const from = visible.length === 0 ? 0 : start + 1;
   const to = Math.min(start + perPage, visible.length);
 
@@ -333,18 +342,18 @@ function GalleryTab({
           type="text"
           value={query}
           onChange={(e) => onSearch(e.target.value)}
-          placeholder={`Search ${searchScope}…`}
-          aria-label={`Search products in ${searchScope}`}
+          placeholder={lt('search.placeholder', 'Search {scope}…', { scope: searchScope })}
+          aria-label={lt('search.ariaLabel', 'Search products in {scope}', { scope: searchScope })}
           className="w-full rounded-card border border-navy-200 bg-white py-2.5 pl-4 pr-20 text-sm text-navy-800 outline-none transition-colors placeholder:text-text-muted focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
         {query && (
           <button
             type="button"
             onClick={() => onSearch('')}
-            aria-label="Clear search"
+            aria-label={lt('search.clearLabel', 'Clear search')}
             className="absolute right-2.5 top-1/2 flex h-6 -translate-y-1/2 items-center justify-center rounded-card px-2 text-[13px] font-bold uppercase tracking-[0.12em] text-text-muted transition-colors hover:bg-navy-50 hover:text-navy-800"
           >
-            Clear
+            {lt('search.clear', 'Clear')}
           </button>
         )}
       </div>
@@ -352,28 +361,28 @@ function GalleryTab({
       {/* Toolbar */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-body-compact text-text-muted">
-          Showing <span className="font-semibold text-navy-800">{from}–{to}</span> of{' '}
-          <span className="font-semibold text-navy-800">{visible.length}</span> products
+          {lt('toolbar.showing', 'Showing ')}<span className="font-semibold text-navy-800">{from}–{to}</span>{lt('toolbar.of', ' of ')}
+          <span className="font-semibold text-navy-800">{visible.length}</span>{lt('toolbar.products', ' products')}
           {query && (
-            <> for &ldquo;<span className="font-semibold text-navy-800">{query}</span>&rdquo;</>
+            <>{lt('toolbar.for', ' for “')}<span className="font-semibold text-navy-800">{query}</span>{lt('toolbar.quoteEnd', '”')}</>
           )}
         </p>
         <div className="flex items-center gap-3">
           <label className="flex items-center gap-2 text-xs text-text-muted">
-            Sort by:
+            {lt('toolbar.sortBy', 'Sort by:')}
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
               className="rounded-card border border-navy-200 bg-white px-2.5 py-1.5 text-sm text-navy-800 outline-none focus:border-primary"
             >
               {Object.entries(SORTS).map(([k, v]) => (
-                <option key={k} value={k}>{v.label}</option>
+                <option key={k} value={k}>{lt(`sort.${k}`, v.label)}</option>
               ))}
             </select>
           </label>
           <div className="flex overflow-hidden rounded-card border border-navy-200">
-            <ViewBtn active={view === 'grid'} onClick={() => setView('grid')} label="Grid view">Grid</ViewBtn>
-            <ViewBtn active={view === 'list'} onClick={() => setView('list')} label="List view">List</ViewBtn>
+            <ViewBtn active={view === 'grid'} onClick={() => setView('grid')} label={lt('toolbar.gridView', 'Grid view')}>{lt('toolbar.grid', 'Grid')}</ViewBtn>
+            <ViewBtn active={view === 'list'} onClick={() => setView('list')} label={lt('toolbar.listView', 'List view')}>{lt('toolbar.list', 'List')}</ViewBtn>
           </div>
         </div>
       </div>
@@ -382,21 +391,21 @@ function GalleryTab({
       {visible.length === 0 ? (
         <div className="mt-10 flex flex-col items-center rounded-card border border-dashed border-navy-200 bg-navy-50/40 py-14 text-center">
           <p className="font-display text-base font-semibold text-text">
-            {query ? <>No products match &ldquo;{query}&rdquo;</> : 'No products match these filters'}
+            {query ? lt('empty.noMatchQuery', 'No products match “{q}”', { q: query }) : lt('empty.noMatchFilters', 'No products match these filters')}
           </p>
           <p className="mt-1 text-body-compact text-text-muted">
-            {query ? 'Try a different term, or clear the search.' : 'Try removing a filter to see more products.'}
+            {query ? lt('empty.queryHint', 'Try a different term, or clear the search.') : lt('empty.filtersHint', 'Try removing a filter to see more products.')}
           </p>
           {(query || activeFilterCount > 0) && (
             <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
               {query && (
                 <button onClick={() => onSearch('')} className="rounded-card bg-navy-800 px-4 py-2 text-sm font-semibold text-white hover:bg-navy-900">
-                  Clear search
+                  {lt('empty.clearSearch', 'Clear search')}
                 </button>
               )}
               {activeFilterCount > 0 && (
                 <button onClick={onClearFilters} className="rounded-card border border-navy-200 bg-white px-4 py-2 text-sm font-semibold text-navy-800 hover:bg-navy-50">
-                  Clear filters
+                  {lt('empty.clearFilters', 'Clear filters')}
                 </button>
               )}
             </div>
@@ -448,6 +457,7 @@ function ViewBtn({ active, onClick, label, children }) {
 }
 
 function ProductRow({ product }) {
+  const lt = useLT('catalog');
   const src = productImage(product, { w: 200, h: 200, crop: 'fill' });
   return (
     <Link
@@ -455,7 +465,7 @@ function ProductRow({ product }) {
       className="group flex items-center gap-4 rounded-card border border-navy-100 bg-white p-3 shadow-card transition-shadow hover:shadow-cardHover"
     >
       <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-card">
-        <ImagePlaceholder src={src} label={product.name} alt={product.name} tone="light" ratio="aspect-square" className="!rounded-none" zoom={false} caption={src ? undefined : 'Soon'} />
+        <ImagePlaceholder src={src} label={product.name} alt={product.name} tone="light" ratio="aspect-square" className="!rounded-none" zoom={false} caption={src ? undefined : lt('card.soon', 'Soon')} />
       </div>
       <div className="min-w-0 flex-1">
         <h3 className="truncate font-display text-sm font-semibold text-text group-hover:text-primary-dark">{product.name}</h3>
@@ -463,7 +473,7 @@ function ProductRow({ product }) {
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-text-muted">
           {product.diameter && <span>{product.diameter}</span>}
           {product.finish && <span>{product.finish}</span>}
-          <span className="text-text-muted">{product.subcategory}</span>
+          <span className="text-text-muted">{lt(`sub.${product.subSlug}.name`, product.subcategory)}</span>
         </div>
       </div>
     </Link>
@@ -471,6 +481,7 @@ function ProductRow({ product }) {
 }
 
 function Pagination({ currentPage, totalPages, goToPage, perPage, setPerPage, perPageOptions }) {
+  const lt = useLT('catalog');
   // compact page window
   const pages = [];
   const win = 2;
@@ -482,8 +493,8 @@ function Pagination({ currentPage, totalPages, goToPage, perPage, setPerPage, pe
   return (
     <div className="mt-8 flex flex-col items-center gap-4 border-t border-navy-100 pt-6 sm:flex-row sm:justify-between">
       <div className="flex items-center gap-1.5">
-        <PageBtn disabled={currentPage === 1} onClick={() => goToPage(currentPage - 1)} label="Previous page">
-          Prev
+        <PageBtn disabled={currentPage === 1} onClick={() => goToPage(currentPage - 1)} label={lt('pager.prevLabel', 'Previous page')}>
+          {lt('pager.prev', 'Prev')}
         </PageBtn>
         {pages.map((p, i) =>
           p === '…' ? (
@@ -501,13 +512,13 @@ function Pagination({ currentPage, totalPages, goToPage, perPage, setPerPage, pe
             </button>
           )
         )}
-        <PageBtn disabled={currentPage === totalPages} onClick={() => goToPage(currentPage + 1)} label="Next page">
-          Next
+        <PageBtn disabled={currentPage === totalPages} onClick={() => goToPage(currentPage + 1)} label={lt('pager.nextLabel', 'Next page')}>
+          {lt('pager.next', 'Next')}
         </PageBtn>
       </div>
       <div className="flex items-center gap-4 text-xs text-text-muted">
         <label className="flex items-center gap-2">
-          Show
+          {lt('pager.show', 'Show')}
           <select
             value={perPage}
             onChange={(e) => setPerPage(Number(e.target.value))}
@@ -515,9 +526,9 @@ function Pagination({ currentPage, totalPages, goToPage, perPage, setPerPage, pe
           >
             {perPageOptions.map((n) => <option key={n} value={n}>{n}</option>)}
           </select>
-          per page
+          {lt('pager.perPage', 'per page')}
         </label>
-        <span>Page {currentPage} of {totalPages}</span>
+        <span>{lt('pager.pageOf', 'Page {current} of {total}', { current: currentPage, total: totalPages })}</span>
       </div>
     </div>
   );
@@ -539,17 +550,18 @@ function PageBtn({ disabled, onClick, label, children }) {
 
 /* ---------------------------------- Overview ---------------------------------- */
 function OverviewTab({ category }) {
+  const lt = useLT('catalog');
   return (
     <div className="mt-6">
       <div className="rounded-card border border-navy-100 bg-white p-6 shadow-card">
-        <p className="body-copy">{category.short}</p>
+        <p className="body-copy">{lt(`cat.${category.slug}.short`, category.short)}</p>
         {category.standard && (
           <p className="mt-3 inline-block rounded-full border border-navy-100 bg-navy-50 px-4 py-1.5 font-mono text-xs text-navy-700">
             {category.standard}
           </p>
         )}
       </div>
-      <h3 className="mt-8 font-display text-sm font-semibold text-text">Browse by type</h3>
+      <h3 className="mt-8 font-display text-sm font-semibold text-text">{lt('overview.browseByType', 'Browse by type')}</h3>
       <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {category.subcategories.map((s) => (
           <Link
@@ -557,7 +569,7 @@ function OverviewTab({ category }) {
             to={`/products/${category.slug}/${s.slug}`}
             className="group flex items-center justify-between rounded-card border border-navy-100 bg-white px-4 py-3.5 shadow-card transition-shadow hover:shadow-cardHover"
           >
-            <span className="border-b border-transparent pb-0.5 text-sm font-medium text-navy-800 transition-colors group-hover:border-primary group-hover:text-primary-dark">{s.name}</span>
+            <span className="border-b border-transparent pb-0.5 text-sm font-medium text-navy-800 transition-colors group-hover:border-primary group-hover:text-primary-dark">{lt(`sub.${s.slug}.name`, s.name)}</span>
             <span className="text-xs text-text-muted">{s.count}</span>
           </Link>
         ))}
@@ -568,14 +580,15 @@ function OverviewTab({ category }) {
 
 /* ---------------------------------- Downloads ---------------------------------- */
 function DownloadsTab() {
+  const lt = useLT('catalog');
   return (
     <div className="mt-6">
       <div className="flex flex-col items-start gap-4 rounded-card border border-navy-100 bg-white p-6 shadow-card sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="font-display text-body-compact font-semibold text-text">KEAA Product Catalogue</p>
-          <p className="text-xs text-text-muted">Complete product range with full technical specifications.</p>
+          <p className="font-display text-body-compact font-semibold text-text">{lt('downloads.title', 'KEAA Product Catalogue')}</p>
+          <p className="text-xs text-text-muted">{lt('downloads.desc', 'Complete product range with full technical specifications.')}</p>
         </div>
-        <Button to="/downloads" size="sm">Downloads Center</Button>
+        <Button to="/downloads" size="sm">{lt('downloads.cta', 'Downloads Center')}</Button>
       </div>
     </div>
   );

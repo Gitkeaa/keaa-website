@@ -3,6 +3,7 @@ import Button from './ui/Button';
 import BrandTexture from './ui/BrandTexture';
 import { company } from '../data/company';
 import { EASE } from '../lib/motion';
+import { useLT } from '../i18n/LocaleContext';
 
 /**
  * The closing call-to-action, sitting between the last page section and the footer.
@@ -25,15 +26,23 @@ const PROMISES = [
 ];
 
 export default function CtaBand({
-  title = 'Looking for Reliable',
-  accent = 'Scaffolding & Formwork Solutions?',
-  desc = 'Get in touch with our team for the best solutions for your project.',
+  title,
+  accent,
+  desc,
   note,
-  cta = { label: 'Request a Quote', to: '/rfq' },
+  cta,
   showPhone = true,
 }) {
+  const lt = useLT('common');
   const reduce = useReducedMotion();
   const phone = company.phones[0];
+
+  /* The old destructured defaults, moved here so they are translatable. `??` keeps the
+     same only-when-the-page-passes-nothing behaviour. */
+  title = title ?? lt('ctaBand.title', 'Looking for Reliable');
+  accent = accent ?? lt('ctaBand.accent', 'Scaffolding & Formwork Solutions?');
+  desc = desc ?? lt('ctaBand.desc', 'Get in touch with our team for the best solutions for your project.');
+  cta = cta ?? { label: lt('ctaBand.cta', 'Request a Quote'), to: '/rfq' };
 
   return (
     <section className="relative isolate overflow-hidden bg-surface pb-5 pt-10 sm:pt-12">
@@ -69,13 +78,13 @@ export default function CtaBand({
               for the navy ramp to register at all. `lg:pl-8` matches the action column on
               the other side, so the tiles clear the divider by the same gap. */}
           <ul className="grid flex-1 grid-cols-3 gap-2 border-t border-border pt-5 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-            {PROMISES.map(({ title }) => (
+            {PROMISES.map(({ title }, i) => (
               <li
                 key={title}
                 className="flex flex-col items-center justify-center rounded-card bg-navy-50 px-2 py-4 text-center"
               >
                 <span className="whitespace-pre-line text-[13px] font-semibold leading-snug text-text">
-                  {title}
+                  {lt(`ctaBand.promises.${i}`, title)}
                 </span>
               </li>
             ))}
@@ -94,7 +103,7 @@ export default function CtaBand({
             </Button>
             {showPhone && (
               <p className="text-center text-[13px] text-text-muted">
-                or Call Us:{' '}
+                {lt('ctaBand.orCall', 'or Call Us:')}{' '}
                 <a
                   href={`tel:${phone.replace(/\s/g, '')}`}
                   className="font-semibold text-primary-dark transition-colors hover:text-primary-darker"

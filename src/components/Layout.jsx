@@ -7,6 +7,7 @@ import MobileDrawer from './layout/MobileDrawer';
 import ScrollToTop from './ScrollToTop';
 import BackToTop from './BackToTop';
 import CookieConsent from './CookieConsent';
+import LanguageNotice from './LanguageNotice';
 import { SkipToContent, RouteAnnouncer } from './A11y';
 import { LocaleProvider } from '../i18n/LocaleContext';
 import { RegionProvider } from '../context/RegionContext';
@@ -53,6 +54,10 @@ export default function Layout() {
           />
           <ScrollToTop />
           <Header onOpenDrawer={() => setDrawerOpen(true)} />
+          {/* Coming-soon strip for a chosen language that is not fully translated yet.
+              In-flow under the header on purpose; renders nothing for English and for
+              live languages. */}
+          <LanguageNotice />
           {/* tabIndex -1 so the skip link can move focus here, not just scroll to it. */}
           <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">
             <AnimatePresence mode="wait">

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Play } from 'lucide-react';
 import { droneFilmUrl, heroFilms } from '../../data/content';
+import { useLT } from '../../i18n/LocaleContext';
 
 /**
  * HOMEPAGE HERO — Lely-style single film.
@@ -54,6 +55,7 @@ function useMediaQuery(query) {
 
 export default function HomeHeroBrandTest() {
   const reduce = useReducedMotion();
+  const lt = useLT('home');
   const saveData = useSaveData();
   const isDesktop = useMediaQuery('(min-width: 1024px)');
   const [filmBroken, setFilmBroken] = useState(false);
@@ -130,8 +132,8 @@ export default function HomeHeroBrandTest() {
                 If the wording changes, re-measure. A longer line silently wraps to three.
               */}
               <h1 className="font-display text-[clamp(1.125rem,calc(6.4vw-4.6px),2.25rem)] font-bold leading-[1.08] tracking-[-0.02em] text-white sm:text-[clamp(2rem,calc(6.4vw-8.8px),3rem)] lg:text-[clamp(3rem,calc(4.375vw+8.2px),3.75rem)]">
-                <span className="block">Engineering Reliable</span>
-                <span className="block">Scaffolding &amp; Formwork Solutions</span>
+                <span className="block">{lt('hero.title1', 'Engineering Reliable')}</span>
+                <span className="block">{lt('hero.title2', 'Scaffolding & Formwork Solutions')}</span>
               </h1>
             </motion.div>
           </div>
@@ -145,8 +147,8 @@ export default function HomeHeroBrandTest() {
             href={droneFilmUrl}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Play the KEAA aerial film (opens in a new tab)"
-            title="Watch the KEAA aerial film"
+            aria-label={lt('hero.filmAria', 'Play the KEAA aerial film (opens in a new tab)')}
+            title={lt('hero.filmTitle', 'Watch the KEAA aerial film')}
             className="group absolute right-6 top-6 z-20 inline-flex items-center gap-2.5 rounded-full bg-black/25 py-1.5 pl-1.5 pr-3.5 backdrop-blur-sm transition-all duration-300 hover:bg-black/40 sm:right-8 sm:top-8"
           >
             {/* `bg-signal` is the shared red token (#E11D2A), replacing a hardcoded hex here.

@@ -10,6 +10,7 @@ import { company } from '../data/company';
 import useSEO from '../hooks/useSEO';
 import CtaBand from '../components/CtaBand';
 import { EASE } from '../lib/motion';
+import { useLT } from '../i18n/LocaleContext';
 
 /**
  * Careers page: hero, a KEAA stats band, perks, and expandable job listings with an apply modal.
@@ -37,10 +38,11 @@ const bannerStats = [
 ].filter((s) => s.value);
 
 export default function Careers() {
+  const lt = useLT('careers');
   useSEO({
-    title: 'Careers',
+    title: lt('seo.title', 'Careers'),
     description:
-      'Join KEAA International\'s team: explore current openings in production, quality, exports and more.',
+      lt('seo.desc', 'Join KEAA International\'s team: explore current openings in production, quality, exports and more.'),
   });
 
   const [activeJob, setActiveJob] = useState(null);
@@ -60,7 +62,7 @@ export default function Careers() {
         <div className="relative isolate flex min-h-[460px] overflow-hidden rounded-3xl sm:min-h-[520px] lg:min-h-[600px]">
           <img
             src="/images/Career.jpg"
-            alt="The KEAA team on the factory floor in branded uniform and safety gear"
+            alt={lt('hero.imgAlt', 'The KEAA team on the factory floor in branded uniform and safety gear')}
             loading="eager"
             fetchPriority="high"
             decoding="async"
@@ -79,24 +81,24 @@ export default function Careers() {
           />
 
           <nav
-            aria-label="Breadcrumb"
+            aria-label={lt('breadcrumb.label', 'Breadcrumb')}
             className="absolute left-6 top-5 z-10 flex items-center gap-1.5 text-xs text-white/85 sm:left-10 sm:top-8 lg:left-12"
           >
             <Link to="/" className="border-b border-transparent pb-0.5 transition-colors hover:border-white/70">
-              Home
+              {lt('breadcrumb.home', 'Home')}
             </Link>
             <span aria-hidden className="text-white/45">/</span>
-            <span aria-current="page">Careers</span>
+            <span aria-current="page">{lt('breadcrumb.current', 'Careers')}</span>
           </nav>
 
           <div className="relative z-10 mt-auto w-full p-6 sm:p-10 lg:p-12">
             <div className="max-w-2xl">
               <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-[-0.02em] text-white sm:text-5xl lg:text-6xl">
-                Build Your Career.
-                <span className="block text-primary-light">Build the Future.</span>
+                {lt('hero.title1', 'Build Your Career.')}
+                <span className="block text-primary-light">{lt('hero.title2', 'Build the Future.')}</span>
               </h1>
               <Button href="#openings" variant="primary" className="mt-7">
-                View Open Positions
+                {lt('hero.cta', 'View Open Positions')}
               </Button>
             </div>
           </div>
@@ -118,8 +120,8 @@ export default function Careers() {
                 <div className="font-display text-3xl font-bold leading-none text-primary-darker sm:text-4xl">
                   {s.value}
                 </div>
-                <div className="mt-2 text-sm font-semibold text-text">{s.label}</div>
-                <div className="mt-0.5 text-xs text-muted">{s.sub}</div>
+                <div className="mt-2 text-sm font-semibold text-text">{lt(`stats.${i}.label`, s.label)}</div>
+                <div className="mt-0.5 text-xs text-muted">{lt(`stats.${i}.sub`, s.sub)}</div>
               </li>
             ))}
           </ul>
@@ -131,17 +133,17 @@ export default function Careers() {
         <div className="container-page">
           <Reveal>
             <SectionHeading
-              eyebrow="Why Work With Us"
-              title="A Career You Can Build On"
-              desc="Join an Indo-Dutch manufacturer trusted across 42+ countries, built on advanced machinery, certified processes and a team that puts safety and quality first."
+              eyebrow={lt('why.eyebrow', 'Why Work With Us')}
+              title={lt('why.title', 'A Career You Can Build On')}
+              desc={lt('why.desc', 'Join an Indo-Dutch manufacturer trusted across 42+ countries, built on advanced machinery, certified processes and a team that puts safety and quality first.')}
             />
           </Reveal>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {perks.map((p, i) => (
               <Reveal key={p.title} delay={i * 0.08}>
                 <div className="group h-full rounded-card border border-navy-100 bg-white p-6 shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-cardHover">
-                  <h4 className="font-display text-base font-semibold text-text">{p.title}</h4>
-                  <p className="mt-1.5 text-body-compact text-muted">{p.desc}</p>
+                  <h4 className="font-display text-base font-semibold text-text">{lt(`perks.${i}.title`, p.title)}</h4>
+                  <p className="mt-1.5 text-body-compact text-muted">{lt(`perks.${i}.desc`, p.desc)}</p>
                 </div>
               </Reveal>
             ))}
@@ -152,10 +154,10 @@ export default function Careers() {
       <section id="openings" className="section-pad scroll-mt-24">
         <div className="container-page">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <SectionHeading align="left" eyebrow="Open Positions" title="Current Openings" className="!mx-0" />
+            <SectionHeading align="left" eyebrow={lt('openings.eyebrow', 'Open Positions')} title={lt('openings.title', 'Current Openings')} className="!mx-0" />
           </div>
           <div className="mt-8 divide-y divide-navy-100 rounded-card border border-navy-100 bg-white">
-            {careers.map((job) => {
+            {careers.map((job, i) => {
               const isOpen = job.status === 'open';
               const expanded = openDetail === job.title;
               return (
@@ -163,24 +165,24 @@ export default function Careers() {
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
                       <div className="flex flex-wrap items-center gap-2.5">
-                        <h4 className="font-display text-sm font-semibold text-text">{job.title}</h4>
+                        <h4 className="font-display text-sm font-semibold text-text">{lt(`jobs.${i}.title`, job.title)}</h4>
                         <span
                           className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
                             isOpen ? 'bg-emerald-50 text-emerald-700' : 'bg-navy-100 text-ink'
                           }`}
                         >
                           <span className={`h-1.5 w-1.5 rounded-full ${isOpen ? 'bg-emerald-500' : 'bg-ink/40'}`} />
-                          {isOpen ? 'Open' : 'Closed'}
+                          {isOpen ? lt('jobs.open', 'Open') : lt('jobs.closed', 'Closed')}
                         </span>
                       </div>
                       <div className="mt-2 flex flex-wrap items-start gap-x-8 gap-y-3 text-xs text-ink">
                         <div>
-                          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">Location</p>
-                          <p className="mt-0.5">{job.location}</p>
+                          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">{lt('jobs.locationLabel', 'Location')}</p>
+                          <p className="mt-0.5">{lt(`jobs.${i}.location`, job.location)}</p>
                         </div>
                         <div>
-                          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">Type</p>
-                          <p className="mt-0.5">{job.type}</p>
+                          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">{lt('jobs.typeLabel', 'Type')}</p>
+                          <p className="mt-0.5">{lt(`jobs.${i}.type`, job.type)}</p>
                         </div>
                       </div>
                       {job.description && (
@@ -190,17 +192,17 @@ export default function Careers() {
                           aria-expanded={expanded}
                           className="mt-3 inline-flex items-center border-b border-transparent pb-0.5 text-xs font-semibold text-primary-darker transition-colors hover:border-primary hover:text-primary-deep"
                         >
-                          {expanded ? 'Hide details' : 'View details'}
+                          {expanded ? lt('jobs.hideDetails', 'Hide details') : lt('jobs.viewDetails', 'View details')}
                         </button>
                       )}
                     </div>
                     {isOpen ? (
                       <Button size="sm" variant="outlineNavy" onClick={() => setActiveJob(job)}>
-                        Apply Now
+                        {lt('jobs.apply', 'Apply Now')}
                       </Button>
                     ) : (
                       <span className="cursor-not-allowed rounded-card border border-navy-100 bg-navy-50 px-4 py-2 text-sm font-medium text-muted">
-                        Applications Closed
+                        {lt('jobs.closedNote', 'Applications Closed')}
                       </span>
                     )}
                   </div>
@@ -215,7 +217,7 @@ export default function Careers() {
                         className="overflow-hidden"
                       >
                         <p className="mt-3 max-w-3xl text-body-compact leading-relaxed text-ink">
-                          {job.description}
+                          {lt(`jobs.${i}.desc`, job.description)}
                         </p>
                       </motion.div>
                     )}
@@ -229,10 +231,10 @@ export default function Careers() {
 
       {/* No phone line here: the number on file is the sales line, not recruitment. */}
       <CtaBand
-        title="Can&rsquo;t Find"
-        accent="the Right Role?"
-        desc="Send us your resume and we&rsquo;ll reach out when a suitable opportunity is available."
-        cta={{ label: 'Send Resume', href: 'mailto:careers@keaa-international.net' }}
+        title={lt('cta.title', 'Can’t Find')}
+        accent={lt('cta.accent', 'the Right Role?')}
+        desc={lt('cta.desc', 'Send us your resume and we’ll reach out when a suitable opportunity is available.')}
+        cta={{ label: lt('cta.label', 'Send Resume'), href: 'mailto:careers@keaa-international.net' }}
         showPhone={false}
       />
 

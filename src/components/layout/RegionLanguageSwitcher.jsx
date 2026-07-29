@@ -3,7 +3,7 @@ import { Globe } from 'lucide-react';
 import HeaderPopover from './HeaderPopover';
 import { useRegion } from '../../context/RegionContext';
 import { useLocale } from '../../i18n/LocaleContext';
-import { getLanguage } from '../../i18n/languages';
+import { getLanguage, isLiveLocale } from '../../i18n/languages';
 import { localeId } from '../../data/regions';
 
 /**
@@ -80,6 +80,16 @@ function Panel({ close }) {
                     {item.country} <span className="text-muted">&ndash;</span>{' '}
                     <span lang={item.lang}>{getLanguage(item.lang).label}</span>
                   </span>
+                  {/* A language that is not fully translated yet says so BEFORE the click:
+                      the visitor should never discover it only from the notice strip. */}
+                  {item.lang !== 'en' && !isLiveLocale(item.lang) && !active && (
+                    <span
+                      aria-hidden={false}
+                      className="flex-shrink-0 rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.08em] text-primary-darker"
+                    >
+                      {t('lang.comingSoon')}
+                    </span>
+                  )}
                   {/* `aria-current` announces the selection; this is its visual half. */}
                   {active && (
                     <span

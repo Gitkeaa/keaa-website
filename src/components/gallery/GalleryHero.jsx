@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import Button from '../ui/Button';
 import { EASE } from '../../lib/motion';
+import { useLT } from '../../i18n/LocaleContext';
 
 /**
  * The framed hero carousel used on every interior page except Home — in the style of the
@@ -19,6 +20,7 @@ import { EASE } from '../../lib/motion';
  * change — a click or the timer — restarts the clock, so it never advances the instant you tap.
  */
 export default function GalleryHero({ slides = [], crumbs = [], cta, interval = 8000 }) {
+  const lt = useLT('gallery');
   const reduce = useReducedMotion();
   const [slide, setSlide] = useState(0);
   const count = slides.length;
@@ -60,7 +62,7 @@ export default function GalleryHero({ slides = [], crumbs = [], cta, interval = 
         {/* ---- breadcrumb ---- */}
         {crumbs.length > 0 && (
           <nav
-            aria-label="Breadcrumb"
+            aria-label={lt('heroNav.breadcrumb', 'Breadcrumb')}
             className="absolute left-6 top-5 z-10 flex items-center gap-1.5 text-xs text-white/85 sm:left-10 sm:top-8 lg:left-12"
           >
             {crumbs.map((c, i) => (
@@ -106,10 +108,10 @@ export default function GalleryHero({ slides = [], crumbs = [], cta, interval = 
           {/* ---- control bar: prev/next arrows, right-aligned ---- */}
           {count > 1 && (
             <div className="flex items-center justify-end gap-3">
-              <button type="button" onClick={() => go(slide - 1)} aria-label="Previous slide" className={arrow}>
+              <button type="button" onClick={() => go(slide - 1)} aria-label={lt('heroNav.prev', 'Previous slide')} className={arrow}>
                 &lsaquo;
               </button>
-              <button type="button" onClick={() => go(slide + 1)} aria-label="Next slide" className={arrow}>
+              <button type="button" onClick={() => go(slide + 1)} aria-label={lt('heroNav.next', 'Next slide')} className={arrow}>
                 &rsaquo;
               </button>
             </div>

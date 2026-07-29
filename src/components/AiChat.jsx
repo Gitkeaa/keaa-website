@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { visitorLanguage } from '../i18n/languages';
+import { useLT } from '../i18n/LocaleContext';
 
 /* ------------------------------------------------------------------ *
  * Dragging
@@ -197,11 +199,12 @@ function useDraggable(ref) {
 }
 
 export default function AiChat() {
+  const lt = useLT('chat');
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Hello! I'm KEAA's AI Assistant. How can I help you today? I can answer questions about our products, services, and company.",
+      text: lt('greeting', "Hello! I'm KEAA's AI Assistant. How can I help you today? I can answer questions about our products, services, and company."),
       sender: 'bot',
       timestamp: new Date(),
     },
@@ -249,6 +252,10 @@ export default function AiChat() {
         },
         body: JSON.stringify({
           message: inputValue,
+          /* The widget mounts OUTSIDE <LocaleProvider> (see App.jsx), so the language is
+             resolved directly: URL locale prefix first, stored choice second. The server
+             answers in this language. */
+          language: visitorLanguage(),
           conversationHistory: messages.map((m) => ({
             role: m.sender === 'user' ? 'user' : 'assistant',
             content: m.text,
@@ -294,9 +301,9 @@ export default function AiChat() {
       const errorMessage = {
         id: messages.length + 2,
         text: offline
-          ? "I can't reach the assistant service right now. Please try again in a moment."
+          ? lt('errors.offline', "I can't reach the assistant service right now. Please try again in a moment.")
           : error.userMessage ||
-            'Sorry, I encountered an error. Please try again.',
+            lt('errors.generic', 'Sorry, I encountered an error. Please try again.'),
         sender: 'bot',
         timestamp: new Date(),
       };
@@ -343,21 +350,22 @@ export default function AiChat() {
               that stays solid white. Doubles as the drag handle while the panel is open. */}
           <div
             {...handleProps}
+            title={lt('handle.title', 'Drag to move · double-click to reset')}
             className={`bg-primary-dark text-white p-4 rounded-t-card flex justify-between items-center ${handleProps.className}`}
           >
             <div>
-              <h3 className="font-semibold">KEAA AI Assistant</h3>
-              <p className="text-xs text-white">Online</p>
+              <h3 className="font-semibold">{lt('header.title', 'KEAA AI Assistant')}</h3>
+              <p className="text-xs text-white">{lt('header.online', 'Online')}</p>
             </div>
             <button
               onClick={() => {
                 if (wasDragged()) return; // the header is the drag handle; a move is not a click
                 setIsOpen(false);
               }}
-              aria-label="Close KEAA assistant"
+              aria-label={lt('closeAria', 'Close KEAA assistant')}
               className="cursor-pointer rounded-card px-2 py-1 text-[13px] font-bold uppercase tracking-[0.12em] transition hover:bg-white/15"
             >
-              Close
+              {lt('close', 'Close')}
             </button>
           </div>
 
@@ -419,7 +427,7 @@ export default function AiChat() {
               <div className="flex justify-start">
                 <div className="bg-navy-50 text-text px-4 py-2 rounded-card rounded-bl-none">
                   <span className="text-[13px] font-bold uppercase tracking-[0.12em]">
-                    Loading…
+                    {lt('loading', 'Loading…')}
                   </span>
                 </div>
               </div>
@@ -435,16 +443,16 @@ export default function AiChat() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Type your message..."
+                placeholder={lt('input.placeholder', 'Type your message...')}
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-card focus:outline-none focus:ring-2 focus:ring-primary text-sm"
               />
               <button
                 onClick={handleSendMessage}
                 disabled={isLoading || !inputValue.trim()}
-                aria-label="Send message"
+                aria-label={lt('input.sendAria', 'Send message')}
                 className="bg-primary-dark hover:bg-primary-darker disabled:bg-gray-300 text-white px-3 py-2 rounded-card transition flex items-center gap-2 text-[13px] font-bold uppercase tracking-[0.12em]"
               >
-                Send
+                {lt('input.send', 'Send')}
               </button>
             </div>
           </div>
@@ -461,11 +469,11 @@ export default function AiChat() {
         {isOpen ? (
           <button
             onClick={() => setIsOpen(false)}
-            aria-label="Close KEAA assistant"
+            aria-label={lt('closeAria', 'Close KEAA assistant')}
             className="relative flex h-14 w-14 items-center justify-center rounded-full border border-primary/60 bg-navy-900 text-white shadow-xl transition-transform hover:scale-105"
           >
             <span className="text-[13px] font-bold uppercase tracking-[0.12em]">
-              Close
+              {lt('close', 'Close')}
             </span>
           </button>
         ) : (
@@ -473,14 +481,14 @@ export default function AiChat() {
              becomes a drag past DRAG_SLOP, and the click is swallowed below when it does, so a
              normal tap is never eaten by the drag. Just the round "Ask" button now — the
              "Ask keaa" label pill was removed. */
-          <div {...handleProps}>
+          <div {...handleProps} title={lt('handle.title', 'Drag to move · double-click to reset')}>
             {/* Launcher button with the brand radiation ring */}
             <button
               onClick={() => {
                 if (wasDragged()) return; // the press that just ended was a move, not a tap
                 setIsOpen(true);
               }}
-              aria-label="Open KEAA assistant"
+              aria-label={lt('openAria', 'Open KEAA assistant')}
               className="group relative h-12 w-12 sm:h-14 sm:w-14 shrink-0 cursor-pointer transition-transform hover:scale-105"
             >
               {/* Rotating brand ring. Built from the palette variables rather than pasted hex
@@ -501,7 +509,7 @@ export default function AiChat() {
               {/* navy circle with the control word */}
               <span className="absolute inset-0 flex items-center justify-center rounded-full border border-primary/60 bg-navy-900 shadow-xl">
                 <span className="text-[11px] sm:text-[13px] font-bold uppercase tracking-[0.12em] text-white">
-                  Ask
+                  {lt('ask', 'Ask')}
                 </span>
               </span>
               {/* notification badge */}

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useLT } from '../../i18n/LocaleContext';
 
 /**
  * The catalog left rail: a dark category header block (with the category's hero
@@ -14,6 +15,7 @@ export default function CatalogSidebar({
   onClearFilters,
   activeFilterCount,
 }) {
+  const lt = useLT('catalog');
   const subLink = (slug) =>
     slug ? `/products/${category.slug}/${slug}` : `/products/${category.slug}`;
 
@@ -31,21 +33,21 @@ export default function CatalogSidebar({
         )}
         <div className="absolute inset-0 bg-gradient-to-br from-navy-900/85 via-navy-800/80 to-navy-700/75" />
         <div className="relative p-5">
-          <p className="font-display text-lg font-bold leading-tight text-white">{category.name}</p>
-          <p className="text-xs text-white/70">{category.count} products</p>
+          <p className="font-display text-lg font-bold leading-tight text-white">{lt(`cat.${category.slug}.name`, category.name)}</p>
+          <p className="text-xs text-white/70">{lt('sidebar.productCount', '{n} products', { n: category.count })}</p>
         </div>
       </div>
 
       {/* Subcategory nav */}
       <nav className="mt-4 overflow-hidden rounded-card border border-navy-100 bg-white shadow-card">
         <ul className="divide-y divide-navy-50">
-          <SubItem to={subLink()} active={!activeSubSlug} label="All Products" count={category.count} />
+          <SubItem to={subLink()} active={!activeSubSlug} label={lt('sidebar.allProducts', 'All Products')} count={category.count} />
           {category.subcategories.map((s) => (
             <SubItem
               key={s.slug}
               to={subLink(s.slug)}
               active={activeSubSlug === s.slug}
-              label={s.name}
+              label={lt(`sub.${s.slug}.name`, s.name)}
               count={s.count}
             />
           ))}
@@ -56,14 +58,14 @@ export default function CatalogSidebar({
       {facets.length > 0 && (
         <div className="mt-4 rounded-card border border-navy-100 bg-white p-5 shadow-card">
           <div className="flex items-center justify-between">
-            <p className="font-display text-body-compact font-semibold text-text">Filter Products</p>
+            <p className="font-display text-body-compact font-semibold text-text">{lt('sidebar.filterTitle', 'Filter Products')}</p>
             {activeFilterCount > 0 && (
               <button
                 type="button"
                 onClick={onClearFilters}
                 className="text-[13px] font-bold uppercase tracking-[0.12em] text-primary-dark hover:text-primary-darker"
               >
-                Clear All
+                {lt('sidebar.clearAll', 'Clear All')}
               </button>
             )}
           </div>
@@ -72,7 +74,7 @@ export default function CatalogSidebar({
             {facets.map((group) => (
               <fieldset key={group.key}>
                 <legend className="mb-2 text-xs font-semibold uppercase tracking-wide text-text-muted">
-                  {group.label}
+                  {lt(`facet.${group.key}`, group.label)}
                 </legend>
                 <div className="space-y-1.5">
                   {group.options.map((opt) => {

@@ -9,6 +9,7 @@ import ProductsShowcase from '../components/home/ProductsShowcase';
 import ManufacturingBand from '../components/home/ManufacturingBand';
 import ProjectCarousel from '../components/home/ProjectCarousel';
 import useSEO from '../hooks/useSEO';
+import { useLT } from '../i18n/LocaleContext';
 import { company } from '../data/company';
 import { featuredProjects, featuredProjectImages } from '../data/content';
 
@@ -31,10 +32,11 @@ const certificationCards = [
 ];
 
 export default function Home() {
+  const lt = useLT('home');
   useSEO({
-    title: 'KEAA International | Scaffolding, Formwork & Industrial Manufacturer',
+    title: lt('seo.title', 'KEAA International | Scaffolding, Formwork & Industrial Manufacturer'),
     description:
-      'ISO 9001:2015 certified manufacturer and exporter of scaffolding systems, formwork accessories, safety products, livestock housing solutions and garden hardware. Exporting to 42+ countries since 2003.',
+      lt('seo.description', 'ISO 9001:2015 certified manufacturer and exporter of scaffolding systems, formwork accessories, safety products, livestock housing solutions and garden hardware. Exporting to 42+ countries since 2003.'),
   });
 
   return (
@@ -49,7 +51,7 @@ export default function Home() {
       <div className="border-b border-navy-100 bg-white">
         <div className="container-page flex items-center gap-6 py-5 sm:gap-9">
           <span className="hidden flex-shrink-0 whitespace-nowrap font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted sm:block">
-            Certified &amp; Accredited
+            {lt('certs.label', 'Certified & Accredited')}
           </span>
           <div className="relative w-full overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_5%,#000_95%,transparent)] [-webkit-mask-image:linear-gradient(90deg,transparent,#000_5%,#000_95%,transparent)]">
             <div className="flex w-max animate-marquee items-center gap-9">
@@ -77,7 +79,7 @@ export default function Home() {
       <section className="section-pad">
         <div className="container-page">
           <Reveal>
-            <SectionHeading eyebrow="Featured Projects" title="Trusted by Clients Worldwide" />
+            <SectionHeading eyebrow={lt('projects.eyebrow', 'Featured Projects')} title={lt('projects.title', 'Trusted by Clients Worldwide')} />
           </Reveal>
           {/* All six projects on one snap-scrolling rail — see ProjectCarousel for why this is
               a native scroll container rather than a transformed track. Every card already
@@ -93,16 +95,16 @@ export default function Home() {
           {/* Global presence */}
           <Reveal className="group flex flex-col rounded-card border border-navy-100 bg-white p-8 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover">
             <span className="eyebrow text-primary-darker">
-              Global Presence
+              {lt('global.eyebrow', 'Global Presence')}
             </span>
-            <h3 className="mt-2 font-display text-2xl font-bold text-text">Serving Customers Worldwide</h3>
+            <h3 className="mt-2 font-display text-2xl font-bold text-text">{lt('global.title', 'Serving Customers Worldwide')}</h3>
             <p className="mt-2 text-body-compact leading-relaxed text-ink">
-              Trusted exports to 42+ countries across the Middle East, Europe, Africa and Asia.
+              {lt('global.body', 'Trusted exports to 42+ countries across the Middle East, Europe, Africa and Asia.')}
             </p>
             <div className="my-6 flex flex-1 items-center overflow-hidden rounded-card bg-navy-50/30 p-4">
               <img
                 src="/images/global-presence-map.png"
-                alt="KEAA global presence, export markets across 42+ countries"
+                alt={lt('global.mapAlt', 'KEAA global presence, export markets across 42+ countries')}
                 loading="lazy"
                 width={1200}
                 height={355}
@@ -113,19 +115,19 @@ export default function Home() {
               <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
-                    Countries Served
+                    {lt('global.countries', 'Countries Served')}
                   </p>
                   <p className="mt-0.5 font-display text-body-compact font-bold text-text">42+</p>
                 </div>
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
-                    Happy Clients
+                    {lt('global.clients', 'Happy Clients')}
                   </p>
                   <p className="mt-0.5 font-display text-body-compact font-bold text-text">1000+</p>
                 </div>
               </div>
               <Button to="/about" variant="ghost" size="sm" className="!px-0">
-                View Our Global Presence
+                {lt('global.cta', 'View Our Global Presence')}
               </Button>
             </div>
           </Reveal>
@@ -133,13 +135,13 @@ export default function Home() {
           {/* Certifications */}
           <Reveal delay={0.1} className="flex flex-col rounded-card border border-navy-100 bg-white p-8 shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover">
             <span className="eyebrow text-primary-darker">
-              Certifications
+              {lt('certsCard.eyebrow', 'Certifications')}
             </span>
             <h3 className="mt-2 font-display text-2xl font-bold text-text">
-              Certified for Quality. <span className="text-primary-dark">Committed to Excellence.</span>
+              {lt('certsCard.title1', 'Certified for Quality - Committed to Excellence.')}
             </h3>
             <p className="mt-2 text-body-compact leading-relaxed text-ink">
-              Independently audited and certified by TÜV Rheinland and the Government of India.
+              {lt('certsCard.body', 'Independently audited and certified by TÜV Rheinland and the Government of India.')}
             </p>
             <div className="mt-6 grid grid-cols-2 gap-3">
               {company.certifications.map((c) => (
@@ -156,7 +158,7 @@ export default function Home() {
               ))}
             </div>
             <Button to="/certifications" variant="ghost" size="sm" className="mt-auto pt-6 !px-0">
-              View All Certificates
+              {lt('certsCard.cta', 'View All Certificates')}
             </Button>
           </Reveal>
         </div>

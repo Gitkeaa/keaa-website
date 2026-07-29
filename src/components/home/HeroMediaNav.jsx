@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight, Pause, Play, Volume2, VolumeX } from 'lucide-react';
+import { useLT } from '../../i18n/LocaleContext';
 
 /**
  * The hero's media control: previous / next chevrons either side of a pill of dots, with
@@ -48,9 +49,10 @@ export default function HeroMediaNav({
   onTogglePlay,
   onToggleMute,
 }) {
+  const lt = useLT('home');
   return (
     <div className="flex items-center gap-1.5 rounded-card bg-surface-raised/[0.88] p-1.5 shadow-[0_1px_2px_-1px_rgb(var(--color-text)_/_0.1),0_18px_40px_-28px_rgb(var(--color-text)_/_0.45)] ring-1 ring-border backdrop-blur-sm sm:gap-2 sm:p-2">
-      <IconButton onClick={onPrev} label="Previous background">
+      <IconButton onClick={onPrev} label={lt('medianav.prev', 'Previous background')}>
         <ChevronLeft className="h-4 w-4" strokeWidth={2.2} />
       </IconButton>
 
@@ -62,7 +64,7 @@ export default function HeroMediaNav({
               key={i}
               type="button"
               onClick={() => onSelect(i)}
-              aria-label={labels[i] ? `Show ${labels[i]}` : `Show background ${i + 1}`}
+              aria-label={labels[i] ? lt('medianav.show', 'Show {label}', { label: labels[i] }) : lt('medianav.showBg', 'Show background {n}', { n: i + 1 })}
               aria-current={active ? 'true' : undefined}
               /* The hit area is 24px tall; only the ink inside it is 8px. */
               className="group flex h-6 items-center justify-center py-2"
@@ -78,7 +80,7 @@ export default function HeroMediaNav({
         })}
       </div>
 
-      <IconButton onClick={onNext} label="Next background">
+      <IconButton onClick={onNext} label={lt('medianav.next', 'Next background')}>
         <ChevronRight className="h-4 w-4" strokeWidth={2.2} />
       </IconButton>
 
@@ -87,14 +89,14 @@ export default function HeroMediaNav({
           <span aria-hidden className="mx-0.5 h-6 w-px flex-shrink-0 bg-border" />
           <IconButton
             onClick={onTogglePlay}
-            label={playing ? 'Pause the background film' : 'Play the background film'}
+            label={playing ? lt('medianav.pause', 'Pause the background film') : lt('medianav.play', 'Play the background film')}
             pressed={!playing}
           >
             {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 translate-x-[1px]" />}
           </IconButton>
           <IconButton
             onClick={onToggleMute}
-            label={muted ? 'Unmute the background film' : 'Mute the background film'}
+            label={muted ? lt('medianav.unmute', 'Unmute the background film') : lt('medianav.mute', 'Mute the background film')}
             pressed={muted}
           >
             {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}

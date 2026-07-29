@@ -10,6 +10,7 @@ import { openCookiePreferences } from '../CookieConsent';
 import { company, developer } from '../../data/company';
 import { footerLinks } from '../../data/navigation';
 import { getAllCategories } from '../../data/categories';
+import { useLT } from '../../i18n/LocaleContext';
 
 /**
  * Footer — deep navy card on a light page, over the supplied blueprint artwork.
@@ -88,6 +89,7 @@ function ContactRow({ label, children }) {
 }
 
 export default function Footer() {
+  const lt = useLT('common');
   const reduce = useReducedMotion();
   const year = new Date().getFullYear();
   const landlineNumbers = Array.isArray(company.landline) ? company.landline : [company.landline];
@@ -123,7 +125,7 @@ export default function Footer() {
         <div className="container-page relative z-10 grid grid-cols-2 gap-x-8 gap-y-12 py-14 lg:grid-cols-[1.25fr_1fr_1.15fr_1fr_1.35fr] lg:py-16">
           <div className="col-span-2 lg:col-span-1">
             <Logo light />
-            <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/55">{company.description}</p>
+            <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/55">{lt('footer.about', company.description)}</p>
 
             <div className="mt-7 flex gap-2.5">
               {SOCIALS.map((social) => (
@@ -142,22 +144,22 @@ export default function Footer() {
           </div>
 
           <div>
-            <ColumnHeading>Quick Links</ColumnHeading>
+            <ColumnHeading>{lt('footer.quickLinks', 'Quick Links')}</ColumnHeading>
             <ul className="mt-8 space-y-3 text-sm">
-              {footerLinks.quick.map((l) => (
+              {footerLinks.quick.map((l, i) => (
                 <NavLinkRow key={l.to} to={l.to}>
-                  {l.label}
+                  {lt(`footer.quick.${i}`, l.label)}
                 </NavLinkRow>
               ))}
             </ul>
           </div>
 
           <div>
-            <ColumnHeading>Products</ColumnHeading>
+            <ColumnHeading>{lt('footer.productsHeading', 'Products')}</ColumnHeading>
             <ul className="mt-8 space-y-3 text-sm">
               {getAllCategories().map((c) => (
                 <NavLinkRow key={c.slug} to={`/products/${c.slug}`}>
-                  {c.name}
+                  {lt(`cat.${c.slug}`, c.name)}
                 </NavLinkRow>
               ))}
             </ul>
@@ -166,11 +168,11 @@ export default function Footer() {
           {/* Phone: full width with its links in two columns, so it never sits alone on the
               left with an empty half beside it. `sm` up is the original single column. */}
           <div className="col-span-2 sm:col-span-1">
-            <ColumnHeading>Resources</ColumnHeading>
+            <ColumnHeading>{lt('footer.resourcesHeading', 'Resources')}</ColumnHeading>
             <ul className="mt-8 grid grid-cols-2 gap-x-6 gap-y-3 text-sm sm:block sm:space-y-3">
-              {footerLinks.resources.map((l) => (
+              {footerLinks.resources.map((l, i) => (
                 <NavLinkRow key={l.to} to={l.to}>
-                  {l.label}
+                  {lt(`footer.resources.${i}`, l.label)}
                 </NavLinkRow>
               ))}
             </ul>
@@ -180,9 +182,9 @@ export default function Footer() {
               so Address|Mobile and Telephone|Email run in parallel instead of one tall stack.
               From `sm` up it is the original vertical list — desktop is untouched. */}
           <div className="col-span-2 sm:col-span-1">
-            <ColumnHeading>Contact Us</ColumnHeading>
+            <ColumnHeading>{lt('footer.contactHeading', 'Contact Us')}</ColumnHeading>
             <ul className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4 text-sm sm:block sm:space-y-4">
-              <ContactRow label="Address">
+              <ContactRow label={lt('footer.address', 'Address')}>
                 <span className="block">
                   {company.manufacturing.line1}
                   <br />
@@ -190,7 +192,7 @@ export default function Footer() {
                 </span>
               </ContactRow>
 
-              <ContactRow label="Mobile">
+              <ContactRow label={lt('footer.mobile', 'Mobile')}>
                 {company.phones.map((p) => (
                   <span key={p} className="block">
                     {p}
@@ -198,16 +200,16 @@ export default function Footer() {
                 ))}
               </ContactRow>
 
-              <ContactRow label="Telephone &amp; Fax">
+              <ContactRow label={lt('footer.telFax', 'Telephone & Fax')}>
                 {landlineNumbers.map((line) => (
                   <span key={line} className="block">
-                    Tel: {line}
+                    {lt('footer.tel', 'Tel: {line}', { line })}
                   </span>
                 ))}
-                <span className="block">Fax: {company.fax}</span>
+                <span className="block">{lt('footer.fax', 'Fax: {fax}', { fax: company.fax })}</span>
               </ContactRow>
 
-              <ContactRow label="Email">
+              <ContactRow label={lt('footer.emailLabel', 'Email')}>
                 {company.emails.map((email) => (
                   <a
                     key={email}
@@ -237,11 +239,11 @@ export default function Footer() {
               parks the button clear of it. */}
           <div className="container-page flex flex-col items-center gap-4 py-5 text-xs text-text/70 lg:flex-row lg:justify-between lg:pr-44">
             <p className="order-1 text-center lg:text-left">
-              &copy; {year} {company.name} All Rights Reserved.
+              {lt('footer.copyright', '© {year} {name} All Rights Reserved.', { year, name: company.name })}
             </p>
 
             <p className="order-3 text-center lg:order-2">
-              Designed &amp; Developed by{' '}
+              {lt('footer.developedBy', 'Designed & Developed by')}{' '}
               <a
                 href={developer.linkedin}
                 target="_blank"
@@ -259,13 +261,13 @@ export default function Footer() {
                 to="/privacy-policy"
                 className="rounded-full bg-navy-50 px-3.5 py-1.5 font-medium text-text transition-colors duration-200 hover:bg-navy-100 hover:text-primary-dark"
               >
-                Privacy Policy
+                {lt('footer.privacy', 'Privacy Policy')}
               </Link>
               <Link
                 to="/terms"
                 className="rounded-full bg-navy-50 px-3.5 py-1.5 font-medium text-text transition-colors duration-200 hover:bg-navy-100 hover:text-primary-dark"
               >
-                Terms &amp; Conditions
+                {lt('footer.terms', 'Terms & Conditions')}
               </Link>
               {/* The Cookie POLICY page (what we store, and why). Distinct from Cookie
                   Preferences below, which opens the settings dialog to change your choice. */}
@@ -273,7 +275,7 @@ export default function Footer() {
                 to="/cookie-policy"
                 className="rounded-full bg-navy-50 px-3.5 py-1.5 font-medium text-text transition-colors duration-200 hover:bg-navy-100 hover:text-primary-dark"
               >
-                Cookie Policy
+                {lt('footer.cookiePolicy', 'Cookie Policy')}
               </Link>
               {/* Reopens the consent dialog, so the banner's "manage your preferences at any
                   time" is actually reachable once the banner has been dismissed. */}
@@ -282,7 +284,7 @@ export default function Footer() {
                 onClick={openCookiePreferences}
                 className="rounded-full bg-navy-50 px-3.5 py-1.5 font-medium text-text transition-colors duration-200 hover:bg-navy-100 hover:text-primary-dark"
               >
-                Cookie Preferences
+                {lt('footer.cookiePrefs', 'Cookie Preferences')}
               </button>
 
               <button
@@ -290,7 +292,7 @@ export default function Footer() {
                 onClick={backToTop}
                 className="group ml-1 inline-flex items-center gap-2 rounded-full bg-navy-700 px-4 py-1.5 font-medium text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-primary motion-reduce:hover:translate-y-0"
               >
-                Back to Top
+                {lt('footer.backToTop', 'Back to Top')}
               </button>
             </div>
           </div>

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import ImagePlaceholder from '../ui/ImagePlaceholder';
 import Badge from '../ui/Badge';
 import { productImage, productSrcSet } from '../../data/productHelpers';
+import { useLT } from '../../i18n/LocaleContext';
 
 // Card widths across the grid's breakpoints (2/3/4/5 columns), so the browser fetches a
 // right-sized WebP/AVIF instead of one fixed file.
@@ -15,6 +16,7 @@ const CARD_SIZES = '(min-width:1280px) 18vw, (min-width:1024px) 22vw, (min-width
  * The whole card links to the product detail page.
  */
 export default function ProductCard({ product }) {
+  const lt = useLT('catalog');
   const src = productImage(product, { w: 600, h: 450, crop: 'fill' });
   const srcSet = productSrcSet(product, [240, 360, 480, 600, 900]);
 
@@ -33,7 +35,7 @@ export default function ProductCard({ product }) {
           tone="light"
           ratio="aspect-[4/3]"
           className="!rounded-none"
-          caption={product.hasImage ? undefined : 'Image coming soon'}
+          caption={product.hasImage ? undefined : lt('card.imageSoon', 'Image coming soon')}
         />
       </div>
 
@@ -47,7 +49,7 @@ export default function ProductCard({ product }) {
         {product.diameter && (
           <div className="mt-2">
             <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
-              Diameter
+              {lt('card.diameter', 'Diameter')}
             </p>
             <p className="mt-0.5 text-xs leading-tight text-text-muted">{product.diameter}</p>
           </div>
@@ -58,7 +60,7 @@ export default function ProductCard({ product }) {
               {product.finish}
             </Badge>
           ) : (
-            <span className="text-[11px] text-text-muted">{product.subcategory}</span>
+            <span className="text-[11px] text-text-muted">{lt(`sub.${product.subSlug}.name`, product.subcategory)}</span>
           )}
         </div>
       </div>

@@ -9,6 +9,7 @@ import AnimatedCounter from '../components/ui/AnimatedCounter';
 import { company, leadership, managingDirectors, chairmanMessage } from '../data/company';
 import { img } from '../data/images';
 import useSEO from '../hooks/useSEO';
+import { useLT } from '../i18n/LocaleContext';
 
 /**
  * The public About page at /about: KEAA's story, leadership and managing directors, the
@@ -68,10 +69,12 @@ const manufacturingStrength = [
 ];
 
 export default function About() {
+  const lt = useLT('about');
+
   useSEO({
-    title: 'About Us',
+    title: lt('seo.title', 'About Us'),
     description:
-      'Two decades of in-house manufacturing excellence. Learn KEAA International\'s journey, leadership team, vision and certifications.',
+      lt('seo.description', 'Two decades of in-house manufacturing excellence. Learn KEAA International\'s journey, leadership team, vision and certifications.'),
   });
 
   return (
@@ -83,34 +86,32 @@ export default function About() {
           first content section without a full band change. */}
       <section className="border-b border-navy-100 pt-9 sm:pt-11">
         <div className="container-page pb-12 sm:pb-14">
-          <nav aria-label="Breadcrumb">
+          <nav aria-label={lt('breadcrumb.label', 'Breadcrumb')}>
             <ol className="flex items-center gap-2 text-xs text-muted">
               <li>
                 <Link to="/" className="transition-colors hover:text-primary-dark">
-                  Home
+                  {lt('breadcrumb.home', 'Home')}
                 </Link>
               </li>
               <li aria-hidden>/</li>
               <li className="font-medium text-text" aria-current="page">
-                About Us
+                {lt('breadcrumb.aboutUs', 'About Us')}
               </li>
             </ol>
           </nav>
 
           <div className="mt-9 grid gap-x-12 gap-y-6 lg:grid-cols-2 lg:items-end">
             <Reveal>
-              <span className="eyebrow text-primary-darker">About Us</span>
+              <span className="eyebrow text-primary-darker">{lt('hero.eyebrow', 'About Us')}</span>
               <h1 className="mt-4 font-display text-4xl font-bold leading-[1.05] tracking-[-0.02em] text-text sm:text-5xl xl:text-[3.5rem]">
-                Building Strength.
+                {lt('hero.title1', 'Building Strength.')}
                 <br />
-                Delivering Trust.
+                {lt('hero.title2', 'Delivering Trust.')}
               </h1>
             </Reveal>
             <Reveal delay={0.1}>
               <p className="body-copy lg:pb-1.5">
-                At KEAA International, we combine engineering expertise, in-house manufacturing
-                and uncompromising quality to deliver scaffolding, formwork and industrial
-                hardware that build a safer, stronger world.
+                {lt('hero.intro', 'At KEAA International, we combine engineering expertise, in-house manufacturing and uncompromising quality to deliver scaffolding, formwork and industrial hardware that build a safer, stronger world.')}
               </p>
             </Reveal>
           </div>
@@ -134,7 +135,7 @@ export default function About() {
                 `primary` for the icons on the navy card (4.75:1 on that ground). */}
             <span className="flex items-center gap-4">
               <span className="eyebrow text-primary-darker">
-                Why Choose KEAA
+                {lt('why.eyebrow', 'Why Choose KEAA')}
               </span>
               <span aria-hidden className="h-px w-16 bg-primary/50" />
             </span>
@@ -143,18 +144,13 @@ export default function About() {
                 gone. It was the design's only two-tone heading, and every other h2 on the
                 site sets solid `text-text`. */}
             <h2 className="mt-5 font-display text-4xl font-bold leading-[1.1] tracking-[-0.02em] text-text sm:text-5xl">
-              Engineering Excellence
+              {lt('why.title1', 'Engineering Excellence')}
               <br />
-              with Global Reach
+              {lt('why.title2', 'with Global Reach')}
             </h2>
 
             <p className="body-copy mt-6">
-              For over two decades, the KEAA International name has stood for engineering
-              precision, manufacturing strength and close customer partnership. With
-              entrepreneurial thinking, reliability and a genuine passion for the people we
-              serve, we have grown into a trusted Indo-Dutch manufacturer and exporter of
-              scaffolding systems, formwork accessories, safety products, livestock housing
-              solutions and garden hardware.
+              {lt('why.p1', 'For over two decades, the KEAA International name has stood for engineering precision, manufacturing strength and close customer partnership. With entrepreneurial thinking, reliability and a genuine passion for the people we serve, we have grown into a trusted Indo-Dutch manufacturer and exporter of scaffolding systems, formwork accessories, safety products, livestock housing solutions and garden hardware.')}
             </p>
 
             {/* The four pillars, on the deep navy ground — one considered statement rather
@@ -167,8 +163,8 @@ export default function About() {
                   return (
                     <li key={w.title} className={i > 0 ? 'xl:pl-8' : ''}>
                       <Icon aria-hidden className="h-7 w-7 text-primary" strokeWidth={1.5} />
-                      <h3 className="mt-4 text-sm font-semibold text-white">{w.title}</h3>
-                      <p className="mt-1.5 text-xs leading-relaxed text-white/65">{w.desc}</p>
+                      <h3 className="mt-4 text-sm font-semibold text-white">{lt(`who.${i}.title`, w.title)}</h3>
+                      <p className="mt-1.5 text-xs leading-relaxed text-white/65">{lt(`who.${i}.desc`, w.desc)}</p>
                     </li>
                   );
                 })}
@@ -185,13 +181,13 @@ export default function About() {
                 meets the navy card's bottom); the fixed `h-[26rem]` still governs the mobile
                 stack, where the two are no longer side by side. */}
             <div className="flex h-[26rem] -skew-x-[7deg] gap-2 overflow-hidden lg:h-full">
-              {COLLAGE.map((c) => (
+              {COLLAGE.map((c, i) => (
                 <div key={c.alt} className="relative flex-1 overflow-hidden">
                   {/* `brightness-110` lifts the moody stock frames toward the reference's
                       vivid look; `scale-125` still covers the corners the skew exposes. */}
                   <img
                     src={c.src}
-                    alt={c.alt}
+                    alt={lt(`collage.${i}.alt`, c.alt)}
                     loading="lazy"
                     className="h-full w-full skew-x-[7deg] scale-125 object-cover brightness-110"
                   />
@@ -211,7 +207,7 @@ export default function About() {
           <Reveal>
             <span className="flex items-center gap-4">
               <span className="eyebrow text-primary-darker">
-                Built on Trust. Driven by Excellence.
+                {lt('trust.eyebrow', 'Built on Trust. Driven by Excellence.')}
               </span>
             </span>
             <span aria-hidden className="mt-3 block h-px w-16 bg-primary/50" />
@@ -221,13 +217,7 @@ export default function About() {
                 to, so the copy fills the container edge to edge. */}
             <div className="mt-6">
               <p className="body-copy max-w-none">
-                Since our foundation in 2003, our headquarters and 25,000 sq. m of in-house
-                manufacturing in Ludhiana, India, together with our European sales office in
-                Eindhoven, the Netherlands, have steered the fortunes of our globally operating
-                business. More than 150 skilled professionals work for us, serving customers in
-                over 42 countries. Under the promise of delivering the best service to every
-                client, our team tackles the daily challenges of the construction process together
-                with contractors, builders, scaffolders and engineers worldwide.
+                {lt('trust.p1', 'Since our foundation in 2003, our headquarters and 25,000 sq. m of in-house manufacturing in Ludhiana, India, together with our European sales office in Eindhoven, the Netherlands, have steered the fortunes of our globally operating business. More than 150 skilled professionals work for us, serving customers in over 42 countries. Under the promise of delivering the best service to every client, our team tackles the daily challenges of the construction process together with contractors, builders, scaffolders and engineers worldwide.')}
               </p>
             </div>
           </Reveal>
@@ -241,7 +231,7 @@ export default function About() {
                     <p className="font-display text-3xl font-bold leading-none text-text">
                       <AnimatedCounter value={s.value} />
                     </p>
-                    <p className="mt-1.5 text-xs leading-snug text-muted">{s.label}</p>
+                    <p className="mt-1.5 text-xs leading-snug text-muted">{lt(`trust.stats.${i}.label`, s.label)}</p>
                   </li>
                 ))}
               </ul>
@@ -263,15 +253,14 @@ export default function About() {
         <div className={PANEL_CARD}>
         <div className="grid gap-12 lg:grid-cols-[minmax(0,0.68fr)_minmax(0,1.32fr)] lg:items-start lg:gap-14">
           <Reveal>
-            <span className="eyebrow text-primary-darker">Our Journey</span>
+            <span className="eyebrow text-primary-darker">{lt('journey.eyebrow', 'Our Journey')}</span>
             <h2 className="mt-3 font-display text-3xl font-bold leading-[1.12] tracking-[-0.02em] text-text sm:text-4xl">
-              From Vision to
+              {lt('journey.title1', 'From Vision to')}
               <br />
-              Global Impact
+              {lt('journey.title2', 'Global Impact')}
             </h2>
             <p className="body-copy mt-5 max-w-[24rem]">
-              Our journey is built on a foundation of hard work, innovation and a relentless focus
-              on our customers.
+              {lt('journey.p1', 'Our journey is built on a foundation of hard work, innovation and a relentless focus on our customers.')}
             </p>
           </Reveal>
 
@@ -290,8 +279,8 @@ export default function About() {
                     className="relative z-10 mt-5 block h-3 w-3 rounded-full bg-primary-dark ring-4 ring-surface-raised"
                   />
                   <p className="mt-5 font-display text-lg font-bold text-primary-dark">{t.year}</p>
-                  <h3 className="mt-1 font-display text-sm font-bold text-text">{t.title}</h3>
-                  <p className="mt-2 text-[13px] leading-relaxed text-ink">{t.desc}</p>
+                  <h3 className="mt-1 font-display text-sm font-bold text-text">{lt(`journey.timeline.${i}.title`, t.title)}</h3>
+                  <p className="mt-2 text-[13px] leading-relaxed text-ink">{lt(`journey.timeline.${i}.desc`, t.desc)}</p>
                 </li>
               ))}
             </ol>
@@ -308,23 +297,21 @@ export default function About() {
           <div>
             <Reveal className="max-w-3xl">
               <span className="eyebrow text-primary-darker">
-                Why KEAA Stands Apart
+                {lt('apart.eyebrow', 'Why KEAA Stands Apart')}
               </span>
               <h3 className="mt-3 font-display text-2xl font-bold text-text">
-                Complete Production Control, In-House
+                {lt('apart.title', 'Complete Production Control, In-House')}
               </h3>
               <p className="body-copy mt-3">
-                Unlike conventional manufacturers, KEAA controls the complete production process
-                in-house, ensuring consistent quality, faster lead times and dependable
-                performance across every product line.
+                {lt('apart.p1', 'Unlike conventional manufacturers, KEAA controls the complete production process in-house, ensuring consistent quality, faster lead times and dependable performance across every product line.')}
               </p>
             </Reveal>
             <StaggerGroup className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {manufacturingStrength.map((m) => (
+              {manufacturingStrength.map((m, i) => (
                 <StaggerItem key={m}>
                   {/* Flat inside the panel — see the note on the vision columns. */}
                   <div className="flex h-full items-center gap-3">
-                    <p className="border-l-2 border-primary/40 pl-4 text-body-compact font-medium leading-snug text-text">{m}</p>
+                    <p className="border-l-2 border-primary/40 pl-4 text-body-compact font-medium leading-snug text-text">{lt(`apart.items.${i}`, m)}</p>
                   </div>
                 </StaggerItem>
               ))}
@@ -352,23 +339,16 @@ export default function About() {
           <Reveal>
             <SectionHeading
               align="left"
-              eyebrow="Leadership"
-              title="Leadership That Inspires Excellence"
+              eyebrow={lt('leadership.eyebrow', 'Leadership')}
+              title={lt('leadership.title', 'Leadership That Inspires Excellence')}
               className="!mx-0"
             />
             <div className="mt-6 space-y-5">
               <p className="body-copy max-w-none">
-                Behind every successful project is a leadership team driven by vision, innovation,
-                and engineering excellence. At KEAA International, our leaders combine strategic
-                thinking with deep manufacturing expertise to deliver high-quality solutions,
-                foster continuous improvement, and create lasting value for customers worldwide.
+                {lt('leadership.p1', 'Behind every successful project is a leadership team driven by vision, innovation, and engineering excellence. At KEAA International, our leaders combine strategic thinking with deep manufacturing expertise to deliver high-quality solutions, foster continuous improvement, and create lasting value for customers worldwide.')}
               </p>
               <p className="body-copy max-w-none">
-                With decades of industry experience, they empower our people, embrace advanced
-                technologies, and uphold the highest standards of quality, integrity, and
-                operational excellence. Their commitment to innovation and customer success
-                continues to strengthen KEAA International&rsquo;s position as a trusted
-                engineering and manufacturing partner, serving industries across 42+ countries.
+                {lt('leadership.p2', 'With decades of industry experience, they empower our people, embrace advanced technologies, and uphold the highest standards of quality, integrity, and operational excellence. Their commitment to innovation and customer success continues to strengthen KEAA International’s position as a trusted engineering and manufacturing partner, serving industries across 42+ countries.')}
               </p>
             </div>
           </Reveal>
@@ -383,7 +363,7 @@ export default function About() {
             <div className="group overflow-hidden rounded-card ring-1 ring-text/[0.08]">
               <img
                 src={chairmanMessage.photo}
-                alt={`${chairmanMessage.name || 'Chairman'}, KEAA International`}
+                alt={lt('chairman.photoAlt', '{name}, KEAA International', { name: chairmanMessage.name || lt('chairman.photoAltFallback', 'Chairman') })}
                 loading="lazy"
                 className="aspect-square w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
               />
@@ -391,20 +371,20 @@ export default function About() {
           </Reveal>
           <Reveal delay={0.1}>
             <span className="eyebrow text-primary-darker">
-              Message from Chairman, keaa international Pvt. Ltd.
+              {lt('chairman.eyebrow', 'Message from Chairman, keaa international Pvt. Ltd.')}
             </span>
             <h2 className="mt-3 font-display text-3xl font-bold text-text">
-              A Legacy of Trust &amp; Quality
+              {lt('chairman.title', 'A Legacy of Trust & Quality')}
             </h2>
-            <p className="body-copy mt-4">{chairmanMessage.message}</p>
+            <p className="body-copy mt-4">{lt('chairman.message', chairmanMessage.message)}</p>
             <p className="mt-5 font-display font-semibold text-navy-800">
               {chairmanMessage.name ? (
                 <>
                   {chairmanMessage.name}
-                  <span className="block text-sm font-normal text-muted">{chairmanMessage.role}</span>
+                  <span className="block text-sm font-normal text-muted">{lt('chairman.role', chairmanMessage.role)}</span>
                 </>
               ) : (
-                <>{chairmanMessage.role}</>
+                <>{lt('chairman.role', chairmanMessage.role)}</>
               )}
             </p>
           </Reveal>
@@ -438,7 +418,7 @@ export default function About() {
                       <div className="group overflow-hidden rounded-card ring-1 ring-text/[0.08]">
                         <img
                           src={m.photo}
-                          alt={`${m.name}, ${m.role}`}
+                          alt={lt('directors.photoAlt', '{name}, {role}', { name: m.name, role: lt(`directors.${i}.role`, m.role) })}
                           loading="lazy"
                           className="aspect-square w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                         />
@@ -449,17 +429,17 @@ export default function About() {
                         edge, so the eye has to hunt for the start of every line. */}
                     <div className={flip ? 'lg:order-1' : ''}>
                       <span className="eyebrow text-primary-darker">{m.name}</span>
-                      <p className="body-copy mt-4">{m.message}</p>
+                      <p className="body-copy mt-4">{lt(`directors.${i}.message`, m.message)}</p>
                       {/* Designation only — the name is already the eyebrow above this message,
                           so repeating it here printed the name twice. */}
-                      <p className="mt-5 text-sm font-medium text-muted">{m.role}</p>
+                      <p className="mt-5 text-sm font-medium text-muted">{lt(`directors.${i}.role`, m.role)}</p>
                       <div className="mt-4 flex items-center gap-3">
                         <a
                           href={m.linkedin}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-navy-100 text-navy-700 transition-colors hover:border-primary/60 hover:text-primary-dark"
-                          aria-label={`${m.name} LinkedIn`}
+                          aria-label={lt('directors.linkedinLabel', '{name} LinkedIn', { name: m.name })}
                         >
                           <Linkedin className="h-4 w-4" />
                         </a>
@@ -489,10 +469,10 @@ export default function About() {
               Drop a file into that person's `photo` in data/company.js and it takes over with
               no change here. */}
           <CardRail
-            label="Leadership team"
-            labels={TEAM.map((l) => `Show ${l.name}`)}
+            label={lt('team.label', 'Leadership team')}
+            labels={TEAM.map((l) => lt('team.show', 'Show {name}', { name: l.name }))}
           >
-            {TEAM.map((l) => (
+            {TEAM.map((l, i) => (
                 <article key={l.name} className={`${TEAM_CARD_W} group flex flex-none snap-start flex-col overflow-hidden rounded-card ring-1 ring-text/[0.08] transition-all duration-300 hover:-translate-y-1 hover:ring-text/[0.16]`}>
                   {l.photo ? (
                     <img
@@ -513,16 +493,16 @@ export default function About() {
                   <div className="flex flex-1 flex-col bg-navy-50 p-5">
                     <h3 className="font-display text-lg font-bold leading-snug text-text">{l.name}</h3>
                     <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-darker">
-                      {l.role}
+                      {lt(`team.${i}.role`, l.role)}
                     </p>
-                    <p className="mt-3 text-body-compact leading-relaxed text-ink">{l.bio}</p>
+                    <p className="mt-3 text-body-compact leading-relaxed text-ink">{lt(`team.${i}.bio`, l.bio)}</p>
                     {l.linkedin && (
                       <a
                         href={l.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="mt-auto inline-flex w-fit items-center gap-2 pt-4 text-navy-700 transition-colors hover:text-primary-darker"
-                        aria-label={`${l.name} on LinkedIn`}
+                        aria-label={lt('team.linkedinLabel', '{name} on LinkedIn', { name: l.name })}
                       >
                         <Linkedin className="h-4 w-4" />
                       </a>

@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import Button from './ui/Button';
+import { useLT } from '../i18n/LocaleContext';
 import { EASE } from '../lib/motion';
 import { isPrerender } from '../lib/prerender';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
@@ -207,6 +208,7 @@ function Toggle({ checked, onChange, disabled = false, label, describedBy }) {
 }
 
 export default function CookieConsent() {
+  const lt = useLT('cookie');
   const reduce = useReducedMotion();
   const [mounted, setMounted] = useState(false);
   const [bannerOpen, setBannerOpen] = useState(false);
@@ -347,7 +349,7 @@ export default function CookieConsent() {
           ref={barRef}
           className="fixed inset-x-0 bottom-0 z-[90] border-t border-border bg-white"
           role="region"
-          aria-label="Cookie notice"
+          aria-label={lt('banner.ariaLabel', 'Cookie notice')}
           /* Announced when it appears. Without this the bar is silent to a screen reader
              AND, being portalled after #root, is the very last thing in the tab order —
              so it could be neither heard nor easily reached. */
@@ -375,20 +377,23 @@ export default function CookieConsent() {
                   dialog nor anything the site does, and "targeting" in particular described
                   advertising trackers that have never existed here. */}
               <p className="text-body-compact leading-[1.6] text-ink">
-                This site uses local storage to work and to remember the language and region you
-                choose. We also embed a Google Map on our Contact page, which shares your IP
-                address with Google (that one is optional and off unless you allow it).
+                {lt(
+                  'banner.p1',
+                  'This site uses local storage to work and to remember the language and region you choose. We also embed a Google Map on our Contact page, which shares your IP address with Google (that one is optional and off unless you allow it).'
+                )}
               </p>
               <p className="text-body-compact leading-[1.6] text-ink">
-                Choose &ldquo;Cookie Settings&rdquo; to decide, or change your mind at any time
-                via Cookie Preferences at the bottom of any page. See our{' '}
+                {lt(
+                  'banner.p2a',
+                  'Choose “Cookie Settings” to decide, or change your mind at any time via Cookie Preferences at the bottom of any page. See our'
+                )}{' '}
                 <Link
                   to="/privacy-policy"
                   className="font-semibold text-primary-dark underline underline-offset-2 transition-colors hover:text-primary-darker"
                 >
-                  Privacy Policy
+                  {lt('banner.privacyPolicy', 'Privacy Policy')}
                 </Link>
-                .
+                {lt('banner.p2b', '.')}
               </p>
             </div>
 
@@ -399,13 +404,13 @@ export default function CookieConsent() {
             */}
             <div className="flex flex-shrink-0 flex-wrap items-center gap-3">
               <Button variant="outlineNavy" onClick={openPreferences} className="justify-center">
-                Cookie Settings
+                {lt('banner.settings', 'Cookie Settings')}
               </Button>
               <Button variant="outlineNavy" onClick={rejectAll} className="justify-center">
-                Reject All
+                {lt('banner.reject', 'Reject All')}
               </Button>
               <Button variant="primary" onClick={acceptAll} className="justify-center">
-                I Accept
+                {lt('banner.accept', 'I Accept')}
               </Button>
             </div>
           </div>
@@ -446,10 +451,13 @@ export default function CookieConsent() {
                   id="cookie-prefs-title"
                   className="font-display text-xl font-bold leading-tight text-text"
                 >
-                  Cookie Preferences
+                  {lt('prefs.title', 'Cookie Preferences')}
                 </h2>
                 <p className="mt-2 text-body-compact font-light leading-[1.7] text-text-muted">
-                  Choose which cookies you allow. Strictly necessary cookies are always active.
+                  {lt(
+                    'prefs.intro',
+                    'Choose which cookies you allow. Strictly necessary cookies are always active.'
+                  )}
                 </p>
               </div>
               {/* Text, not a glyph — this dialog is deliberately icon-free. */}
@@ -458,7 +466,7 @@ export default function CookieConsent() {
                 onClick={closePreferences}
                 className="flex-shrink-0 rounded-card px-2 py-1 text-sm font-semibold text-text-muted transition-colors hover:text-text"
               >
-                Close
+                {lt('prefs.close', 'Close')}
               </button>
             </div>
 
@@ -471,10 +479,12 @@ export default function CookieConsent() {
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-display text-base font-bold text-text">{title}</h3>
+                        <h3 className="font-display text-base font-bold text-text">
+                          {lt(`cats.${key}.title`, title)}
+                        </h3>
                         {locked && (
                           <span className="rounded-full bg-navy-50 px-2 py-0.5 text-[11px] font-semibold text-navy-700">
-                            Always on
+                            {lt('prefs.alwaysOn', 'Always on')}
                           </span>
                         )}
                       </div>
@@ -482,14 +492,20 @@ export default function CookieConsent() {
                         id={`cookie-cat-${key}`}
                         className="mt-1 text-body-compact font-light leading-[1.7] text-text-muted"
                       >
-                        {desc}
+                        {lt(`cats.${key}.desc`, desc)}
                       </p>
                     </div>
                     {/* The switch is labelled with the "(always on)" state folded in, and
                         described by the paragraph above, so a screen-reader user gets the
                         same information sighted users read from the badge and blurb. */}
                     <Toggle
-                      label={locked ? `${title} (always on)` : title}
+                      label={
+                        locked
+                          ? lt('prefs.toggleAlwaysOn', '{title} (always on)', {
+                              title: lt(`cats.${key}.title`, title),
+                            })
+                          : lt(`cats.${key}.title`, title)
+                      }
                       describedBy={`cookie-cat-${key}`}
                       checked={locked ? true : !!draft[key]}
                       disabled={locked}
@@ -504,13 +520,13 @@ export default function CookieConsent() {
                 only way out is to accept something. */}
             <div className="flex flex-col gap-3 border-t border-border p-6 sm:flex-row sm:justify-end">
               <Button variant="outlineNavy" onClick={rejectAll} className="justify-center">
-                Reject All
+                {lt('prefs.reject', 'Reject All')}
               </Button>
               <Button variant="outlineNavy" onClick={saveDraft} className="justify-center">
-                Save Preferences
+                {lt('prefs.save', 'Save Preferences')}
               </Button>
               <Button variant="primary" onClick={acceptAll} className="justify-center">
-                Accept All
+                {lt('prefs.acceptAll', 'Accept All')}
               </Button>
             </div>
           </motion.div>

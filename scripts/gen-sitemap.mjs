@@ -17,6 +17,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { liveLocales } from '../src/i18n/languages.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = join(ROOT, 'src', 'data');
@@ -71,6 +72,19 @@ for (const p of products) {
   if (p.id === undefined || p.id === null) continue;
   add(`/product/${p.id}`, 0.6);
   productCount++;
+}
+
+/**
+ * Live languages list every URL again under their prefix — /de/about is a real page Google
+ * should crawl. Not-yet-live languages get nothing: their URLs 404 by design, and a sitemap
+ * that lists 404s erodes crawler trust. While no locale is live this loop adds zero URLs.
+ */
+const locales = liveLocales();
+const base = [...urls];
+for (const code of locales) {
+  for (const { path, priority } of base) {
+    add(path === '/' ? `/${code}` : `/${code}${path}`, priority);
+  }
 }
 
 const body = urls

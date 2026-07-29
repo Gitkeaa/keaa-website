@@ -3,6 +3,8 @@
  * below turns red as it reaches the cap; typing beyond the limit is blocked
  * (deleting always works). Used for message / requirement-details fields.
  */
+import { useLT } from '../../i18n/LocaleContext';
+
 export default function WordLimitTextarea({
   id,
   label,
@@ -14,6 +16,7 @@ export default function WordLimitTextarea({
   placeholder = '',
   className = '',
 }) {
+  const lt = useLT('common');
   const words = value.trim() ? value.trim().split(/\s+/) : [];
   const count = words.length;
   const atLimit = count >= maxWords;
@@ -41,7 +44,7 @@ export default function WordLimitTextarea({
       />
       <div className="mt-1 flex justify-end">
         <span className={`text-xs ${atLimit ? 'font-semibold text-red-500' : 'text-muted'}`}>
-          {count} / {maxWords} words
+          {lt('wordLimit.count', '{count} / {max} words', { count, max: maxWords })}
         </span>
       </div>
     </div>

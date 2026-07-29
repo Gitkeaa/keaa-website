@@ -2,6 +2,7 @@ import Button from '../ui/Button';
 import Reveal from '../ui/Reveal';
 import { PANEL_CARD } from '../ui/panelCard';
 import { company } from '../../data/company';
+import { useLT } from '../../i18n/LocaleContext';
 
 /**
  * "Manufacturing Excellence" — the home page's production-capability band.
@@ -59,6 +60,7 @@ const PROOF = [
 ];
 
 export default function ManufacturingBand() {
+  const lt = useLT('home');
   return (
     <section className="section-pad">
       <div className="container-page">
@@ -70,33 +72,31 @@ export default function ManufacturingBand() {
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-12">
           {/* ------------------------------------------------------------------ PITCH */}
           <Reveal>
-            <span className="eyebrow text-primary-darker">Manufacturing Excellence</span>
+            <span className="eyebrow text-primary-darker">{lt('mfg.eyebrow', 'Manufacturing Excellence')}</span>
             <h2 className="mt-3 font-display text-3xl font-bold leading-[1.08] tracking-[-0.02em] text-text sm:text-4xl">
-              Advanced Manufacturing, Strong Production Capability
+              {lt('mfg.title', 'Advanced Manufacturing, Strong Production Capability')}
             </h2>
             <p className="body-copy mt-5 max-w-xl">
-              Five integrated units in Ludhiana (laser cutting, robotic welding, in-house
-              hot-dip galvanizing and powder coating) engineered for precision, consistency
-              and scale on every order.
+              {lt('mfg.body', 'Five integrated units in Ludhiana (laser cutting, robotic welding, in-house hot-dip galvanizing and powder coating) engineered for precision, consistency and scale on every order.')}
             </p>
 
             {/* The rule is the LIST's own left edge, one continuous line down the group,
                 rather than a dash per row — it groups the four claims into one block. */}
             <ul className="mt-7 space-y-3.5 border-l-2 border-primary/40 pl-5 text-sm text-text">
-              {PROOF.map((text) => (
-                <li key={text}>{text}</li>
+              {PROOF.map((text, i) => (
+                <li key={text}>{lt(`mfg.proof.${i}`, text)}</li>
               ))}
             </ul>
 
             <Button to="/manufacturing" variant="navy" size="sm" className="mt-8">
-              View Manufacturing
+              {lt('mfg.cta', 'View Manufacturing')}
             </Button>
           </Reveal>
 
           {/* ----------------------------------------------------------- CAPABILITIES */}
           <Reveal delay={0.1}>
             <h3 className="text-[11px] font-bold uppercase tracking-[0.14em] text-text">
-              Our Manufacturing Strength
+              {lt('mfg.strength', 'Our Manufacturing Strength')}
             </h3>
             {/* Soft navy-50 fill, no border. The tiles sit inside the white PANEL_CARD now,
                 and a bordered white tile on a white panel is the card-in-card the rest of the
@@ -104,10 +104,10 @@ export default function ManufacturingBand() {
                 panel's own ring. A tint reads as a distinct tile without a second border, and
                 echoes the scale strip below. */}
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              {CAPABILITIES.map((c) => (
+              {CAPABILITIES.map((c, i) => (
                 <div key={c.title} className="rounded-card bg-navy-50 p-5">
-                  <h4 className="font-display text-base font-semibold text-text">{c.title}</h4>
-                  <p className="mt-2 text-body-compact text-text-muted">{c.desc}</p>
+                  <h4 className="font-display text-base font-semibold text-text">{lt(`mfg.cap.${i}.title`, c.title)}</h4>
+                  <p className="mt-2 text-body-compact text-text-muted">{lt(`mfg.cap.${i}.desc`, c.desc)}</p>
                 </div>
               ))}
             </div>
@@ -119,8 +119,8 @@ export default function ManufacturingBand() {
           <div className="mt-10 rounded-card bg-navy-50 p-6 sm:p-8">
             <div className="grid gap-6 lg:grid-cols-[16rem_minmax(0,1fr)] lg:items-center lg:gap-10">
               <p className="font-display text-base font-bold leading-snug text-text">
-                Built for scale.
-                <span className="block">Delivered with consistency.</span>
+                {lt('mfg.scale.lead1', 'Built for scale.')}
+                <span className="block">{lt('mfg.scale.lead2', 'Delivered with consistency.')}</span>
               </p>
               <ul className="grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-4">
                 {SCALE.map((s, i) => (
@@ -134,7 +134,7 @@ export default function ManufacturingBand() {
                     <div className="font-display text-xl font-bold leading-none text-text">
                       {s.value}
                     </div>
-                    <div className="mt-1.5 text-xs text-text-muted">{s.label}</div>
+                    <div className="mt-1.5 text-xs text-text-muted">{lt(`mfg.scale.${i}.label`, s.label)}</div>
                   </li>
                 ))}
               </ul>

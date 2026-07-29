@@ -418,11 +418,29 @@ function watchDataFiles() {
 // writes the cache, every follow-up reads it back at about a tenth of the input price.
 // Caching is a prefix match, so nothing volatile (no timestamps, no visitor ids) may go
 // into the system block, or the cache is missed on every single request.
-async function generateReply({ history, message }) {
+async function generateReply({ history, message, language }) {
+  /**
+   * The language instruction is a SECOND system block, after the cached one, never inside
+   * it: caching is a prefix match, so the cached knowledge block stays byte-identical and
+   * keeps hitting while this small uncached tail varies per visitor. English adds nothing —
+   * the base prompt already answers in English.
+   */
+  const system = [{ type: 'text', text: FULL_INSTRUCTION, cache_control: { type: 'ephemeral' } }];
+  if (language && language !== 'en') {
+    system.push({
+      type: 'text',
+      text:
+        `The visitor is reading the site in the language with ISO code "${language}". ` +
+        `Reply in that language. If they write to you in some other language, follow the ` +
+        `language they actually write in. Keep product names, item codes and certification ` +
+        `names in their original form.`,
+    });
+  }
+
   const response = await client.messages.create({
     model: MODEL,
     max_tokens: MAX_TOKENS,
-    system: [{ type: 'text', text: FULL_INSTRUCTION, cache_control: { type: 'ephemeral' } }],
+    system,
     messages: [...history, { role: 'user', content: message }],
   });
 
@@ -646,11 +664,15 @@ function offlineAnswer(question) {
 
 app.post('/api/chat', async (req, res) => {
   try {
-    const { message, conversationHistory } = req.body;
+    const { message, conversationHistory, language: rawLanguage } = req.body;
 
     if (!message || typeof message !== 'string') {
       return res.status(400).json({ error: 'Invalid message' });
     }
+
+    // Whitelisted, not trusted: the body is visitor input. Anything but a plain
+    // two-letter code is treated as absent.
+    const language = typeof rawLanguage === 'string' && /^[a-z]{2}$/.test(rawLanguage) ? rawLanguage : null;
 
     // Drop the just-sent user message (last item) from history, and drop any leading
     // assistant greeting, since the conversation has to start with a user turn.
@@ -662,7 +684,7 @@ app.post('/api/chat', async (req, res) => {
       priorHistory.shift();
     }
 
-    const { text } = await generateReply({ history: priorHistory, message });
+    const { text } = await generateReply({ history: priorHistory, message, language });
 
     res.json({ message: text });
   } catch (error) {

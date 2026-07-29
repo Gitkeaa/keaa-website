@@ -11,6 +11,7 @@ import { EASE } from '../lib/motion';
 import { isPrerender } from '../lib/prerender';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import { useFocusTrap } from '../hooks/useFocusTrap';
+import { useLT } from '../i18n/LocaleContext';
 
 /**
  * Site-wide visitor feedback: a permanent right-edge tab, a once-per-session nudge, and the
@@ -106,6 +107,7 @@ const EMPTY_FORM = {
 };
 
 export default function FeedbackWidget() {
+  const lt = useLT('feedback');
   const [open, setOpen] = useState(false);
   const [nudgeArmed, setNudgeArmed] = useState(false);
   const [nudgeSilenced, setNudgeSilenced] = useState(true);
@@ -209,14 +211,14 @@ export default function FeedbackWidget() {
 
   const validate = () => {
     const next = {};
-    if (!form.rating) next.rating = 'Please choose a rating.';
-    if (!form.message.trim()) next.message = 'Please tell us a little more.';
+    if (!form.rating) next.rating = lt('form.ratingRequired', 'Please choose a rating.');
+    if (!form.message.trim()) next.message = lt('form.messageRequired', 'Please tell us a little more.');
     // Asking us to reply without leaving an address is the one combination that cannot work,
     // so the address is required only in that case. Everything else stays optional.
     if (form.contact === 'yes' && !form.email.trim()) {
-      next.email = 'We need an email address to reply to you.';
+      next.email = lt('form.emailRequired', 'We need an email address to reply to you.');
     } else if (form.email.trim() && !looksLikeEmail(form.email)) {
-      next.email = 'That email address does not look right.';
+      next.email = lt('form.emailInvalid', 'That email address does not look right.');
     }
     setErrors(next);
 
@@ -258,7 +260,7 @@ export default function FeedbackWidget() {
       setNudgeSilenced(true);
       setSent(true);
     } catch {
-      setSendError('Could not send your feedback. Please try again in a moment.');
+      setSendError(lt('form.sendError', 'Could not send your feedback. Please try again in a moment.'));
     } finally {
       setSending(false);
     }
@@ -295,7 +297,7 @@ export default function FeedbackWidget() {
         >
           <MessageSquare aria-hidden className="h-4 w-4 shrink-0 text-primary-light" />
           <span className="text-[13px] font-bold uppercase tracking-[0.12em] text-white [writing-mode:vertical-rl]">
-            Feedback
+            {lt('tab.label', 'Feedback')}
           </span>
         </motion.button>
       )}
@@ -323,20 +325,20 @@ export default function FeedbackWidget() {
           className="fixed left-4 z-40 w-[320px] max-w-[calc(100vw-2rem)] rounded-card border border-border bg-white p-5 shadow-cardHover transition-[bottom] duration-300 sm:left-6"
         >
           <p className="font-display text-body-compact font-bold leading-snug text-text">
-            Enjoying your experience?
+            {lt('nudge.title', 'Enjoying your experience?')}
           </p>
-          <p className="mt-1 text-sm text-muted">Help us improve.</p>
+          <p className="mt-1 text-sm text-muted">{lt('nudge.body', 'Help us improve.')}</p>
 
           <div className="mt-4 flex items-center gap-2">
             <Button size="sm" onClick={() => openDrawer('nudge')} className="flex-1">
-              Share Feedback
+              {lt('nudge.share', 'Share Feedback')}
             </Button>
             <button
               type="button"
               onClick={() => dismissNudge('dismissed')}
               className="rounded-card px-3 py-2 text-sm font-semibold text-muted transition-colors hover:bg-navy-50 hover:text-navy-700"
             >
-              Not now
+              {lt('nudge.dismiss', 'Not now')}
             </button>
           </div>
         </motion.div>
@@ -375,34 +377,33 @@ export default function FeedbackWidget() {
             <div className="flex items-start justify-between gap-4 border-b border-border px-6 py-5">
               <div>
                 <h2 id="feedback-title" className="font-display text-lg font-bold text-text">
-                  Share Your Feedback
+                  {lt('drawer.title', 'Share Your Feedback')}
                 </h2>
-                <p className="mt-1 text-sm text-muted">Help us improve your experience.</p>
+                <p className="mt-1 text-sm text-muted">{lt('drawer.subtitle', 'Help us improve your experience.')}</p>
               </div>
               <button
                 type="button"
                 onClick={closeDrawer}
                 className="flex h-9 shrink-0 items-center justify-center rounded-card border border-border px-3 text-[13px] font-bold uppercase tracking-[0.12em] text-navy-700 transition-colors hover:border-primary/40 hover:bg-navy-50"
               >
-                Close
+                {lt('drawer.close', 'Close')}
               </button>
             </div>
 
             {sent ? (
               <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
-                <p className="font-display text-xl font-bold text-text">Thank you.</p>
+                <p className="font-display text-xl font-bold text-text">{lt('sent.title', 'Thank you.')}</p>
                 <p className="mt-2 text-sm text-ink">
-                  Your feedback has reached our team. If you asked us to get back to you, we
-                  will be in touch.
+                  {lt('sent.body', 'Your feedback has reached our team. If you asked us to get back to you, we will be in touch.')}
                 </p>
                 <div className="mt-7 flex items-center gap-3">
-                  <Button onClick={closeDrawer}>Done</Button>
+                  <Button onClick={closeDrawer}>{lt('sent.done', 'Done')}</Button>
                   <button
                     type="button"
                     onClick={startAnother}
                     className="rounded-card px-3 py-2 text-sm font-semibold text-primary-dark transition-colors hover:bg-navy-50"
                   >
-                    Send another
+                    {lt('sent.another', 'Send another')}
                   </button>
                 </div>
               </div>

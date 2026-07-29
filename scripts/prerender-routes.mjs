@@ -20,6 +20,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { liveLocales } from '../src/i18n/languages.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = join(ROOT, 'src', 'data');
@@ -69,7 +70,17 @@ export function getPrerenderRoutes({ includeProducts = false } = {}) {
     }
   }
 
-  return [...new Set(routes)];
+  /**
+   * Every LIVE language re-renders the full route list under its own prefix — /de/about is
+   * its own prerendered page with German copy and meta (the SPA reads the prefix and comes
+   * up in that language; see App.jsx). While no locale is live this adds nothing and the
+   * build is exactly the English build it always was. Expect build time to scale with the
+   * number of live languages — that is the known, accepted cost of Option B.
+   */
+  const base = [...new Set(routes)];
+  const localized = liveLocales().flatMap((code) => base.map((r) => (r === '/' ? `/${code}` : `/${code}${r}`)));
+
+  return [...base, ...localized];
 }
 
 /**

@@ -8,6 +8,7 @@ import CtaBand from '../components/CtaBand';
 import useSEO, { absoluteUrl } from '../hooks/useSEO';
 import { getProductById, getRelatedProducts, publicIdFromCloudinaryUrl } from '../data/productHelpers';
 import { cldImage } from '../data/cloudinary';
+import { useLT } from '../i18n/LocaleContext';
 
 /**
  * Product detail page: image gallery, key facts, specifications and related products for a single
@@ -22,6 +23,7 @@ const optimized = (url, opts) => {
 };
 
 export default function ProductDetail() {
+  const lt = useLT('product');
   const { id } = useParams();
   const product = getProductById(id);
   const [active, setActive] = useState(0);
@@ -91,7 +93,7 @@ export default function ProductDetail() {
     : undefined;
 
   useSEO({
-    title: product ? product.name : 'Product',
+    title: product ? product.name : lt('seo.title', 'Product'),
     description: product?.description || product?.subcategory,
     breadcrumbs,
     schema: productSchema,
@@ -100,9 +102,9 @@ export default function ProductDetail() {
   if (!product) {
     return (
       <section className="container-page py-24 text-center">
-        <h1 className="font-display text-2xl font-bold text-text">Product not found</h1>
-        <p className="body-copy mx-auto text-center mt-2">This product may have been moved or removed.</p>
-        <Button to="/products" className="mt-6">Back to Products</Button>
+        <h1 className="font-display text-2xl font-bold text-text">{lt('notFound.title', 'Product not found')}</h1>
+        <p className="body-copy mx-auto text-center mt-2">{lt('notFound.body', 'This product may have been moved or removed.')}</p>
+        <Button to="/products" className="mt-6">{lt('notFound.back', 'Back to Products')}</Button>
       </section>
     );
   }
@@ -115,10 +117,10 @@ export default function ProductDetail() {
   const hasSpecs = product.specs && product.specs.length > 0;
 
   const facts = [
-    product.itemCode && { label: 'Item Code', value: product.itemCode },
-    product.diameter && { label: 'Tube Size', value: product.diameter },
-    product.finish && { label: 'Finish', value: product.finish },
-    { label: 'Category', value: product.subcategory },
+    product.itemCode && { label: lt('facts.itemCode', 'Item Code'), value: product.itemCode },
+    product.diameter && { label: lt('facts.tubeSize', 'Tube Size'), value: product.diameter },
+    product.finish && { label: lt('facts.finish', 'Finish'), value: product.finish },
+    { label: lt('facts.category', 'Category'), value: product.subcategory },
   ].filter(Boolean);
 
   return (
@@ -126,10 +128,10 @@ export default function ProductDetail() {
       <section className="border-b border-navy-100 bg-surface">
         <div className="container-page py-8 lg:py-10">
           {/* Breadcrumb */}
-          <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-xs text-text-strong">
-            <Link to="/" className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">Home</Link>
+          <nav aria-label={lt('breadcrumb.label', 'Breadcrumb')} className="flex flex-wrap items-center gap-1.5 text-xs text-text-strong">
+            <Link to="/" className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">{lt('breadcrumb.home', 'Home')}</Link>
             <span aria-hidden className="text-primary">/</span>
-            <Link to="/products" className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">Products</Link>
+            <Link to="/products" className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">{lt('breadcrumb.products', 'Products')}</Link>
             <span aria-hidden className="text-primary">/</span>
             <Link to={`/products/${product.catSlug}`} className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">{product.category}</Link>
             <span aria-hidden className="text-primary">/</span>
@@ -150,7 +152,7 @@ export default function ProductDetail() {
                   ratio="aspect-square"
                   zoom={false}
                   className="!rounded-none"
-                  caption={mainSrc ? undefined : 'Image coming soon'}
+                  caption={mainSrc ? undefined : lt('gallery.comingSoon', 'Image coming soon')}
                 />
               </div>
               {images.length > 1 && (
@@ -160,7 +162,7 @@ export default function ProductDetail() {
                       key={url}
                       type="button"
                       onClick={() => setActive(i)}
-                      aria-label={`View image ${i + 1}`}
+                      aria-label={lt('gallery.viewImage', 'View image {n}', { n: i + 1 })}
                       className={`h-16 w-16 overflow-hidden rounded-card border-2 transition-colors ${
                         i === active ? 'border-primary-dark' : 'border-navy-100 hover:border-navy-300'
                       }`}
@@ -180,14 +182,14 @@ export default function ProductDetail() {
               </div>
               <h1 className="mt-3 font-display text-3xl font-bold text-text">{product.name}</h1>
               {product.itemCode && (
-                <p className="mt-1.5 font-mono text-body-compact text-primary-dark">Item Code: {product.itemCode}</p>
+                <p className="mt-1.5 font-mono text-body-compact text-primary-dark">{lt('info.itemCode', 'Item Code: {code}', { code: product.itemCode })}</p>
               )}
 
               {product.description ? (
                 <p className="body-copy mt-5">{product.description}</p>
               ) : (
                 <p className="mt-5 rounded-card border-l-2 border-primary/40 bg-navy-50 px-4 py-3 text-body-compact text-text-muted">
-                  Full product description available on request, contact our team for details.
+                  {lt('info.noDescription', 'Full product description available on request, contact our team for details.')}
                 </p>
               )}
 
@@ -205,15 +207,15 @@ export default function ProductDetail() {
 
               {/* CTAs */}
               <div className="mt-7 flex flex-wrap gap-3">
-                <Button to="/rfq">Request a Quote</Button>
-                <Button to="/contact" variant="outlineNavy">Talk to an Expert</Button>
+                <Button to="/rfq">{lt('cta.requestQuote', 'Request a Quote')}</Button>
+                <Button to="/contact" variant="outlineNavy">{lt('cta.talkToExpert', 'Talk to an Expert')}</Button>
               </div>
             </div>
           </div>
 
           {/* Specifications */}
           <div className="mt-12">
-            <h2 className="font-display text-xl font-bold text-text">Specifications</h2>
+            <h2 className="font-display text-xl font-bold text-text">{lt('specs.title', 'Specifications')}</h2>
             {hasSpecs ? (
               <div className="mt-4 overflow-hidden rounded-card border border-navy-100 bg-white shadow-card">
                 <table className="w-full text-left text-sm">
@@ -229,7 +231,7 @@ export default function ProductDetail() {
               </div>
             ) : (
               <p className="mt-4 rounded-card border border-dashed border-navy-200 border-l-2 border-l-primary/40 bg-navy-50/40 px-5 py-6 text-body-compact text-text-muted">
-                Detailed specifications for this product are being added. Contact our team for the full datasheet.
+                {lt('specs.pending', 'Detailed specifications for this product are being added. Contact our team for the full datasheet.')}
               </p>
             )}
           </div>
@@ -238,12 +240,12 @@ export default function ProductDetail() {
           {related.length > 0 && (
             <div className="mt-12">
               <div className="flex items-center justify-between">
-                <h2 className="font-display text-xl font-bold text-text">Related Products</h2>
+                <h2 className="font-display text-xl font-bold text-text">{lt('related.title', 'Related Products')}</h2>
                 <Link
                   to={`/products/${product.catSlug}/${product.subSlug}`}
                   className="border-b border-transparent pb-0.5 text-sm font-medium text-primary-dark transition-colors hover:border-primary hover:text-primary-darker"
                 >
-                  View all
+                  {lt('related.viewAll', 'View all')}
                 </Link>
               </div>
               <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
@@ -257,10 +259,10 @@ export default function ProductDetail() {
       </section>
 
       <CtaBand
-        title="Interested in This"
-        accent="Product?"
-        desc="Request a quote or talk to our team about specifications, pricing and bulk orders."
-        cta={{ label: 'Request a Quote', to: '/rfq' }}
+        title={lt('band.title', 'Interested in This')}
+        accent={lt('band.accent', 'Product?')}
+        desc={lt('band.desc', 'Request a quote or talk to our team about specifications, pricing and bulk orders.')}
+        cta={{ label: lt('cta.requestQuote', 'Request a Quote'), to: '/rfq' }}
       />
     </>
   );

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { cldImage } from '../../data/cloudinary';
+import { useLT } from '../../i18n/LocaleContext';
 
 /**
  * Full-screen image viewer for the photo gallery: click a tile, see it large, step through
@@ -19,6 +20,7 @@ import { cldImage } from '../../data/cloudinary';
  * has loaded. `ready` resets every time the shown image changes.
  */
 export default function Lightbox({ items, index, onClose, onIndex, alt = () => '' }) {
+  const lt = useLT('gallery');
   const open = index !== null && index !== undefined;
   const closeRef = useRef(null);
   const [ready, setReady] = useState(false);
@@ -71,7 +73,7 @@ export default function Lightbox({ items, index, onClose, onIndex, alt = () => '
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Image viewer"
+      aria-label={lt('lightbox.label', 'Image viewer')}
       onClick={onClose}
       className="fixed inset-0 z-[120] flex items-center justify-center bg-navy-950/95 p-4"
     >
@@ -79,7 +81,7 @@ export default function Lightbox({ items, index, onClose, onIndex, alt = () => '
         ref={closeRef}
         type="button"
         onClick={onClose}
-        aria-label="Close"
+        aria-label={lt('lightbox.close', 'Close')}
         className={`${ctrl} right-3 top-3 h-11 w-11 text-2xl leading-none sm:right-5 sm:top-5`}
       >
         &times;
@@ -91,7 +93,7 @@ export default function Lightbox({ items, index, onClose, onIndex, alt = () => '
           e.stopPropagation();
           go(index - 1);
         }}
-        aria-label="Previous image"
+        aria-label={lt('lightbox.prev', 'Previous image')}
         className={`${ctrl} left-2 top-1/2 h-12 w-12 -translate-y-1/2 text-3xl leading-none sm:left-5`}
       >
         &lsaquo;
@@ -127,14 +129,14 @@ export default function Lightbox({ items, index, onClose, onIndex, alt = () => '
           e.stopPropagation();
           go(index + 1);
         }}
-        aria-label="Next image"
+        aria-label={lt('lightbox.next', 'Next image')}
         className={`${ctrl} right-2 top-1/2 h-12 w-12 -translate-y-1/2 text-3xl leading-none sm:right-5`}
       >
         &rsaquo;
       </button>
 
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-4 py-1.5 text-sm text-white backdrop-blur-sm">
-        {index + 1} / {items.length}
+        {lt('lightbox.counter', '{current} / {total}', { current: index + 1, total: items.length })}
       </div>
     </div>
   );

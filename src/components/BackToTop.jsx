@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
+import { useLT } from '../i18n/LocaleContext';
 
 /**
  * Floating back-to-top button with a circular scroll-progress ring.
  * Appears after scrolling past one viewport height.
  */
 export default function BackToTop() {
+  const lt = useLT('common');
   const [visible, setVisible] = useState(false);
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
@@ -29,7 +31,7 @@ export default function BackToTop() {
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.94 }}
           onClick={scrollTop}
-          aria-label="Back to top"
+          aria-label={lt('backToTop.label', 'Back to top')}
           /* Bottom-LEFT, and DESKTOP-ONLY (`hidden sm:flex`). On desktop the chat launcher sits
              bottom-right, so the two never overlap; on mobile the launcher moves to bottom-left,
              so this button steps aside there. Offset above the consent bar for the same reason
@@ -50,7 +52,7 @@ export default function BackToTop() {
               style={{ pathLength: progress }}
             />
           </svg>
-          <span className="relative text-[13px] font-bold uppercase tracking-[0.12em]">Top</span>
+          <span className="relative text-[13px] font-bold uppercase tracking-[0.12em]">{lt('backToTop.short', 'Top')}</span>
         </motion.button>
       )}
     </AnimatePresence>

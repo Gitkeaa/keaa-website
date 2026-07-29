@@ -5,6 +5,7 @@ import { getAllCategories, TOTAL_PRODUCTS } from '../../data/categories';
 import { img } from '../../data/images';
 import { company } from '../../data/company';
 import { EASE } from '../../lib/motion';
+import { useLT } from '../../i18n/LocaleContext';
 
 /**
  * "Products at KEAA" — the catalogue's shop window on the home page, sitting directly under
@@ -92,6 +93,7 @@ const PROMISES = [
 
 export default function ProductsShowcase() {
   const reduce = useReducedMotion();
+  const lt = useLT('home');
   const [activeSlug, setActiveSlug] = useState(ALL.slug);
 
   const active = ROWS.find((c) => c.slug === activeSlug) || ALL;
@@ -128,16 +130,15 @@ export default function ProductsShowcase() {
         >
           {/* ------------------------------------------------------- PITCH + CATEGORY RAIL */}
           <div>
-            <span className="eyebrow text-primary-darker">Products at KEAA</span>
+            <span className="eyebrow text-primary-darker">{lt('showcase.eyebrow', 'Products at KEAA')}</span>
             <h2 className="mt-3 font-display text-3xl font-bold leading-[1.08] tracking-[-0.02em] text-text">
-              Built for Strength.{' '}
+              {lt('showcase.title1', 'Built for Strength.')}{' '}
               {/* Black, not the brand accent. Headings are solid black site-wide — the accent
                   stays on the eyebrow and the CTA, not in the headline. */}
-              <span className="block">Engineered for Excellence.</span>
+              <span className="block">{lt('showcase.title2', 'Engineered for Excellence.')}</span>
             </h2>
             <p className="mt-4 text-body-compact text-text-muted">
-              From structural components to precision fasteners, our solutions are designed to
-              deliver reliability in every build.
+              {lt('showcase.body', 'From structural components to precision fasteners, our solutions are designed to deliver reliability in every build.')}
             </p>
 
             <ul className="mt-6 flex flex-col gap-1.5 rounded-card border border-border bg-surface-raised p-2">
@@ -160,7 +161,7 @@ export default function ProductsShowcase() {
                           : 'text-text hover:bg-navy-50 hover:text-primary-darker'
                       }`}
                     >
-                      <span className="min-w-0 truncate">{cat.name}</span>
+                      <span className="min-w-0 truncate">{lt(`showcase.cat.${cat.slug ?? 'all'}.name`, cat.name)}</span>
                       <span
                         aria-hidden
                         className={`flex-shrink-0 text-xs ${isActive ? 'text-white' : 'text-text-muted'}`}
@@ -231,20 +232,20 @@ export default function ProductsShowcase() {
 
                   <div className="relative">
                     <span className="eyebrow text-primary-darker">
-                      {active.slug ? 'Featured Category' : 'Full Range'}
+                      {active.slug ? lt('showcase.featured', 'Featured Category') : lt('showcase.fullRange', 'Full Range')}
                     </span>
                     <h3 className="mt-2 font-display text-2xl font-bold leading-tight tracking-[-0.01em] text-text">
-                      {active.name}
+                      {lt(`showcase.cat.${active.slug ?? 'all'}.name`, active.name)}
                     </h3>
-                    <p className="mt-3 text-body-compact text-text-muted">{active.short}</p>
+                    <p className="mt-3 text-body-compact text-text-muted">{lt(`showcase.cat.${active.slug ?? 'all'}.short`, active.short)}</p>
                     <p className="mt-3 text-[13px] font-semibold text-text">
-                      {active.count} products
+                      {lt('showcase.products', '{n} products', { n: active.count })}
                       {active.subcategories?.length
-                        ? ` · ${active.subcategories.length} sub-categories`
+                        ? lt('showcase.subcats', ' · {n} sub-categories', { n: active.subcategories.length })
                         : ''}
                     </p>
                     <div className="mt-5">
-                      <Button to={hrefFor(active)}>Explore Products &rarr;</Button>
+                      <Button to={hrefFor(active)}>{lt('showcase.cta', 'Explore Products')} &rarr;</Button>
                     </div>
                   </div>
                 </motion.div>
@@ -285,7 +286,7 @@ export default function ProductsShowcase() {
                     <div className="font-display text-xl font-bold leading-none text-text">
                       {s.value}
                     </div>
-                    <div className="mt-1.5 text-xs text-text-muted">{s.label}</div>
+                    <div className="mt-1.5 text-xs text-text-muted">{lt(`showcase.stats.${i}`, s.label)}</div>
                   </li>
                 ))}
               </ul>
@@ -298,12 +299,12 @@ export default function ProductsShowcase() {
           {...rise(0.15)}
           className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6"
         >
-          {PROMISES.map((p) => (
+          {PROMISES.map((p, i) => (
             <li
               key={p}
               className="rounded-card bg-navy-50 px-3 py-3 text-center text-[13px] font-semibold leading-snug text-text"
             >
-              {p}
+              {lt(`showcase.promises.${i}`, p)}
             </li>
           ))}
         </motion.ul>

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { img } from '../../data/images';
+import { useLT, useT } from '../../i18n/LocaleContext';
 
 /**
  * The half-height panel a nav item opens.
@@ -24,15 +25,17 @@ export default function NavPanel({ item, categories = [], onNavigate }) {
     Categories used to lead here; they now follow, because a visitor who wants one category
     picks it directly and one who wants the whole page needs the top row to be obvious.
   */
+  const lt = useLT('common');
+  const t = useT();
   const children = item.children || [];
   const parentRow = children.find((c) => c.to === item.to);
 
   const rows = [
     ...(parentRow ? [parentRow] : []),
     ...categories.map((c) => ({
-      label: c.name,
+      label: lt(`cat.${c.slug}`, c.name),
       to: `/products/${c.slug}`,
-      desc: `${c.count} products`,
+      desc: lt('nav.productCount', '{n} products', { n: c.count }),
     })),
     ...children.filter((c) => c !== parentRow),
   ];
@@ -50,7 +53,7 @@ export default function NavPanel({ item, categories = [], onNavigate }) {
       <div className="container-full grid gap-x-14 gap-y-10 py-12 xl:grid-cols-[1fr_24rem] 2xl:grid-cols-[1fr_26rem]">
         <div>
           <p className="text-[13px] font-bold uppercase tracking-[0.14em] text-primary-darker">
-            {item.label}
+            {t(item.key)}
           </p>
 
           <ul className="mt-8 gap-x-12 sm:columns-2">
@@ -60,10 +63,10 @@ export default function NavPanel({ item, categories = [], onNavigate }) {
               <li key={`${row.to}-${row.label}`} className="mb-7 break-inside-avoid">
                 <Link to={row.to} onClick={onNavigate} className="group block">
                   <span className="block text-base font-semibold text-navy-900 transition-colors group-hover:text-primary-darker">
-                    {row.label}
+                    {lt(`nav.row.${row.to}.label`, row.label)}
                   </span>
                   {row.desc && (
-                    <span className="mt-1 block text-body-compact text-muted">{row.desc}</span>
+                    <span className="mt-1 block text-body-compact text-muted">{lt(`nav.row.${row.to}.desc`, row.desc)}</span>
                   )}
                 </Link>
               </li>
@@ -99,12 +102,12 @@ export default function NavPanel({ item, categories = [], onNavigate }) {
               )}
               <div className="flex flex-col p-5">
                 <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
-                  {feature.eyebrow}
+                  {lt(`${item.key}.feature.eyebrow`, feature.eyebrow)}
                 </p>
-                <p className="mt-2 text-lg font-bold leading-snug text-text">{feature.title}</p>
+                <p className="mt-2 text-lg font-bold leading-snug text-text">{lt(`${item.key}.feature.title`, feature.title)}</p>
                 <span className="mt-auto pt-4 text-sm font-semibold text-primary-dark">
                   <span className="border-b border-transparent pb-0.5 transition-colors group-hover:border-primary">
-                    {feature.cta.label}
+                    {lt(`${item.key}.feature.cta`, feature.cta.label)}
                   </span>
                 </span>
               </div>

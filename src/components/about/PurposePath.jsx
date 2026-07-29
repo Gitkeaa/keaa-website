@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { company } from '../../data/company';
 import { img, atWidth } from '../../data/images';
 import { EASE } from '../../lib/motion';
+import { useLT } from '../../i18n/LocaleContext';
 
 /**
  * OUR PURPOSE — the vision / mission / core-values band on the About page.
@@ -203,6 +204,7 @@ const PARA = 'mt-4 max-w-[54ch] text-body-compact leading-relaxed text-ink';
 
 export default function PurposePath() {
   const reduce = useReducedMotion();
+  const lt = useLT('about');
 
   const step = {
     initial: reduce ? false : { opacity: 0, y: 24 },
@@ -237,7 +239,7 @@ export default function PurposePath() {
           <div className="flex w-full max-w-xl items-center justify-center gap-4">
             <span aria-hidden="true" className="h-px flex-1 bg-primary/30" />
             <h2 id="purpose-heading" className="eyebrow text-primary-darker">
-              Our Purpose
+              {lt('purpose.eyebrow', 'Our Purpose')}
             </h2>
             <span aria-hidden="true" className="h-px flex-1 bg-primary/30" />
           </div>
@@ -271,7 +273,7 @@ export default function PurposePath() {
             <div className="lg:col-start-1 lg:col-span-2 lg:justify-self-center lg:self-stretch">
               <Medallion
                 image={img.scaffoldOnBuilding}
-                alt="Scaffolding erected on a building under construction"
+                alt={lt('purpose.vision.alt', 'Scaffolding erected on a building under construction')}
                 dots={['bottom']}
                 stub={['down']}
               />
@@ -280,9 +282,9 @@ export default function PurposePath() {
               <span aria-hidden="true" className={NUMERAL}>
                 01
               </span>
-              <h3 className={TITLE}>Our Vision</h3>
+              <h3 className={TITLE}>{lt('purpose.vision.title', 'Our Vision')}</h3>
               <span aria-hidden="true" className={UNDERLINE} />
-              <p className={PARA}>{company.values.vision}</p>
+              <p className={PARA}>{lt('purpose.vision.body', company.values.vision)}</p>
             </div>
 
             {/* connector 01 -> 02: down from line 2, right to line 11, down, left to line 6 */}
@@ -300,7 +302,7 @@ export default function PurposePath() {
             <div className="lg:col-start-5 lg:col-span-2 lg:justify-self-center lg:self-stretch">
               <Medallion
                 image={img.manOnMachine}
-                alt="A technician operating machinery on the factory floor"
+                alt={lt('purpose.mission.alt', 'A technician operating machinery on the factory floor')}
                 dots={['top', 'bottom']}
                 stub={['up', 'down']}
               />
@@ -309,9 +311,9 @@ export default function PurposePath() {
               <span aria-hidden="true" className={NUMERAL}>
                 02
               </span>
-              <h3 className={TITLE}>Our Mission</h3>
+              <h3 className={TITLE}>{lt('purpose.mission.title', 'Our Mission')}</h3>
               <span aria-hidden="true" className={UNDERLINE} />
-              <p className={PARA}>{company.values.mission}</p>
+              <p className={PARA}>{lt('purpose.mission.body', company.values.mission)}</p>
             </div>
 
             {/* connector 02 -> 03: left along the TOP from line 6 to line 3, then down.
@@ -333,7 +335,7 @@ export default function PurposePath() {
             <div className="lg:col-start-2 lg:col-span-2 lg:justify-self-center lg:self-stretch">
               <Medallion
                 image={img.scaffoldMenWorking}
-                alt="A team working together on a scaffolding site"
+                alt={lt('purpose.values.alt', 'A team working together on a scaffolding site')}
                 dots={['top']}
                 stub={['up']}
               />
@@ -342,7 +344,7 @@ export default function PurposePath() {
               <span aria-hidden="true" className={NUMERAL}>
                 03
               </span>
-              <h3 className={TITLE}>Our Core Values</h3>
+              <h3 className={TITLE}>{lt('purpose.values.title', 'Our Core Values')}</h3>
               <span aria-hidden="true" className={UNDERLINE} />
 
               {/* A balanced 3-across grid: stacked on mobile, 2-up on sm, then 3×2 from lg up.
@@ -358,17 +360,17 @@ export default function PurposePath() {
                   :first-child would leave a stray rule hanging at the left of the second row.
                   Per-item borders, not divide-x, because divide-x misbehaves once a grid wraps. */}
               <ul className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-0 lg:gap-y-10">
-                {values.map(({ raw, lead, rest }) => (
+                {values.map(({ raw, lead, rest }, i) => (
                   <li
                     key={raw}
                     className="border-l-2 border-primary/40 pl-4 lg:border-l lg:border-primary/30 lg:px-6 lg:[&:nth-child(3n+1)]:border-l-0 lg:[&:nth-child(3n+1)]:pl-0"
                   >
                     <span className="block font-display text-base font-bold leading-snug text-text">
-                      {lead}
+                      {lt(`purpose.values.${i}.lead`, lead)}
                     </span>
                     {rest ? (
                       <span className="mt-1.5 block text-body-compact leading-relaxed text-ink">
-                        {rest}
+                        {lt(`purpose.values.${i}.rest`, rest)}
                       </span>
                     ) : null}
                   </li>

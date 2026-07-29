@@ -1,5 +1,6 @@
 import CardRail from '../ui/CardRail';
 import ProjectCard from '../ui/ProjectCard';
+import { useLT } from '../../i18n/LocaleContext';
 
 /**
  * The Featured Projects rail.
@@ -8,8 +9,9 @@ import ProjectCard from '../ui/ProjectCard';
  * so this only decides what goes on the rail and how wide each card sits at each breakpoint.
  */
 export default function ProjectCarousel({ projects, images }) {
+  const lt = useLT('home');
   return (
-    <CardRail label="Featured projects" labels={projects.map((p) => `Show ${p.title}`)}>
+    <CardRail label={lt('projects.rail.label', 'Featured projects')} labels={projects.map((p) => lt('projects.rail.show', 'Show {title}', { title: p.title }))}>
       {projects.map((p, i) => (
         <ProjectCard
           key={p.title}

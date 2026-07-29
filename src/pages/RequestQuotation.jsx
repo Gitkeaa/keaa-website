@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRegion } from '../context/RegionContext';
 import { useAdminAuth } from '../admin/auth/AdminAuthContext';
-import { useT } from '../i18n/LocaleContext';
+import { useLT, useT } from '../i18n/LocaleContext';
 import GalleryHero from '../components/gallery/GalleryHero';
 import { heroSlides } from '../data/heroSlides';
 import Button from '../components/ui/Button';
@@ -71,10 +71,11 @@ const formIntros = {
 const productLines = getAllProductLines();
 
 export default function RequestQuotation() {
+  const lt = useLT('rfq');
   useSEO({
-    title: 'Request a Quote',
+    title: lt('seo.title', 'Request a Quote'),
     description:
-      'Request a quote or export inquiry from KEAA International.',
+      lt('seo.description', 'Request a quote or export inquiry from KEAA International.'),
   });
 
   const [tab, setTab] = useState('rfq');
@@ -166,7 +167,7 @@ export default function RequestQuotation() {
       });
       setSubmitted(true);
     } catch {
-      setSendError('Could not submit your request. Please try again, or email us directly.');
+      setSendError(lt('form.submitError', 'Could not submit your request. Please try again, or email us directly.'));
     } finally {
       setSending(false);
     }
@@ -175,8 +176,8 @@ export default function RequestQuotation() {
   return (
     <>
       <GalleryHero
-        eyebrow="Request for Quotation"
-        crumbs={[{ label: 'Home', to: '/' }, { label: 'Request for Quotation' }]}
+        eyebrow={lt('hero.eyebrow', 'Request for Quotation')}
+        crumbs={[{ label: lt('crumbs.home', 'Home'), to: '/' }, { label: lt('crumbs.rfq', 'Request for Quotation') }]}
         slides={heroSlides.rfq}
         scrollTo="content"
       />
@@ -193,7 +194,7 @@ export default function RequestQuotation() {
                     tab === t.id ? 'bg-navy-700 text-white' : 'text-ink hover:bg-navy-50'
                   }`}
                 >
-                  {t.label}
+                  {lt(`tabs.${t.id}`, t.label)}
                 </button>
               ))}
             </div>
@@ -206,10 +207,10 @@ export default function RequestQuotation() {
                 animate={{ y: [0, -6, 0] }}
                 transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
                 aria-expanded={showIntro}
-                aria-label="Toggle form guidance"
+                aria-label={lt('guide.toggle', 'Toggle form guidance')}
                 className="flex h-11 flex-shrink-0 items-center justify-center rounded-card bg-primary-dark px-4 text-[13px] font-bold uppercase tracking-[0.12em] text-white shadow-lg shadow-primary/30 transition-transform hover:scale-105"
               >
-                Guide
+                {lt('guide.button', 'Guide')}
               </motion.button>
               <button
                 type="button"
@@ -218,7 +219,7 @@ export default function RequestQuotation() {
                 className="flex flex-1 items-center text-left"
               >
                 <h3 className="font-display text-base font-bold text-text border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker sm:text-lg">
-                  {formIntros[tab].title}
+                  {lt(`intro.${tab}.title`, formIntros[tab].title)}
                 </h3>
               </button>
             </div>
@@ -236,16 +237,16 @@ export default function RequestQuotation() {
                   <div className="mt-4 rounded-card border border-primary/20 bg-primary/[0.05] p-5">
                     {formIntros[tab].paras.map((p, i) => (
                       <p key={i} className={`body-copy ${i > 0 ? 'mt-8' : ''}`}>
-                        {p}
+                        {lt(`intro.${tab}.p${i}`, p)}
                       </p>
                     ))}
                     <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-                      {formIntros[tab].perks.map((perk) => (
+                      {formIntros[tab].perks.map((perk, i) => (
                         <li
                           key={perk}
                           className="border-l-2 border-primary/40 pl-4 text-body-compact font-medium text-text"
                         >
-                          {perk}
+                          {lt(`intro.${tab}.perks.${i}`, perk)}
                         </li>
                       ))}
                     </ul>
@@ -257,10 +258,10 @@ export default function RequestQuotation() {
             {submitted ? (
               <div className="mt-8 rounded-card bg-navy-50 p-10 text-center">
                 <p className="font-display text-lg font-semibold text-text">
-                  Your Request Has Been Submitted
+                  {lt('submitted.title', 'Your Request Has Been Submitted')}
                 </p>
                 <p className="mt-2 text-body-compact text-ink">
-                  Our export team will review your requirement and respond within 24 hours.
+                  {lt('submitted.body', 'Our export team will review your requirement and respond within 24 hours.')}
                 </p>
               </div>
             ) : (
@@ -274,14 +275,14 @@ export default function RequestQuotation() {
                     the prefill note above. */}
                 <Field
                   key={`name-${user?.id ?? 'anon'}`}
-                  label="Full Name"
+                  label={lt('form.name', 'Full Name')}
                   id="name"
                   required
                   defaultValue={user?.name || ''}
                 />
                 {/* Company is NOT prefilled: the backend user object is {id,name,email,role}
                     and has no company, and guessing one would put a wrong name on a quote. */}
-                <Field label="Company Name" id="company" required />
+                <Field label={lt('form.company', 'Company Name')} id="company" required />
                 <EmailField value={email} onChange={setEmail} required />
 
                 <CountrySelect value={country} onChange={setCountry} required />
@@ -289,7 +290,7 @@ export default function RequestQuotation() {
 
                 <div>
                   <label htmlFor="product" className="text-sm font-medium text-navy-800">
-                    Product Category
+                    {lt('form.product', 'Product Category')}
                   </label>
                   <select
                     id="product"
@@ -303,22 +304,22 @@ export default function RequestQuotation() {
 
                 {tab === 'export' && (
                   <Field
-                    label="Port of Destination"
+                    label={lt('form.port', 'Port of Destination')}
                     id="port"
                     className="sm:col-span-2"
-                    placeholder="e.g. Jebel Ali Port, Dubai (UAE), or Rotterdam, Netherlands"
+                    placeholder={lt('form.portPlaceholder', 'e.g. Jebel Ali Port, Dubai (UAE), or Rotterdam, Netherlands')}
                   />
                 )}
 
                 <WordLimitTextarea
                   className="sm:col-span-2"
                   id="details"
-                  label="Requirement Details"
+                  label={lt('form.details', 'Requirement Details')}
                   value={details}
                   onChange={setDetails}
                   required
                   maxWords={250}
-                  placeholder="Tell us about specifications, quantities, timelines and destination port..."
+                  placeholder={lt('form.detailsPlaceholder', 'Tell us about specifications, quantities, timelines and destination port...')}
                 />
 
                 <div className="sm:col-span-2">
@@ -328,7 +329,7 @@ export default function RequestQuotation() {
                     </p>
                   )}
                   <Button type="submit" disabled={sending}>
-                    {sending ? 'Submitting…' : 'Submit Request'}
+                    {sending ? lt('form.submitting', 'Submitting…') : lt('form.submit', 'Submit Request')}
                   </Button>
                 </div>
               </form>
@@ -337,25 +338,25 @@ export default function RequestQuotation() {
 
           <aside className="space-y-5">
             <div className="rounded-card border border-navy-100 bg-navy-50 p-6">
-              <h4 className="font-display text-sm font-semibold text-text">What Happens Next?</h4>
+              <h4 className="font-display text-sm font-semibold text-text">{lt('aside.nextTitle', 'What Happens Next?')}</h4>
               <ol className="mt-4 space-y-3 text-sm text-ink">
                 <li className="flex gap-2.5">
                   <span className="font-mono text-xs font-semibold text-primary-darker">01</span>
-                  Our export team reviews your requirement.
+                  {lt('aside.step1', 'Our export team reviews your requirement.')}
                 </li>
                 <li className="flex gap-2.5">
                   <span className="font-mono text-xs font-semibold text-primary-darker">02</span>
-                  We respond with pricing, lead time and specs within 24 hours.
+                  {lt('aside.step2', 'We respond with pricing, lead time and specs within 24 hours.')}
                 </li>
                 <li className="flex gap-2.5">
                   <span className="font-mono text-xs font-semibold text-primary-darker">03</span>
-                  We finalise the order and manage dispatch end-to-end.
+                  {lt('aside.step3', 'We finalise the order and manage dispatch end-to-end.')}
                 </li>
               </ol>
             </div>
             <div className="rounded-card border border-navy-100 p-6 shadow-card">
-              <h4 className="font-display text-sm font-semibold text-text">Prefer to Talk?</h4>
-              <p className="mt-2 text-body-compact text-ink">Call or email our export team directly.</p>
+              <h4 className="font-display text-sm font-semibold text-text">{lt('aside.talkTitle', 'Prefer to Talk?')}</h4>
+              <p className="mt-2 text-body-compact text-ink">{lt('aside.talkBody', 'Call or email our export team directly.')}</p>
               <p className="mt-3 text-body-compact font-medium text-text">+91 98767 01926</p>
               <p className="text-body-compact font-medium text-text break-all">raveesh@keaa-international.net</p>
             </div>

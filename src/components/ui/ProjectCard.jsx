@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useLT } from '../../i18n/LocaleContext';
 
 /**
  * A project card: the photograph fills the card and the copy sits on top of it over a scrim,
@@ -19,6 +20,7 @@ import { Link } from 'react-router-dom';
  *               needs.
  */
 export default function ProjectCard({ project, image, to, withDesc = false, className = '' }) {
+  const lt = useLT('gallery');
   const body = (
     <>
       <img
@@ -43,7 +45,7 @@ export default function ProjectCard({ project, image, to, withDesc = false, clas
         )}
         {to && (
           <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-white">
-            Learn more
+            {lt('card.learnMore', 'Learn more')}
             <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
               &rarr;
             </span>

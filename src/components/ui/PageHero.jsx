@@ -3,6 +3,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { useEffect, useRef, useState } from 'react';
 import AnimatedCounter from './AnimatedCounter';
 import { EASE } from '../../lib/motion';
+import { useLT } from '../../i18n/LocaleContext';
 
 /**
  * The interior-page hero, rebuilt to match the homepage: a light stage with the
@@ -64,6 +65,7 @@ export default function PageHero({
   images,
   align = 'left',
 }) {
+  const lt = useLT('common');
   const centered = align === 'center';
   const ref = useRef(null);
   const reduce = useReducedMotion();
@@ -176,7 +178,7 @@ export default function PageHero({
 
       <div className={`${GUTTER} relative z-10 py-14 sm:py-16 lg:py-20 ${centered ? 'text-center' : ''}`}>
         {crumbs.length > 0 && (
-          <nav aria-label="Breadcrumb" className={`mb-5 flex items-center gap-1.5 text-xs text-text-strong ${centered ? 'justify-center' : ''}`}>
+          <nav aria-label={lt('hero.breadcrumbs', 'Breadcrumb')} className={`mb-5 flex items-center gap-1.5 text-xs text-text-strong ${centered ? 'justify-center' : ''}`}>
             {crumbs.map((c, i) => (
               <span key={c.label} className="flex items-center gap-1.5">
                 {i > 0 && (

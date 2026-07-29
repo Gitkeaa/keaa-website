@@ -6,7 +6,7 @@ import Button from '../ui/Button';
 import { mainNav } from '../../data/navigation';
 import { getAllCategories } from '../../data/categories';
 import { useLocale } from '../../i18n/LocaleContext';
-import { getLanguage } from '../../i18n/languages';
+import { getLanguage, isLiveLocale } from '../../i18n/languages';
 import { useRegion } from '../../context/RegionContext';
 import { localeId } from '../../data/regions';
 import { useAdminAuth } from '../../admin/auth/AdminAuthContext';
@@ -283,6 +283,13 @@ export default function MobileDrawer({ open, onClose }) {
                                       {item.country} <span className="text-muted">–</span>{' '}
                                       <span lang={item.lang}>{getLanguage(item.lang).label}</span>
                                     </span>
+                                    {/* Same coming-soon badge as the desktop switcher: an
+                                      untranslated language says so before it is chosen. */}
+                                    {item.lang !== 'en' && !isLiveLocale(item.lang) && !active && (
+                                      <span className="flex-shrink-0 rounded-full border border-primary/40 bg-primary/10 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.08em] text-primary-darker">
+                                        {t('lang.comingSoon')}
+                                      </span>
+                                    )}
                                     {/* `aria-current` announces the selection; this is its
                                       visual half, so it stays aria-hidden. */}
                                     {active && (

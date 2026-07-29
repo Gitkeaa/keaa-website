@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLT } from '../../i18n/LocaleContext';
 
 /*
  * Email input with domain auto-suggestions. The moment the user types the first
@@ -10,12 +11,13 @@ const DOMAINS = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'icloud
 
 export default function EmailField({
   id = 'email',
-  label = 'Email Address',
+  label,
   value,
   onChange,
   required = false,
   className = '',
 }) {
+  const lt = useLT('common');
   const [open, setOpen] = useState(false);
 
   const atIndex = value.indexOf('@');
@@ -30,7 +32,7 @@ export default function EmailField({
   return (
     <div className={`relative ${className}`}>
       <label htmlFor={id} className="text-sm font-medium text-navy-800">
-        {label} {required && <span className="text-red-500">*</span>}
+        {label ?? lt('emailField.label', 'Email Address')} {required && <span className="text-red-500">*</span>}
       </label>
       <input
         id={id}
@@ -44,7 +46,7 @@ export default function EmailField({
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}
         autoComplete="email"
-        placeholder="you@gmail.com"
+        placeholder={lt('emailField.placeholder', 'you@gmail.com')}
         className="mt-1.5 w-full rounded-card border border-navy-100 px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-primary"
       />
 

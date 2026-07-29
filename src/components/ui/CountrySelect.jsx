@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { countriesData } from '../../data/countriesData';
+import { useLT } from '../../i18n/LocaleContext';
 
 /*
  * Accessible, searchable country picker. Type to filter by country name or
  * dialling code, click to select. Returns the full country object (with `dial`)
  * so the parent can auto-fill the phone STD/ISD code.
  */
-export default function CountrySelect({ value, onChange, id = 'country', label = 'Country', required = false }) {
+export default function CountrySelect({ value, onChange, id = 'country', label, required = false }) {
+  const lt = useLT('common');
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const wrapRef = useRef(null);
@@ -46,7 +48,7 @@ export default function CountrySelect({ value, onChange, id = 'country', label =
   return (
     <div ref={wrapRef} className="relative">
       <label htmlFor={id} className="text-sm font-medium text-navy-800">
-        {label} {required && <span className="text-red-500">*</span>}
+        {label ?? lt('countrySelect.label', 'Country')} {required && <span className="text-red-500">*</span>}
       </label>
 
       <button
@@ -58,7 +60,7 @@ export default function CountrySelect({ value, onChange, id = 'country', label =
         className="mt-1.5 flex w-full items-center justify-between gap-2 rounded-card border border-navy-100 bg-white px-3.5 py-2.5 text-left text-sm outline-none transition-colors hover:border-navy-200 focus:border-primary"
       >
         <span className={value ? 'truncate text-navy-800' : 'text-muted'}>
-          {value ? value.name : 'Select your country'}
+          {value ? value.name : lt('countrySelect.placeholder', 'Select your country')}
         </span>
       </button>
 
@@ -69,7 +71,7 @@ export default function CountrySelect({ value, onChange, id = 'country', label =
               htmlFor={`${id}-search`}
               className="block px-1 pb-1.5 text-[13px] font-bold uppercase tracking-[0.12em] text-primary-darker"
             >
-              Search
+              {lt('countrySelect.search', 'Search')}
             </label>
             <input
               ref={searchRef}
@@ -77,13 +79,13 @@ export default function CountrySelect({ value, onChange, id = 'country', label =
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search country or code…"
+              placeholder={lt('countrySelect.searchPlaceholder', 'Search country or code…')}
               className="w-full rounded-card border border-navy-100 bg-navy-50/40 px-3 py-2 text-sm outline-none focus:border-primary"
             />
           </div>
           <ul role="listbox" className="max-h-60 overflow-y-auto py-1">
             {filtered.length === 0 && (
-              <li className="px-4 py-3 text-body-compact text-muted">No country found</li>
+              <li className="px-4 py-3 text-body-compact text-muted">{lt('countrySelect.noResults', 'No country found')}</li>
             )}
             {filtered.map((c) => {
               const selected = value?.iso === c.iso;
@@ -102,7 +104,7 @@ export default function CountrySelect({ value, onChange, id = 'country', label =
                     <span className="text-xs text-muted">{c.dial}</span>
                     {selected && (
                       <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
-                        Selected
+                        {lt('countrySelect.selected', 'Selected')}
                       </span>
                     )}
                   </button>

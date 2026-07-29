@@ -102,6 +102,15 @@ const en = {
   'auth.close': 'Close',
   'auth.accountAria': 'Account menu',
   'auth.signedInAs': 'Logged in as',
+
+  /* Language rollout status: the switcher badge, and the strip shown after picking a
+     language whose translation is not live yet (see LanguageNotice.jsx). `{language}` is
+     replaced with the language's native name by the component. Client copy rule applies
+     here as everywhere: no em dashes in anything rendered. */
+  'lang.comingSoon': 'Coming soon',
+  'lang.noticeTitle': '{language} is on its way',
+  'lang.noticeBody': 'Our team is preparing the full site in {language}. Until it is ready, pages are shown in English.',
+  'lang.noticeDismiss': 'Continue in English',
 };
 
 /**
@@ -142,6 +151,10 @@ const nl = {
   'auth.close': 'Sluiten',
   'auth.accountAria': 'Accountmenu',
   'auth.signedInAs': 'Ingelogd als',
+  'lang.comingSoon': 'Binnenkort beschikbaar',
+  'lang.noticeTitle': 'De site in het {language} komt eraan',
+  'lang.noticeBody': 'Ons team werkt aan de volledige site in het {language}. Tot die klaar is, worden de pagina’s in het Engels getoond.',
+  'lang.noticeDismiss': 'Verder in het Engels',
 };
 
 const de = {
@@ -177,6 +190,10 @@ const de = {
   'auth.close': 'Schließen',
   'auth.accountAria': 'Kontomenü',
   'auth.signedInAs': 'Angemeldet als',
+  'lang.comingSoon': 'Bald verfügbar',
+  'lang.noticeTitle': 'Die Website auf {language} ist auf dem Weg',
+  'lang.noticeBody': 'Unser Team arbeitet an der vollständigen Website auf {language}. Bis dahin werden die Seiten auf Englisch angezeigt.',
+  'lang.noticeDismiss': 'Weiter auf Englisch',
 };
 
 const fr = {
@@ -212,6 +229,10 @@ const fr = {
   'auth.close': 'Fermer',
   'auth.accountAria': 'Menu du compte',
   'auth.signedInAs': 'Connecté en tant que',
+  'lang.comingSoon': 'Bientôt disponible',
+  'lang.noticeTitle': 'Le site en {language} arrive bientôt',
+  'lang.noticeBody': 'Notre équipe prépare le site complet en {language}. En attendant, les pages sont affichées en anglais.',
+  'lang.noticeDismiss': 'Continuer en anglais',
 };
 
 const es = {
@@ -247,6 +268,10 @@ const es = {
   'auth.close': 'Cerrar',
   'auth.accountAria': 'Menú de cuenta',
   'auth.signedInAs': 'Sesión iniciada como',
+  'lang.comingSoon': 'Próximamente',
+  'lang.noticeTitle': 'El sitio en {language} está en camino',
+  'lang.noticeBody': 'Nuestro equipo está preparando el sitio completo en {language}. Hasta entonces, las páginas se muestran en inglés.',
+  'lang.noticeDismiss': 'Continuar en inglés',
 };
 
 const it = {
@@ -280,6 +305,10 @@ const it = {
   'auth.close': 'Chiudi',
   'auth.accountAria': 'Menu account',
   'auth.signedInAs': 'Accesso effettuato come',
+  'lang.comingSoon': 'In arrivo',
+  'lang.noticeTitle': 'Il sito in {language} è in arrivo',
+  'lang.noticeBody': 'Il nostro team sta preparando il sito completo in {language}. Fino ad allora, le pagine sono mostrate in inglese.',
+  'lang.noticeDismiss': 'Continua in inglese',
 };
 
 const pt = {
@@ -313,6 +342,10 @@ const pt = {
   'auth.close': 'Fechar',
   'auth.accountAria': 'Menu da conta',
   'auth.signedInAs': 'Conectado como',
+  'lang.comingSoon': 'Em breve',
+  'lang.noticeTitle': 'O site em {language} está a caminho',
+  'lang.noticeBody': 'Nossa equipe está preparando o site completo em {language}. Até lá, as páginas são exibidas em inglês.',
+  'lang.noticeDismiss': 'Continuar em inglês',
 };
 
 const pl = {
@@ -346,6 +379,10 @@ const pl = {
   'auth.close': 'Zamknij',
   'auth.accountAria': 'Menu konta',
   'auth.signedInAs': 'Zalogowano jako',
+  'lang.comingSoon': 'Wkrótce',
+  'lang.noticeTitle': 'Wersja strony ({language}) już wkrótce',
+  'lang.noticeBody': 'Nasz zespół przygotowuje pełną wersję strony ({language}). Do tego czasu strony wyświetlane są po angielsku.',
+  'lang.noticeDismiss': 'Kontynuuj po angielsku',
 };
 
 const ru = {
@@ -379,6 +416,10 @@ const ru = {
   'auth.close': 'Закрыть',
   'auth.accountAria': 'Меню аккаунта',
   'auth.signedInAs': 'Вы вошли как',
+  'lang.comingSoon': 'Скоро',
+  'lang.noticeTitle': 'Версия сайта ({language}) скоро появится',
+  'lang.noticeBody': 'Наша команда готовит полную версию сайта на этом языке. А пока страницы отображаются на английском.',
+  'lang.noticeDismiss': 'Продолжить на английском',
 };
 
 const tr = {
@@ -412,6 +453,10 @@ const tr = {
   'auth.close': 'Kapat',
   'auth.accountAria': 'Hesap menüsü',
   'auth.signedInAs': 'Giriş yapan',
+  'lang.comingSoon': 'Çok yakında',
+  'lang.noticeTitle': '{language} site yolda',
+  'lang.noticeBody': 'Ekibimiz sitenin {language} sürümünü hazırlıyor. Hazır olana kadar sayfalar İngilizce gösterilir.',
+  'lang.noticeDismiss': 'İngilizce devam et',
 };
 
 const ar = {
@@ -445,6 +490,10 @@ const ar = {
   'auth.close': 'إغلاق',
   'auth.accountAria': 'قائمة الحساب',
   'auth.signedInAs': 'تم تسجيل الدخول باسم',
+  'lang.comingSoon': 'قريباً',
+  'lang.noticeTitle': 'الموقع باللغة {language} قادم قريباً',
+  'lang.noticeBody': 'يعمل فريقنا على تجهيز الموقع الكامل باللغة {language}. وحتى ذلك الحين، تُعرض الصفحات باللغة الإنجليزية.',
+  'lang.noticeDismiss': 'المتابعة بالإنجليزية',
 };
 
 const hi = {
@@ -478,6 +527,10 @@ const hi = {
   'auth.close': 'बंद करें',
   'auth.accountAria': 'खाता मेनू',
   'auth.signedInAs': 'साइन इन किया हुआ',
+  'lang.comingSoon': 'जल्द आ रहा है',
+  'lang.noticeTitle': '{language} साइट जल्द आ रही है',
+  'lang.noticeBody': 'हमारी टीम पूरी साइट {language} में तैयार कर रही है। तब तक पृष्ठ अंग्रेज़ी में दिखाए जाते हैं।',
+  'lang.noticeDismiss': 'अंग्रेज़ी में जारी रखें',
 };
 
 export const strings = { en, nl, de, fr, es, it, pt, pl, ru, tr, ar, hi };

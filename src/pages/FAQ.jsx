@@ -10,6 +10,7 @@ import { PANEL_CARD } from '../components/ui/panelCard';
 import { faqs, allFaqs } from '../data/faqs';
 import { testimonials } from '../data/content';
 import useSEO from '../hooks/useSEO';
+import { useLT } from '../i18n/LocaleContext';
 
 /**
  * Answers are native <details>/<summary>, not a JS accordion.
@@ -27,6 +28,7 @@ import useSEO from '../hooks/useSEO';
 const MAX_OPEN = 2;
 
 export default function FAQ() {
+  const lt = useLT('faq');
   /*
     `open` is the list of open question ids, OLDEST FIRST. The accordion is not single-open:
     a visitor can leave one answer open and read a second alongside it. Opening a THIRD does
@@ -46,9 +48,11 @@ export default function FAQ() {
     });
 
   useSEO({
-    title: 'FAQ & Customer Testimonials',
-    description:
-      'Answers on KEAA International’s products, manufacturing, certifications, export markets, ordering and quotations, plus what our customers say about working with us.',
+    title: lt('seo.title', 'FAQ & Customer Testimonials'),
+    description: lt(
+      'seo.description',
+      'Answers on KEAA International’s products, manufacturing, certifications, export markets, ordering and quotations, plus what our customers say about working with us.'
+    ),
     breadcrumbs: [{ label: 'Home', to: '/' }, { label: 'FAQ & Testimonials' }],
     /**
      * FAQPage structured data. Google can surface these as expandable answers directly in
@@ -70,8 +74,8 @@ export default function FAQ() {
   return (
     <>
       <GalleryHero
-        eyebrow="FAQ & Testimonials"
-        crumbs={[{ label: 'Home', to: '/' }, { label: 'FAQ & Testimonials' }]}
+        eyebrow={lt('hero.eyebrow', 'FAQ & Testimonials')}
+        crumbs={[{ label: lt('crumbs.home', 'Home'), to: '/' }, { label: lt('crumbs.current', 'FAQ & Testimonials') }]}
         slides={heroSlides.faq}
         scrollTo="content"
       />
@@ -83,43 +87,43 @@ export default function FAQ() {
               {/* Jump list. Plain anchors — each group heading carries the matching id, so
                   these work with the browser's own history and are copyable links. */}
               <Reveal>
-                <p className="eyebrow text-primary-darker">On this page</p>
+                <p className="eyebrow text-primary-darker">{lt('onThisPage', 'On this page')}</p>
                 {/* Two columns while the list is full-width (phone/tablet), so the jump links
                     fill the row instead of stacking down the left. At `lg` it becomes the narrow
                     sidebar again — a single vertical column, unchanged. */}
                 <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 lg:block lg:space-y-3">
-                  {faqs.map((g) => (
+                  {faqs.map((g, gi) => (
                     <li key={g.group}>
                       <a
                         href={`#${slug(g.group)}`}
                         className="border-b border-transparent pb-0.5 text-sm font-medium text-ink transition-colors hover:border-primary hover:text-primary-darker"
                       >
-                        {g.group}
+                        {lt(`groups.${gi}.title`, g.group)}
                       </a>
                     </li>
                   ))}
                 </ul>
 
                 <div className="mt-10 border-t border-navy-100 pt-8">
-                  <p className="text-sm font-semibold text-text">Still have a question?</p>
+                  <p className="text-sm font-semibold text-text">{lt('aside.title', 'Still have a question?')}</p>
                   <p className="mt-1.5 text-body-compact text-ink">
-                    Our team answers every enquiry within one business day.
+                    {lt('aside.body', 'Our team answers every enquiry within one business day.')}
                   </p>
                   <Button to="/contact" variant="outlineNavy" size="sm" className="mt-4">
-                    Contact us
+                    {lt('aside.cta', 'Contact us')}
                   </Button>
                 </div>
               </Reveal>
 
               <div className="space-y-14">
-                {faqs.map((group) => (
+                {faqs.map((group, gi) => (
                   <Reveal key={group.group}>
                     <h2 id={slug(group.group)} className="font-display text-2xl font-bold text-text">
-                      {group.group}
+                      {lt(`groups.${gi}.title`, group.group)}
                     </h2>
 
                     <div className="mt-6 divide-y divide-navy-100 border-y border-navy-100">
-                      {group.items.map((item) => {
+                      {group.items.map((item, qi) => {
                         const id = `${slug(group.group)}-${slug(item.q)}`;
                         return (
                           <details
@@ -130,7 +134,7 @@ export default function FAQ() {
                           >
                             <summary className="flex cursor-pointer list-none items-start justify-between gap-6 text-left">
                               <span className="text-base font-semibold text-text transition-colors group-hover:text-primary-darker">
-                                {item.q}
+                                {lt(`groups.${gi}.items.${qi}.q`, item.q)}
                               </span>
                               {/* Typographic +/− rather than a chevron glyph, matching the
                                   mobile drawer's expanders. */}
@@ -141,7 +145,7 @@ export default function FAQ() {
                                 {open.includes(id) ? '–' : '+'}
                               </span>
                             </summary>
-                            <p className="body-copy mt-3 max-w-3xl">{item.a}</p>
+                            <p className="body-copy mt-3 max-w-3xl">{lt(`groups.${gi}.items.${qi}.a`, item.a)}</p>
                           </details>
                         );
                       })}
@@ -151,14 +155,14 @@ export default function FAQ() {
 
                 <Reveal>
                   <p className="text-body-compact text-muted">
-                    Looking for the full product catalogues instead?{' '}
+                    {lt('downloads.lead', 'Looking for the full product catalogues instead?')}{' '}
                     <Link
                       to="/downloads"
                       className="border-b border-transparent font-semibold text-primary-dark transition-colors hover:border-primary hover:text-primary-darker"
                     >
-                      Browse the Downloads Center
+                      {lt('downloads.link', 'Browse the Downloads Center')}
                     </Link>
-                    .
+                    {lt('downloads.end', '.')}
                   </p>
                 </Reveal>
               </div>
@@ -172,14 +176,14 @@ export default function FAQ() {
           already reading. `#testimonials` is a stable anchor for the nav and the footer. */}
       <section id="testimonials" className="section-pad pt-0">
         <div className="container-page">
-          <SectionHeading eyebrow="What Our Customers Say" title="Testimonials" />
+          <SectionHeading eyebrow={lt('testimonials.eyebrow', 'What Our Customers Say')} title={lt('testimonials.title', 'Testimonials')} />
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {testimonials.map((t) => (
+            {testimonials.map((t, i) => (
               <Reveal key={t.name}>
                 <figure className="h-full rounded-card border border-navy-100 bg-white p-6 shadow-card">
                   <Rating value={t.rating} />
                   <blockquote className="mt-4 text-body-compact leading-relaxed text-ink">
-                    &ldquo;{t.quote}&rdquo;
+                    &ldquo;{lt(`testimonials.${i}.quote`, t.quote)}&rdquo;
                   </blockquote>
                   <figcaption className="mt-4">
                     <p className="font-display text-body-compact font-semibold text-text">{t.name}</p>
@@ -205,6 +209,7 @@ export default function FAQ() {
 const MAX_STARS = 5;
 
 function Rating({ value = MAX_STARS }) {
+  const lt = useLT('faq');
   return (
     <p className="flex items-center gap-0.5">
       {Array.from({ length: MAX_STARS }, (_, i) => (
@@ -215,7 +220,7 @@ function Rating({ value = MAX_STARS }) {
           strokeWidth={0}
         />
       ))}
-      <span className="sr-only">Rated {value} out of {MAX_STARS}</span>
+      <span className="sr-only">{lt('rating', 'Rated {value} out of {max}', { value, max: MAX_STARS })}</span>
     </p>
   );
 }

@@ -1,6 +1,7 @@
 import PageHero from '../components/ui/PageHero';
 import { company } from '../data/company';
 import useSEO from '../hooks/useSEO';
+import { useLT } from '../i18n/LocaleContext';
 
 /**
  * Legal content pages: one component switched by a `type` prop to render the Privacy Policy,
@@ -137,11 +138,15 @@ const seo = {
 };
 
 export default function Legal({ type }) {
+  const lt = useLT('legal');
   const data = content[type];
   useSEO({
-    title: seo[type]?.title || 'Legal',
-    description: seo[type]?.description,
-    breadcrumbs: [{ label: 'Home', to: '/' }, { label: seo[type]?.title || 'Legal' }],
+    title: lt(`${type}.title`, seo[type]?.title || 'Legal'),
+    description: lt(`${type}.seoDescription`, seo[type]?.description),
+    breadcrumbs: [
+      { label: lt('crumbs.home', 'Home'), to: '/' },
+      { label: lt(`${type}.title`, seo[type]?.title || 'Legal') },
+    ],
   });
   return (
     <>
@@ -149,10 +154,10 @@ export default function Legal({ type }) {
           brand blue, and this heading is wanted all in one colour (black).
           Centred — safe here because the legal hero carries no image (see PageHero). */}
       <PageHero
-        eyebrow="Legal"
+        eyebrow={lt('eyebrow', 'Legal')}
         align="center"
-        title={`${data.title} for ${WEBSITE}`}
-        crumbs={[{ label: 'Home', to: '/' }, { label: data.title }]}
+        title={lt('hero.title', '{title} for {site}', { title: lt(`${type}.title`, data.title), site: WEBSITE })}
+        crumbs={[{ label: lt('crumbs.home', 'Home'), to: '/' }, { label: lt(`${type}.title`, data.title) }]}
       />
       <section className="section-pad">
         <div className="container-page">
@@ -162,17 +167,17 @@ export default function Legal({ type }) {
               CSS columns (not a grid) so the sections balance by height and flow top-to-bottom
               down the first column before the second; break-inside-avoid keeps a section whole. */}
           <div className="gap-x-14 lg:columns-2">
-            {data.sections.map((s) => (
+            {data.sections.map((s, i) => (
               <div key={s.h} className="mb-8 break-inside-avoid">
-                <h3 className="font-display text-lg font-semibold text-text">{s.h}</h3>
+                <h3 className="font-display text-lg font-semibold text-text">{lt(`${type}.${i}.h`, s.h)}</h3>
                 {/* 16px (text-body-compact), not the 18px .body-copy: denser reading size for
                     the legal columns. Weight stays 400 and colour text-ink (#000), so it reads
                     as dark as the rest of the site — only the size steps down. */}
-                <p className="mt-2 text-body-compact leading-relaxed text-ink">{s.p}</p>
+                <p className="mt-2 text-body-compact leading-relaxed text-ink">{lt(`${type}.${i}.p`, s.p)}</p>
               </div>
             ))}
           </div>
-          <p className="mt-4 text-xs text-muted">Last updated: June 2026.</p>
+          <p className="mt-4 text-xs text-muted">{lt('updated', 'Last updated: June 2026.')}</p>
         </div>
       </section>
     </>

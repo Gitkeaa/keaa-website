@@ -5,6 +5,7 @@ import SectionHeading from '../components/ui/SectionHeading';
 import Button from '../components/ui/Button';
 import { catalogueDownloads } from '../data/content';
 import useSEO from '../hooks/useSEO';
+import { useLT } from '../i18n/LocaleContext';
 
 /**
  * Every catalogue here is gated: the visitor fills a short form and the file opens on submit.
@@ -15,10 +16,11 @@ import useSEO from '../hooks/useSEO';
 const CatalogueRequestModal = lazy(() => import('../components/CatalogueRequestModal'));
 
 export default function DownloadsCenter() {
+  const lt = useLT('downloads');
   useSEO({
-    title: 'Downloads & Resources',
+    title: lt('seo.title', 'Downloads & Resources'),
     description:
-      "Download KEAA's product catalogues: scaffolding and formworks, livestock housing solutions, and wood connectors and garden hardware.",
+      lt('seo.desc', "Download KEAA's product catalogues: scaffolding and formworks, livestock housing solutions, and wood connectors and garden hardware."),
   });
 
   // The catalogue the visitor asked for, or null when the gate is closed.
@@ -28,24 +30,29 @@ export default function DownloadsCenter() {
     <>
       <GalleryHero
         eyebrow="Downloads Center"
-        crumbs={[{ label: 'Home', to: '/' }, { label: 'Downloads Center' }]}
-        slides={heroSlides.downloads}
+        crumbs={[{ label: lt('crumbs.home', 'Home'), to: '/' }, { label: lt('crumbs.page', 'Downloads Center') }]}
+        slides={heroSlides.downloads.map((s, i) => ({
+          ...s,
+          title: lt(`hero.${i}.title`, s.title),
+          accent: s.accent && lt(`hero.${i}.accent`, s.accent),
+          desc: s.desc && lt(`hero.${i}.desc`, s.desc),
+        }))}
         scrollTo="content"
       />
 
       <section id="content" className="section-pad">
         <div className="container-page">
-          <SectionHeading eyebrow="Catalogues" title="Download Our Catalogues" />
+          <SectionHeading eyebrow={lt('catalogues.eyebrow', 'Catalogues')} title={lt('catalogues.title', 'Download Our Catalogues')} />
           <div className="mt-10 divide-y divide-navy-100 rounded-card border border-navy-100 bg-white">
             {/* Catalogues only. Brand artwork and company presentations are internal and live
                 in the portal's Resource Library (admin/components/ResourceLibrary.jsx). */}
-            {catalogueDownloads.map((d) => (
+            {catalogueDownloads.map((d, i) => (
               <div key={d.title} className="flex flex-wrap items-center justify-between gap-3 px-6 py-4">
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
                     {d.type}
                   </p>
-                  <p className="mt-1 text-body-compact font-medium text-text">{d.title}</p>
+                  <p className="mt-1 text-body-compact font-medium text-text">{lt(`catalogues.${i}.title`, d.title)}</p>
                 </div>
                 <Button
                   onClick={() => setRequested(d)}
@@ -53,14 +60,13 @@ export default function DownloadsCenter() {
                   size="sm"
                   className="text-[13px] font-bold uppercase tracking-[0.12em]"
                 >
-                  Download
+                  {lt('catalogues.download', 'Download')}
                 </Button>
               </div>
             ))}
           </div>
           <p className="mt-4 text-xs text-muted">
-            Catalogues are free. We ask for your details so our team can follow up with pricing,
-            samples or technical support if you need them.
+            {lt('catalogues.note', 'Catalogues are free. We ask for your details so our team can follow up with pricing, samples or technical support if you need them.')}
           </p>
         </div>
       </section>

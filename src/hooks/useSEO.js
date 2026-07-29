@@ -1,8 +1,17 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { DEFAULT_LANGUAGE, liveLocales, localePrefixOf } from '../i18n/languages';
 
 const SITE_NAME = 'KEAA International';
 const SITE_URL = 'https://www.keaainternational.com';
+
+/**
+ * The locale prefix this page load lives under ('' on the English site, '/de' on German).
+ * `location.pathname` from the router never contains it — the prefix is the router's
+ * basename (see App.jsx) — so canonical/og:url/hreflang re-attach it here. Fixed for the
+ * lifetime of the load, exactly like the basename it mirrors.
+ */
+const LOCALE_PREFIX = typeof window === 'undefined' ? '' : localePrefixOf(window.location.pathname);
 /**
  * The default social-share image, proxied through Cloudinary like the rest of the stock
  * photography (see src/data/images.js). This one is only ever fetched by social crawlers
@@ -80,7 +89,7 @@ export default function useSEO({ title, description, image, breadcrumbs, schema 
     setMeta('property', 'og:title', fullTitle);
     setMeta('property', 'og:description', description);
     setMeta('property', 'og:type', 'website');
-    setMeta('property', 'og:url', `${SITE_URL}${location.pathname}`);
+    setMeta('property', 'og:url', `${SITE_URL}${LOCALE_PREFIX}${location.pathname}`);
     setMeta('property', 'og:image', image || DEFAULT_IMAGE);
     setMeta('name', 'twitter:card', 'summary_large_image');
     setMeta('name', 'twitter:title', fullTitle);
@@ -93,7 +102,33 @@ export default function useSEO({ title, description, image, breadcrumbs, schema 
       canonical.setAttribute('rel', 'canonical');
       document.head.appendChild(canonical);
     }
-    canonical.setAttribute('href', `${SITE_URL}${location.pathname}`);
+    // Each language's page is its OWN canonical — /de/about canonicalises to /de/about,
+    // never to the English page; hreflang below is what ties the versions together.
+    canonical.setAttribute('href', `${SITE_URL}${LOCALE_PREFIX}${location.pathname}`);
+
+    /**
+     * hreflang alternates — emitted only while at least one locale is live, so the English-
+     * only site carries exactly the head it always did. Every language version lists the
+     * full set including itself and an x-default pointing at English, which is the
+     * documented reciprocal form Google requires (one-way links are ignored).
+     */
+    document.querySelectorAll('link[data-seo-hreflang]').forEach((el) => el.remove());
+    const locales = liveLocales();
+    if (locales.length) {
+      const alternates = [
+        [DEFAULT_LANGUAGE, `${SITE_URL}${location.pathname}`],
+        ...locales.map((code) => [code, `${SITE_URL}/${code}${location.pathname}`]),
+        ['x-default', `${SITE_URL}${location.pathname}`],
+      ];
+      for (const [lang, href] of alternates) {
+        const el = document.createElement('link');
+        el.setAttribute('rel', 'alternate');
+        el.setAttribute('hreflang', lang);
+        el.setAttribute('href', href);
+        el.setAttribute('data-seo-hreflang', '');
+        document.head.appendChild(el);
+      }
+    }
   }, [title, description, image, location.pathname]);
 
   /**
