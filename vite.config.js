@@ -58,9 +58,12 @@ export default defineConfig({
   server: {
     port: 5173,
     open: true,
+    /* Everything under /api — the forms AND the chat widget — is served by the Spring Boot
+       backend on :8080. The chat used to run in a separate Node process on :3001; it is now
+       a controller in that same backend, so there is one target rather than two. */
     proxy: {
       '/api': {
-        target: 'http://localhost:3001',
+        target: 'http://localhost:8080',
         changeOrigin: true,
       },
     },

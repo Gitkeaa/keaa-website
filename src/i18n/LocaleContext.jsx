@@ -164,7 +164,18 @@ export function LocaleProvider({ children }) {
       window.location.assign(swapLocaleUrl(code));
       return;
     }
-    setLanguageState(code);
+
+    // Load translations for non-live languages on demand
+    if (code !== DEFAULT_LANGUAGE && !isLiveLocale(code)) {
+      loadContent(code).then((dict) => {
+        setContent(dict);
+        setLanguageState(code);
+      });
+    } else {
+      // For English, no translations needed
+      setContent({});
+      setLanguageState(code);
+    }
   }, []);
 
   /**

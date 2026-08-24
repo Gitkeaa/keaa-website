@@ -46,11 +46,10 @@ export const company = {
    */
   social: {
     linkedin: 'https://www.linkedin.com/company/keaa/',
-    facebook: 'https://www.facebook.com/', // TODO: real KEAA page URL
-    instagram: 'https://www.instagram.com/', // TODO: real KEAA profile URL
+    facebook: 'https://www.facebook.com/Keaainternational/', // TODO: real KEAA page URL
+    instagram: 'https://www.instagram.com/keaa_international/?utm_source=ig_web_button_share_sheet', // TODO: real KEAA profile URL
     youtube: 'https://www.youtube.com/@keaainternationalpvtltd5005',
     whatsapp: 'https://wa.me/919872984707',
-    x: 'https://x.com/', // TODO: real KEAA profile URL
   },
 
   stats: [
@@ -125,7 +124,7 @@ export const company = {
     { step: '06', title: 'Inspection & Testing', desc: 'Tensile, compression, bend and weld-penetration testing on every batch.' },
     { step: '07', title: 'Packaging & Dispatch', desc: 'Secure export packaging and on-time worldwide dispatch.' },
   ],
-
+  
   timeline: [
     { year: '2003', title: 'The Beginning', desc: 'KEAA International was established with a vision to deliver quality scaffolding and construction hardware.' },
     { year: '2008', title: 'Expanding Capabilities', desc: 'Added livestock housing and garden hardware lines alongside scaffolding and formwork.' },

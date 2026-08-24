@@ -10,11 +10,21 @@ import { useLT } from '../../i18n/LocaleContext';
  */
 export default function ProjectCarousel({ projects, images }) {
   const lt = useLT('home');
+  // Same keys as the Gallery page (see ProjectsGallery.jsx) — `projects` here IS
+  // featuredProjects, index-aligned with the `gallery.projects.*` dictionary entries.
+  const ltGallery = useLT('gallery');
+  const translated = projects.map((p, i) => ({
+    ...p,
+    title: ltGallery(`projects.${i}.title`, p.title),
+    location: ltGallery(`projects.${i}.location`, p.location),
+    category: ltGallery(`projects.${i}.category`, p.category),
+    desc: ltGallery(`projects.${i}.desc`, p.desc),
+  }));
   return (
-    <CardRail label={lt('projects.rail.label', 'Featured projects')} labels={projects.map((p) => lt('projects.rail.show', 'Show {title}', { title: p.title }))}>
-      {projects.map((p, i) => (
+    <CardRail label={lt('projects.rail.label', 'Featured projects')} labels={translated.map((p) => lt('projects.rail.show', 'Show {title}', { title: p.title }))}>
+      {translated.map((p, i) => (
         <ProjectCard
-          key={p.title}
+          key={projects[i].title}
           project={p}
           image={images[i]}
           to="/projects-gallery"

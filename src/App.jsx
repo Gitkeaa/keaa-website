@@ -32,9 +32,22 @@ const DownloadsCenter = lazy(() => import('./pages/DownloadsCenter'));
 const Certifications = lazy(() => import('./pages/Certifications'));
 const Careers = lazy(() => import('./pages/Careers'));
 const FAQ = lazy(() => import('./pages/FAQ'));
-const RequestQuotation = lazy(() => import('./pages/RequestQuotation'));
 const Legal = lazy(() => import('./pages/Legal'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+
+/**
+ * `/rfq` used to be its own page; the RFQ and Export Inquiry forms are now tabs on
+ * /contact (see pages/Contact.jsx), so every existing `/rfq` link — the header CTA, product
+ * page bands, the region switcher's `?region=` link — is redirected here rather than edited
+ * at each call site. The query string is forwarded and `tab=rfq` added, so `/rfq?region=eu`
+ * still lands the visitor on the right desk with the RFQ tab already open.
+ */
+function RfqRedirect() {
+  const location = useLocation();
+  const qs = new URLSearchParams(location.search);
+  qs.set('tab', 'rfq');
+  return <Navigate to={`/contact?${qs.toString()}`} replace />;
+}
 
 // The chat widget is lazy: it alone pulls in react-markdown + the remark/micromark stack
 // (the heaviest dependency on the site), which no first paint needs. Loading it after the
@@ -131,7 +144,7 @@ function AppShell() {
             <Route path="success-stories" element={<Navigate to="/faq#testimonials" replace />} />
             <Route path="careers" element={<Careers />} />
             <Route path="faq" element={<FAQ />} />
-            <Route path="rfq" element={<RequestQuotation />} />
+            <Route path="rfq" element={<RfqRedirect />} />
 
             <Route path="privacy-policy" element={<Legal type="privacy" />} />
             <Route path="terms" element={<Legal type="terms" />} />

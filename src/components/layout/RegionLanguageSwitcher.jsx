@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Globe } from 'lucide-react';
 import HeaderPopover from './HeaderPopover';
 import { useRegion } from '../../context/RegionContext';
-import { useLocale } from '../../i18n/LocaleContext';
+import { useLocale, useLT } from '../../i18n/LocaleContext';
 import { getLanguage, isLiveLocale } from '../../i18n/languages';
 import { localeId } from '../../data/regions';
 
@@ -15,7 +15,7 @@ import { localeId } from '../../data/regions';
  * a single row sets both, so the two settings are structurally incapable of contradicting.
  *
  * What a pick actually does: sets the sales region (which decides the desk an RFQ is routed
- * to — see RequestQuotation), sets the site language, persists both, and updates
+ * to — see the RFQ tab on pages/Contact.jsx), sets the site language, persists both, and updates
  * <html lang>. See src/data/regions.js for the country/language table.
  *
  * NO FLAG EMOJI ANYWHERE, and that is a bug fix rather than a style preference: Chrome on
@@ -34,13 +34,18 @@ import { localeId } from '../../data/regions';
 function Panel({ close }) {
   const { region, confirmed, entry, setLocaleChoice, regions } = useRegion();
   const { setLanguage, t } = useLocale();
+  const lt = useLT('common');
   const [openRegion, setOpenRegion] = useState(null);
 
   const activeId = entry ? localeId(region, entry) : null;
 
   const choose = (regionKey, item) => {
     const lang = setLocaleChoice(regionKey, item);
-    if (lang) setLanguage(lang);
+    if (lang) {
+      setLanguage(lang);
+      // Allow switching to non-live languages without full page navigation
+      // Live languages will handle their own navigation in setLanguage
+    }
     close();
   };
 
@@ -57,7 +62,7 @@ function Panel({ close }) {
           >
             <span aria-hidden>&larr;</span>
           </button>
-          <p className="text-sm font-semibold text-text">{openRegion.label}</p>
+          <p className="text-sm font-semibold text-text">{lt(`region.${openRegion.key}.label`, openRegion.label)}</p>
         </div>
 
         <ul className="max-h-[20rem] overflow-y-auto py-1.5">
@@ -77,7 +82,7 @@ function Panel({ close }) {
                   }`}
                 >
                   <span className="min-w-0 flex-1 truncate">
-                    {item.country} <span className="text-muted">&ndash;</span>{' '}
+                    {lt(`country.${item.code}`, item.country)} <span className="text-muted">&ndash;</span>{' '}
                     <span lang={item.lang}>{getLanguage(item.lang).label}</span>
                   </span>
                   {/* A language that is not fully translated yet says so BEFORE the click:
@@ -96,7 +101,7 @@ function Panel({ close }) {
                       aria-hidden
                       className="flex-shrink-0 text-[10px] font-bold uppercase tracking-[0.1em] text-primary-dark"
                     >
-                      Selected
+                      {lt('selected', 'Selected')}
                     </span>
                   )}
                 </button>
@@ -116,7 +121,7 @@ function Panel({ close }) {
         <p className="mt-0.5 text-xs text-muted">
           {/* An unconfirmed region is a guess from the browser locale — say so, so the
               visitor knows to check it rather than trusting a wrong number. */}
-          {confirmed ? t('region.subtitle') : 'We guessed this from your browser, please confirm.'}
+          {confirmed ? t('region.subtitle') : lt('region.guessedNote', 'We guessed this from your browser, please confirm.')}
         </p>
       </div>
 
@@ -134,7 +139,7 @@ function Panel({ close }) {
                 }`}
               >
                 <span className={`min-w-0 flex-1 truncate text-sm ${active ? 'font-semibold' : ''}`}>
-                  {r.label}
+                  {lt(`region.${r.key}.label`, r.label)}
                 </span>
                 <span aria-hidden className="flex-shrink-0 text-sm leading-none text-muted">
                   &rsaquo;
@@ -148,7 +153,8 @@ function Panel({ close }) {
       {/* The office/contact block that used to close this panel is gone — the picker is a
           market chooser, not a contact card. The serving office is still reachable on the
           Contact page and in the footer, and the region a visitor picks here still routes
-          their RFQ to the right desk (RequestQuotation reads it from the region context). */}
+          their RFQ to the right desk (the Contact page's RFQ tab reads it from the region
+          context). */}
     </div>
   );
 }
@@ -156,6 +162,7 @@ function Panel({ close }) {
 export default function RegionLanguageSwitcher() {
   const { entry, meta } = useRegion();
   const { language, t } = useLocale();
+  const lt = useLT('common');
 
   /**
    * The trigger spells the market out: "INDIA (EN)", "CANADA (FR)".
@@ -164,7 +171,9 @@ export default function RegionLanguageSwitcher() {
    * a country has been picked the region label stands in, so the control always names a
    * place rather than showing an empty slot.
    */
-  const place = entry ? entry.short || entry.country : meta.label;
+  const countryName = entry && lt(`country.${entry.code}`, entry.country);
+  const regionLabel = lt(`region.${meta.key}.label`, meta.label);
+  const place = entry ? entry.short || countryName : regionLabel;
   const label = (
     <>
       <Globe aria-hidden className="h-[18px] w-[18px] flex-shrink-0" strokeWidth={2} />
@@ -178,7 +187,7 @@ export default function RegionLanguageSwitcher() {
     <HeaderPopover
       label={label}
       hint={t('region.hint')}
-      srLabel={`${t('header.regionAria')}, ${entry ? `${entry.country}, ` : ''}${meta.label}, ${
+      srLabel={`${t('header.regionAria')}, ${entry ? `${countryName}, ` : ''}${regionLabel}, ${
         getLanguage(language).label
       }`}
       panelClassName="w-[21rem]"

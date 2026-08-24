@@ -25,9 +25,14 @@ export default function Certifications() {
   return (
     <>
       <GalleryHero
-        eyebrow="Certifications & Compliance"
+        eyebrow={lt('hero.eyebrow', 'Certifications & Compliance')}
         crumbs={[{ label: lt('crumbs.home', 'Home'), to: '/' }, { label: lt('crumbs.current', 'Certifications & Compliance') }]}
-        slides={heroSlides.certifications}
+        slides={heroSlides.certifications.map((s, i) => ({
+          ...s,
+          title: lt(`hero.${i}.title`, s.title),
+          accent: s.accent && lt(`hero.${i}.accent`, s.accent),
+          desc: s.desc && lt(`hero.${i}.desc`, s.desc),
+        }))}
         scrollTo="content"
       />
 

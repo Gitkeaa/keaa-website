@@ -319,7 +319,7 @@ export default function ProductCatalog() {
         title={lt('cta.title', 'Need Help Choosing')}
         accent={lt('cta.accent', 'the Right Product?')}
         desc={lt('cta.desc', 'Our experts are here to help you find the best solution for your project.')}
-        cta={{ label: lt('cta.label', 'Request a Quote'), to: '/rfq' }}
+        cta={{ label: lt('cta.label', 'Request a Quote'), to: '/contact?tab=rfq' }}
       />
     </>
   );

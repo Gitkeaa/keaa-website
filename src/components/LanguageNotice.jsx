@@ -16,7 +16,7 @@ const DISMISS_KEY = 'keaa.langNoticeDismissed';
  * Polish) states it again.
  */
 export default function LanguageNotice() {
-  const { language, meta, t } = useLocale();
+  const { language, meta, t, content } = useLocale();
   const [dismissed, setDismissed] = useState(() => {
     try {
       return window.sessionStorage.getItem(DISMISS_KEY) === language;
@@ -25,7 +25,9 @@ export default function LanguageNotice() {
     }
   });
 
-  const active = language !== 'en' && !isLiveLocale(language);
+  // Only show for non-live languages that haven't loaded translations yet
+  const hasTranslations = content && Object.keys(content).length > 0;
+  const active = language !== 'en' && !isLiveLocale(language) && !hasTranslations;
   if (!active || dismissed) return null;
 
   const dismiss = () => {

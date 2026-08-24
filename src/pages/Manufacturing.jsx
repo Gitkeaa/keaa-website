@@ -75,7 +75,12 @@ export default function Manufacturing() {
       <GalleryHero
         eyebrow="Manufacturing"
         crumbs={[{ label: lt('crumbs.home', 'Home'), to: '/' }, { label: lt('crumbs.current', 'Manufacturing') }]}
-        slides={heroSlides.manufacturing}
+        slides={heroSlides.manufacturing.map((s, i) => ({
+          ...s,
+          title: lt(`hero.${i}.title`, s.title),
+          accent: s.accent && lt(`hero.${i}.accent`, s.accent),
+          desc: s.desc && lt(`hero.${i}.desc`, s.desc),
+        }))}
         stats={[
           { value: '5', label: 'Manufacturing Facilities' },
           { value: 'ISO 9001', label: 'Certified Quality' },

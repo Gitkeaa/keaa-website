@@ -11,6 +11,7 @@
     "gen:sitemap": "node scripts/gen-categories.mjs && node scripts/gen-sitemap.mjs",
     "prebuild": "node scripts/gen-categories.mjs && node scripts/gen-sitemap.mjs",
     "build": "vite build && node scripts/gen-search-index.mjs",
+    "export:chat-kb": "node scripts/export-chat-kb.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
     "check:i18n": "node scripts/check-translations.mjs",
     "gen:proof": "node scripts/gen-proof-pdf.mjs",

@@ -207,7 +207,7 @@ export default function ProductDetail() {
 
               {/* CTAs */}
               <div className="mt-7 flex flex-wrap gap-3">
-                <Button to="/rfq">{lt('cta.requestQuote', 'Request a Quote')}</Button>
+                <Button to="/contact?tab=rfq">{lt('cta.requestQuote', 'Request a Quote')}</Button>
                 <Button to="/contact" variant="outlineNavy">{lt('cta.talkToExpert', 'Talk to an Expert')}</Button>
               </div>
             </div>
@@ -262,7 +262,7 @@ export default function ProductDetail() {
         title={lt('band.title', 'Interested in This')}
         accent={lt('band.accent', 'Product?')}
         desc={lt('band.desc', 'Request a quote or talk to our team about specifications, pricing and bulk orders.')}
-        cta={{ label: lt('cta.requestQuote', 'Request a Quote'), to: '/rfq' }}
+        cta={{ label: lt('cta.requestQuote', 'Request a Quote'), to: '/contact?tab=rfq' }}
       />
     </>
   );

@@ -99,7 +99,6 @@ export const mainNav = [
       { label: 'Advanced Machinery', to: '/manufacturing#machinery', desc: 'Laser cutting, robotic welding, galvanizing' },
       { label: 'Output at Scale', to: '/manufacturing#stats', desc: 'Capacity, area and workforce' },
       { label: 'Certifications & Compliance', to: '/certifications', desc: 'ISO, CE, EN 1090 and test reports' },
-      { label: 'Request a Quote', to: '/rfq', desc: 'Tell us what you need made' },
     ],
     feature: {
       eyebrow: 'In-house capability',
@@ -165,7 +164,7 @@ export const megaMenuItems = [
     n: 9,
     title: 'Request for Quotation',
     desc: 'Submit your project requirements to receive a customized quotation, competitive factory pricing, OEM manufacturing support, and expert recommendations tailored to your business and project needs.',
-    to: '/rfq',
+    to: '/contact?tab=rfq',
     icon: FileText,
     color: 'bg-pink-600',
   },
@@ -193,6 +192,6 @@ export const footerLinks = {
     { label: 'Certifications', to: '/certifications' },
     { label: 'FAQ & Testimonials', to: '/faq' },
     { label: 'Careers', to: '/careers' },
-    { label: 'Request a Quote', to: '/rfq' },
+    { label: 'Request a Quote', to: '/contact?tab=rfq' },
   ],
 };

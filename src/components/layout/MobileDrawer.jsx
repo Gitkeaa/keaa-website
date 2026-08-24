@@ -2,10 +2,9 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
-import Button from '../ui/Button';
 import { mainNav } from '../../data/navigation';
 import { getAllCategories } from '../../data/categories';
-import { useLocale } from '../../i18n/LocaleContext';
+import { useLocale, useLT } from '../../i18n/LocaleContext';
 import { getLanguage, isLiveLocale } from '../../i18n/languages';
 import { useRegion } from '../../context/RegionContext';
 import { localeId } from '../../data/regions';
@@ -24,6 +23,7 @@ import { EASE } from '../../lib/motion';
 // palette together (see Layout.jsx). Do not re-implement it here.
 export default function MobileDrawer({ open, onClose }) {
   const { setLanguage, t } = useLocale();
+  const lt = useLT('common');
   const { region, entry, setLocaleChoice, regions } = useRegion();
   const [openRegion, setOpenRegion] = useState(null);
 
@@ -97,9 +97,9 @@ export default function MobileDrawer({ open, onClose }) {
                 <button
                   onClick={onClose}
                   className="flex h-9 items-center justify-center rounded-card border border-border px-3 text-[13px] font-bold uppercase tracking-[0.12em] text-navy-700 transition-colors hover:border-primary/40 hover:bg-navy-50"
-                  aria-label="Close menu"
+                  aria-label={lt('closeMenu', 'Close menu')}
                 >
-                  Close
+                  {lt('close', 'Close')}
                 </button>
               </div>
 
@@ -122,14 +122,16 @@ export default function MobileDrawer({ open, onClose }) {
                     const parentRow = own.find((c) => c.to === item.to);
 
                     const children = [
-                      ...(parentRow ? [parentRow] : []),
+                      ...(parentRow ? [{ ...parentRow, label: lt(`nav.row.${parentRow.to}.label`, parentRow.label) }] : []),
                       ...(item.categories
                         ? getAllCategories().map((c) => ({
-                            label: c.name,
+                            label: lt(`cat.${c.slug}`, c.name),
                             to: `/products/${c.slug}`,
                           }))
                         : []),
-                      ...own.filter((c) => c !== parentRow),
+                      ...own
+                        .filter((c) => c !== parentRow)
+                        .map((c) => ({ ...c, label: lt(`nav.row.${c.to}.label`, c.label) })),
                     ];
 
                     /*
@@ -249,7 +251,7 @@ export default function MobileDrawer({ open, onClose }) {
                             isCurrent ? 'font-semibold text-navy-900' : 'text-ink hover:bg-navy-50'
                           }`}
                         >
-                          {r.label}
+                          {lt(`region.${r.key}.label`, r.label)}
                           {/* Typographic, not an icon — the drawer states every affordance
                             in type (see the nav rows above). */}
                           <span
@@ -280,7 +282,7 @@ export default function MobileDrawer({ open, onClose }) {
                                     {/* No flag emoji — Chrome on Windows has no flag glyphs
                                       and renders them as bare country letters ("IN"). */}
                                     <span className="min-w-0 flex-1 truncate">
-                                      {item.country} <span className="text-muted">–</span>{' '}
+                                      {lt(`country.${item.code}`, item.country)} <span className="text-muted">–</span>{' '}
                                       <span lang={item.lang}>{getLanguage(item.lang).label}</span>
                                     </span>
                                     {/* Same coming-soon badge as the desktop switcher: an
@@ -316,11 +318,6 @@ export default function MobileDrawer({ open, onClose }) {
                 </div>
               </div>
 
-              <div className="border-t border-border p-5">
-                <Button to="/rfq" onClick={onClose} className="w-full">
-                  {t('cta.requestQuote')}
-                </Button>
-              </div>
             </motion.div>
           </motion.div>
         )}

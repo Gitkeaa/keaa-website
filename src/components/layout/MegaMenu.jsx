@@ -14,6 +14,7 @@ import Logo from './Logo';
 import { megaMenuItems } from '../../data/navigation';
 import { company, countries } from '../../data/company';
 import { catalogueDownloads } from '../../data/content';
+import { useLT } from '../../i18n/LocaleContext';
 
 const gridStagger = {
   hidden: {},
@@ -26,6 +27,8 @@ const cardVariant = {
 
 export default function MegaMenu({ open, onClose }) {
   const navigate = useNavigate();
+  const lt = useLT('common');
+  const ltDownloads = useLT('downloads');
 
   const handleNavigate = (to) => {
     navigate(to);
@@ -43,7 +46,7 @@ export default function MegaMenu({ open, onClose }) {
           className="fixed inset-0 z-[60] overflow-y-auto bg-surface"
           role="dialog"
           aria-modal="true"
-          aria-label="Explore KEAA"
+          aria-label={lt('megaMenu.ariaLabel', 'Explore KEAA')}
         >
           {/* Very light atmosphere */}
           <div className="pointer-events-none fixed inset-0 overflow-hidden">
@@ -74,7 +77,7 @@ export default function MegaMenu({ open, onClose }) {
             {/* Sticky header */}
             <div className="sticky top-0 z-10 border-b border-navy-100 bg-surface/80 backdrop-blur-md">
               <div className="flex w-full items-center justify-between px-5 py-4 sm:px-8 lg:px-10">
-                <button onClick={() => handleNavigate('/')} aria-label="Go to home page">
+                <button onClick={() => handleNavigate('/')} aria-label={lt('megaMenu.goHome', 'Go to home page')}>
                   <Logo />
                 </button>
                 <button
@@ -82,7 +85,7 @@ export default function MegaMenu({ open, onClose }) {
                   className="group flex items-center gap-2 rounded-full border border-navy-200 bg-white px-4 py-2 text-sm font-medium text-navy-700 transition-all hover:border-primary/60 hover:text-navy-900 hover:shadow-sm"
                 >
                   <X className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
-                  Close
+                  {lt('megaMenu.close', 'Close')}
                 </button>
               </div>
             </div>
@@ -94,12 +97,12 @@ export default function MegaMenu({ open, onClose }) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.05, duration: 0.3 }}
               >
-                <span className="eyebrow text-primary-darker">Explore</span>
+                <span className="eyebrow text-primary-darker">{lt('megaMenu.eyebrow', 'Explore')}</span>
                 <h2 className="mt-3 font-display text-4xl font-bold tracking-tight text-text sm:text-5xl">
-                  Explore More About <span className="text-primary-dark">KEAA</span>
+                  {lt('megaMenu.title1', 'Explore More About')} <span className="text-primary-dark">KEAA</span>
                 </h2>
                 <p className="mt-3 max-w-md text-sm text-ink">
-                  Resources, insights and solutions, all in one place.
+                  {lt('megaMenu.subtitle', 'Resources, insights and solutions, all in one place.')}
                 </p>
               </motion.div>
 
@@ -130,13 +133,13 @@ export default function MegaMenu({ open, onClose }) {
                     </span>
 
                     <h3 className="relative mt-5 font-display text-base font-semibold text-text">
-                      {item.title}
+                      {lt(`megaMenu.items.${i}.title`, item.title)}
                     </h3>
                     <p className="relative mt-1.5 flex-1 text-xs leading-relaxed text-ink">
-                      {item.desc}
+                      {lt(`megaMenu.items.${i}.desc`, item.desc)}
                     </p>
                     <span className="relative mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-primary-darker">
-                      Explore
+                      {lt('megaMenu.explore', 'Explore')}
                       <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
                     </span>
                   </motion.button>
@@ -150,7 +153,7 @@ export default function MegaMenu({ open, onClose }) {
                 {/* Countries */}
                 <div>
                   <h4 className="flex items-center gap-2 font-display text-sm font-semibold text-text">
-                    <Globe2 className="h-4 w-4 text-primary-dark" /> Exporting to 42+ Countries
+                    <Globe2 className="h-4 w-4 text-primary-dark" /> {lt('megaMenu.exportingTo', 'Exporting to 42+ Countries')}
                   </h4>
                   <div className="mt-3 flex flex-wrap gap-1.5">
                     {countries.map((c) => (
@@ -169,7 +172,7 @@ export default function MegaMenu({ open, onClose }) {
                 {/* Need help */}
                 <div className="md:text-right">
                   <h4 className="flex items-center gap-2 font-display text-sm font-semibold text-text md:justify-end">
-                    <Headset className="h-4 w-4 text-primary-dark" /> Need Help?
+                    <Headset className="h-4 w-4 text-primary-dark" /> {lt('megaMenu.needHelp', 'Need Help?')}
                   </h4>
                   <div className="mt-3 space-y-2 text-sm">
                     <a
@@ -185,7 +188,7 @@ export default function MegaMenu({ open, onClose }) {
                       <Mail className="h-4 w-4 flex-shrink-0 text-primary-dark" /> {company.emails[0]}
                     </a>
                     <p className="flex items-center gap-2 text-muted md:justify-end">
-                      <Clock className="h-4 w-4 text-primary-dark" /> Mon – Sat, 9 AM – 6 PM (IST)
+                      <Clock className="h-4 w-4 text-primary-dark" /> {lt('megaMenu.hours', 'Mon – Sat, 9 AM – 6 PM (IST)')}
                     </p>
                   </div>
                 </div>
@@ -195,9 +198,9 @@ export default function MegaMenu({ open, onClose }) {
               <div className="border-t border-navy-100">
                 <div className="container-page flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-4">
                   <span className="text-xs font-semibold uppercase tracking-widest text-muted">
-                    Quick Access
+                    {lt('megaMenu.quickAccess', 'Quick Access')}
                   </span>
-                  {catalogueDownloads.map((d) => (
+                  {catalogueDownloads.map((d, i) => (
                     <a
                       key={d.title}
                       href={d.url}
@@ -206,7 +209,7 @@ export default function MegaMenu({ open, onClose }) {
                       onClick={onClose}
                       className="group inline-flex items-center gap-1.5 font-display text-sm font-semibold text-navy-700 transition-colors hover:text-primary-deep"
                     >
-                      {d.title}
+                      {ltDownloads(`catalogues.${i}.title`, d.title)}
                       <ArrowUpRight className="h-4 w-4 text-primary-dark opacity-0 transition-opacity group-hover:opacity-100" />
                     </a>
                   ))}

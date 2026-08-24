@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
-import Button from '../ui/Button';
 import RegionLanguageSwitcher from './RegionLanguageSwitcher';
 import HeaderSearch from './HeaderSearch';
 import HeaderAccount from './HeaderAccount';
@@ -202,10 +201,6 @@ export default function Header({ onOpenDrawer }) {
               while the session check is in flight, so the row does not flicker. The region
               block above already closes with a divider, so none is added here. */}
           <HeaderAccount />
-
-          <Button to="/rfq" variant="primary" size="sm" className="hidden sm:inline-flex">
-            {t('cta.requestQuote')}
-          </Button>
 
           {/* "Menu" as a word, not a hamburger — the label survives; only the bordered box
               is gone, so it reacts like every other control in the row. */}

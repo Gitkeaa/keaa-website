@@ -42,7 +42,7 @@ export default function CtaBand({
   title = title ?? lt('ctaBand.title', 'Looking for Reliable');
   accent = accent ?? lt('ctaBand.accent', 'Scaffolding & Formwork Solutions?');
   desc = desc ?? lt('ctaBand.desc', 'Get in touch with our team for the best solutions for your project.');
-  cta = cta ?? { label: lt('ctaBand.cta', 'Request a Quote'), to: '/rfq' };
+  cta = cta ?? { label: lt('ctaBand.cta', 'Request a Quote'), to: '/contact?tab=rfq' };
 
   return (
     <section className="relative isolate overflow-hidden bg-surface pb-5 pt-10 sm:pt-12">

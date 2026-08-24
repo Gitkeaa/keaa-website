@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 /* Full-colour brand marks, the sanctioned exception to the site's icon-free rule. The client
    asked this row specifically to show each platform in its own colour (see BrandIconsColor). */
@@ -17,6 +18,7 @@ import CountrySelect from '../components/ui/CountrySelect';
 import PhoneField from '../components/ui/PhoneField';
 import EmailField from '../components/ui/EmailField';
 import MultiSelect from '../components/ui/MultiSelect';
+import ProductLineItems, { emptyLineItem } from '../components/ui/ProductLineItems';
 import WordLimitTextarea from '../components/ui/WordLimitTextarea';
 import { getAllProductLines } from '../data/productLines';
 import Reveal from '../components/ui/Reveal';
@@ -25,9 +27,11 @@ import { img } from '../data/images';
 import { defaultCountry } from '../data/countriesData';
 import { submitPublicForm } from '../data/adminApi';
 import { useConsent, openCookiePreferences } from '../components/CookieConsent';
+import { useRegion } from '../context/RegionContext';
+import { useAdminAuth } from '../admin/auth/AdminAuthContext';
 import useSEO from '../hooks/useSEO';
 import { EASE } from '../lib/motion';
-import { useLT } from '../i18n/LocaleContext';
+import { useLT, useT } from '../i18n/LocaleContext';
 
 /**
  * Filtered on `href` for the same reason as the footer's row: these render as large,
@@ -156,30 +160,129 @@ const rideApps = [
   { name: 'Rapido', href: rideLinks.rapido, badge: 'R', badgeClass: 'bg-[#FFCC00] text-black' },
 ];
 
-/* Same product lines the RFQ form offers (catalogue categories + enquiry-only lines like
-   Safety Products), so a contact lead can flag which ones it is about. */
+/* Catalogue categories + enquiry-only lines like Safety Products, so a plain contact lead
+   can flag which ones it is about. */
 const productCategoryOptions = getAllProductLines().map((c) => ({ value: c.name, label: c.name }));
+
+/* The RFQ/Export tabs also use this exact list for their "Product Category" select — the
+   backend's AssignmentService auto-routes a submission by matching `category` AGAINST A
+   REP'S TERRITORY STRING EXACTLY (see BACKEND_GUIDE.md/BACKEND_FEEDBACK.md), so this field
+   must stay a single value from a fixed, backend-known vocabulary. It CANNOT be derived from
+   the specific catalogue products picked in ProductLineItems below: those are searched
+   straight against products.json, whose category strings cover only 3 of these 4 lines
+   ("Safety Products" has no catalogue entry at all), and picking items from two different
+   categories would produce a joined string ("A, B") that matches no rep's territory either.
+   So the select stays the single source of truth for routing; the picked products/quantities
+   ride along as supplementary detail in the message body. */
+const productLines = getAllProductLines();
+
+/* The three switchable modes this one page now covers — a plain enquiry, a product quote
+   request, and an export/distributor enquiry — replacing what used to be a separate /rfq
+   page with its own tabs. `/rfq` still works: it redirects here with `?tab=rfq` (see App.jsx). */
+const MAIN_TABS = [
+  { id: 'contact', label: 'Contact Us' },
+  { id: 'rfq', label: 'RFQ Form' },
+  { id: 'export', label: 'Export Inquiry' },
+];
+
+const formIntros = {
+  rfq: {
+    title: "Let's Build the Right Solution Together",
+    paras: [
+      "Whether you're planning a construction project, sourcing scaffolding systems, or looking for custom manufacturing solutions, our team is here to help. Complete the Request for Quotation form with your project requirements, and our specialists will prepare a tailored quotation based on your specifications.",
+      'Please include product details, quantity, destination, and any technical requirements to help us provide the most accurate pricing and recommendations.',
+    ],
+    perks: [
+      'Customized Quotation',
+      'Competitive Factory Pricing',
+      'Fast Response within 24 Business Hours',
+      'Global Export & OEM Manufacturing Support',
+    ],
+  },
+  export: {
+    title: 'Expand Your Business with KEAA International',
+    paras: [
+      'Looking to import high-quality engineering products from India? Submit your export inquiry, and our international sales team will assist you with product information, pricing, export documentation, shipping options, and country-specific requirements.',
+      "Whether you're a distributor, wholesaler, importer, contractor, or project developer, we'll provide reliable export solutions tailored to your market.",
+      'Please share your product interest, destination country, estimated order quantity, and any specific requirements so we can respond with the most suitable proposal.',
+    ],
+    perks: [
+      'International Shipping Support',
+      'Export Documentation Assistance',
+      'Flexible OEM & Private Label Solutions',
+      'Dedicated International Sales Team',
+    ],
+  },
+};
 
 export default function Contact() {
   const lt = useLT('contact');
+  const ltRfq = useLT('rfq');
+  const t = useT();
   useSEO({
     title: lt('seo.title', 'Contact Us'),
     description:
       lt('seo.description', 'Get in touch with KEAA International for inquiries, quotes and partnership opportunities. Manufacturing plant in Ludhiana, Punjab, India.'),
   });
 
+  const [searchParams] = useSearchParams();
+  const initialTab = MAIN_TABS.some((tb) => tb.id === searchParams.get('tab')) ? searchParams.get('tab') : 'contact';
+  const [mainTab, setMainTab] = useState(initialTab);
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState('');
   const [showConsult, setShowConsult] = useState(false);
+  const [showIntro, setShowIntro] = useState(false);
   const [country, setCountry] = useState(defaultCountry);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  const [details, setDetails] = useState('');
   const [categories, setCategories] = useState([]);
+  // Kept as two separate lists — a product/quantity picked while on the RFQ tab must not
+  // bleed into the Export Inquiry tab (or vice versa), since they are two distinct requests.
+  const [rfqItems, setRfqItems] = useState(() => [emptyLineItem()]);
+  const [exportItems, setExportItems] = useState(() => [emptyLineItem()]);
+  const lineItems = mainTab === 'export' ? exportItems : rfqItems;
+  const setLineItems = mainTab === 'export' ? setExportItems : setRfqItems;
+  // Same independence for the routing category — this is what the backend actually matches
+  // against a rep's territory, so each tab keeps its own (see the note on productLines above).
+  const [rfqCategory, setRfqCategory] = useState(() => productLines[0]?.name || '');
+  const [exportCategory, setExportCategory] = useState(() => productLines[0]?.name || '');
+  const category = mainTab === 'export' ? exportCategory : rfqCategory;
+  const setCategory = mainTab === 'export' ? setExportCategory : setRfqCategory;
   const landlineNumbers = Array.isArray(company.landline) ? company.landline : [company.landline];
 
-  const handleSubmit = async (e) => {
+  // Switching tabs clears any previous submit result/error so a visitor moving from a
+  // finished RFQ to the plain contact form does not still see "Your Request Has Been Submitted".
+  useEffect(() => {
+    setSubmitted(false);
+    setSendError('');
+  }, [mainTab]);
+
+  /* The header's region control links to `/rfq?region=<key>`, redirected here with the same
+     query string (see RfqRedirect in App.jsx) — adopting it routes the enquiry to the desk
+     that should answer it without asking the visitor to restate what they already told us. */
+  const { region, setRegion, meta: regionMeta, office } = useRegion();
+  useEffect(() => {
+    const requested = searchParams.get('region');
+    if (requested && requested !== region) setRegion(requested);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, setRegion]);
+
+  /* Prefill for a signed-in team member — see the RFQ tab's name/email fields below. Name is
+     read back uncontrolled on submit, so it is remounted (keyed on user id) rather than made
+     controlled; email is controlled but only filled in if the visitor has not already typed. */
+  const { user } = useAdminAuth();
+  const prefilledFor = useRef(null);
+  useEffect(() => {
+    if (!user?.email) return;
+    if (prefilledFor.current === user.id) return;
+    prefilledFor.current = user.id;
+    setEmail((current) => (current.trim() ? current : user.email));
+  }, [user]);
+
+  const handleContactSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
     const val = (id) => form.querySelector('#' + id)?.value?.trim() || '';
@@ -208,12 +311,61 @@ export default function Contact() {
     }
   };
 
+  const handleRfqSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const val = (id) => form.querySelector('#' + id)?.value?.trim() || '';
+    const port = val('port');
+    // Only rows where a catalogue product was actually picked count — an empty search row
+    // (or one left over after the visitor removed their pick) contributes nothing.
+    const pickedItems = lineItems.filter((it) => it.product);
+    setSending(true);
+    setSendError('');
+    try {
+      await submitPublicForm('/api/rfq', {
+        name: val('name'),
+        company: val('company'),
+        email,
+        phone: `${country?.dial || ''} ${phone || ''}`.trim(),
+        country: country?.name || '',
+        // The single value the backend routes on — see the note on productLines above for why
+        // this can't be derived from the picked catalogue products instead.
+        category,
+        // Which desk owns this: the Export tab routes to the admin's Export Inquiries screen,
+        // everything else is a normal quote request. Defaults server-side to "quote" too.
+        type: mainTab === 'export' ? 'export' : 'quote',
+        message: [
+          details,
+          pickedItems.length
+            ? `Products requested:\n${pickedItems
+                .map((it) => `- ${it.product.name} (${it.product.itemCode || 'N/A'}) × ${it.quantity}`)
+                .join('\n')}`
+            : '',
+          port ? `Port of destination: ${port}` : '',
+          `Sales region: ${regionMeta.label}, handled by ${office.name}`,
+        ]
+          .filter(Boolean)
+          .join('\n\n'),
+      });
+      setSubmitted(true);
+    } catch {
+      setSendError(ltRfq('form.submitError', 'Could not submit your request. Please try again, or email us directly.'));
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
     <>
       <GalleryHero
         eyebrow={lt('hero.eyebrow', 'Contact Us')}
         crumbs={[{ label: lt('crumbs.home', 'Home'), to: '/' }, { label: lt('crumbs.contact', 'Contact Us') }]}
-        slides={heroSlides.contact}
+        slides={heroSlides.contact.map((s, i) => ({
+          ...s,
+          title: lt(`hero.${i}.title`, s.title),
+          accent: s.accent && lt(`hero.${i}.accent`, s.accent),
+          desc: s.desc && lt(`hero.${i}.desc`, s.desc),
+        }))}
         scrollTo="content"
       />
 
@@ -279,88 +431,261 @@ export default function Contact() {
             </div>
           </Reveal>
 
-          {/* FORM */}
+          {/* FORM — switchable between a plain enquiry, an RFQ, and an export inquiry. All
+              three post to the desk that handles that lead type; only the fields and the
+              endpoint change underneath the same card. */}
           <Reveal delay={0.1} className="relative rounded-card border border-navy-100 p-7 shadow-card">
-            <div>
-              <div>
-                <h3 className="font-display text-xl font-bold text-text">{lt('form.title', 'Send Us a Message')}</h3>
+            <div className="flex flex-wrap gap-2 border-b border-navy-100 pb-5">
+              {MAIN_TABS.map((tb) => (
                 <button
+                  key={tb.id}
                   type="button"
-                  onClick={() => setShowConsult((v) => !v)}
-                  aria-expanded={showConsult}
-                  className="mt-0.5 inline-block border-b border-transparent pb-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary-darker transition-colors hover:border-primary hover:text-primary-deep"
+                  onClick={() => setMainTab(tb.id)}
+                  className={`flex items-center rounded-card px-4 py-2 text-sm font-medium transition-colors ${
+                    mainTab === tb.id ? 'bg-navy-700 text-white' : 'text-ink hover:bg-navy-50'
+                  }`}
                 >
-                  {lt('form.consultToggle', 'Request a Consultation')}
+                  {tb.id === 'contact' ? lt('form.tab', tb.label) : ltRfq(`tabs.${tb.id}`, tb.label)}
                 </button>
-              </div>
+              ))}
             </div>
 
-            <AnimatePresence initial={false}>
-              {showConsult && (
-                <motion.div
-                  key="consult"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.35, ease: EASE }}
-                  className="overflow-hidden"
-                >
-                  <p className="mt-4 rounded-card border border-primary/20 bg-primary/[0.05] p-4 text-body-compact leading-relaxed text-ink">
-                    {lt('form.consultBody', 'Planning your next construction or industrial project? Tell us about your requirements, and our specialists will recommend the right products, pricing, and manufacturing solutions tailored to your business. From initial inquiry to final delivery, we’re committed to supporting your success.')}
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {submitted ? (
-              <div className="mt-8 rounded-card bg-navy-50 p-8 text-center">
-                <p className="font-display text-lg font-semibold text-text">{lt('form.sentTitle', 'Message Sent')}</p>
-                <p className="mt-2 text-body-compact text-ink">
-                  {lt('form.sentBody', 'Thank you for reaching out. Our team will get back to you within 24 hours.')}
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="mt-6 grid gap-5 sm:grid-cols-2">
-                <Field label={lt('form.name', 'Your Name')} id="name" required />
-                <Field label={lt('form.company', 'Company Name')} id="company" />
-                <EmailField value={email} onChange={setEmail} required />
-                <CountrySelect value={country} onChange={setCountry} required />
-                <PhoneField country={country} value={phone} onChange={setPhone} />
-                <Field
-                  label={lt('form.subject', 'Subject')}
-                  id="subject"
-                  required
-                  placeholder={lt('form.subjectPlaceholder', 'e.g. Bulk order inquiry for Cuplock scaffolding')}
-                />
-                <MultiSelect
-                  className="sm:col-span-2"
-                  label={lt('form.category', 'Product Category')}
-                  placeholder={lt('form.categoryPlaceholder', 'Select one or more categories…')}
-                  options={productCategoryOptions}
-                  value={categories}
-                  onChange={setCategories}
-                />
-                <WordLimitTextarea
-                  className="sm:col-span-2"
-                  id="message"
-                  label={lt('form.message', 'Message')}
-                  value={message}
-                  onChange={setMessage}
-                  required
-                  maxWords={250}
-                  placeholder={lt('form.messagePlaceholder', 'Tell us how we can help: product, quantity, timeline, destination…')}
-                />
-                <div className="sm:col-span-2">
-                  {sendError && (
-                    <p role="alert" className="mb-3 rounded-card bg-red-50 px-3 py-2 text-body-compact text-red-700">
-                      {sendError}
-                    </p>
-                  )}
-                  <Button type="submit" disabled={sending}>
-                    {sending ? lt('form.sending', 'Sending…') : lt('form.submit', 'Send Message')}
-                  </Button>
+            {mainTab === 'contact' ? (
+              <>
+                <div className="mt-5">
+                  <h3 className="font-display text-xl font-bold text-text">{lt('form.title', 'Send Us a Message')}</h3>
+                  <button
+                    type="button"
+                    onClick={() => setShowConsult((v) => !v)}
+                    aria-expanded={showConsult}
+                    className="mt-0.5 inline-block border-b border-transparent pb-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary-darker transition-colors hover:border-primary hover:text-primary-deep"
+                  >
+                    {lt('form.consultToggle', 'Request a Consultation')}
+                  </button>
                 </div>
-              </form>
+
+                <AnimatePresence initial={false}>
+                  {showConsult && (
+                    <motion.div
+                      key="consult"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.35, ease: EASE }}
+                      className="overflow-hidden"
+                    >
+                      <p className="mt-4 rounded-card border border-primary/20 bg-primary/[0.05] p-4 text-body-compact leading-relaxed text-ink">
+                        {lt('form.consultBody', 'Planning your next construction or industrial project? Tell us about your requirements, and our specialists will recommend the right products, pricing, and manufacturing solutions tailored to your business. From initial inquiry to final delivery, we’re committed to supporting your success.')}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {submitted ? (
+                  <div className="mt-8 rounded-card bg-navy-50 p-8 text-center">
+                    <p className="font-display text-lg font-semibold text-text">{lt('form.sentTitle', 'Message Sent')}</p>
+                    <p className="mt-2 text-body-compact text-ink">
+                      {lt('form.sentBody', 'Thank you for reaching out. Our team will get back to you within 24 hours.')}
+                    </p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleContactSubmit} className="mt-6 grid gap-5 sm:grid-cols-2">
+                    <Field label={lt('form.name', 'Your Name')} id="name" required />
+                    <Field label={lt('form.company', 'Company Name')} id="company" />
+                    <EmailField value={email} onChange={setEmail} required />
+                    <CountrySelect value={country} onChange={setCountry} required />
+                    <PhoneField country={country} value={phone} onChange={setPhone} />
+                    <Field
+                      label={lt('form.subject', 'Subject')}
+                      id="subject"
+                      required
+                      placeholder={lt('form.subjectPlaceholder', 'e.g. Bulk order inquiry for Cuplock scaffolding')}
+                    />
+                    <MultiSelect
+                      className="sm:col-span-2"
+                      label={lt('form.category', 'Product Category')}
+                      placeholder={lt('form.categoryPlaceholder', 'Select one or more categories…')}
+                      options={productCategoryOptions}
+                      value={categories}
+                      onChange={setCategories}
+                    />
+                    <WordLimitTextarea
+                      className="sm:col-span-2"
+                      id="message"
+                      label={lt('form.message', 'Message')}
+                      value={message}
+                      onChange={setMessage}
+                      required
+                      maxWords={250}
+                      placeholder={lt('form.messagePlaceholder', 'Tell us how we can help: product, quantity, timeline, destination…')}
+                    />
+                    <div className="sm:col-span-2">
+                      {sendError && (
+                        <p role="alert" className="mb-3 rounded-card bg-red-50 px-3 py-2 text-body-compact text-red-700">
+                          {sendError}
+                        </p>
+                      )}
+                      <Button type="submit" disabled={sending}>
+                        {sending ? lt('form.sending', 'Sending…') : lt('form.submit', 'Send Message')}
+                      </Button>
+                    </div>
+                  </form>
+                )}
+              </>
+            ) : (
+              <>
+                {/* Tap-to-open guidance — content per tab (RFQ / Export) */}
+                <div className="mt-5 flex items-center gap-3.5">
+                  <motion.button
+                    type="button"
+                    onClick={() => setShowIntro((v) => !v)}
+                    animate={{ y: [0, -6, 0] }}
+                    transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
+                    aria-expanded={showIntro}
+                    aria-label={ltRfq('guide.toggle', 'Toggle form guidance')}
+                    className="flex h-11 flex-shrink-0 items-center justify-center rounded-card bg-primary-dark px-4 text-[13px] font-bold uppercase tracking-[0.12em] text-white shadow-lg shadow-primary/30 transition-transform hover:scale-105"
+                  >
+                    {ltRfq('guide.button', 'Guide')}
+                  </motion.button>
+                  <button
+                    type="button"
+                    onClick={() => setShowIntro((v) => !v)}
+                    aria-expanded={showIntro}
+                    className="flex flex-1 items-center text-left"
+                  >
+                    <h3 className="font-display text-base font-bold text-text border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker sm:text-lg">
+                      {ltRfq(`intro.${mainTab}.title`, formIntros[mainTab].title)}
+                    </h3>
+                  </button>
+                </div>
+
+                <AnimatePresence initial={false}>
+                  {showIntro && (
+                    <motion.div
+                      key="rfq-intro"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.35, ease: EASE }}
+                      className="overflow-hidden"
+                    >
+                      <div className="mt-4 rounded-card border border-primary/20 bg-primary/[0.05] p-5">
+                        {formIntros[mainTab].paras.map((p, i) => (
+                          <p key={i} className={`body-copy ${i > 0 ? 'mt-8' : ''}`}>
+                            {ltRfq(`intro.${mainTab}.p${i}`, p)}
+                          </p>
+                        ))}
+                        <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                          {formIntros[mainTab].perks.map((perk, i) => (
+                            <li
+                              key={perk}
+                              className="border-l-2 border-primary/40 pl-4 text-body-compact font-medium text-text"
+                            >
+                              {ltRfq(`intro.${mainTab}.perks.${i}`, perk)}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {submitted ? (
+                  <div className="mt-8 rounded-card bg-navy-50 p-10 text-center">
+                    <p className="font-display text-lg font-semibold text-text">
+                      {ltRfq('submitted.title', 'Your Request Has Been Submitted')}
+                    </p>
+                    <p className="mt-2 text-body-compact text-ink">
+                      {ltRfq('submitted.body', 'Our export team will review your requirement and respond within 24 hours.')}
+                    </p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleRfqSubmit} className="mt-6 grid gap-5 sm:grid-cols-2">
+                    {user && (
+                      <p className="text-body-compact text-muted sm:col-span-2">
+                        {t('auth.signedInAs')} {user.name}
+                      </p>
+                    )}
+                    <Field
+                      key={`name-${user?.id ?? 'anon'}`}
+                      label={ltRfq('form.name', 'Full Name')}
+                      id="name"
+                      required
+                      defaultValue={user?.name || ''}
+                    />
+                    <Field label={ltRfq('form.company', 'Company Name')} id="company" required />
+                    <EmailField value={email} onChange={setEmail} required />
+                    <CountrySelect value={country} onChange={setCountry} required />
+                    <PhoneField country={country} value={phone} onChange={setPhone} required />
+                    <div>
+                      <label htmlFor="category" className="text-sm font-medium text-navy-800">
+                        {ltRfq('form.product', 'Product Category')}
+                      </label>
+                      <select
+                        id="category"
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                        className="mt-1.5 w-full rounded-card border border-navy-100 px-3.5 py-2.5 text-sm outline-none focus:border-primary"
+                      >
+                        {productLines.map((c) => (
+                          <option key={c.slug} value={c.name}>
+                            {c.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <ProductLineItems
+                      items={lineItems}
+                      onChange={setLineItems}
+                      labels={{
+                        label: ltRfq('form.products', 'Products & Quantities Required'),
+                        add: ltRfq('form.addProduct', '+ Add another product'),
+                        searchPlaceholder: ltRfq(
+                          'form.productSearchPlaceholder',
+                          'Search by item code or product name…'
+                        ),
+                        quantity: ltRfq('form.quantity', 'Quantity'),
+                        change: ltRfq('form.changeProduct', 'Change product'),
+                        remove: ltRfq('form.removeProduct', 'Remove product'),
+                        noResults: ltRfq('form.noProductResults', 'No matching products'),
+                        alreadyAdded: ltRfq(
+                          'form.productAlreadyAdded',
+                          'Already added — adjust its quantity above instead'
+                        ),
+                        loading: ltRfq('form.loadingProducts', 'Loading products…'),
+                      }}
+                    />
+                    {mainTab === 'export' && (
+                      <Field
+                        label={ltRfq('form.port', 'Port of Destination')}
+                        id="port"
+                        className="sm:col-span-2"
+                        placeholder={ltRfq('form.portPlaceholder', 'e.g. Jebel Ali Port, Dubai (UAE), or Rotterdam, Netherlands')}
+                      />
+                    )}
+                    <WordLimitTextarea
+                      className="sm:col-span-2"
+                      id="details"
+                      label={ltRfq('form.details', 'Requirement Details')}
+                      value={details}
+                      onChange={setDetails}
+                      required
+                      maxWords={250}
+                      placeholder={ltRfq('form.detailsPlaceholder', 'Tell us about specifications, quantities, timelines and destination port...')}
+                    />
+                    <div className="sm:col-span-2">
+                      {sendError && (
+                        <p role="alert" className="mb-3 rounded-card bg-red-50 px-3 py-2 text-body-compact text-red-700">
+                          {sendError}
+                        </p>
+                      )}
+                      <Button type="submit" disabled={sending}>
+                        {sending ? ltRfq('form.submitting', 'Submitting…') : ltRfq('form.submit', 'Submit Request')}
+                      </Button>
+                    </div>
+                  </form>
+                )}
+              </>
             )}
           </Reveal>
         </div>
@@ -443,7 +768,7 @@ export default function Contact() {
   );
 }
 
-function Field({ label, id, type = 'text', required = false, className = '', placeholder = '' }) {
+function Field({ label, id, type = 'text', required = false, className = '', placeholder = '', defaultValue = undefined }) {
   return (
     <div className={className}>
       <label htmlFor={id} className="text-sm font-medium text-navy-800">
@@ -454,6 +779,7 @@ function Field({ label, id, type = 'text', required = false, className = '', pla
         type={type}
         required={required}
         placeholder={placeholder}
+        defaultValue={defaultValue}
         className="mt-1.5 w-full rounded-card border border-navy-100 px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-primary"
       />
     </div>

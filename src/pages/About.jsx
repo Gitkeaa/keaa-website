@@ -25,7 +25,7 @@ import { useLT } from '../i18n/LocaleContext';
  * 1.5rem gaps so the cards land flush with the container edges.
  */
 const TEAM_CARD_W =
-  'w-[74%] sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] xl:w-[calc((100%-4.5rem)/4)]';
+  'w-[74%] sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] xl:w-[calc((100%-6rem)/5)]';
 
 /**
  * The rail covers everyone except the CMD and the MDs. Those three carry the company's voice,
