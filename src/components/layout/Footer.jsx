@@ -7,7 +7,7 @@ import { Linkedin, Facebook, Instagram, Youtube } from 'lucide-react';
 import { WhatsApp, XLogo } from '../ui/BrandGlyphs';
 import Logo from './Logo';
 import { openCookiePreferences } from '../CookieConsent';
-import { company, developer } from '../../data/company';
+import { company } from '../../data/company';
 import { footerLinks } from '../../data/navigation';
 import { getAllCategories } from '../../data/categories';
 import { useLT } from '../../i18n/LocaleContext';
@@ -242,17 +242,6 @@ export default function Footer() {
               {lt('footer.copyright', '© {year} {name} All Rights Reserved.', { year, name: company.name })}
             </p>
 
-            <p className="order-3 text-center lg:order-2">
-              {lt('footer.developedBy', 'Designed & Developed by')}{' '}
-              <a
-                href={developer.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-semibold text-text transition-colors duration-200 hover:text-primary-dark"
-              >
-                {developer.name}
-              </a>
-            </p>
 
             {/* Shared chip background so the legal controls are visible buttons on white.
                 The separators are gone — the pills already read as discrete controls. */}

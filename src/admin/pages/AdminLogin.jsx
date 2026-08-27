@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { Lock, Mail, Loader2, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import { useAdminAuth } from '../auth/AdminAuthContext';
-import { developer } from '../../data/company';
 
 /**
  * KEAA admin portal login page: renders the email/password sign-in form and the two-factor code step.
@@ -181,17 +180,6 @@ export default function AdminLogin() {
 
         <div className="mt-8 text-center">
           <p className="text-sm text-muted">© {new Date().getFullYear()} KEAA International. All rights reserved.</p>
-          <p className="mt-1.5 text-sm text-muted">
-            Designed &amp; developed by{' '}
-            <a
-              href={developer.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold text-primary-dark transition-colors hover:text-primary-darker hover:underline"
-            >
-              {developer.name}
-            </a>
-          </p>
         </div>
       </div>
     </div>
