@@ -182,7 +182,7 @@ export const leadership = [
     name: 'Vikram Singh',
     role: 'Sales Manager',
     bio: 'Results-driven Sales Manager specializing in export sales, client communication, quotation management, and successful deal execution for assigned regions and product categories.',
-    photo: '/images/vikram.jpg',
+    photo: '/images/Vikram.jpg',
     linkedin: 'https://www.linkedin.com/in/vikram-singh-panwar%E2%9C%A8/',
   },
 
