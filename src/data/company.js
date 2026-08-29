@@ -175,7 +175,7 @@ export const leadership = [
     name: 'Jaskamal Singh',
     role: 'Sales Manager',
     bio: 'Experienced Sales Manager responsible for managing customer relationships, handling RFQs, preparing quotations, and driving business growth across assigned international markets.',
-    photo: '/images/Jaskamal.jpg',
+    photo: '',
     linkedin: 'https://www.linkedin.com/in/jaskamal-singh-37b469377/',
   },
   {
