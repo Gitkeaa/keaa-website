@@ -7,6 +7,7 @@ import Reveal, { StaggerGroup, StaggerItem } from '../components/ui/Reveal';
 import AnimatedCounter from '../components/ui/AnimatedCounter';
 import { company } from '../data/company';
 import { img } from '../data/images';
+import { cldImage } from '../data/cloudinary';
 import useSEO from '../hooks/useSEO';
 import { useLT } from '../i18n/LocaleContext';
 
@@ -43,14 +44,14 @@ const CAPABILITIES = [
   company.facilities.moldRooms,
 ];
 
-/* One machinery photograph per company.machinery entry, index-matched. */
+/* Cloudinary machinery photographs, index-matched to company.machinery entries. */
 const machineryImages = [
-  img.metalSparks,
-  img.grinderMetal,
-  img.weldersFactory,
-  img.factoryMachines,
-  img.metalPour,
-  img.steelFrame,
+  'Sheet_laser_Cutting_oa7ib6',
+  'Tube_Laser_Cutting_mx4lc9',
+  'Robotic_Welding_Stations_vnvqos',
+  'CNC_Press_Brake_tcsl3k',
+  'Hot_Dip_Galvanizing_Plant_ze1vep',
+  'Automatic_Powder_Coating_Plant_guv3pr',
 ];
 
 const qaSteps = [
@@ -211,7 +212,11 @@ export default function Manufacturing() {
                 key={m.name}
                 className="w-[82%] flex-none snap-start overflow-hidden rounded-card border border-navy-100 shadow-card transition-shadow hover:shadow-cardHover sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
               >
-                <ImagePlaceholder src={machineryImages[i]} label={lt(`machinery.items.${i}.name`, m.name)} ratio="aspect-[4/3]" />
+                <img
+                  src={cldImage(machineryImages[i], { w: 600, h: 450, crop: 'fill' })}
+                  alt={lt(`machinery.items.${i}.name`, m.name)}
+                  className="w-full aspect-[4/3] object-cover"
+                />
                 <div className="p-5">
                   <h4 className="font-display text-sm font-semibold text-text">{lt(`machinery.items.${i}.name`, m.name)}</h4>
                   <p className="mt-1.5 text-body-compact text-ink">{lt(`machinery.items.${i}.desc`, m.desc)}</p>

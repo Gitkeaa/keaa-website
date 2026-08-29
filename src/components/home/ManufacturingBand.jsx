@@ -3,6 +3,7 @@ import Reveal from '../ui/Reveal';
 import { PANEL_CARD } from '../ui/panelCard';
 import { company } from '../../data/company';
 import { useLT } from '../../i18n/LocaleContext';
+import { cldImage } from '../../data/cloudinary';
 
 /**
  * "Manufacturing Excellence" — the home page's production-capability band.
@@ -30,15 +31,15 @@ import { useLT } from '../../i18n/LocaleContext';
  * name ("Automatic Powder Coating Plant") where a heading wants the process.
  */
 const FEATURED = [
-  { key: 'Sheet Laser Cutting', short: 'Laser Cutting' },
-  { key: 'Robotic Welding Stations', short: 'Robotic Welding' },
-  { key: 'Hot Dip Galvanizing Plant', short: 'Hot-Dip Galvanizing' },
-  { key: 'Automatic Powder Coating Plant', short: 'Powder Coating' },
+  { key: 'Sheet Laser Cutting', short: 'Laser Cutting', image: 'Sheet_laser_Cutting_oa7ib6' },
+  { key: 'Robotic Welding Stations', short: 'Robotic Welding', image: 'Robotic_Welding_Stations_vnvqos' },
+  { key: 'Hot Dip Galvanizing Plant', short: 'Hot-Dip Galvanizing', image: 'Hot_Dip_Galvanizing_Plant_ze1vep' },
+  { key: 'Automatic Powder Coating Plant', short: 'Powder Coating', image: 'Automatic_Powder_Coating_Plant_guv3pr' },
 ];
 
 const CAPABILITIES = FEATURED.map((f) => {
   const entry = company.machinery.find((m) => m.name === f.key);
-  return entry ? { title: f.short, desc: entry.desc } : null;
+  return entry ? { ...f, title: f.short, desc: entry.desc } : null;
 }).filter(Boolean);
 
 /** Pull a headline figure out of `company.stats` by its label, so nothing is retyped here. */
@@ -105,9 +106,18 @@ export default function ManufacturingBand() {
                 echoes the scale strip below. */}
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {CAPABILITIES.map((c, i) => (
-                <div key={c.title} className="rounded-card bg-navy-50 p-5">
-                  <h4 className="font-display text-base font-semibold text-text">{lt(`mfg.cap.${i}.title`, c.title)}</h4>
-                  <p className="mt-2 text-body-compact text-text-muted">{lt(`mfg.cap.${i}.desc`, c.desc)}</p>
+                <div key={c.title} className="rounded-card bg-navy-50 overflow-hidden">
+                  {c.image && (
+                    <img
+                      src={cldImage(c.image, { w: 400, h: 300, crop: 'fill' })}
+                      alt={c.title}
+                      className="w-full h-48 object-cover"
+                    />
+                  )}
+                  <div className="p-5">
+                    <h4 className="font-display text-base font-semibold text-text">{lt(`mfg.cap.${i}.title`, c.title)}</h4>
+                    <p className="mt-2 text-body-compact text-text-muted">{lt(`mfg.cap.${i}.desc`, c.desc)}</p>
+                  </div>
                 </div>
               ))}
             </div>
