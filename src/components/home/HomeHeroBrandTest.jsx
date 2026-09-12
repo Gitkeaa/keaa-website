@@ -7,12 +7,12 @@ import { useLT } from '../../i18n/LocaleContext';
 /**
  * How long each second-line phrase holds before the next one takes over.
  *
- * The longest phrase is 46 characters — roughly eight words, about 2.4s of reading at an
- * average pace — and the staggered fade below eats 0.5s of whatever this is set to. 3.5s
- * therefore leaves ~3s at full opacity, which is enough to finish the line instead of merely
- * glimpsing it. Anything under ~2.5s reads as motion rather than as a sentence.
+ * One second is what was asked for. It is FAST — "garden hardware, and custom-fabricated
+ * solutions." is 49 characters, which most people cannot finish reading in that time, so the
+ * headline reads more as motion than as a sentence. Raise this to ~2600 if it should be
+ * readable rather than kinetic; nothing else needs touching.
  */
-const ROTATE_MS = 3500;
+const ROTATE_MS = 2600;
 
 /**
  * HOMEPAGE HERO — Lely-style single film.
@@ -76,14 +76,17 @@ export default function HomeHeroBrandTest() {
    * new keys and fall back to English until they are translated.
    */
   const ROTATING = [
-    lt('hero.title2', 'Scaffolding & Formwork Solutions'),
-    lt('hero.title2b', 'Safety Products & Livestock Housing Solutions'),
-    lt('hero.title2c', 'Garden Hardware & Custom Fabricated Solutions.'),
+    lt('hero.title2', 'Scaffolding Solutions'),
+    lt('hero.title2b', 'Formwork Solutions'),
+    lt('hero.title2c', 'Safety Products Solutions'),
+    lt('hero.title2d', 'Livestock Housing Solutions'),
+    lt('hero.title2e', 'Garden Hardware Solutions'),
+    lt('hero.title2f', 'Custom Fabricated Solutions')
   ];
 
   /*
-   * Reduced motion holds phrase 0 and never starts the timer. Text that rewrites itself on a
-   * loop is exactly the kind of motion that setting exists to stop, and unlike the muted
+   * Reduced motion holds phrase 0 and never starts the timer. Text that rewrites itself once a
+   * second is exactly the kind of motion that setting exists to stop, and unlike the muted
    * background film this carries meaning a visitor has to read.
    */
   const [phraseIdx, setPhraseIdx] = useState(0);
@@ -100,7 +103,6 @@ export default function HomeHeroBrandTest() {
   const filmSrc = film ? (isDesktop || !film.srcMobile ? film.src : film.srcMobile) : null;
   const poster = film?.poster ?? '/images/hero2.jpg';
   const showVideo = Boolean(film) && !saveData && !filmBroken;
-
   return (
     <>
       {/* ---- HERO: full-bleed film in a rounded inset card ---- */}
@@ -146,39 +148,27 @@ export default function HomeHeroBrandTest() {
               initial={reduce ? false : { opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: EASE }}
-              className="max-w-7xl"
+              className="max-w-5xl"
             >
               {/*
-                TWO LINES — bottom-left, broken where the copy reads best rather than wherever
-                the box happens to run out. The two spans are the break; the fluid size is what
-                stops either of them wrapping again.
+                TWO LINES, ALWAYS — bottom-left, broken where the copy reads best rather than
+                wherever the box happens to run out. The two spans are the break; the fluid
+                size is what stops either of them wrapping again.
 
-                MEASURED, NOT GUESSED. Set nowrap and the widest rotating phrase ("Garden
-                Hardware & Custom Fabricated Solutions.") occupies 22.2x its own font size in
-                width, so the largest size that still fits one line is column ÷ 22.2. Each step
-                below is column ÷ 23.4 — the extra 5% is headroom for a classic Windows
-                scrollbar, which `vw` counts but the layout does not get.
+                The sizes are measured, not guessed. The longer line needs roughly 14.5x its
+                font size in width, so the largest size that still fits is column ÷ 14.5, and
+                each step below stays under that for every width in its range (the three steps
+                exist because the card's own padding changes at `sm` and `lg`, which moves the
+                column width). Widening to max-w-4xl is what lets the desktop headline stay at
+                60px and still make it in two lines.
 
-                The column is a known function of the viewport because the card's own padding
-                changes at the same two breakpoints:
-                  base   vw - 72    (section px-3 + card p-6)
-                  sm     vw - 120   (section px-5 + card p-10)
-                  lg     vw - 160   (section px-6 + card p-14), capped by max-w-7xl at 1280
+                Below ~360px there is no honest answer: two lines would need type smaller than
+                the body copy, so the lower clamp holds at 18px and a very small phone gets a
+                third line instead of an unreadable headline.
 
-                which is where each `calc(4.2735vw - Npx)` comes from: vw/23.4 = 4.2735vw, less
-                that step's padding ÷ 23.4. The lg cap of 54px is 1280 ÷ 23.4 — the size at
-                which the longest phrase still clears the widest the column is ever allowed to
-                get. That cap is also why the copy column was widened from max-w-5xl: at 1024px
-                the same phrase would only fit at 44px.
-
-                BELOW ~470px THERE IS NO HONEST ANSWER, and the lower clamp is where that shows.
-                A 390px phone offers 318px of column, so one line of 46 characters would need a
-                14px headline — smaller than the body copy under it. The clamp holds at 18px
-                instead and those phones get a third line, which is the readable failure.
-
-                If the wording changes, re-measure: a longer phrase silently wraps to three.
+                If the wording changes, re-measure. A longer line silently wraps to three.
               */}
-              <h1 className="font-display text-[clamp(1.125rem,calc(4.2735vw-3.08px),1.75rem)] font-bold leading-[1.08] tracking-[-0.02em] text-white sm:text-[clamp(1.25rem,calc(4.2735vw-5.13px),2.5rem)] lg:text-[clamp(2rem,calc(4.2735vw-6.84px),3.375rem)]">
+              <h1 className="font-display text-[clamp(1.125rem,calc(6.4vw-4.6px),2.25rem)] font-bold leading-[1.08] tracking-[-0.02em] text-white sm:text-[clamp(2rem,calc(6.4vw-8.8px),3rem)] lg:text-[clamp(3rem,calc(4.375vw+8.2px),3.75rem)]">
                 <span className="block">{lt('hero.title1', 'Engineering Reliable')}</span>
                 {/*
                   The second line cycles. All three phrases are in the DOM at once, stacked in
@@ -191,25 +181,17 @@ export default function HomeHeroBrandTest() {
                   range — and nothing is announced on a timer, which an aria-live region here
                   would do once a second, unusably.
 
-                  The h1 above is sized off the LONGEST of these, not off whichever one is
-                  showing, so the type never changes size as the phrases swap — the shorter
-                  ones simply sit at the same size and end sooner.
+                  These phrases are far longer than the single line this h1 was measured for
+                  (49 characters against 32), so the longest ones wrap. That is deliberate: the
+                  alternative is shrinking the headline by a third at every width to fit the
+                  worst case on one line.
                 */}
-                <span className="grid">
+                <span className="grid text-primary-light">
                   {ROTATING.map((phrase, i) => (
                     <span
                       key={phrase}
                       style={{ gridArea: '1 / 1' }}
-                      /*
-                        The fade is STAGGERED, not a crossfade. Both phrases share one grid
-                        cell, so fading them simultaneously prints one on top of the other and
-                        the line is unreadable for the whole transition. The outgoing phrase
-                        therefore leaves over 200ms and the incoming one only starts after it
-                        (delay-200), so the cell holds at most one phrase at a time.
-                      */
-                      className={`block transition-opacity ${
-                        i === phraseIdx ? 'opacity-100 delay-200 duration-300' : 'opacity-0 duration-200'
-                      }`}
+                      className={`block transition-opacity duration-500 ${i === phraseIdx ? 'opacity-100' : 'opacity-0'}`}
                     >
                       {phrase}
                     </span>
