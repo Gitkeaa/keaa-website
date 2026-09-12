@@ -1,4 +1,7 @@
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import PageHero from '../components/ui/PageHero';
+import Button from '../components/ui/Button';
 import { company } from '../data/company';
 import useSEO from '../hooks/useSEO';
 import { useLT } from '../i18n/LocaleContext';
@@ -139,6 +142,24 @@ const seo = {
 
 export default function Legal({ type }) {
   const lt = useLT('legal');
+  const navigate = useNavigate();
+
+  /*
+   * These pages render without the site footer (see the FOOTERLESS set in components/Layout),
+   * so this is the way back out other than the header.
+   *
+   * It cannot be a plain navigate(-1). These pages are reached from OUTSIDE the app as often
+   * as from inside it — the cookie banner links here, as do search results and the emails that
+   * cite a policy — and from a fresh tab, step -1 leaves the site entirely or does nothing at
+   * all. React Router stamps each of its own entries with an index, so `idx > 0` is the test
+   * for "there is somewhere of ours to go back to"; when there is not, home is the honest
+   * destination.
+   */
+  const goBack = () => {
+    const idx = window.history.state?.idx;
+    if (typeof idx === 'number' && idx > 0) navigate(-1);
+    else navigate('/');
+  };
   const data = content[type];
   useSEO({
     title: lt(`${type}.title`, seo[type]?.title || 'Legal'),
@@ -178,6 +199,14 @@ export default function Legal({ type }) {
             ))}
           </div>
           <p className="mt-4 text-xs text-muted">{lt('updated', 'Last updated: June 2026.')}</p>
+
+          {/* Sits where the footer used to, so the page still ends in a way out. */}
+          <div className="mt-10 border-t border-navy-100 pt-8">
+            <Button variant="outlineNavy" size="sm" onClick={goBack}>
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              {lt('back', 'Go Back')}
+            </Button>
+          </div>
         </div>
       </section>
     </>

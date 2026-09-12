@@ -25,6 +25,19 @@ import { RegionProvider } from '../context/RegionContext';
  * The desktop mega-menu is no longer rendered — Header dropped its trigger in favour of
  * search (see the note there). `layout/MegaMenu.jsx` still exists if it is wanted back.
  */
+/**
+ * Routes that render WITHOUT the site footer.
+ *
+ * The legal pages are read, not browsed: the footer under them is a second full sitemap
+ * offering every link the visitor just left, directly beneath a policy they were sent here to
+ * read. It also repeats links to these same three pages, so the footer on /terms links to
+ * /terms. They carry their own "Go back" control instead (see pages/Legal.jsx).
+ *
+ * These are BASENAME-RELATIVE paths. App.jsx mounts the router with the locale prefix as its
+ * basename, so /de/terms arrives here as "/terms" and one entry covers every language.
+ */
+const FOOTERLESS = new Set(['/privacy-policy', '/terms', '/cookie-policy']);
+
 export default function Layout() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { scrollYProgress } = useScroll();
@@ -74,7 +87,9 @@ export default function Layout() {
               </motion.div>
             </AnimatePresence>
           </main>
-          <Footer />
+          {/* Trailing slash trimmed first: /terms and /terms/ are the same page, and only the
+              bare form is in FOOTERLESS. */}
+          {!FOOTERLESS.has(location.pathname.replace(/\/+$/, '') || '/') && <Footer />}
           <MobileDrawer
             open={drawerOpen}
             onClose={() => setDrawerOpen(false)}

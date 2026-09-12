@@ -159,7 +159,7 @@ export const productCategories = [
   },
   {
     slug: 'garden-hardware',
-    name: 'Wood Connectors / Garden Hardware',
+    name: 'Wood Connectors DIY Hardware Products',
     brochureUrl: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/web_support_keaa-international_net/IQDZg2UkpJN-RaIAwbR0rsxeATkSWko0PsjqrFR1SWLZMWc?e=DPhLYa',
     short: 'Durable and practical garden hardware products for outdoor structures and timber connections.',
     bullets: ['Wood Connectors', 'Post Holders', 'Hinges & Latches', 'Gate Hardware', 'Pergola & Swing Connectors'],
@@ -203,7 +203,7 @@ export const bestSellers = [
   { name: 'Ü-Mark Prop (KIP-Ü-BD30)', category: 'Formwork Accessories' },
   { name: 'Full Body Harness', category: 'Safety Products' },
   { name: 'Giant Safety Headlock (ART 325007)', category: 'Livestock Housing Solutions' },
-  { name: 'Joist Hanger (Type A)', category: 'Wood Connectors / Garden Hardware' },
+  { name: 'Joist Hanger (Type A)', category: 'Wood Connectors DIY Hardware Products' },
   { name: 'Sheep Race (ART 425011)', category: 'Livestock Housing Solutions' },
 ];
 

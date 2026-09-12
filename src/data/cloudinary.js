@@ -33,6 +33,25 @@ export function cldImage(publicId, { w, h, crop = 'fill', extra } = {}) {
   return `${BASE}/image/upload/${t.join(',')}/${encodeId(publicId)}`;
 }
 
+/**
+ * An escape hatch for a CHAINED transformation — several components separated by `/`, each
+ * applied to the result of the last.
+ *
+ * `cldImage()` builds a single component, which is right for the ordinary resize-and-optimise
+ * case. It cannot express an ordered pipeline, and order matters more than it looks: effects
+ * listed together in one component are applied in Cloudinary's own order, not left to right.
+ * Knocking a background out and then trimming the border it left behind is the case in point —
+ *
+ *   'e_make_transparent:30,e_trim'   one component  -> trim runs on the ORIGINAL edges, no-op
+ *   'e_make_transparent:30/e_trim'   two components -> trim runs on the transparent edges ✓
+ *
+ * Pass the chain exactly as Cloudinary spells it, without leading or trailing slashes:
+ *   cldRaw('Keaa_Logo_pcf86h', 'e_make_transparent:30/e_trim/f_auto,q_auto,w_180')
+ */
+export function cldRaw(publicId, chain) {
+  return `${BASE}/image/upload/${chain}/${encodeId(publicId)}`;
+}
+
 /** A `srcSet` string across common widths, for a responsive `<img srcset sizes>`. */
 export function cldSrcSet(publicId, widths = [480, 768, 1200, 1600, 2000]) {
   return widths.map((w) => `${cldImage(publicId, { w })} ${w}w`).join(', ');

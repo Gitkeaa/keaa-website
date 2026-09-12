@@ -26,12 +26,15 @@ export const slugify = (str) =>
 /**
  * Category URLs are derived from the display name, so renaming a category would normally
  * change its route and orphan its `categoryMeta` entry. This pins the slug instead: the
- * "Wood Connectors / Garden Hardware" line keeps the short, already-published
+ * "Wood Connectors DIY Hardware Products" line keeps the short, already-published
  * `/products/wood-connectors` URL.
  *
  * Idempotent — passing either the display name or the slug returns the slug.
  */
 const CATEGORY_SLUG_OVERRIDES = {
+  'wood-connectors-diy-hardware-products': 'wood-connectors',
+  // Previous display name. Kept so historical rows still resolve — the backend stores the
+  // category string on each lead, so records created before the rename carry the old text.
   'wood-connectors-garden-hardware': 'wood-connectors',
 };
 

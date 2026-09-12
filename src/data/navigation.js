@@ -56,7 +56,7 @@ export const mainNav = [
       { label: 'About KEAA', to: '/about', desc: 'Who we are and what we build' },
       { label: 'Our Journey', to: '/about#journey', desc: 'From 2003 to 42+ countries' },
       { label: 'Leadership', to: '/about#leadership', desc: 'Message from our Managing Directors' },
-      { label: 'Our Team', to: '/about#team', desc: 'The people behind the products' },
+      { label: 'Our Team', to: '/contact#team', desc: 'The people behind the products' },
       { label: 'Careers', to: '/careers', desc: 'Open roles and life at KEAA' },
       { label: 'Contact Us', to: '/contact', desc: 'Offices, phone and email' },
     ],
@@ -102,7 +102,7 @@ export const mainNav = [
     ],
     feature: {
       eyebrow: 'In-house capability',
-      title: '25,000 sq. m. of integrated manufacturing',
+      title: '100,000+ sq. m. of integrated manufacturing',
       image: 'factoryMachines',
       cta: { label: 'See the plant', to: '/manufacturing' },
     },

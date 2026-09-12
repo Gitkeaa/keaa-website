@@ -7,16 +7,10 @@ import CardRail from '../components/ui/CardRail';
 import Pagination from '../components/ui/Pagination';
 import Lightbox from '../components/ui/Lightbox';
 import Reveal, { StaggerGroup, StaggerItem } from '../components/ui/Reveal';
-import {
-  featuredProjects,
-  featuredProjectImages,
-  droneFilmUrl,
-  naymoFilmUrl,
-  raasFilmUrl,
-  galleryFilms,
-} from '../data/content';
+import { featuredProjects, featuredProjectImages } from '../data/content';
+import { galleryFilms } from '../data/galleryFilms';
 import { galleryPhotos, galleryCategories, galleryAlt } from '../data/gallery';
-import { cldImage, cldSrcSet, cldVideoPoster } from '../data/cloudinary';
+import { cldImage, cldSrcSet } from '../data/cloudinary';
 import useSEO from '../hooks/useSEO';
 import { useLT } from '../i18n/LocaleContext';
 
@@ -28,37 +22,29 @@ import { useLT } from '../i18n/LocaleContext';
  * from data/content.js and data/gallery.js; page sizes are the PER_PAGE constants below.
  */
 
-// Video thumbnails use KEAA's OWN gallery photography (real facility, aerial and product
-// shots from Cloudinary), not stock imagery — the stock stand-ins read as generic / AI.
-// A true frame-grab from each film is not possible: the films are SharePoint share pages,
-// not files we can transform, so those fall back to a real KEAA photo until the film is
-// uploaded to Cloudinary. There are more photos (57) than films, so each gets a distinct one.
-// w_800 on purpose — the SAME width the gallery grid uses, so a video thumbnail reuses the
-// grid's already-generated (and CDN-cached) transformation instead of forcing Cloudinary to
-// generate a new size on first view. Cold transformations are ~1.8s each; reuse avoids them.
-const REAL_THUMBS = galleryPhotos.map((p) => cldImage(p.id, { w: 800 }));
-const thumbAt = (i) => REAL_THUMBS[i % REAL_THUMBS.length];
-
 /*
- * Two of these films ALSO exist on Cloudinary — they are the ones powering the home-page
- * hero background (see heroFilms in data/content.js) — so cldVideoPoster lifts a REAL frame
- * out of the actual .mp4 for them: the aerial/factory film (hero1_a0hnen) and the Raass film
- * (Rass_wixfl0). Every other film is a OneDrive/SharePoint share page, not a file, so no
- * frame can be pulled from it — those keep a real KEAA photo until they too are on Cloudinary.
+ * Each film's own poster, or null when it has none yet.
+ *
+ * This replaces a block that dealt every film an unrelated KEAA gallery photograph by array
+ * position — film 7 got gallery photo 7 — so every card advertised footage it did not contain,
+ * and two films pointed at Cloudinary video ids that 404. A card with no real frame now says
+ * so (see the placeholder in the grid below) instead of showing the wrong thing.
+ *
+ * `poster` may be a Cloudinary public_id or a full delivery URL; see data/galleryFilms.js for
+ * how to fill one in. w_800 matches the width the photo grid already requests, so a poster
+ * reuses that CDN-cached transformation rather than forcing Cloudinary to generate a new size.
  */
-const FRAME = {
-  aerial: cldVideoPoster('hero1_a0hnen', { so: 6, w: 640 }),
-  raas: cldVideoPoster('Rass_wixfl0', { so: 8, w: 640 }),
+const posterOf = (poster) => {
+  if (!poster) return null;
+  // A leading "/" or a full URL is already a delivery path — the local captures in
+  // public/images/video-thumbs are the former. Only a bare public_id goes through Cloudinary;
+  // wrapping a local path in cldImage() produces a .../upload/f_auto,q_auto//images/... URL
+  // that 404s on every card.
+  if (poster.startsWith('/') || /^https?:\/\//.test(poster)) return poster;
+  return cldImage(poster, { w: 800 });
 };
 
-// The KEAA factory film is the first card here now (same size as the rest) rather than a
-// separate full-width hero above the grid.
-const galleryVideos = [
-  { title: 'KEAA International Pvt. Ltd.', url: droneFilmUrl, thumb: FRAME.aerial },
-  { title: 'Raas Industries', url: raasFilmUrl, thumb: FRAME.raas },
-  { title: 'Naymo International Pvt. Ltd', url: naymoFilmUrl, thumb: thumbAt(0) },
-  ...galleryFilms.map((f, i) => ({ ...f, thumb: thumbAt(i + 1) })),
-];
+const galleryVideos = galleryFilms.map((f) => ({ ...f, thumb: posterOf(f.poster) }));
 
 
 // Videos and photos both paginate (see components/ui/Pagination): this is the default
@@ -266,16 +252,30 @@ export default function ProjectsGallery() {
                   className="group relative block overflow-hidden rounded-card shadow-card"
                   aria-label={lt('videos.watch', 'Watch {title} (opens in a new tab)', { title: v.title })}
                 >
-                  <img
-                    src={v.thumb}
-                    alt={v.title}
-                    loading="lazy"
-                    /* 4/3, matching the project and gallery tiles. These were `aspect-video`
-                       (16:9) in a 3-column grid, so a film card was both a different shape
-                       and a different width from everything else on the page. The thumbnails
-                       are `object-cover`, so the crop simply tightens — nothing distorts. */
-                    className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
+                  {/* A real frame when the film has one, otherwise a branded panel. The old
+                      fallback — an unrelated photograph from the KEAA gallery, dealt out by
+                      array position — made every card advertise footage it did not contain,
+                      which is worse than showing no still at all.
+
+                      4/3 on both branches, matching the project and gallery tiles, so the grid
+                      never reflows between a film that has a poster and one that does not.
+                      These were `aspect-video` (16:9) in a 3-column grid, which made a film
+                      card both a different shape and a different width from everything else on
+                      the page. The poster is `object-cover`, so the crop tightens — nothing
+                      distorts. */}
+                  {v.thumb ? (
+                    <img
+                      src={v.thumb}
+                      alt={v.title}
+                      loading="lazy"
+                      className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div
+                      aria-hidden="true"
+                      className="aspect-[4/3] w-full bg-gradient-to-br from-navy-800 via-navy-900 to-navy-950 transition-transform duration-500 group-hover:scale-105"
+                    />
+                  )}
                   <span className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/20 to-transparent" />
                   {/* centre play control — a blue disc with a white play triangle, drawn inline
                       (no asset to host, crisp at any size). */}

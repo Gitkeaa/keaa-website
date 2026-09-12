@@ -2,11 +2,10 @@ import { Link } from 'react-router-dom';
 import { Linkedin, ShieldCheck, Globe2, Factory, Handshake } from 'lucide-react';
 import SectionHeading from '../components/ui/SectionHeading';
 import Reveal, { StaggerGroup, StaggerItem } from '../components/ui/Reveal';
-import CardRail from '../components/ui/CardRail';
 import { PANEL_CARD } from '../components/ui/panelCard';
 import PurposePath from '../components/about/PurposePath';
 import AnimatedCounter from '../components/ui/AnimatedCounter';
-import { company, leadership, managingDirectors, chairmanMessage } from '../data/company';
+import { company, managingDirectors, chairmanMessage } from '../data/company';
 import { img } from '../data/images';
 import useSEO from '../hooks/useSEO';
 import { useLT } from '../i18n/LocaleContext';
@@ -19,27 +18,10 @@ import { useLT } from '../i18n/LocaleContext';
  * leadership, managingDirectors, chairmanMessage); edit the copy there and reorder sections below.
  */
 
-/**
- * How wide a leadership card sits on the rail: just under a full screen on a phone so the next
- * one peeks in and the rail is discoverable, then 2 / 3 / 4 across. The `calc` subtracts the
- * 1.5rem gaps so the cards land flush with the container edges.
- */
-const TEAM_CARD_W =
-  'w-[74%] sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] xl:w-[calc((100%-6rem)/5)]';
-
-/**
- * The rail covers everyone except the CMD and the MDs. Those three carry the company's voice,
- * so they get a full message section with a large square portrait higher up the page rather
- * than a thumbnail on a rail — putting them in both read as a demotion.
- */
-const TEAM = leadership.filter(
-  (l) => l.role !== 'Chief Managing Director' && l.role !== 'Managing Director'
-);
-
 const whoWeAre = [
   { title: 'Quality First', desc: 'We follow strict quality standards in every stage of production.' },
   { title: 'Global Reach', desc: 'Serving customers across 42+ countries with consistent reliability.' },
-  { title: '5 Manufacturing Units', desc: '25,000 sq. m of in-house facilities in Ludhiana, Punjab.' },
+  { title: '6 Manufacturing Units', desc: '100,000+ sq. m of in-house facilities in Ludhiana, Punjab.' },
   { title: 'Reliable Partner', desc: 'Long-term partnerships built on trust, since 2003.' },
 ];
 
@@ -66,6 +48,7 @@ const manufacturingStrength = [
   'Material Testing & Quality Inspection Lab',
   'Certified Welders & Skilled Technical Workforce',
   'State-of-the-Art CNC & Automated Machinery',
+  'Europe Office / Warehouse'
 ];
 
 export default function About() {
@@ -150,7 +133,7 @@ export default function About() {
             </h2>
 
             <p className="body-copy mt-6">
-              {lt('why.p1', 'For over two decades, the KEAA International name has stood for engineering precision, manufacturing strength and close customer partnership. With entrepreneurial thinking, reliability and a genuine passion for the people we serve, we have grown into a trusted Indo-Dutch manufacturer and exporter of scaffolding systems, formwork accessories, safety products, livestock housing solutions and garden hardware.')}
+              {lt('why.p1', 'For over two decades, the KEAA International name has stood for engineering precision, manufacturing strength and close customer partnership. With entrepreneurial thinking, reliability and a genuine passion for the people we serve, we have grown into a trusted  manufacturer and exporter of scaffolding systems, formwork accessories, safety products, livestock housing solutions and garden hardware.')}
             </p>
 
             {/* The four pillars, on the deep navy ground — one considered statement rather
@@ -217,7 +200,7 @@ export default function About() {
                 to, so the copy fills the container edge to edge. */}
             <div className="mt-6">
               <p className="body-copy max-w-none">
-                {lt('trust.p1', 'Since our foundation in 2003, our headquarters and 25,000 sq. m of in-house manufacturing in Ludhiana, India, together with our European sales office in Eindhoven, the Netherlands, have steered the fortunes of our globally operating business. More than 150 skilled professionals work for us, serving customers in over 42 countries. Under the promise of delivering the best service to every client, our team tackles the daily challenges of the construction process together with contractors, builders, scaffolders and engineers worldwide.')}
+                {lt('trust.p1', 'Since our foundation in 2003, our headquarters and 100,000+ sq. m of in-house manufacturing in Ludhiana, India. More than 1000 skilled professionals working in the company, serving customers in over 42 countries. Under the promise of delivering the best service to every client, our team tackles the daily challenges of the construction process together with contractors, builders, scaffolders and engineers worldwide.')}
               </p>
             </div>
           </Reveal>
@@ -451,66 +434,6 @@ export default function About() {
             })}
           </div>
           </div>
-        </div>
-      </section>
-
-      {/* LEADERSHIP TEAM */}
-      <section id="team" className="section-pad">
-        <div className="container-page">
-          {/* No heading. The directors' messages directly above already open the leadership
-              run, so a second "Our Leadership Team / Experienced Leaders" title restated it.
-              The rail still carries its own accessible name (`label` on CardRail), so the
-              `/about#team` link from the nav panel lands on a labelled region. */}
-          {/* Photo-led cards on a scrolling rail carrying every name in the leadership list,
-              including the CMD and the MDs.
-
-              Some people have no photograph on file yet. Rather than leave a hole, the same
-              block renders their initials on the brand ground at the identical aspect ratio.
-              Drop a file into that person's `photo` in data/company.js and it takes over with
-              no change here. */}
-          <CardRail
-            label={lt('team.label', 'Leadership team')}
-            labels={TEAM.map((l) => lt('team.show', 'Show {name}', { name: l.name }))}
-          >
-            {TEAM.map((l, i) => (
-                <article key={l.name} className={`${TEAM_CARD_W} group flex flex-none snap-start flex-col overflow-hidden rounded-card ring-1 ring-text/[0.08] transition-all duration-300 hover:-translate-y-1 hover:ring-text/[0.16]`}>
-                  {l.photo ? (
-                    <img
-                      src={l.photo}
-                      alt={l.name}
-                      loading="lazy"
-                      className="aspect-[3/4] w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                    />
-                  ) : (
-                    <span
-                      aria-hidden
-                      className="flex aspect-[3/4] w-full items-center justify-center bg-gradient-to-br from-navy-800 to-navy-950 font-display text-4xl font-bold tracking-[0.08em] text-primary-light"
-                    >
-                      {l.name.split(' ').map((n) => n[0]).join('')}
-                    </span>
-                  )}
-
-                  <div className="flex flex-1 flex-col bg-navy-50 p-5">
-                    <h3 className="font-display text-lg font-bold leading-snug text-text">{l.name}</h3>
-                    <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-darker">
-                      {lt(`team.${i}.role`, l.role)}
-                    </p>
-                    <p className="mt-3 text-body-compact leading-relaxed text-ink">{lt(`team.${i}.bio`, l.bio)}</p>
-                    {l.linkedin && (
-                      <a
-                        href={l.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-auto inline-flex w-fit items-center gap-2 pt-4 text-navy-700 transition-colors hover:text-primary-darker"
-                        aria-label={lt('team.linkedinLabel', '{name} on LinkedIn', { name: l.name })}
-                      >
-                        <Linkedin className="h-4 w-4" />
-                      </a>
-                    )}
-                  </div>
-                </article>
-            ))}
-          </CardRail>
         </div>
       </section>
 

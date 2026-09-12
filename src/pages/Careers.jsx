@@ -135,7 +135,7 @@ export default function Careers() {
             <SectionHeading
               eyebrow={lt('why.eyebrow', 'Why Work With Us')}
               title={lt('why.title', 'A Career You Can Build On')}
-              desc={lt('why.desc', 'Join an Indo-Dutch manufacturer trusted across 42+ countries, built on advanced machinery, certified processes and a team that puts safety and quality first.')}
+              desc={lt('why.desc', 'Join an Indian manufacturer trusted across 42+ countries, built on advanced machinery, certified processes and a team that puts safety and quality first.')}
             />
           </Reveal>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

@@ -20,43 +20,40 @@
  * script above) just needs a `{ id, category }` line — if its category is not in
  * `galleryCategories` it still shows under "All", it just gets no filter button.
  */
+// DSC_6129_n49y89 and DSC_6380_afmt2n were removed for the SAME reason as 'Exhibitions'
+// below, and they were the last two survivors of that shoot: both are trade-show booth
+// meetings, and both have printed handouts on the table carrying the blue-and-yellow
+// "T" Tobler mark (one also shows a "MATO" document). Filed under 'Team' rather than
+// 'Exhibitions', which is how they escaped the earlier purge.
+//
 // 'Exhibitions' was removed: every photo in it was shot at a competitor's ("Tobler India")
 // trade-show booth, so the whole category showed another brand's name and products. If real
 // KEAA-booth exhibition photos arrive, re-add the category here and tag them 'Exhibitions'.
+//
+// A further 17 ids were dropped across two rounds after the client deleted those assets from
+// Cloudinary — their delivery URLs 404, so they rendered as broken tiles.
+//
+// FIVE of those were ALSO hero slides (heroSlides.js), between them covering 13 slides across
+// 9 of the 10 carousels, so deleting a gallery photo is not a gallery-only change. Before
+// removing an id here, grep it across src/ — if heroSlides.js uses it, that slide needs a live
+// replacement or the page opens on a broken hero.
 export const galleryCategories = ['All', 'Manufacturing', 'Aerial'];
 
 export const galleryPhotos = [
-  { id: '9bdbb5065c_q2bd6m', category: 'Manufacturing' },
   { id: 'DJI_0082_p2qmld', category: 'Aerial' },
   { id: 'DJI_0083_1_w7zuxk', category: 'Aerial' },
-  { id: 'DJI_0085_ut3erz', category: 'Aerial' },
   { id: 'DJI_0117_jnjfzw', category: 'Manufacturing' },
   { id: 'DJI_0126_busis7', category: 'Manufacturing' },
   { id: 'DJI_0131_ljo3tq', category: 'Manufacturing' },
   { id: 'DJI_0146_bzclb7', category: 'Aerial' },
-  { id: 'DJI_0151_pyqq3i', category: 'Manufacturing' },
-  { id: 'DJI_0158_d1lz3h', category: 'Manufacturing' },
-  { id: 'DJI_0159_jbk0dl', category: 'Manufacturing' },
   { id: 'DJI_0164_efaxki', category: 'Manufacturing' },
   // The four 'Exhibitions' photos that sat here (DSC_6055/6057/6058/6220) were removed — each
   // showed the "Tobler India" competitor booth, not KEAA's. See galleryCategories above.
-  { id: 'DSC_6129_n49y89', category: 'Team' },
-  { id: 'DSC_6153_y9498s', category: 'Team' },
-  { id: 'DSC_6190_jj6nsi', category: 'Team' },
-  { id: 'DSC_6380_afmt2n', category: 'Team' },
-  { id: 'DSC_6403_urjq3q', category: 'Team' },
-  { id: 'DSC_6475_k8tzs5', category: 'Team' },
   { id: 'hot_dip_u4t1vc', category: 'Manufacturing' },
-  { id: 'image_9a3a7917-5b5e-474f-b8f7-cd170a7ca8f620230407_115549_rrzguh', category: 'Manufacturing' },
-  { id: 'image_large_2_gi4d42', category: 'Manufacturing' },
-  { id: 'image_large_3_hxtwtf', category: 'Manufacturing' },
-  { id: 'image_large_4_hejpvm', category: 'Manufacturing' },
-  { id: 'image_large_x3tifr', category: 'Manufacturing' },
   { id: 'IMG_0363_eik0rk', category: 'Team' },
   { id: 'IMG_0378_x5iqib', category: 'Manufacturing' },
   { id: 'IMG_0430_bnfi0v', category: 'Team' },
   { id: 'IMG_0444_pzkfun', category: 'Team' },
-  { id: 'IMG_0447_ais0xt', category: 'Manufacturing' },
   { id: 'IMG_0453_xiscrp', category: 'Team' },
   { id: 'IMG_1108_lkay4c', category: 'Team' },
   { id: 'IMG_1113_wb6dmo', category: 'Team' },
@@ -77,8 +74,6 @@ export const galleryPhotos = [
   { id: 'IMG_9612_xlbdb5', category: 'Manufacturing' },
   { id: 'IMG_9619_dy341a', category: 'Manufacturing' },
   { id: 'IMG_9641_pi3mja', category: 'Manufacturing' },
-  { id: 'IMG_9646_fegbtz', category: 'Manufacturing' },
-  { id: 'iStock-1161618868_x1meiw', category: 'Manufacturing' },
   { id: 'Locking_2_jrzuql', category: 'Manufacturing' },
   { id: 'Screenshot_2023-04-17_103327_cq7mkj', category: 'Manufacturing' },
 ];

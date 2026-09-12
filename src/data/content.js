@@ -8,13 +8,13 @@ import { cldVideo, cldVideoPoster } from './cloudinary.js';
  * so a future testimonial can carry an honest score without touching the component.
  */
 export const testimonials = [
-  {
-    quote:
-      'KEAA scaffolding systems are of premium quality and durable. Their team support is excellent and responsive on every order.',
-    name: 'Ahmed Al Mansoori',
-    company: 'Al Mansoori Group, UAE',
-    rating: 5,
-  },
+  // {
+  //   quote:
+  //     'KEAA scaffolding systems are of premium quality and durable. Their team support is excellent and responsive on every order.',
+  //   name: 'Ahmed Al Mansoori',
+  //   company: 'Al Mansoori Group, UAE',
+  //   rating: 5,
+  // },
   {
     quote:
       'We have been using KEAA formwork accessories for years. Consistent quality and on-time delivery, every single shipment.',
@@ -289,7 +289,7 @@ export const catalogueDownloads = [
     url: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/web_support_keaa-international_net/IQAE1nDX1LiORZ7UEr7sRjleARl-qf2YieMmzVUTsdis4qI?e=s1QADa',
   },
   {
-    title: 'Wood Connectors / Garden Hardware Catalogue',
+    title: 'Wood Connectors DIY Hardware Products Catalogue',
     type: 'PDF',
     group: 'Catalogues',
     url: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/web_support_keaa-international_net/IQDZg2UkpJN-RaIAwbR0rsxeATkSWko0PsjqrFR1SWLZMWc?e=DPhLYa',

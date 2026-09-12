@@ -135,6 +135,14 @@ export default function HomeHeroBrandTest() {
                 <span className="block">{lt('hero.title1', 'Engineering Reliable')}</span>
                 <span className="block">{lt('hero.title2', 'Scaffolding & Formwork Solutions')}</span>
               </h1>
+
+              {/* Supporting line under the headline. Deliberately small and slightly held back
+                  in white/75: at full strength it competes with the headline it is meant to
+                  sit under. It is one short phrase, so it never wraps and cannot disturb the
+                  measured two-line break above it. */}
+              <p className="mt-2.5 font-display text-sm font-semibold tracking-[-0.01em] text-white/75 sm:mt-3.5 sm:text-base lg:text-lg">
+                {lt('hero.tagline', 'Equipped for the Future')}
+              </p>
             </motion.div>
           </div>
 

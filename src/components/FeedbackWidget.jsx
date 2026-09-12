@@ -276,7 +276,18 @@ export default function FeedbackWidget() {
   if (isPrerender()) return null;
 
   const shownRating = hovered || form.rating;
-  const showNudge = nudgeArmed && !nudgeSilenced && !open && consentDecided;
+  /*
+   * The nudge card is switched OFF. Its heading and its two buttons were commented out (see
+   * the block further down), which left the panel itself still mounting: a bordered, shadowed,
+   * white 320px card with nothing inside it, parked over the bottom-left of every page.
+   *
+   * Gated here rather than deleted so it is one flag to restore — flip this to true and
+   * uncomment the card's contents below. Everything else (the arming timers, the session
+   * "already nudged" key that Legal.jsx clears) is left intact and harmless: with this false
+   * the card never mounts, so none of it reaches the screen.
+   */
+  const NUDGE_ENABLED = false;
+  const showNudge = NUDGE_ENABLED && nudgeArmed && !nudgeSilenced && !open && consentDecided;
 
   /* ---------------------------------------------------------------- *
    * The permanent trigger: a slim tab on the right edge.
@@ -324,12 +335,12 @@ export default function FeedbackWidget() {
           style={{ bottom: `calc(1.5rem + ${NUDGE_LIFT} + var(--consent-bar-h, 0px))` }}
           className="fixed left-4 z-40 w-[320px] max-w-[calc(100vw-2rem)] rounded-card border border-border bg-white p-5 shadow-cardHover transition-[bottom] duration-300 sm:left-6"
         >
-          <p className="font-display text-body-compact font-bold leading-snug text-text">
+          {/* <p className="font-display text-body-compact font-bold leading-snug text-text">
             {lt('nudge.title', 'Enjoying your experience?')}
-          </p>
-          <p className="mt-1 text-sm text-muted">{lt('nudge.body', 'Help us improve.')}</p>
+          </p> */}
+          
 
-          <div className="mt-4 flex items-center gap-2">
+          {/* <div className="mt-4 flex items-center gap-2">
             <Button size="sm" onClick={() => openDrawer('nudge')} className="flex-1">
               {lt('nudge.share', 'Share Feedback')}
             </Button>
@@ -340,7 +351,7 @@ export default function FeedbackWidget() {
             >
               {lt('nudge.dismiss', 'Not now')}
             </button>
-          </div>
+          </div> */}
         </motion.div>
       )}
     </AnimatePresence>

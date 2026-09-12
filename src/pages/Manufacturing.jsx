@@ -42,7 +42,8 @@ const CAPABILITIES = [
   company.facilities.galvanizingBaths,
   company.facilities.powderCoating,
   company.facilities.moldRooms,
-];
+  company.facilities.Electroplating,
+].filter(Boolean);
 
 /* Cloudinary machinery photographs, index-matched to company.machinery entries. */
 const machineryImages = [
@@ -101,7 +102,7 @@ export default function Manufacturing() {
                 align="left"
                 eyebrow={lt('infra.eyebrow', 'Our Infrastructure')}
                 title={lt('infra.title', 'World-Class Manufacturing Facilities')}
-                desc={lt('infra.desc', 'Five manufacturing units in Ludhiana, Punjab run the complete production process in-house, for precision engineering, consistent quality and on-time export delivery.')}
+                desc={lt('infra.desc', 'Six manufacturing units in Ludhiana, Punjab run the complete production process in-house, for precision engineering, consistent quality and on-time export delivery.')}
                 className="!mx-0 max-w-none"
               />
               {/* The vertical-integration proof: the in-house capabilities, on the same

@@ -26,7 +26,7 @@ export const faqs = [
     items: [
       {
         q: 'What does KEAA manufacture?',
-        a: 'We manufacture and export scaffolding systems, formwork accessories, safety products, livestock housing solutions and garden hardware. Everything is produced in our own facilities in Ludhiana, India: we are a manufacturer, not a trading house.',
+        a: 'We manufacture and export scaffolding systems, formwork accessories, safety products, livestock housing solutions, garden hardware, and custom-fabricated solutions. Everything is produced in our own manufacturing facilities in Ludhiana, India. As a manufacturer and custom fabricator, not a trading house, we maintain complete control over quality, precision, and production.',
       },
       {
         q: 'Do you manufacture in-house, or outsource?',
@@ -55,10 +55,10 @@ export const faqs = [
         q: 'Do your products meet European standards?',
         a: `Yes. Our welders are certified to EN 1090-2 / 3834-2 through SLV Germany, and our props (EN 1065 Class BD) and couplers (EN 74-1 B/BB) carry the Ü-mark accredited by Sigma Karlsruhe, Germany. Nailing plates hold an ETA from Denmark.`,
       },
-      {
-        q: 'How is quality controlled during production?',
-        a: 'Quality control runs at every stage, not just at the end: raw material inspection on arrival, in-process checks during production, and final testing before dispatch. We run our own tensile, compression, bend and weld-penetration testing in-house, plus third-party inspection where a project calls for it.',
-      },
+      // {
+      //   q: 'How is quality controlled during production?',
+      //   a: 'Quality control runs at every stage, not just at the end: raw material inspection on arrival, in-process checks during production, and final testing before dispatch. We run our own tensile, compression, bend and weld-penetration testing in-house, plus third-party inspection where a project calls for it.',
+      // },
     ],
   },
   {
@@ -74,18 +74,18 @@ export const faqs = [
         a: 'It depends on the product and the finish: a standard catalogue item and a custom-tooled component have very different economics. Send us your requirement through the quotation form and we will confirm the minimum for those exact items.',
         needsRealAnswer: true,
       },
-      {
-        q: 'What are your lead times?',
-        a: 'Lead time depends on the quantity, the finish and current production load. We will confirm a firm date with your quotation rather than quote a general figure we might not hold to.',
-        needsRealAnswer: true,
-      },
+      // {
+      //   q: 'What are your lead times?',
+      //   a: 'Lead time depends on the quantity, the finish and current production load. We will confirm a firm date with your quotation rather than quote a general figure we might not hold to.',
+      //   needsRealAnswer: true,
+      // },
       {
         q: 'Do you help with export documentation and shipping?',
         a: 'Yes. We handle export packaging and documentation as standard, and can advise on shipping options and country-specific requirements for your market. KEAA holds an AEO certificate from the Government of India and Star Export House status from the Ministry of Commerce.',
       },
       {
         q: 'How do I request a quotation?',
-        a: 'Use the Request a Quote form and include the product or item codes, quantity, required finish and destination port. The more of that you can give us, the closer the first quotation will be. Our team responds within one business day.',
+        a: 'Use the **Request a Quote** form and include the product or item codes, quantity, required finish, and destination port. The more details you provide, the more accurately we can prepare your initial quotation. Alternatively, you can email any of the **resource persons listed on our website** directly. Our team will respond within one business day.',
       },
       {
         q: 'Can I get samples before placing an order?',
@@ -97,10 +97,10 @@ export const faqs = [
   {
     group: 'Working With Us',
     items: [
-      {
-        q: 'Who do I contact for my region?',
-        a: 'Europe is served from our sales office in Eindhoven, the Netherlands. All other regions are served from our head office in Ludhiana, India. Use the region selector in the site header to see the right contact details for your market.',
-      },
+      // {
+      //   q: 'Who do I contact for my region?',
+      //   a: 'Europe is served from our sales office in Eindhoven, the Netherlands. All other regions are served from our head office in Ludhiana, India. Use the region selector in the site header to see the right contact details for your market.',
+      // },
       {
         q: 'Do you supply to distributors and resellers?',
         a: 'Yes, distributors, wholesalers, importers, contractors and project developers all form part of our customer base, and we offer OEM and private-label options for partners building their own range.',

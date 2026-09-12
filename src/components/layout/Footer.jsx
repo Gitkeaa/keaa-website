@@ -200,14 +200,7 @@ export default function Footer() {
                 ))}
               </ContactRow>
 
-              <ContactRow label={lt('footer.telFax', 'Telephone & Fax')}>
-                {landlineNumbers.map((line) => (
-                  <span key={line} className="block">
-                    {lt('footer.tel', 'Tel: {line}', { line })}
-                  </span>
-                ))}
-                <span className="block">{lt('footer.fax', 'Fax: {fax}', { fax: company.fax })}</span>
-              </ContactRow>
+            
 
               <ContactRow label={lt('footer.emailLabel', 'Email')}>
                 {company.emails.map((email) => (
@@ -221,6 +214,7 @@ export default function Footer() {
                     {email}
                   </a>
                 ))}
+
               </ContactRow>
             </ul>
           </div>

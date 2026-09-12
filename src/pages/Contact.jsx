@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Mail } from 'lucide-react';
 /* Full-colour brand marks, the sanctioned exception to the site's icon-free rule. The client
    asked this row specifically to show each platform in its own colour (see BrandIconsColor). */
 import {
@@ -22,7 +23,7 @@ import ProductLineItems, { emptyLineItem } from '../components/ui/ProductLineIte
 import WordLimitTextarea from '../components/ui/WordLimitTextarea';
 import { getAllProductLines } from '../data/productLines';
 import Reveal from '../components/ui/Reveal';
-import { company } from '../data/company';
+import { company, leadership, waLink } from '../data/company';
 import { img } from '../data/images';
 import { defaultCountry } from '../data/countriesData';
 import { submitPublicForm } from '../data/adminApi';
@@ -48,6 +49,18 @@ const socials = [
   { icon: YoutubeColor, name: 'YouTube', href: company.social.youtube },
   { icon: WhatsAppColor, name: 'WhatsApp', href: company.social.whatsapp },
 ].filter((s) => Boolean(s.href));
+
+/**
+ * The sales team, shown as reachable contact cards further down this page. They used to sit on
+ * the About page as a scrolling rail, which put the people you can actually call on a page that
+ * has no way to call them.
+ *
+ * The CMD and the two Managing Directors are excluded: they carry the company's voice and keep
+ * their full message blocks on About rather than becoming one card among seven here.
+ */
+const TEAM = leadership.filter(
+  (l) => l.role !== 'Chief Managing Director' && l.role !== 'Managing Director'
+);
 
 /**
  * The map, gated on consent.
@@ -251,7 +264,6 @@ export default function Contact() {
   const [exportCategory, setExportCategory] = useState(() => productLines[0]?.name || '');
   const category = mainTab === 'export' ? exportCategory : rfqCategory;
   const setCategory = mainTab === 'export' ? setExportCategory : setRfqCategory;
-  const landlineNumbers = Array.isArray(company.landline) ? company.landline : [company.landline];
 
   // Switching tabs clears any previous submit result/error so a visitor moving from a
   // finished RFQ to the plain contact form does not still see "Your Request Has Been Submitted".
@@ -399,14 +411,6 @@ export default function Contact() {
                       </a>
                     </p>
                   ))}
-                  {landlineNumbers.map((line) => (
-                    <p key={line} className="text-body-compact text-ink">
-                      <a href={`tel:${line.replace(/[^\d+]/g, '')}`} className="hover:text-navy-700">
-                        {lt('info.tel', 'Tel: {line}', { line })}
-                      </a>
-                    </p>
-                  ))}
-                  <p className="text-body-compact text-ink">{lt('info.fax', 'Fax: {fax}', { fax: company.fax })}</p>
                 </div>
               </div>
               <div className="mt-5">
@@ -688,6 +692,94 @@ export default function Contact() {
               </>
             )}
           </Reveal>
+        </div>
+      </section>
+
+      {/* SALES TEAM — moved here from the About page: these are the people a buyer actually
+          reaches, so they belong on the page they are reached from. Each card's WhatsApp and
+          email button renders only when that field is filled in data/company.js, so a person
+          with nothing on file yet shows their photo and role without any dead links. */}
+      <section id="team" className="section-pad">
+        <div className="container-page">
+          <Reveal>
+            <span className="eyebrow text-primary-darker">{lt('team.eyebrow', 'Our Team')}</span>
+            <h3 className="mt-2 font-display text-xl font-semibold text-text">
+              {lt('team.title', 'Talk to Our Sales Team Directly')}
+            </h3>
+          </Reveal>
+
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {TEAM.map((l, i) => (
+              <Reveal key={l.name} delay={Math.min(i, 3) * 0.05}>
+                <article className="group flex h-full flex-col overflow-hidden rounded-card ring-1 ring-text/[0.08] transition-all duration-300 hover:-translate-y-1 hover:ring-text/[0.16]">
+                  {/* Same photo-or-initials fallback the About rail used, so a missing
+                      portrait leaves a branded tile rather than a hole in the grid. */}
+                  {l.photo ? (
+                    <img
+                      src={l.photo}
+                      alt={l.name}
+                      loading="lazy"
+                      className="aspect-[3/4] w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                    />
+                  ) : (
+                    <span
+                      aria-hidden
+                      className="flex aspect-[3/4] w-full items-center justify-center bg-gradient-to-br from-navy-800 to-navy-950 font-display text-4xl font-bold tracking-[0.08em] text-primary-light"
+                    >
+                      {l.name.split(' ').map((n) => n[0]).join('')}
+                    </span>
+                  )}
+
+                  <div className="flex flex-1 flex-col bg-navy-50 p-5">
+                    <h4 className="font-display text-lg font-bold leading-snug text-text">{l.name}</h4>
+                    <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-darker">
+                      {lt(`team.${i}.role`, l.role)}
+                    </p>
+                    <p className="mt-3 text-body-compact leading-relaxed text-ink">
+                      {lt(`team.${i}.bio`, l.bio)}
+                    </p>
+
+                    <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 pt-4">
+                      {waLink(l.whatsapp) && (
+                        <a
+                          href={waLink(l.whatsapp)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-sm font-medium text-text transition-opacity hover:opacity-70"
+                          aria-label={lt('team.whatsappLabel', 'Message {name} on WhatsApp', { name: l.name })}
+                        >
+                          <WhatsAppColor className="h-5 w-5" />
+                          {lt('team.whatsapp', 'WhatsApp')}
+                        </a>
+                      )}
+                      {l.email && (
+                        <a
+                          href={`mailto:${l.email.trim()}`}
+                          className="inline-flex items-center gap-1.5 text-sm font-medium text-text transition-opacity hover:opacity-70"
+                          aria-label={lt('team.emailLabel', 'Email {name}', { name: l.name })}
+                        >
+                          <Mail className="h-5 w-5 text-navy-700" />
+                          {lt('team.email', 'Email')}
+                        </a>
+                      )}
+                      {l.linkedin && (
+                        <a
+                          href={l.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-sm font-medium text-text transition-opacity hover:opacity-70"
+                          aria-label={lt('team.linkedinLabel', '{name} on LinkedIn', { name: l.name })}
+                        >
+                          <LinkedinColor className="h-5 w-5" />
+                          {lt('team.linkedin', 'LinkedIn')}
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 

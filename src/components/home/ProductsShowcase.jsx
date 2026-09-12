@@ -138,7 +138,7 @@ export default function ProductsShowcase() {
               <span className="block">{lt('showcase.title2', 'Engineered for Excellence.')}</span>
             </h2>
             <p className="mt-4 text-body-compact text-text-muted">
-              {lt('showcase.body', 'From structural components to precision fasteners, our solutions are designed to deliver reliability in every build.')}
+              {lt('showcase.body', 'From robust structural components to precision-engineered solutions, we build reliability and performance into every project.')}
             </p>
 
             <ul className="mt-6 flex flex-col gap-1.5 rounded-card border border-border bg-surface-raised p-2">

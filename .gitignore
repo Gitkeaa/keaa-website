@@ -20,3 +20,6 @@ devserver.log
 
 .vercel
 .env*
+
+# Run artefact from scripts/capture-video-posters.mjs — regenerated on every run.
+scripts/video-posters.report.json

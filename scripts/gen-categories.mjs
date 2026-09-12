@@ -26,8 +26,10 @@ const slugify = (str) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '');
 
-// Keeps the already-published /products/wood-connectors URL. Mirrors productHelpers.js.
+// Keeps the already-published /products/wood-connectors URL. Mirrors categories.js — both
+// copies must carry the same keys, including the pre-rename one.
 const CATEGORY_SLUG_OVERRIDES = {
+  'wood-connectors-diy-hardware-products': 'wood-connectors',
   'wood-connectors-garden-hardware': 'wood-connectors',
 };
 

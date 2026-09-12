@@ -8,6 +8,7 @@ import CoreSolutions from '../components/home/CoreSolutions';
 import ProductsShowcase from '../components/home/ProductsShowcase';
 import ManufacturingBand from '../components/home/ManufacturingBand';
 import ProjectCarousel from '../components/home/ProjectCarousel';
+import CertificationStrip from '../components/home/CertificationStrip';
 import useSEO from '../hooks/useSEO';
 import { useLT } from '../i18n/LocaleContext';
 import { company } from '../data/company';
@@ -19,17 +20,6 @@ import { featuredProjects, featuredProjectImages } from '../data/content';
  * Rendered by App.jsx as the index route. The sections live in components/home/* and
  * data/*, so change their content there and reorder them in the JSX returned below.
  */
-
-const certificationCards = [
-  { name: 'ISO 9001:2015', body: 'TÜV Rheinland' },
-  { name: 'CE Certified', body: 'European Union' },
-  { name: 'SLV Mannheim', body: 'Germany EN 1090' },
-  { name: 'Sigma Karlsruhe', body: 'Germany EN 74' },
-  { name: 'AEO Certificate', body: 'Govt. of India' },
-  { name: 'Star Export House', body: 'Ministry of Commerce' },
-  { name: 'BSCI Compliant', body: 'Social Standards' },
-  { name: 'ETA Nailing Plates', body: 'Denmark' },
-];
 
 export default function Home() {
   const lt = useLT('home');
@@ -45,25 +35,12 @@ export default function Home() {
       <HomeHeroBrandTest />
 
       {/* CERTIFICATION STRIP — a calm trust line. Was a row of black-bordered cards that
-          competed with the hero right above it; softened to muted names alone with an edge
-          fade so it reads as quiet reassurance. The full set lives in the Certifications section
-          below and on /certifications, so this stays deliberately understated. */}
-      <div className="border-b border-navy-100 bg-white">
-        <div className="container-page flex items-center gap-6 py-5 sm:gap-9">
-          <span className="hidden flex-shrink-0 whitespace-nowrap font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted sm:block">
-            {lt('certs.label', 'Certified & Accredited')}
-          </span>
-          <div className="relative w-full overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_5%,#000_95%,transparent)] [-webkit-mask-image:linear-gradient(90deg,transparent,#000_5%,#000_95%,transparent)]">
-            <div className="flex w-max animate-marquee items-center gap-9">
-              {[...certificationCards, ...certificationCards].map((c, i) => (
-                <div key={i} className="flex items-center gap-2.5 opacity-60 transition-opacity duration-300 hover:opacity-100">
-                  <span className="whitespace-nowrap text-xs font-semibold text-text">{c.name}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+          competed with the hero right above it; softened to a floating rail of accreditation
+          marks with an edge fade so it reads as quiet reassurance. The full set with scopes
+          lives in the Certifications section below and on /certifications, so this stays
+          deliberately understated. Add a mark by pasting its Cloudinary key into
+          data/certificationLogos.js — see CertificationStrip.jsx. */}
+      <CertificationStrip />
 
       {/* WHO WE ARE + PRODUCT CATEGORIES — merged into one band. */}
       <CoreSolutions />

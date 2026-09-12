@@ -15,7 +15,7 @@ import { cldImage } from '../../data/cloudinary';
  *
  * EVERYTHING HERE IS DERIVED FROM company.js. That is deliberate and load-bearing — the
  * design this was built from carried "600+ Skilled Professionals" and "200+ Advanced
- * Machines", and neither is true: `company.stats` says 150+ employees, and there is no
+ * Machines", and neither is true: `company.stats` says 1000+ employees, and there is no
  * machine count anywhere in the data. Both would have been invented numbers on a
  * manufacturer's home page. The figures below read from the same source as the About page,
  * so the two can never disagree.
@@ -49,12 +49,15 @@ const SCALE = [
   /* `facilities.area` already carries its unit ("25,000 sq. m."), so it is printed whole. */
   { value: company.facilities.area, label: 'Manufacturing Area' },
   { value: company.facilities.capacity, label: 'Annual Capacity' },
-  { value: statValue('Skilled Employees'), label: 'Skilled Employees' },
+  /* The argument to statValue() is a LOOKUP KEY into company.stats, not display text — it has
+     to stay 'Skilled Employees' or the figure comes back undefined and the cell is filtered
+     out. `label` is the caption; the value ("1000+") already prints above it. */
+  { value: statValue('Skilled Employees'), label: 'Skilled Workforce' },
   { value: statValue('Countries Exported'), label: 'Countries Served' },
 ].filter((s) => s.value);
 
 const PROOF = [
-  'State-of-the-art facilities over 25,000 sq. m.',
+  'State-of-the-art facilities over 100,000+ sq. m.',
   'Advanced machinery & technology at global standards',
   'Strict in-house quality control at every stage',
   'Large production capacity to meet global demand',

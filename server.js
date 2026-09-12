@@ -37,7 +37,7 @@ const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY, maxRetries: 3 });
 app.use(cors());
 app.use(express.json());
 
-const SYSTEM_PROMPT = `You are the KEAA AI Assistant, a helpful and professional assistant for KEAA International Pvt. Ltd. — an Indo-Dutch company that manufactures and exports scaffolding systems, formwork accessories, safety products, livestock housing solutions and garden hardware.
+const SYSTEM_PROMPT = `You are the KEAA AI Assistant, a helpful and professional assistant for KEAA International Pvt. Ltd. — an Indian company that manufactures and exports scaffolding systems, formwork accessories, safety products, livestock housing solutions and garden hardware.
 
 Company Information:
 - Name: KEAA International Pvt. Ltd. (short: KEAA)
@@ -46,7 +46,7 @@ Company Information:
 - Manufacturing plant: Village Bhagwanpura, Dehlon Road, Ludhiana – 141120, Punjab, India (25,000 sq. m in-house facilities)
 - European sales office & warehouse: Park Forum 1005, 5657 HJ Eindhoven, The Netherlands
 - Main products: Scaffolding systems, formwork accessories, safety products, livestock housing solutions, garden hardware
-- Reach: Exports to 42+ countries with 20+ years of experience and 150+ skilled employees
+- Reach: Exports to 42+ countries with 23+ years of experience and 1000+ skilled workforce
 
 Capabilities & Quality:
 - In-house hot dip galvanizing (4 m and 1.7 m zinc baths, DIN EN 1461), automatic powder coating, sheet & tube laser cutting, robotic welding, CNC press brake
@@ -194,7 +194,7 @@ function renderCompanyProfile(c) {
   const f = c.facilities || {};
   return `
 COMPANY PROFILE:
-- Legal name: ${c.name} (${c.shortName}); part of the ${c.group} group. Indo-Dutch, founded ${c.founded}. Tagline: "${c.tagline}".
+- Legal name: ${c.name} (${c.shortName}); part of the ${c.group} group, founded ${c.founded}. Tagline: "${c.tagline}".
 - By the numbers: ${stat}.
 - Vision: ${c.values?.vision || ''}
 - Mission: ${c.values?.mission || ''}
