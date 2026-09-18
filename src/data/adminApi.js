@@ -5,21 +5,23 @@
  * the same MySQL the admin console reads. These endpoints are unauthenticated on the
  * backend (only submitting is public; reading and triaging still require an admin login).
  *
- * Base URL matches the admin API; override with VITE_ADMIN_API when the backend moves.
+ * WHERE THE API IS. Same rule as src/admin/api/client.js: calls go to the page's own origin
+ * as `/api/...`, and a proxy hands them to Spring Boot (vercel.json in production,
+ * vite.config.js in dev and preview). Nothing has to be configured at build time for the
+ * forms to work; what has to be right is the /api rewrite in vercel.json, and
+ * scripts/check-secrets.mjs checks that.
  *
- * VITE_* variables are inlined at BUILD time, so an unset VITE_ADMIN_API bakes the
- * localhost fallback into the shipped bundle and every public form then fails in the
- * visitor's browser. That failure is silent from the developer's side — the form just
- * shows "Could not send…" — so the check below makes it loud in the console of any
- * production build that was compiled without the variable. See .env.example.
+ * VITE_API_DIRECT_ORIGIN bypasses the proxy and calls that origin directly. A production
+ * build with it pointing at localhost would fail for every visitor, so that is shouted
+ * about below, at runtime, where it cannot be missed.
  */
-const API_BASE = import.meta.env.VITE_ADMIN_API ?? 'http://localhost:8080';
+const API_BASE = import.meta.env.VITE_API_DIRECT_ORIGIN ?? '';
 
 if (import.meta.env.PROD && /localhost|127\.0\.0\.1/.test(API_BASE)) {
   console.error(
-    `[KEAA] VITE_ADMIN_API was not set at build time, so the Contact / RFQ / Careers forms ` +
-      `POST to ${API_BASE} and will fail for every visitor. Set VITE_ADMIN_API to the ` +
-      `backend URL and rebuild.`
+    `[KEAA] VITE_API_DIRECT_ORIGIN was ${API_BASE} at build time, so the Contact / RFQ / Careers ` +
+      `forms POST to a visitor's own machine and fail. Unset it (same-origin through the ` +
+      `vercel.json proxy) and rebuild.`
   );
 }
 

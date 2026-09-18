@@ -53,20 +53,30 @@ const prerenderPlugin = chromium
     })
   : null
 
+/**
+ * Local stand-in for the vercel.json rewrites. Everything under /api (forms, chat widget,
+ * admin console) and /uploads (avatars, product images served by the backend) goes to the
+ * Spring Boot backend on :8080, so the app calls its API on ITS OWN origin in every
+ * environment and the login cookie is always first-party. The chat used to run in a separate
+ * Node process on :3001; it is now a controller in that same backend.
+ */
+const backendProxy = {
+  '/api': { target: 'http://localhost:8080', changeOrigin: true },
+  '/uploads': { target: 'http://localhost:8080', changeOrigin: true },
+}
+
 export default defineConfig({
   plugins: [react(), prerenderPlugin].filter(Boolean),
   server: {
     port: 5173,
     open: true,
-    /* Everything under /api — the forms AND the chat widget — is served by the Spring Boot
-       backend on :8080. The chat used to run in a separate Node process on :3001; it is now
-       a controller in that same backend, so there is one target rather than two. */
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-      },
-    },
+    proxy: backendProxy,
+  },
+  // `npm run preview` serves the production build locally; it needs the same proxy or every
+  // /api call would hit the static server and 404.
+  preview: {
+    port: 4173,
+    proxy: backendProxy,
   },
   build: {
     rollupOptions: {

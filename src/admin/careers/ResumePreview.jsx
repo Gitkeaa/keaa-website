@@ -1,5 +1,5 @@
 import { FileText, Download, ExternalLink } from 'lucide-react';
-import { resolveUpload, API_BASE } from '../api/client';
+import { resolveUpload, isOwnApiUrl } from '../api/client';
 import { downloadFile, resumeFilename } from './download';
 
 /**
@@ -26,7 +26,7 @@ export default function ResumePreview({ app }) {
   // Only frame files from a trusted host: our own backend, or Cloudinary (where resumes are
   // stored). resolveUpload passes absolute URLs through, so an attacker-influenced resumeUrl
   // could otherwise frame arbitrary external content inside the authenticated console.
-  const framable = isPdf && (url.startsWith(API_BASE) || /^https:\/\/res\.cloudinary\.com\//i.test(url));
+  const framable = isPdf && (isOwnApiUrl(url) || /^https:\/\/res\.cloudinary\.com\//i.test(url));
   return (
     <div className="overflow-hidden rounded-lg border border-slate-200">
       <div className="flex items-center justify-between border-b border-slate-100 px-3 py-2">

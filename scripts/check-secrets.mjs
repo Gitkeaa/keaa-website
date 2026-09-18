@@ -18,10 +18,10 @@
  *      hardcoded in source, which .env scanning alone would miss
  *   3. An .env file sits inside dist/                                 → fetchable at /.env
  *
- * Plus one warning (exit 0): VITE_ADMIN_API unset or pointing at localhost, which bakes the
- * `http://localhost:8080` fallback from src/data/adminApi.js into the bundle and breaks
- * every public form for every visitor. That one is checked against the build INPUT, not the
- * output — after minification the fallback string is indistinguishable from a real value.
+ * Plus warnings (exit 0) about the API wiring, checked against the build INPUT: the site
+ * calls its API on its own origin and vercel.json must proxy /api to the backend over https;
+ * and VITE_API_DIRECT_ORIGIN, if set, must not point at localhost, or every public form
+ * fails for every visitor. After minification neither can be told from the output.
  *
  * Run `npm run check:secrets` after `npm run build`, before uploading dist/.
  */
@@ -126,12 +126,25 @@ for (const file of readdirSync(DIST)) {
   if (file.startsWith('.env')) failures.push(`dist/${file} would be served publicly. Delete it.`);
 }
 
-// 3. Build INPUT check — the fallback that silently breaks every public form.
-const adminApi = process.env.VITE_ADMIN_API || env.get('VITE_ADMIN_API')?.value || '';
-if (!adminApi || PLACEHOLDER.test(adminApi)) {
-  warnings.push('VITE_ADMIN_API was not set for this build. Contact / RFQ / Careers forms will POST to http://localhost:8080 and fail for every visitor.');
-} else if (/localhost|127\.0\.0\.1/.test(adminApi)) {
-  warnings.push(`VITE_ADMIN_API is "${adminApi}". Fine for local testing, broken if this build is deployed.`);
+// 3. Build INPUT check — the API wiring that silently breaks every public form.
+//    Production calls the API same-origin (/api/...) and vercel.json proxies that to the
+//    backend, so what must be right is the rewrite, not an env var.
+const direct = process.env.VITE_API_DIRECT_ORIGIN || env.get('VITE_API_DIRECT_ORIGIN')?.value || '';
+if (direct && /localhost|127\.0\.0\.1/.test(direct)) {
+  warnings.push(`VITE_API_DIRECT_ORIGIN is "${direct}". Fine for local testing, broken if this build is deployed.`);
+}
+if (env.has('VITE_ADMIN_API') || process.env.VITE_ADMIN_API) {
+  warnings.push('VITE_ADMIN_API is set but retired and ignored. The API is reached same-origin through the vercel.json rewrite; remove the variable.');
+}
+if (!direct) {
+  try {
+    const vercel = JSON.parse(readFileSync(join(ROOT, 'vercel.json'), 'utf8'));
+    const api = (vercel.rewrites || []).find((r) => r.source === '/api/(.*)');
+    if (!api) warnings.push('vercel.json has no rewrite for /api/(.*). Every public form and the admin console will 404 in production.');
+    else if (!/^https:\/\//.test(api.destination)) warnings.push(`vercel.json rewrites /api to "${api.destination}", which is not an https backend.`);
+  } catch (e) {
+    warnings.push(`vercel.json could not be read (${e.message}); the /api proxy cannot be verified.`);
+  }
 }
 
 for (const w of warnings) console.warn(`check:secrets — WARN  ${w}`);

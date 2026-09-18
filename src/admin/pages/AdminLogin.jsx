@@ -32,7 +32,7 @@ function CubeMark({ className = 'h-11 w-11' }) {
 }
 
 export default function AdminLogin() {
-  const { login, loginTwoFactor, loading, isAuthed, checking } = useAdminAuth();
+  const { login, loginTwoFactor, loading, isAuthed, checking, sessionNotice } = useAdminAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from || '/portal';
@@ -96,6 +96,7 @@ export default function AdminLogin() {
             <span className="text-primary-dark">KEAA</span> <span className="text-text">Portal</span>
           </h1>
           <p className="mt-1.5 text-sm text-muted">Secure access to your KEAA account and business services.</p>
+          <p className="mt-1 text-sm font-semibold text-muted">EMPLOYEE LOGIN</p>
         </div>
 
         {/* Card */}
@@ -109,6 +110,15 @@ export default function AdminLogin() {
               <p className="text-sm text-muted">{challenge ? 'Enter your authentication code.' : 'Please sign in to continue.'}</p>
             </div>
           </div>
+
+          {/* Why the person is back here: the session ended under an open console (cookie
+              expired, "log out everywhere" elsewhere, cookie dropped). Cleared by a successful
+              sign-in; hidden while a fresh error has something more specific to say. */}
+          {sessionNotice && !error && (
+            <p role="status" className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+              {sessionNotice}
+            </p>
+          )}
 
           {!challenge ? (
             <form onSubmit={onSubmit} className="space-y-4">

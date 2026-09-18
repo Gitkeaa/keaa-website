@@ -1,28 +1,43 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { api, API_BASE } from '../api/client';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { api, API_LABEL } from '../api/client';
 
-/** Map a failed login call to a stable code and the admin console's own wording. */
+/**
+ * Map a failed login call to a stable code and the admin console's own wording.
+ *
+ * A CODE, not just a sentence: /portal/login is an internal console, but the same login is
+ * also reachable from the PUBLIC header in twelve languages, where internal detail is not
+ * something a visitor should be shown. Callers map the code to their own copy; `error` is
+ * the console's wording.
+ *
+ *   invalid      wrong email/password, or a deactivated account (the server answered 401)
+ *   unreachable  no answer at all: backend not running, DNS, CORS, timeout
+ *   server       the server answered with a failure (5xx: database down, mid-redeploy)
+ *   cookie       signed in, but the browser did not keep the session cookie (set by login())
+ */
 function describeLoginFailure(e) {
   if (e?.status === 401) {
     return { code: 'invalid', error: e.message && !/^Request failed/.test(e.message) ? e.message : 'Invalid email or password.' };
   }
-  if (e?.status >= 500) {
-    return {
-      code: 'server',
-      error: `The server is having trouble right now (HTTP ${e.status}). Please try again in a moment.`,
-    };
-  }
-  if (e?.network) {
-    const local = /localhost|127.0.0.1/.test(API_BASE);
-    const hint = import.meta.env.DEV && local
-      ? `The backend is not running on ${API_BASE}. Start it with "npm run dev:all" (or run KeaaAdminApiApplication in IntelliJ) and try again.`
-      : e.timedOut
-        ? `${API_BASE} did not answer in time. It may be restarting — please try again in a minute.`
-        : `Could not reach ${API_BASE}. Check your connection, or the server may be restarting — please try again in a minute.`;
+  // In dev the Vite proxy answers 5xx ITSELF when nothing listens on :8080, so a 5xx there
+  // means "backend not running", not "backend crashed".
+  if (e?.network || (import.meta.env.DEV && e?.status >= 500 && e?.status <= 504)) {
+    const hint = import.meta.env.DEV
+      ? `The backend is not running (${API_LABEL}). Start it with "npm run dev:all", or run KeaaAdminApiApplication in IntelliJ, and try again.`
+      : e?.timedOut
+        ? `${API_LABEL} did not answer in time. It may be restarting — please try again in a minute.`
+        : `Could not reach ${API_LABEL}. Check your connection, or the server may be restarting — please try again in a minute.`;
     return { code: 'unreachable', error: hint };
+  }
+  if (e?.status >= 500) {
+    return { code: 'server', error: `The server is having trouble right now (HTTP ${e.status}). Please try again in a moment.` };
   }
   return { code: 'server', error: e?.message || 'Login failed. Please try again.' };
 }
+
+const COOKIE_NOT_KEPT =
+  'You signed in, but your browser did not keep the session cookie, so the console cannot load. ' +
+  'This usually means cookies are blocked for this site (a private window, or a browser setting). ' +
+  'Allow cookies for this site and sign in again.';
 
 /**
  * Admin auth, backed by the Spring Boot API.
@@ -30,7 +45,9 @@ function describeLoginFailure(e) {
  * The JWT is stored in an httpOnly cookie the browser can't read from JS, so we don't keep
  * the token here at all. Instead:
  *   - on load we ask GET /api/auth/me who the cookie belongs to (session restore);
- *   - login() POSTs credentials and the server sets the cookie;
+ *   - login() POSTs credentials, the server sets the cookie, and ONE more /me confirms the
+ *     browser actually kept it before the console opens;
+ *   - any later 401 ends the session (the api client raises 'keaa:session-lost');
  *   - logout() POSTs to clear it.
  * `checking` is true while the initial /me call is in flight, so guards can wait instead of
  * bouncing a logged-in user to the login screen on refresh.
@@ -41,6 +58,14 @@ export function AdminAuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [checking, setChecking] = useState(true);
   const [loading, setLoading] = useState(false);
+  // Shown on the login screen after a session ended underneath an open console.
+  const [sessionNotice, setSessionNotice] = useState('');
+
+  // The event handler below needs the CURRENT user without re-subscribing on every change.
+  const userRef = useRef(null);
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
 
   useEffect(() => {
     let alive = true;
@@ -54,51 +79,83 @@ export function AdminAuthProvider({ children }) {
     };
   }, []);
 
-  const login = useCallback(async ({ email, password }) => {
-    setLoading(true);
+  // A 401 from ANY admin call while someone is signed in means the session is gone: the
+  // 7-day cookie expired, "log out everywhere" was used on another device, or the browser
+  // stopped sending the cookie. End it here so the layout guard sends the person to the
+  // login screen with an explanation, instead of every panel showing "Request failed (401)".
+  // Ignored while nobody is signed in: a wrong password and the restore call above both
+  // produce a 401 that means nothing.
+  useEffect(() => {
+    const onSessionLost = () => {
+      if (!userRef.current) return;
+      setSessionNotice('Your session has ended. Please sign in again.');
+      setUser(null);
+    };
+    window.addEventListener('keaa:session-lost', onSessionLost);
+    return () => window.removeEventListener('keaa:session-lost', onSessionLost);
+  }, []);
+
+  /**
+   * A login answering 200 does not prove the browser KEPT the cookie it was handed; a
+   * blocked third-party cookie looks exactly like success until the next request. So every
+   * sign-in is confirmed with one GET /me before the console opens. A 401 there means the
+   * cookie was dropped, and the person is told so, instead of getting a console that fails
+   * on every panel. Anything other than a 401 (a network blip right after login) proceeds
+   * with the login response; the session-lost handler catches whatever is real.
+   */
+  const confirmSession = useCallback(async (fallbackUser) => {
     try {
-      const res = await api.post('/api/auth/login', { email, password });
-      // 2FA on: the password was right but there is no session yet — the caller must collect a
-      // code and call loginTwoFactor with this challenge token.
-      if (res && res.twoFactorRequired) {
-        return { ok: false, twoFactor: true, challengeToken: res.challengeToken };
-      }
-      setUser(res);
-      return { ok: true };
+      return { ok: true, user: await api.get('/api/auth/me') };
     } catch (e) {
-      // A CODE, not just a sentence. This used to return English prose, which was fine while
-      // /portal/login was the only caller — an internal console, English-only, staffed by people
-      // who know what port 8080 is. It is now also reachable from the PUBLIC header in twelve
-      // languages, where an internal detail is not something a visitor should ever be shown.
-      // Callers map the code to their own copy; `error` stays for the admin console.
-      //
-      // Three codes, because they need three different actions from the person reading them:
-      //   invalid      wrong email/password (or a deactivated account) — the server answered 401
-      //   server       the server answered, but with a failure (5xx: database down, mid-redeploy)
-      //   unreachable  no answer at all — backend not running, wrong VITE_ADMIN_API, CORS, timeout
-      // Before this split every non-401 (including a 500 from a database hiccup on the live
-      // API) was reported as "Is the backend running on port 8080?", which sent people looking
-      // for a local process that was not the problem.
-      const { code, error } = describeLoginFailure(e);
-      return { ok: false, code, error };
-    } finally {
-      setLoading(false);
+      if (e?.status === 401) return { ok: false };
+      return { ok: true, user: fallbackUser };
     }
   }, []);
 
+  const login = useCallback(
+    async ({ email, password }) => {
+      setLoading(true);
+      try {
+        const res = await api.post('/api/auth/login', { email, password });
+        // 2FA on: the password was right but there is no session yet — the caller must collect
+        // a code and call loginTwoFactor with this challenge token.
+        if (res && res.twoFactorRequired) {
+          return { ok: false, twoFactor: true, challengeToken: res.challengeToken };
+        }
+        const confirmed = await confirmSession(res);
+        if (!confirmed.ok) return { ok: false, code: 'cookie', error: COOKIE_NOT_KEPT };
+        setSessionNotice('');
+        setUser(confirmed.user);
+        return { ok: true };
+      } catch (e) {
+        const { code, error } = describeLoginFailure(e);
+        return { ok: false, code, error };
+      } finally {
+        setLoading(false);
+      }
+    },
+    [confirmSession]
+  );
+
   /** Step two of a 2FA login — trade the challenge token + code for a session. */
-  const loginTwoFactor = useCallback(async ({ challengeToken, code }) => {
-    setLoading(true);
-    try {
-      const u = await api.post('/api/auth/login/2fa', { challengeToken, code });
-      setUser(u);
-      return { ok: true };
-    } catch (e) {
-      return { ok: false, error: e.status === 401 ? 'Your sign-in expired. Please log in again.' : (e.message || 'That code is not valid.') };
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const loginTwoFactor = useCallback(
+    async ({ challengeToken, code }) => {
+      setLoading(true);
+      try {
+        const u = await api.post('/api/auth/login/2fa', { challengeToken, code });
+        const confirmed = await confirmSession(u);
+        if (!confirmed.ok) return { ok: false, code: 'cookie', error: COOKIE_NOT_KEPT };
+        setSessionNotice('');
+        setUser(confirmed.user);
+        return { ok: true };
+      } catch (e) {
+        return { ok: false, error: e.status === 401 ? 'Your sign-in expired. Please log in again.' : (e.message || 'That code is not valid.') };
+      } finally {
+        setLoading(false);
+      }
+    },
+    [confirmSession]
+  );
 
   /** Re-pull the current user (e.g. after a profile photo change) so the shell updates. */
   const refreshUser = useCallback(async () => {
@@ -111,12 +168,24 @@ export function AdminAuthProvider({ children }) {
     } catch {
       /* clear locally even if the call fails */
     }
+    setSessionNotice('');
     setUser(null);
   }, []);
 
   const value = useMemo(
-    () => ({ user, role: user?.role ?? null, isAuthed: Boolean(user), checking, loading, login, loginTwoFactor, logout, refreshUser }),
-    [user, checking, loading, login, loginTwoFactor, logout, refreshUser]
+    () => ({
+      user,
+      role: user?.role ?? null,
+      isAuthed: Boolean(user),
+      checking,
+      loading,
+      sessionNotice,
+      login,
+      loginTwoFactor,
+      logout,
+      refreshUser,
+    }),
+    [user, checking, loading, sessionNotice, login, loginTwoFactor, logout, refreshUser]
   );
 
   return <AdminAuthContext.Provider value={value}>{children}</AdminAuthContext.Provider>;

@@ -29,11 +29,12 @@ npm run preview     # serve the production build locally
 (override with `KEAA_BACKEND_DIR`) and runs `mvnw spring-boot:run` there. Starting it from
 IntelliJ instead is fine too — the script notices the port is taken and stays out of the way.
 
-In dev, everything under `/api` is proxied by Vite to `localhost:8080` (see `vite.config.js`).
-**That proxy is dev-only.** Production builds bake `VITE_ADMIN_API` into the bundle instead
-(Vercel has it set to the Railway API), so a build made without it points every form and the
-portal at localhost and fails for visitors — `src/data/adminApi.js` logs a loud console error
-when that happens.
+The app calls its API on its **own origin** (`/api/...`, `/uploads/...`) in every environment,
+and a proxy hands those to Spring Boot: `vite.config.js` in dev and preview (to `localhost:8080`),
+the `rewrites` in `vercel.json` in production (to the Railway backend). One origin means the
+admin login cookie is first-party, which is what keeps the console working in browsers that
+block third-party cookies. To move the backend, change the destination in `vercel.json`;
+nothing is baked in at build time.
 
 `dev:server` still starts the old Express chat proxy on :3001; the chat now lives in the
 Spring Boot backend, so it is only kept for reference.
@@ -47,9 +48,10 @@ Copy `.env.example` to `.env` and fill it in:
 | `ANTHROPIC_API_KEY` | yes | Claude API key for the chat widget. Create one at <https://console.anthropic.com/settings/keys>; the account needs credit. Read only by `server.js`; it is never exposed to the browser. Without it the widget still answers, but from site data only. |
 | `ANTHROPIC_MODEL` | no | Overrides the model. Defaults to `claude-haiku-4-5`. |
 | `PORT` | no | API server port. Defaults to `3001`. |
+| `VITE_API_DIRECT_ORIGIN` | no | Bypasses the same-origin proxy and calls this API origin directly. Only for a special build (a preview pointed at a staging API); a cross-site origin brings the third-party-cookie problem back for the console. Inlined at build time. The old `VITE_ADMIN_API` is retired and ignored. |
 
-There is no client-side env surface: nothing in `src/` reads `import.meta.env`, so no key
-can leak into the bundle.
+The only client-side env surface is `VITE_API_DIRECT_ORIGIN`, and `npm run check:secrets`
+warns when it points at localhost. No key can leak into the bundle.
 
 ## Project Structure
 

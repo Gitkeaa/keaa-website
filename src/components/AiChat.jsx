@@ -288,14 +288,15 @@ export default function AiChat() {
 
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
-      // A TypeError from fetch() almost always means the backend (server.js on
-      // :3001) isn't running. Log the real reason to the console for debugging.
+      // A TypeError from fetch() almost always means the Spring Boot backend on :8080
+      // isn't running (the chat is a controller in it). Log the real reason for debugging.
       const offline = error instanceof TypeError;
       console.error('[KEAA AI Chat] request failed:', error);
       if (offline) {
         console.error(
           '[KEAA AI Chat] The chat backend is unreachable. Start it with "npm run dev:all" ' +
-            '(or "npm run dev:server"), then confirm http://localhost:3001/health responds.'
+            '(or run KeaaAdminApiApplication in IntelliJ), then confirm ' +
+            'http://localhost:8080/actuator/health responds.'
         );
       }
       const errorMessage = {

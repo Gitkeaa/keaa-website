@@ -1,25 +1,55 @@
 /**
  * Tiny fetch wrapper for the admin API (the Spring Boot backend).
  *
- * `credentials: 'include'` is the important bit: the JWT lives in an httpOnly cookie the
- * browser sets on login, and this tells fetch to send that cookie on every call. The
- * backend's CORS config allows this exact origin with credentials.
+ * WHERE THE API IS. Every call goes to the SAME ORIGIN the page came from, as `/api/...`,
+ * and a proxy hands it to Spring Boot:
+ *   - production:            vercel.json rewrites /api/* and /uploads/* to the Railway backend
+ *   - npm run dev / preview: vite.config.js proxies the same two prefixes to :8080
  *
- * Base URL defaults to the local Spring Boot port; override with VITE_ADMIN_API when the
- * backend is deployed elsewhere.
+ * That is what makes the session hold. The backend answers a login with an httpOnly cookie.
+ * Served through the page's own origin, that cookie is FIRST-PARTY and every browser keeps
+ * it. When this file called the Railway hostname directly, the same cookie was THIRD-PARTY
+ * (site: keaainternational.com, cookie: up.railway.app), and every browser that blocks
+ * third-party cookies (Safari, Brave, Chrome and Edge in private windows or with the
+ * setting on) accepted the login, then silently dropped the cookie, so the console opened
+ * and every panel answered 403.
  *
- * Every error thrown here carries enough to tell the three failure classes apart, because
- * the login screen shows a different message for each:
- *   err.network === true   the request never got an HTTP answer (backend down, DNS, CORS
- *                          refusal, or the timeout below) — `status` is undefined
- *   err.status === 401     wrong credentials / no session
+ * VITE_API_DIRECT_ORIGIN bypasses the proxy and calls that origin directly, for a preview
+ * build pointed at a staging API. Expect the cookie problem above whenever that origin is a
+ * different site from the page.
+ *
+ * `credentials: 'include'` is right for both: same-origin it changes nothing, direct it is
+ * what sends the cookie cross-site (the backend's CORS allows this exact origin).
+ *
+ * Every error thrown here carries enough to tell the failure classes apart:
+ *   err.network === true   no HTTP answer at all (backend down, DNS, CORS refusal, timeout)
+ *   err.status === 401     no session; the auth provider ends it (see 'keaa:session-lost')
+ *   err.status === 403     signed in, but this role may not do that
  *   err.status >= 500      the server was reached but failed (DB down, crash, redeploy)
  */
-export const API_BASE = import.meta.env.VITE_ADMIN_API ?? 'http://localhost:8080';
+export const API_BASE = import.meta.env.VITE_API_DIRECT_ORIGIN ?? '';
+
+/** Where requests go, in words, for error messages. */
+export const API_LABEL =
+  API_BASE || (import.meta.env.DEV ? 'the backend on http://localhost:8080 (through the Vite proxy)' : 'the API');
 
 /** Give up on a request after this long. Without it, a backend that accepts the TCP
  *  connection but never answers (cold start, hung DB) leaves the login spinner forever. */
 const REQUEST_TIMEOUT_MS = 20_000;
+
+/**
+ * True for a URL that belongs to our own backend: a same-origin path, or an absolute URL on
+ * API_BASE / this page's origin. Callers use it to decide whether the admin cookie may be
+ * sent to a URL and whether a file at that URL may be framed inside the console. A stored
+ * resumeUrl or imageUrl can be an outside host (Cloudinary), which is public and must never
+ * receive the cookie.
+ */
+export function isOwnApiUrl(url) {
+  if (!url) return false;
+  if (url.startsWith('/')) return true;
+  const own = API_BASE || (typeof window !== 'undefined' ? window.location.origin : '');
+  return Boolean(own) && url.startsWith(`${own}/`);
+}
 
 /** Resolve an uploaded-file path (e.g. an avatar's "/uploads/…") to a full URL; passes
  *  through absolute URLs and returns null for empty input. */
@@ -39,7 +69,7 @@ async function request(path, options = {}) {
   } catch (cause) {
     // fetch() only rejects when no HTTP response arrived at all.
     const timedOut = cause?.name === 'TimeoutError' || cause?.name === 'AbortError';
-    const err = new Error(timedOut ? `No reply from ${API_BASE} within ${REQUEST_TIMEOUT_MS / 1000}s` : `Cannot reach ${API_BASE}`);
+    const err = new Error(timedOut ? `No reply from ${API_LABEL} within ${REQUEST_TIMEOUT_MS / 1000}s` : `Cannot reach ${API_LABEL}`);
     err.network = true;
     err.timedOut = timedOut;
     err.cause = cause;
@@ -56,6 +86,13 @@ async function request(path, options = {}) {
       (body && body.error) || (typeof body === 'string' && body) || `Request failed (${res.status})`;
     const err = new Error(message);
     err.status = res.status;
+    if (res.status === 401 && typeof window !== 'undefined') {
+      // Tell the auth provider. It ignores this while nobody is signed in (a wrong password,
+      // the session-restore call on load) and otherwise ends the session, which sends the
+      // person to the login screen with a notice instead of leaving a console where every
+      // panel says "Request failed".
+      window.dispatchEvent(new CustomEvent('keaa:session-lost', { detail: { path } }));
+    }
     throw err;
   }
   return body;
