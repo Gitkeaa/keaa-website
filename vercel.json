@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npx puppeteer browsers install chrome && npm run build",
+  "buildCommand": "npx --yes puppeteer browsers install chrome || true; npm run build",
   "outputDirectory": "dist",
   "redirects": [
     {
