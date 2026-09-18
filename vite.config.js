@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import prerender from '@prerenderer/rollup-plugin'
-import { getPrerenderRoutes, findChromium } from './scripts/prerender-routes.mjs'
+import { getPrerenderRoutes, resolveBrowser } from './scripts/prerender-routes.mjs'
 
 /**
  * Build-time prerendering. See scripts/prerender-routes.mjs for what is rendered and why.
@@ -10,17 +10,20 @@ import { getPrerenderRoutes, findChromium } from './scripts/prerender-routes.mjs
  * plugin is simply not added and the build produces the same SPA it always did. A missing
  * browser must never be able to break a deploy.
  */
-const chromium = findChromium()
+const browser = await resolveBrowser()
 const includeProducts = process.env.PRERENDER_PRODUCTS === '1'
 
-if (!chromium) {
+if (!browser) {
   console.warn(
-    '[prerender] No Chromium found — skipping prerender; the build falls back to a plain SPA.\n' +
-      '            Set PRERENDER_BROWSER to a Chrome/Edge/Chromium binary to enable it.'
+    '[prerender] No browser found, so prerendering is SKIPPED and this build is a plain SPA.\n' +
+      '            Every URL will then serve the homepage title and canonical, which is the\n' +
+      '            single most expensive SEO failure this site has had. scripts/check-prerender.mjs\n' +
+      '            reports it after the build; set REQUIRE_PRERENDER=1 to make it fatal.\n' +
+      '            Set PRERENDER_BROWSER to a Chrome, Edge or Chromium binary to enable it.'
   )
 }
 
-const prerenderPlugin = chromium
+const prerenderPlugin = browser
   ? prerender({
       routes: getPrerenderRoutes({ includeProducts }),
       renderer: '@prerenderer/renderer-puppeteer',
@@ -43,11 +46,12 @@ const prerenderPlugin = chromium
         maxConcurrentRoutes: 4,
         timeout: 30000,
         launchOptions: {
-          executablePath: chromium,
+          executablePath: browser.executablePath,
           headless: true,
           // --no-sandbox is required for the common CI/root-container case and is safe
           // here: the only pages this browser ever opens are our own build output.
-          args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+          // browser.args carries whatever the serverless Chromium build additionally needs.
+          args: [...new Set(['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', ...browser.args])],
         },
       },
     })
@@ -65,7 +69,7 @@ const backendProxy = {
   '/uploads': { target: 'http://localhost:8080', changeOrigin: true },
 }
 
-export default defineConfig({
+export default defineConfig(async () => ({
   plugins: [react(), prerenderPlugin].filter(Boolean),
   server: {
     port: 5173,
@@ -115,4 +119,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))

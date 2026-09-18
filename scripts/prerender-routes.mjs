@@ -155,6 +155,38 @@ function findPuppeteerChrome() {
  * homepage title and canonical on every URL, which is what P1 and P2 of the SEO programme
  * were about. scripts/check-prerender.mjs fails the build instead of letting that ship.
  */
+/**
+ * Resolve a browser for the build, including the one a cloud build image can actually run.
+ *
+ * Why the sync findChromium below is not enough: Puppeteer's bundled Chrome is a normal
+ * desktop build and expects a desktop Linux's shared libraries (libnss3, libatk, libgbm and
+ * friends). A minimal cloud build container usually has none of them, so the binary is
+ * present, downloads fine, and then fails to launch. @sparticuz/chromium is a Chromium built
+ * for exactly that environment, with those libraries bundled, and it exposes the binary
+ * through an async call. Hence this wrapper and the async vite config.
+ *
+ * Returns { executablePath, args } or null. `args` are extra flags the serverless build
+ * needs; an ordinary desktop Chrome needs none of them.
+ */
+export async function resolveBrowser() {
+  const direct = findChromium();
+  if (direct) return { executablePath: direct, args: [] };
+
+  // Only worth trying on Linux. On a developer's Windows or macOS machine the sync lookup
+  // above has already found a real browser, and this package ships a Linux binary only.
+  if (process.platform !== 'linux') return null;
+
+  try {
+    const mod = await import('@sparticuz/chromium');
+    const chromium = mod.default ?? mod;
+    const executablePath = await chromium.executablePath();
+    if (!executablePath || !existsSync(executablePath)) return null;
+    return { executablePath, args: chromium.args ?? [] };
+  } catch {
+    return null;
+  }
+}
+
 export function findChromium() {
   if (process.env.PRERENDER_BROWSER) {
     return existsSync(process.env.PRERENDER_BROWSER) ? process.env.PRERENDER_BROWSER : null;
