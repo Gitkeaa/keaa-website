@@ -9,24 +9,34 @@ The AI chat widget is backed by a small **Express + Google Gemini** server (`ser
 
 ## Getting Started
 
-**Requires Node.js 20.11 or newer.** `server.js` uses `import.meta.dirname`, which does
-not exist on Node 18 or on Node 20.10 and below — the API server throws at boot on those
-versions. The front end alone will build on 18, but the chat will not run.
+**Requires Node.js 20.11 or newer** and, for anything that talks to the backend (the portal
+login at /portal/login, the Contact / RFQ / Careers forms, the chat widget), a running copy of
+the Spring Boot admin API on http://localhost:8080 with the MySQL80 service up.
 
 ```bash
 npm install
 
-npm run dev         # front end only, http://localhost:5173
-npm run dev:server  # API server only, http://localhost:3001
-npm run dev:all     # both together (this is the one you usually want)
+npm run dev:all     # front end + Spring Boot backend together (this is the one you want)
+npm run dev         # front end only, http://localhost:5173 — the portal will say
+                    # "The backend is not running on http://localhost:8080" until you start it
+npm run dev:backend # backend only (skips itself if :8080 is already answering, e.g. IntelliJ)
 
 npm run build       # production build to /dist
 npm run preview     # serve the production build locally
 ```
 
-The chat widget calls `/api/chat`, which the Vite dev server proxies to `localhost:3001`
-(see `vite.config.js`). **That proxy is dev-only** — it does not survive `npm run build`,
-so a production deployment must route `/api/*` to the Express process itself.
+`dev:backend` looks for the backend checkout at `%USERPROFILE%IdeaProjectskeaa-admin-api`
+(override with `KEAA_BACKEND_DIR`) and runs `mvnw spring-boot:run` there. Starting it from
+IntelliJ instead is fine too — the script notices the port is taken and stays out of the way.
+
+In dev, everything under `/api` is proxied by Vite to `localhost:8080` (see `vite.config.js`).
+**That proxy is dev-only.** Production builds bake `VITE_ADMIN_API` into the bundle instead
+(Vercel has it set to the Railway API), so a build made without it points every form and the
+portal at localhost and fails for visitors — `src/data/adminApi.js` logs a loud console error
+when that happens.
+
+`dev:server` still starts the old Express chat proxy on :3001; the chat now lives in the
+Spring Boot backend, so it is only kept for reference.
 
 ### Environment
 

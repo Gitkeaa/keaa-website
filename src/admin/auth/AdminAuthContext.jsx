@@ -1,5 +1,28 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { api } from '../api/client';
+import { api, API_BASE } from '../api/client';
+
+/** Map a failed login call to a stable code and the admin console's own wording. */
+function describeLoginFailure(e) {
+  if (e?.status === 401) {
+    return { code: 'invalid', error: e.message && !/^Request failed/.test(e.message) ? e.message : 'Invalid email or password.' };
+  }
+  if (e?.status >= 500) {
+    return {
+      code: 'server',
+      error: `The server is having trouble right now (HTTP ${e.status}). Please try again in a moment.`,
+    };
+  }
+  if (e?.network) {
+    const local = /localhost|127.0.0.1/.test(API_BASE);
+    const hint = import.meta.env.DEV && local
+      ? `The backend is not running on ${API_BASE}. Start it with "npm run dev:all" (or run KeaaAdminApiApplication in IntelliJ) and try again.`
+      : e.timedOut
+        ? `${API_BASE} did not answer in time. It may be restarting — please try again in a minute.`
+        : `Could not reach ${API_BASE}. Check your connection, or the server may be restarting — please try again in a minute.`;
+    return { code: 'unreachable', error: hint };
+  }
+  return { code: 'server', error: e?.message || 'Login failed. Please try again.' };
+}
 
 /**
  * Admin auth, backed by the Spring Boot API.
@@ -46,14 +69,17 @@ export function AdminAuthProvider({ children }) {
       // A CODE, not just a sentence. This used to return English prose, which was fine while
       // /portal/login was the only caller — an internal console, English-only, staffed by people
       // who know what port 8080 is. It is now also reachable from the PUBLIC header in twelve
-      // languages, where "Is the backend running on port 8080?" is both untranslated and an
-      // internal detail no visitor should ever be shown. Callers map the code to their own copy;
-      // `error` stays for the admin console, which wants exactly this wording.
-      const code = e.status === 401 ? 'invalid' : 'unreachable';
-      const error =
-        code === 'invalid'
-          ? 'Invalid email or password.'
-          : 'Could not reach the server. Is the backend running on port 8080?';
+      // languages, where an internal detail is not something a visitor should ever be shown.
+      // Callers map the code to their own copy; `error` stays for the admin console.
+      //
+      // Three codes, because they need three different actions from the person reading them:
+      //   invalid      wrong email/password (or a deactivated account) — the server answered 401
+      //   server       the server answered, but with a failure (5xx: database down, mid-redeploy)
+      //   unreachable  no answer at all — backend not running, wrong VITE_ADMIN_API, CORS, timeout
+      // Before this split every non-401 (including a 500 from a database hiccup on the live
+      // API) was reported as "Is the backend running on port 8080?", which sent people looking
+      // for a local process that was not the problem.
+      const { code, error } = describeLoginFailure(e);
       return { ok: false, code, error };
     } finally {
       setLoading(false);

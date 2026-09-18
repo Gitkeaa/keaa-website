@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:backend": "node scripts/dev-backend.mjs",
     "dev:server": "node server.js",
-    "dev:all": "concurrently \"npm run dev\" \"npm run dev:server\"",
+    "dev:all": "concurrently -k -n web,api -c cyan,green \"npm run dev\" \"npm run dev:backend\"",
     "gen:categories": "node scripts/gen-categories.mjs",
     "gen:sitemap": "node scripts/gen-categories.mjs && node scripts/gen-sitemap.mjs",
     "prebuild": "node scripts/gen-categories.mjs && node scripts/gen-sitemap.mjs",
