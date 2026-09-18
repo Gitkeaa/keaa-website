@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Plus, Search, X } from 'lucide-react';
 import ImagePlaceholder from './ImagePlaceholder';
+import { useProductL10n } from '../../i18n/LocaleContext';
 
 /**
  * Product picker + quantity, as a repeatable list of line items — used by the RFQ and Export
@@ -87,6 +88,9 @@ export default function ProductLineItems({ items, onChange, labels = {}, classNa
 }
 
 function LineItemRow({ item, catalog, excludeIds, onFocusSearch, onChangeItem, onRemove, labels }) {
+  // Names are DISPLAYED in the active language; the picked product object stays the
+  // catalogue original, so the quotation reaches the sales team with the English name.
+  const { lp } = useProductL10n();
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
@@ -97,13 +101,13 @@ function LineItemRow({ item, catalog, excludeIds, onFocusSearch, onChangeItem, o
   const { results, hadDuplicates } = useMemo(() => {
     const q = query.trim();
     if (!catalog || !q) return { results: [], hadDuplicates: false };
-    const matches = catalog.searchProducts(catalog.products, q);
+    const matches = catalog.searchProducts(catalog.products, q, lp);
     const visible = matches.filter((p) => !excludeIds.includes(p.id));
     return {
       results: visible.slice(0, MAX_SUGGESTIONS),
       hadDuplicates: visible.length === 0 && matches.length > 0,
     };
-  }, [catalog, query, excludeIds]);
+  }, [catalog, query, excludeIds, lp]);
 
   useEffect(() => setActive(0), [query]);
 
@@ -148,7 +152,7 @@ function LineItemRow({ item, catalog, excludeIds, onFocusSearch, onChangeItem, o
             <div className="h-11 w-11 flex-shrink-0 overflow-hidden rounded-card">
               <ImagePlaceholder
                 src={catalog ? catalog.productImage(item.product, { w: 88, h: 88, crop: 'fill' }) : null}
-                alt={item.product.name}
+                alt={lp(item.product).name}
                 ratio="aspect-square"
                 tone="light"
                 zoom={false}
@@ -156,7 +160,7 @@ function LineItemRow({ item, catalog, excludeIds, onFocusSearch, onChangeItem, o
               />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold text-text">{item.product.name}</p>
+              <p className="truncate text-sm font-semibold text-text">{lp(item.product).name}</p>
               {item.product.itemCode && (
                 <p className="font-mono text-xs text-primary-dark">{item.product.itemCode}</p>
               )}
@@ -209,7 +213,7 @@ function LineItemRow({ item, catalog, excludeIds, onFocusSearch, onChangeItem, o
                         <div className="h-9 w-9 flex-shrink-0 overflow-hidden rounded-card">
                           <ImagePlaceholder
                             src={catalog.productImage(p, { w: 72, h: 72, crop: 'fill' })}
-                            alt={p.name}
+                            alt={lp(p).name}
                             ratio="aspect-square"
                             tone="light"
                             zoom={false}
@@ -217,7 +221,7 @@ function LineItemRow({ item, catalog, excludeIds, onFocusSearch, onChangeItem, o
                           />
                         </div>
                         <span className="min-w-0 flex-1">
-                          <span className="block truncate text-sm font-medium text-navy-900">{p.name}</span>
+                          <span className="block truncate text-sm font-medium text-navy-900">{lp(p).name}</span>
                           {p.itemCode && <span className="block font-mono text-xs text-muted">{p.itemCode}</span>}
                         </span>
                       </button>

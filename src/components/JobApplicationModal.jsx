@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Check, ChevronDown, UploadCloud, Copy } from 'lucide-react';
 import Button from './ui/Button';
-import CountrySelect from './ui/CountrySelect';
+import CountrySelect, { useCountryName } from './ui/CountrySelect';
 import PhoneField from './ui/PhoneField';
 import EmailField from './ui/EmailField';
 import { defaultCountry } from '../data/countriesData';
@@ -312,12 +312,13 @@ function ReviewSection({ title, step, goTo, rows, reduce }) {
 }
 function ReviewStep({ form, country, resumeName, goTo, consent, setConsent, reduce }) {
   const lt = useLT('careers');
+  const countryName = useCountryName();
   const phone = `${country?.dial || ''} ${form.phone || ''}`.trim();
   const altPhone = form.altPhone ? `${country?.dial || ''} ${form.altPhone}`.trim() : '';
   return (
     <div className="space-y-4">
       <ReviewSection title={lt('apply.review.personal', 'Personal')} step={1} goTo={goTo} reduce={reduce}
-        rows={[[lt('apply.review.rows.title', 'Title'), form.title], [lt('apply.review.rows.name', 'Name'), form.name], [lt('apply.review.rows.email', 'Email'), form.email], [lt('apply.review.rows.altEmail', 'Alternate email'), form.altEmail], [lt('apply.review.rows.phone', 'Phone'), phone], [lt('apply.review.rows.altContact', 'Alternate contact'), altPhone], [lt('apply.review.rows.country', 'Country'), country?.name], [lt('apply.review.rows.city', 'City'), form.city]]} />
+        rows={[[lt('apply.review.rows.title', 'Title'), form.title], [lt('apply.review.rows.name', 'Name'), form.name], [lt('apply.review.rows.email', 'Email'), form.email], [lt('apply.review.rows.altEmail', 'Alternate email'), form.altEmail], [lt('apply.review.rows.phone', 'Phone'), phone], [lt('apply.review.rows.altContact', 'Alternate contact'), altPhone], [lt('apply.review.rows.country', 'Country'), countryName(country)], [lt('apply.review.rows.city', 'City'), form.city]]} />
       <ReviewSection title={lt('apply.review.qualification', 'Qualification')} step={2} goTo={goTo} reduce={reduce}
         rows={[
           [lt('apply.review.rows.sscSchool', '10th school / board'), form.sscSchool], [lt('apply.review.rows.sscPercent', '10th %'), form.sscPercent],

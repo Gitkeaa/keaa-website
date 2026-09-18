@@ -175,7 +175,9 @@ const rideApps = [
 
 /* Catalogue categories + enquiry-only lines like Safety Products, so a plain contact lead
    can flag which ones it is about. */
-const productCategoryOptions = getAllProductLines().map((c) => ({ value: c.name, label: c.name }));
+/* The VALUE is the English line name the backend routes on; the label is translated where the
+   select renders (rfq.lines.<slug>), so the visitor reads it in their language. */
+const productCategoryOptions = getAllProductLines().map((c) => ({ value: c.name, label: c.name, slug: c.slug }));
 
 /* The RFQ/Export tabs also use this exact list for their "Product Category" select — the
    backend's AssignmentService auto-routes a submission by matching `category` AGAINST A
@@ -509,7 +511,7 @@ export default function Contact() {
                       className="sm:col-span-2"
                       label={lt('form.category', 'Product Category')}
                       placeholder={lt('form.categoryPlaceholder', 'Select one or more categories…')}
-                      options={productCategoryOptions}
+                      options={productCategoryOptions.map((o) => ({ value: o.value, label: ltRfq(`lines.${o.slug}`, o.label) }))}
                       value={categories}
                       onChange={setCategories}
                     />
@@ -633,7 +635,7 @@ export default function Contact() {
                       >
                         {productLines.map((c) => (
                           <option key={c.slug} value={c.name}>
-                            {c.name}
+                            {ltRfq(`lines.${c.slug}`, c.name)}
                           </option>
                         ))}
                       </select>

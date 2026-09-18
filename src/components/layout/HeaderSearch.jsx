@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, X } from 'lucide-react';
-import { useT } from '../../i18n/LocaleContext';
+import { useT, useLT, useLocale, useProductL10n } from '../../i18n/LocaleContext';
+import { localePrefixOf } from '../../i18n/languages';
 import { headerControl } from './headerControl';
 import HeaderHint from './HeaderHint';
 
@@ -111,6 +112,9 @@ function snippet(page, term) {
 
 export default function HeaderSearch({ onOpenChange }) {
   const t = useT();
+  const ltc = useLT('catalog');
+  const { urlLocale } = useLocale();
+  const { lp } = useProductL10n();
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -228,11 +232,11 @@ export default function HeaderSearch({ onOpenChange }) {
     const out = [];
 
     if (catalog) {
-      for (const p of catalog.searchProducts(catalog.products, q).slice(0, MAX_PRODUCTS)) {
+      for (const p of catalog.searchProducts(catalog.products, q, lp).slice(0, MAX_PRODUCTS)) {
         out.push({
           id: `p:${p.id}`,
-          label: p.name,
-          hint: [p.itemCode, p.subcategory].filter(Boolean).join(' · '),
+          label: lp(p).name,
+          hint: [p.itemCode, ltc(`sub.${p.subSlug}.name`, p.subcategory)].filter(Boolean).join(' · '),
           to: `/product/${p.id}`,
           kind: t('search.products'),
         });
@@ -240,7 +244,15 @@ export default function HeaderSearch({ onOpenChange }) {
     }
 
     if (pages) {
+      /**
+       * The index covers every language's pages (it is built from all of dist/), so only
+       * the pages of the language being read are offered. Their routes carry the language
+       * prefix, which the router's basename would add a second time on navigation, so it
+       * is stripped from the target.
+       */
+      const prefix = urlLocale ? `/${urlLocale}` : '';
       const ranked = pages
+        .filter((page) => localePrefixOf(page.r) === prefix)
         .map((page) => ({ page, score: scorePage(page, terms) }))
         .filter((r) => r.score > 0)
         .sort((a, b) => b.score - a.score)
@@ -251,14 +263,14 @@ export default function HeaderSearch({ onOpenChange }) {
           id: `g:${page.r}`,
           label: page.t || page.r,
           hint: snippet(page, terms[0]),
-          to: page.r,
+          to: prefix ? page.r.slice(prefix.length) || '/' : page.r,
           kind: t('search.pages'),
         });
       }
     }
 
     return out;
-  }, [query, catalog, pages, t]);
+  }, [query, catalog, pages, t, ltc, lp, urlLocale]);
 
   useEffect(() => setActive(0), [query]);
 

@@ -8,7 +8,7 @@ import CtaBand from '../components/CtaBand';
 import useSEO, { absoluteUrl } from '../hooks/useSEO';
 import { getProductById, getRelatedProducts, publicIdFromCloudinaryUrl } from '../data/productHelpers';
 import { cldImage } from '../data/cloudinary';
-import { useLT } from '../i18n/LocaleContext';
+import { useLT, useProductL10n } from '../i18n/LocaleContext';
 
 /**
  * Product detail page: image gallery, key facts, specifications and related products for a single
@@ -24,9 +24,16 @@ const optimized = (url, opts) => {
 
 export default function ProductDetail() {
   const lt = useLT('product');
+  const ltc = useLT('catalog');
+  const { lp } = useProductL10n();
   const { id } = useParams();
-  const product = getProductById(id);
+  // The catalogue entry, with its name, description and specification rows in the active
+  // language (the same object when nothing is translated, see localizeProduct.js).
+  const product = lp(getProductById(id));
   const [active, setActive] = useState(0);
+  // Category and subcategory names share the catalogue page's dictionary keys.
+  const catName = product ? ltc(`cat.${product.catSlug}.name`, product.category) : '';
+  const subName = product ? ltc(`sub.${product.subSlug}.name`, product.subcategory) : '';
 
   // Reset the gallery selection during render (before paint) when the product changes,
   // so navigating between products never flashes the previous product's active image.
@@ -47,10 +54,10 @@ export default function ProductDetail() {
    */
   const breadcrumbs = product
     ? [
-        { label: 'Home', to: '/' },
-        { label: 'Products', to: '/products' },
-        { label: product.category, to: `/products/${product.catSlug}` },
-        { label: product.subcategory, to: `/products/${product.catSlug}/${product.subSlug}` },
+        { label: lt('breadcrumb.home', 'Home'), to: '/' },
+        { label: lt('breadcrumb.products', 'Products'), to: '/products' },
+        { label: catName, to: `/products/${product.catSlug}` },
+        { label: subName, to: `/products/${product.catSlug}/${product.subSlug}` },
         { label: product.name },
       ]
     : undefined;
@@ -66,7 +73,7 @@ export default function ProductDetail() {
         ...(product.cloudinaryImages?.length
           ? { image: product.cloudinaryImages.slice(0, 6) }
           : {}),
-        category: `${product.category} > ${product.subcategory}`,
+        category: `${catName} > ${subName}`,
         brand: { '@type': 'Brand', name: 'KEAA International' },
         manufacturer: {
           '@type': 'Organization',
@@ -94,7 +101,7 @@ export default function ProductDetail() {
 
   useSEO({
     title: product ? product.name : lt('seo.title', 'Product'),
-    description: product?.description || product?.subcategory,
+    description: product?.description || subName,
     breadcrumbs,
     schema: productSchema,
   });
@@ -120,7 +127,7 @@ export default function ProductDetail() {
     product.itemCode && { label: lt('facts.itemCode', 'Item Code'), value: product.itemCode },
     product.diameter && { label: lt('facts.tubeSize', 'Tube Size'), value: product.diameter },
     product.finish && { label: lt('facts.finish', 'Finish'), value: product.finish },
-    { label: lt('facts.category', 'Category'), value: product.subcategory },
+    { label: lt('facts.category', 'Category'), value: subName },
   ].filter(Boolean);
 
   return (
@@ -133,9 +140,9 @@ export default function ProductDetail() {
             <span aria-hidden className="text-primary">/</span>
             <Link to="/products" className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">{lt('breadcrumb.products', 'Products')}</Link>
             <span aria-hidden className="text-primary">/</span>
-            <Link to={`/products/${product.catSlug}`} className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">{product.category}</Link>
+            <Link to={`/products/${product.catSlug}`} className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">{catName}</Link>
             <span aria-hidden className="text-primary">/</span>
-            <Link to={`/products/${product.catSlug}/${product.subSlug}`} className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">{product.subcategory}</Link>
+            <Link to={`/products/${product.catSlug}/${product.subSlug}`} className="border-b border-transparent pb-0.5 transition-colors hover:border-primary hover:text-primary-darker">{subName}</Link>
             <span aria-hidden className="text-primary">/</span>
             <span className="font-medium text-text" aria-current="page">{product.name}</span>
           </nav>
@@ -177,7 +184,7 @@ export default function ProductDetail() {
             {/* Info */}
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <Badge tone="navy">{product.category}</Badge>
+                <Badge tone="navy">{catName}</Badge>
                 {product.finish && <Badge tone="gold">{product.finish}</Badge>}
               </div>
               <h1 className="mt-3 font-display text-3xl font-bold text-text">{product.name}</h1>

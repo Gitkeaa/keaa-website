@@ -6,7 +6,7 @@ import CtaBand from '../components/CtaBand';
 import ImagePlaceholder from '../components/ui/ImagePlaceholder';
 import Button from '../components/ui/Button';
 import useSEO, { absoluteUrl } from '../hooks/useSEO';
-import { useLT } from '../i18n/LocaleContext';
+import { useLT, useProductL10n } from '../i18n/LocaleContext';
 import {
   getCategory,
   getProductsByCategory,
@@ -49,6 +49,12 @@ export default function ProductCatalog() {
 
   const activeSub = category?.subcategories.find((s) => s.slug === subSlug) || null;
 
+  // Category and subcategory names in the active language, for the crumbs, the schema and
+  // the page title. Every other heading below calls the same keys inline.
+  const catName = category ? lt(`cat.${category.slug}.name`, category.name) : '';
+  const subName = activeSub ? lt(`sub.${activeSub.slug}.name`, activeSub.name) : '';
+  const { lp } = useProductL10n();
+
   // Reset transient state when the route changes — during render (before paint) so the
   // previous route's filters never flash against the new product list.
   const routeKey = `${categorySlug}/${subSlug || ''}`;
@@ -72,11 +78,13 @@ export default function ProductCatalog() {
   const facets = useMemo(() => getFacets(baseList), [baseList]);
 
   const visible = useMemo(() => {
-    const searched = searchProducts(baseList, query);
+    // Facets and filters work on the English data (their values are the derived English
+    // terms); search matches both languages and sorting compares the names the visitor sees.
+    const searched = searchProducts(baseList, query, lp);
     const filtered = applyFilters(searched, activeFilters);
-    const sorted = [...filtered].sort(SORTS[sort].fn);
+    const sorted = [...filtered].sort((a, b) => SORTS[sort].fn(lp(a), lp(b)));
     return sorted;
-  }, [baseList, query, activeFilters, sort]);
+  }, [baseList, query, activeFilters, sort, lp]);
 
   const activeFilterCount = Object.values(activeFilters).reduce((n, s) => n + (s?.size || 0), 0);
 
@@ -92,10 +100,10 @@ export default function ProductCatalog() {
    */
   const breadcrumbs = category
     ? [
-        { label: 'Home', to: '/' },
-        { label: 'Products', to: '/products' },
-        { label: category.name, ...(activeSub ? { to: `/products/${category.slug}` } : {}) },
-        ...(activeSub ? [{ label: activeSub.name }] : []),
+        { label: lt('crumbs.home', 'Home'), to: '/' },
+        { label: lt('crumbs.products', 'Products'), to: '/products' },
+        { label: catName, ...(activeSub ? { to: `/products/${category.slug}` } : {}) },
+        ...(activeSub ? [{ label: subName }] : []),
       ]
     : undefined;
 
@@ -103,8 +111,8 @@ export default function ProductCatalog() {
     ? {
         '@context': 'https://schema.org',
         '@type': 'CollectionPage',
-        name: activeSub ? `${activeSub.name}, ${category.name}` : category.name,
-        ...(category.short ? { description: category.short } : {}),
+        name: activeSub ? `${subName}, ${catName}` : catName,
+        ...(category.short ? { description: lt(`cat.${category.slug}.short`, category.short) } : {}),
         url: absoluteUrl(
           activeSub ? `/products/${category.slug}/${activeSub.slug}` : `/products/${category.slug}`,
         ),
@@ -115,7 +123,7 @@ export default function ProductCatalog() {
             '@type': 'ListItem',
             position: start + i + 1,
             url: absoluteUrl(`/product/${p.id}`),
-            name: p.name,
+            name: lp(p).name,
           })),
         },
       }
@@ -123,11 +131,7 @@ export default function ProductCatalog() {
 
   useSEO({
     title: category
-      ? lt('seo.listTitle', '{name}, Products', {
-          name: activeSub
-            ? lt(`sub.${activeSub.slug}.name`, activeSub.name)
-            : lt(`cat.${category.slug}.name`, category.name),
-        })
+      ? lt('seo.listTitle', '{name}, Products', { name: activeSub ? subName : catName })
       : lt('seo.title', 'Products'),
     description: category?.short ? lt(`cat.${category.slug}.short`, category.short) : undefined,
     breadcrumbs,
@@ -458,6 +462,8 @@ function ViewBtn({ active, onClick, label, children }) {
 
 function ProductRow({ product }) {
   const lt = useLT('catalog');
+  const { lp } = useProductL10n();
+  const p = lp(product);
   const src = productImage(product, { w: 200, h: 200, crop: 'fill' });
   return (
     <Link
@@ -465,14 +471,14 @@ function ProductRow({ product }) {
       className="group flex items-center gap-4 rounded-card border border-navy-100 bg-white p-3 shadow-card transition-shadow hover:shadow-cardHover"
     >
       <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-card">
-        <ImagePlaceholder src={src} label={product.name} alt={product.name} tone="light" ratio="aspect-square" className="!rounded-none" zoom={false} caption={src ? undefined : lt('card.soon', 'Soon')} />
+        <ImagePlaceholder src={src} label={p.name} alt={p.name} tone="light" ratio="aspect-square" className="!rounded-none" zoom={false} caption={src ? undefined : lt('card.soon', 'Soon')} />
       </div>
       <div className="min-w-0 flex-1">
-        <h3 className="truncate font-display text-sm font-semibold text-text group-hover:text-primary-dark">{product.name}</h3>
+        <h3 className="truncate font-display text-sm font-semibold text-text group-hover:text-primary-dark">{p.name}</h3>
         {product.itemCode && <p className="mt-0.5 font-mono text-xs text-primary-dark">{product.itemCode}</p>}
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-text-muted">
           {product.diameter && <span>{product.diameter}</span>}
-          {product.finish && <span>{product.finish}</span>}
+          {p.finish && <span>{p.finish}</span>}
           <span className="text-text-muted">{lt(`sub.${product.subSlug}.name`, product.subcategory)}</span>
         </div>
       </div>

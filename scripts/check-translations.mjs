@@ -42,30 +42,42 @@ function* sourceFiles(dir) {
  * produce 'ns.key'. String-literal fallbacks only — a computed fallback cannot be checked
  * here and shows up as a key with English `null`, which the table flags.
  */
-const NS_RE = /useLT\(\s*['"]([\w.-]+)['"]\s*\)/g;
-const CALL_RE = /\blt\(\s*(?:'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)")\s*(?:,\s*(?:'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)"))?/gs;
+/**
+ * A translator is bound as `const NAME = useLT('ns')`. NAME is usually `lt`, but a file that
+ * needs two namespaces binds a second one (`const ltRfq = useLT('rfq')` on the contact
+ * page), so calls are matched per bound name rather than on `lt(` alone. Matching `lt(`
+ * only credited every call after that second binding to the wrong namespace, which reported
+ * translated strings as missing and hid the ones that really were.
+ */
+const DECL_RE = /\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*useLT\(\s*['"]([\w.-]+)['"]\s*\)/g;
+const callRegexFor = (name) =>
+  new RegExp(
+    `\\b${name}\\(\\s*(?:'((?:[^'\\\\]|\\\\.)*)'|"((?:[^"\\\\]|\\\\.)*)")\\s*(?:,\\s*(?:'((?:[^'\\\\]|\\\\.)*)'|"((?:[^"\\\\]|\\\\.)*)"))?`,
+    'gs'
+  );
 
 const keys = new Map(); // 'ns.key' -> english | null
 let filesWithCalls = 0;
 
 for (const file of sourceFiles(SRC)) {
   const text = readFileSync(file, 'utf8');
-  const nsMatches = [...text.matchAll(NS_RE)];
-  if (!nsMatches.length) continue;
+  const decls = [...text.matchAll(DECL_RE)].map((m) => ({ name: m[1], ns: m[2], index: m.index }));
+  if (!decls.length) continue;
   filesWithCalls++;
   /**
-   * Source-order scoping: a file may hold several components, each binding its own
-   * namespace, so every lt() call is attributed to the CLOSEST PRECEDING useLT(). Calls
-   * before the first useLT() cannot exist (lt would be undefined there).
+   * Source-order scoping: a file may hold several components, each binding its own `lt`,
+   * so a call is attributed to the CLOSEST PRECEDING binding of that same name. Calls
+   * before the first binding cannot exist (the name would be undefined there).
    */
-  for (const [i, m] of nsMatches.entries()) {
-    const ns = m[1];
-    const chunk = text.slice(m.index, nsMatches[i + 1]?.index ?? text.length);
-    for (const c of chunk.matchAll(CALL_RE)) {
+  for (const name of new Set(decls.map((d) => d.name))) {
+    const mine = decls.filter((d) => d.name === name);
+    for (const c of text.matchAll(callRegexFor(name))) {
+      const decl = mine.filter((d) => d.index < c.index).pop();
+      if (!decl) continue;
       const key = (c[1] ?? c[2] ?? '').replace(/\\(.)/g, '$1');
       const english = c[3] != null || c[4] != null ? (c[3] ?? c[4]).replace(/\\(.)/g, '$1') : null;
       if (!key) continue;
-      const id = `${ns}.${key}`;
+      const id = `${decl.ns}.${key}`;
       if (!keys.has(id) || keys.get(id) === null) keys.set(id, english);
     }
   }

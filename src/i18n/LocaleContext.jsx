@@ -8,6 +8,7 @@ import {
   localePrefixOf,
 } from './languages';
 import { strings } from './locales';
+import { EMPTY_PRODUCT_DICT, localizeProduct, translateTerm } from './localizeProduct';
 
 /**
  * True RTL is not enabled yet. Flipping `dir` mirrors text direction but this codebase
@@ -31,6 +32,20 @@ const contentModules = import.meta.glob('./content/*.js');
 function loadContent(code) {
   const loader = contentModules[`./content/${code}.js`];
   return loader ? loader().then((m) => m.default || {}) : Promise.resolve({});
+}
+
+/**
+ * Product-data dictionaries, one per language, same lazy pattern (see ./localizeProduct.js).
+ * A language with no file yet resolves to the empty dictionary: every product then renders
+ * in English, exactly as it did before product translation existed.
+ */
+const productModules = import.meta.glob('./products/*.json');
+
+function loadProducts(code) {
+  const loader = productModules[`./products/${code}.json`];
+  return loader
+    ? loader().then((m) => m.default || EMPTY_PRODUCT_DICT)
+    : Promise.resolve(EMPTY_PRODUCT_DICT);
 }
 
 const LocaleContext = createContext(null);
@@ -105,12 +120,16 @@ export function LocaleProvider({ children }) {
    * prerendered German HTML.
    */
   const [content, setContent] = useState(() => (URL_LOCALE ? null : {}));
+  // The product-data dictionary rides with the content one: same language, same gate.
+  const [productDict, setProductDict] = useState(() => (URL_LOCALE ? null : EMPTY_PRODUCT_DICT));
 
   useEffect(() => {
     if (!URL_LOCALE) return;
     let alive = true;
-    loadContent(URL_LOCALE).then((dict) => {
-      if (alive) setContent(dict);
+    Promise.all([loadContent(URL_LOCALE), loadProducts(URL_LOCALE)]).then(([dict, products]) => {
+      if (!alive) return;
+      setProductDict(products);
+      setContent(dict);
     });
     return () => {
       alive = false;
@@ -167,12 +186,14 @@ export function LocaleProvider({ children }) {
 
     // Load translations for non-live languages on demand
     if (code !== DEFAULT_LANGUAGE && !isLiveLocale(code)) {
-      loadContent(code).then((dict) => {
+      Promise.all([loadContent(code), loadProducts(code)]).then(([dict, products]) => {
+        setProductDict(products);
         setContent(dict);
         setLanguageState(code);
       });
     } else {
       // For English, no translations needed
+      setProductDict(EMPTY_PRODUCT_DICT);
       setContent({});
       setLanguageState(code);
     }
@@ -195,12 +216,12 @@ export function LocaleProvider({ children }) {
   );
 
   const value = useMemo(
-    () => ({ language, setLanguage, t, meta, languages, content, urlLocale: URL_LOCALE }),
-    [language, setLanguage, t, meta, content]
+    () => ({ language, setLanguage, t, meta, languages, content, productDict, urlLocale: URL_LOCALE }),
+    [language, setLanguage, t, meta, content, productDict]
   );
 
-  // Locale URL, dictionary still loading — hold the tree (see the `content` note above).
-  if (content === null) return null;
+  // Locale URL, dictionaries still loading — hold the tree (see the `content` note above).
+  if (content === null || productDict === null) return null;
 
   return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
 }
@@ -246,5 +267,22 @@ export function useLT(ns) {
       return out;
     },
     [content, ns]
+  );
+}
+
+/**
+ * The product-data translator: `const { lp, tp } = useProductL10n()`, then `lp(product)` for
+ * a product with its text in the active language and `tp('Hot Dip Galvanized')` for one
+ * derived term. Both fall back to the English text, so calling them on the English site is
+ * free. See ./localizeProduct.js for what is translated and how the dictionaries are keyed.
+ */
+export function useProductL10n() {
+  const { productDict } = useLocale();
+  return useMemo(
+    () => ({
+      lp: (product) => localizeProduct(product, productDict),
+      tp: (term) => translateTerm(productDict, term),
+    }),
+    [productDict]
   );
 }

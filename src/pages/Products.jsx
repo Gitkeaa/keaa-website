@@ -12,7 +12,7 @@ import ProductCard from '../components/products/ProductCard';
 import { getAllCategories, getProductsByCategory, TOTAL_PRODUCTS } from '../data/productHelpers';
 import { heroSlides } from '../data/heroSlides';
 import useSEO from '../hooks/useSEO';
-import { useLT } from '../i18n/LocaleContext';
+import { useLT, useProductL10n } from '../i18n/LocaleContext';
 import { EASE } from '../lib/motion';
 
 /**
@@ -44,6 +44,7 @@ const featuredByCategory = getAllCategories()
 
 export default function Products() {
   const lt = useLT('catalog');
+  const { lp } = useProductL10n();
   const categories = getAllCategories();
 
   useSEO({
@@ -162,7 +163,7 @@ export default function Products() {
                     </div>
                     <CardRail
                       label={lt('featured.railLabel', '{name} products', { name: lt(`cat.${category.slug}.name`, category.name) })}
-                      labels={items.map((p) => lt('featured.showProduct', 'Show {name}', { name: p.name }))}
+                      labels={items.map((p) => lt('featured.showProduct', 'Show {name}', { name: lp(p).name }))}
                     >
                       {items.map((p) => (
                         <div

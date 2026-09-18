@@ -20,6 +20,7 @@
 import productsRaw from './products.json';
 import { cldImage, cldSrcSet } from './cloudinary.js';
 import { slugify, catSlugOf } from './categories.js';
+import { FINISH_RULES, TYPE_RULES, TYPE_OTHER } from './productTerms.js';
 
 export {
   slugify,
@@ -30,6 +31,12 @@ export {
   TOTAL_PRODUCTS,
 } from './categories.js';
 
+/**
+ * Product text in the active language. Pages that already import this module reach the
+ * overlay from here; components call it through useProductL10n() in the locale context.
+ */
+export { localizeProduct, translateTerm } from '../i18n/localizeProduct.js';
+
 const specText = (p) =>
   `${p.description || ''} ${(p.specs || []).map((s) => `${s.label} ${s.value}`).join(' ')}`;
 
@@ -39,38 +46,21 @@ function deriveDiameter(p) {
   return m ? `Ø${m[1]} mm` : null;
 }
 
-/** Normalise the finish (mostly "Hot Dip Galvanized") from the specs/description. */
+/**
+ * Normalise the finish (mostly "Hot Dip Galvanized") from the specs/description. The rules
+ * and their labels live in productTerms.js, shared with the translation coverage check.
+ */
 function deriveFinish(p) {
   const h = specText(p).toLowerCase();
-  if (h.includes('hot dip') || h.includes('hot-dip')) return 'Hot Dip Galvanized';
-  if (h.includes('electro')) return 'Electro Galvanized';
-  if (h.includes('powder')) return 'Powder Coated';
-  if (h.includes('stainless')) return 'Stainless Steel';
-  if (h.includes('paint')) return 'Painted';
-  if (h.includes('galvani')) return 'Galvanized';
-  return null;
+  const hit = FINISH_RULES.find(([needle]) => h.includes(needle));
+  return hit ? hit[1] : null;
 }
 
 /** A coarse product "type" derived from the name — best effort, used only for filtering. */
 export function classifyType(name = '') {
   const n = name.toLowerCase();
-  const rules = [
-    [/coupler|clamp/, 'Couplers & Clamps'],
-    [/jack|nut|spindle/, 'Jacks & Nuts'],
-    [/brace/, 'Braces'],
-    [/ledger/, 'Ledgers'],
-    [/standard|vertical|riser/, 'Standards & Verticals'],
-    [/frame/, 'Frames'],
-    [/prop|shore|tower/, 'Props & Towers'],
-    [/plank|board|platform|deck|step|stair/, 'Platforms & Boards'],
-    [/head|fork|tripod/, 'Heads & Tripods'],
-    [/gate|hurdle|barrier|panel/, 'Gates & Panels'],
-    [/feeder|trough|drinker|bowl/, 'Feeders & Drinkers'],
-    [/post|support|anchor|base|plate/, 'Supports & Anchors'],
-    [/cap|cover|connector|bracket|hook/, 'Connectors & Fittings'],
-  ];
-  for (const [re, label] of rules) if (re.test(n)) return label;
-  return 'Other';
+  for (const [re, label] of TYPE_RULES) if (re.test(n)) return label;
+  return TYPE_OTHER;
 }
 
 const firstImage = (p) => (p.cloudinaryImages && p.cloudinaryImages[0]) || null;
@@ -195,14 +185,20 @@ export function applyFilters(list, active) {
  * tested against the product's name, item code, subcategory and the derived
  * type/finish/diameter, plus the description + spec text — so the results are always actual
  * products from the catalogue. An empty query returns the list untouched.
+ *
+ * `localize` (the `lp` of useProductL10n) is optional: a visitor reading the site in German
+ * types the German name, so the localized copy of each product joins the haystack and both
+ * languages match. On the English site it returns the same object and costs nothing.
  */
-export function searchProducts(list, query) {
+export function searchProducts(list, query, localize) {
   const q = String(query || '').trim().toLowerCase();
   if (!q) return list;
   const terms = q.split(/\s+/);
   return list.filter((p) => {
+    const local = localize ? localize(p) : p;
     const haystack = [
       p.name,
+      local.name,
       p.itemCode,
       p.subcategory,
       p.finish,

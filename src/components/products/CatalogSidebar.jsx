@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useLT } from '../../i18n/LocaleContext';
+import { useLT, useProductL10n } from '../../i18n/LocaleContext';
 
 /**
  * The catalog left rail: a dark category header block (with the category's hero
@@ -16,6 +16,9 @@ export default function CatalogSidebar({
   activeFilterCount,
 }) {
   const lt = useLT('catalog');
+  // Filter options are derived English terms ("Hot Dip Galvanized", "Couplers & Clamps");
+  // they stay the filter's VALUE and are only displayed in the active language.
+  const { tp } = useProductL10n();
   const subLink = (slug) =>
     slug ? `/products/${category.slug}/${slug}` : `/products/${category.slug}`;
 
@@ -90,7 +93,7 @@ export default function CatalogSidebar({
                           onChange={() => onFilterToggle(group.key, opt.value)}
                           className="h-4 w-4 rounded-card border-navy-300 text-primary-dark accent-primary-dark focus:ring-primary"
                         />
-                        <span className="flex-1">{opt.value}</span>
+                        <span className="flex-1">{tp(opt.value)}</span>
                         <span className="text-xs text-text-muted">({opt.count})</span>
                       </label>
                     );

@@ -15,6 +15,8 @@
     "export:chat-kb": "node scripts/export-chat-kb.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
     "check:i18n": "node scripts/check-translations.mjs",
+    "check:i18n:products": "node scripts/check-product-i18n.mjs",
+    "check:leak": "node scripts/check-english-leak.mjs",
     "gen:proof": "node scripts/gen-proof-pdf.mjs",
     "snapshot:text": "node scripts/snapshot-text.mjs",
     "preview": "vite preview"
