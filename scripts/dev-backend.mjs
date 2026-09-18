@@ -31,7 +31,7 @@ function portInUse(port) {
 }
 
 if (await portInUse(PORT)) {
-  console.log(`[api] something already listens on :${PORT} — not starting a second backend.`);
+  console.log(`[api] something already listens on :${PORT}, not starting a second backend.`);
   process.exit(0);
 }
 

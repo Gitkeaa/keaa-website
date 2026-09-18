@@ -24,8 +24,8 @@ function describeLoginFailure(e) {
     const hint = import.meta.env.DEV
       ? `The backend is not running (${API_LABEL}). Start it with "npm run dev:all", or run KeaaAdminApiApplication in IntelliJ, and try again.`
       : e?.timedOut
-        ? `${API_LABEL} did not answer in time. It may be restarting — please try again in a minute.`
-        : `Could not reach ${API_LABEL}. Check your connection, or the server may be restarting — please try again in a minute.`;
+        ? `${API_LABEL} did not answer in time. It may be restarting, please try again in a minute.`
+        : `Could not reach ${API_LABEL}. Check your connection, or the server may be restarting, please try again in a minute.`;
     return { code: 'unreachable', error: hint };
   }
   if (e?.status >= 500) {

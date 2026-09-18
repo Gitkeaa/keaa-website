@@ -9,17 +9,28 @@
  * shared link. Prerendering writes a real `dist/<route>/index.html` per route with that
  * route's own <title>, description, canonical, Open Graph tags and JSON-LD.
  *
- * WHAT IS PRERENDERED, AND WHY NOT EVERYTHING
- * -------------------------------------------
- * By default: the marketing routes plus every category and subcategory (~40 pages, a few
- * seconds). The 355 product pages are opt-in behind `PRERENDER_PRODUCTS=1`, because each
- * one costs a real browser navigation and turns a 3-second build into a multi-minute one.
- * Google renders JavaScript, so product pages are still indexed without this; turn it on
- * when the long-tail product listings matter more than build time.
+ * WHAT IS PRERENDERED
+ * -------------------
+ * Locally: the marketing routes plus every category and subcategory, in every live
+ * language. About 530 pages, roughly 20 seconds on top of the JS build.
+ *
+ * On Vercel: that plus all 355 product pages, again in every language, because
+ * vercel.json sets `PRERENDER_PRODUCTS=1`. About 4,800 pages and roughly 10 minutes.
+ *
+ * Products are worth those minutes. Without prerendering, a product URL serves the plain
+ * SPA shell, whose canonical says "this page is the homepage" and whose title is the
+ * homepage title. Google then treats all 355 product pages as duplicates of the homepage
+ * and indexes none of them, which is the single largest SEO problem the site had. Google
+ * executing JavaScript later does not undo a canonical it was handed in the HTML.
+ *
+ * Build time scales with pages times live languages, so adding a language adds about a
+ * minute. If that ever becomes the binding constraint, drop `PRERENDER_PRODUCTS` for
+ * preview deployments rather than for production.
  */
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { homedir } from 'node:os';
 import { liveLocales } from '../src/i18n/languages.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -84,18 +95,73 @@ export function getPrerenderRoutes({ includeProducts = false } = {}) {
 }
 
 /**
- * Puppeteer's own Chromium download is ~150 MB and is commonly blocked by install-script
- * policies (it was here). Every Windows machine already ships Edge, and most dev machines
- * have Chrome, so reuse one of those instead. `PRERENDER_BROWSER` overrides the search,
- * which is how a Linux CI box points at its own chromium.
+ * Puppeteer downloads its own Chrome into a cache directory on install. Find it there,
+ * synchronously, without importing puppeteer.
  *
- * Returns null when nothing is found — the caller then SKIPS prerendering with a warning
- * rather than failing the build, so a deploy never breaks over a missing browser.
+ * Why not just call puppeteer.executablePath(): in Puppeteer 23 and later that returns a
+ * Promise, and this whole lookup runs at the top of vite.config.js where a Promise cannot
+ * be awaited. A directory scan is sync, has no import cost, and answers the only question
+ * that matters: is there a browser on disk.
+ *
+ * Layout: <cache>/chrome/<platform>-<version>/chrome-<platform>/chrome[.exe]
+ * The newest version directory wins, so an upgraded Puppeteer does not keep launching the
+ * browser it shipped with two releases ago.
+ */
+function findPuppeteerChrome() {
+  const cacheRoot = process.env.PUPPETEER_CACHE_DIR || join(homedir(), '.cache', 'puppeteer');
+  const chromeRoot = join(cacheRoot, 'chrome');
+  if (!existsSync(chromeRoot)) return null;
+
+  let versions;
+  try {
+    versions = readdirSync(chromeRoot, { withFileTypes: true })
+      .filter((d) => d.isDirectory())
+      .map((d) => d.name)
+      .sort()
+      .reverse();
+  } catch {
+    return null;
+  }
+
+  for (const version of versions) {
+    const dir = join(chromeRoot, version);
+    let inner;
+    try {
+      inner = readdirSync(dir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
+    } catch {
+      continue;
+    }
+    for (const folder of inner) {
+      for (const bin of ['chrome', 'chrome.exe', 'Google Chrome for Testing']) {
+        const candidate = join(dir, folder, bin);
+        if (existsSync(candidate)) return candidate;
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * Where the build finds a browser to prerender with, in order of preference.
+ *
+ * PRERENDER_BROWSER wins, which is how a CI box points at its own binary. Then Puppeteer's
+ * own download, which is what makes this work on Vercel: the build command installs it (see
+ * vercel.json) and every deploy then ships real prerendered HTML. Then the browsers a
+ * developer machine already has, so nobody needs a second 150 MB copy locally.
+ *
+ * Returns null when nothing is found. The caller then SKIPS prerendering with a warning
+ * rather than failing the build, so a deploy never breaks over a missing browser. That
+ * fallback is a safety net, NOT the normal path: a deploy that takes it serves the same
+ * homepage title and canonical on every URL, which is what P1 and P2 of the SEO programme
+ * were about. scripts/check-prerender.mjs fails the build instead of letting that ship.
  */
 export function findChromium() {
   if (process.env.PRERENDER_BROWSER) {
     return existsSync(process.env.PRERENDER_BROWSER) ? process.env.PRERENDER_BROWSER : null;
   }
+
+  const puppeteerChrome = findPuppeteerChrome();
+  if (puppeteerChrome) return puppeteerChrome;
 
   const candidates = [
     'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',

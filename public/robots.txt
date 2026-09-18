@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+# The staff console. Nothing under it is public, and an indexed login page is a
+# liability, not traffic.
+Disallow: /portal
+Disallow: /portal/
 
 Sitemap: https://www.keaainternational.com/sitemap.xml
