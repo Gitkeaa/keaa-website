@@ -26,6 +26,9 @@ const u = (id, w = 1920) =>
     `https://images.unsplash.com/${id}`
   )}`;
 
+const cldImage = (id, w = 1920) =>
+  `https://res.cloudinary.com/keaa-assets/image/upload/f_auto,q_auto,w_${w},c_limit/${id}`;
+
 /* Only the photographs a component actually renders. `img` is exported whole and every
    value is a string literal, so an unreferenced entry is not tree-shaken — it ships in the
    bundle and its Cloudinary URL is dead weight. Curated-but-unused candidates were removed;
@@ -53,6 +56,7 @@ export const img = {
 
   // Shipping / logistics / export
   containersStacked: u('photo-1678182451047-196f22a4143e'),
+  allCategoriesShowcase: cldImage('All_categories_r2ttvy'),
   cargoContainers: u('photo-1606964212858-c215029db704'),
 
   // Livestock / cattle / barn

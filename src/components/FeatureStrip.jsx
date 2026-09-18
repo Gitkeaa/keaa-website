@@ -2,20 +2,6 @@ import { motion, useReducedMotion } from 'framer-motion';
 import BrandTexture from './ui/BrandTexture';
 import { EASE } from '../lib/motion';
 
-/**
- * A row of supporting promises -- Products' perks, Contact's help strip -- rendered as a
- * white card on the brand texture rather than as a full-bleed navy block.
- *
- * Two navy strips were the last dark bands outside the footer. They now read as the same
- * object as the closing CTA: same card, same ring, same icon chip, same backdrop.
- *
- * `lead` turns the row into a two-column band with a heading on the left. Without it the
- * items share the card evenly.
- *
- * The lead track is a fixed 22rem rather than `1fr`: against an `auto` item track the
- * three items claim their full content width and squeeze the heading into a two-word
- * ribbon.
- */
 
 export default function FeatureStrip({ items, lead, photo = true, className = '' }) {
   const reduce = useReducedMotion();

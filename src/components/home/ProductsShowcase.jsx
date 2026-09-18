@@ -71,7 +71,7 @@ const ALL = {
     the stats beside it, and it stays clear of the factory photograph the Manufacturing band
     directly below this section already uses.
   */
-  heroImage: img.containersStacked,
+  heroImage: img.allCategoriesShowcase,
 };
 
 const ROWS = [ALL, ...CATEGORIES];

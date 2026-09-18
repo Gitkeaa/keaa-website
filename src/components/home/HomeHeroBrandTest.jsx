@@ -204,7 +204,7 @@ export default function HomeHeroBrandTest() {
                   sit under. It is one short phrase, so it never wraps and cannot disturb the
                   measured two-line break above it. */}
               <p className="mt-2.5 font-display text-sm font-semibold tracking-[-0.01em] text-white/75 sm:mt-3.5 sm:text-base lg:text-lg">
-                {lt('hero.tagline', 'Equipped for the Future')}
+                {lt('hero.tagline', 'Equipped for Future')}
               </p>
             </motion.div>
           </div>
