@@ -1,14 +1,35 @@
 {
-  "buildCommand": "npx puppeteer browsers install chrome && PRERENDER_PRODUCTS=1 npm run build",
+  "buildCommand": "npx puppeteer browsers install chrome && npm run build",
   "outputDirectory": "dist",
   "redirects": [
-    { "source": "/category/1", "destination": "/products/scaffolding-formworks", "permanent": true },
-    { "source": "/category/1/", "destination": "/products/scaffolding-formworks", "permanent": true },
-    { "source": "/category/:rest*", "destination": "/products", "permanent": true }
+    {
+      "source": "/category/1",
+      "destination": "/products/scaffolding-formworks",
+      "permanent": true
+    },
+    {
+      "source": "/category/1/",
+      "destination": "/products/scaffolding-formworks",
+      "permanent": true
+    },
+    {
+      "source": "/category/:rest*",
+      "destination": "/products",
+      "permanent": true
+    }
   ],
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://api-production-4259d.up.railway.app/api/$1" },
-    { "source": "/uploads/(.*)", "destination": "https://api-production-4259d.up.railway.app/uploads/$1" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/api/(.*)",
+      "destination": "https://api-production-4259d.up.railway.app/api/$1"
+    },
+    {
+      "source": "/uploads/(.*)",
+      "destination": "https://api-production-4259d.up.railway.app/uploads/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
