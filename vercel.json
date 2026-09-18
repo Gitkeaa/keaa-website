@@ -1,6 +1,11 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "redirects": [
+    { "source": "/category/1", "destination": "/products/scaffolding-formworks", "permanent": true },
+    { "source": "/category/1/", "destination": "/products/scaffolding-formworks", "permanent": true },
+    { "source": "/category/:rest*", "destination": "/products", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
