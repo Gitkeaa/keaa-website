@@ -24,7 +24,7 @@
     "id": 273,
     "name": "Stair Case Step",
     "itemCode": "Accessories-Ringlock-SCS",
-    "description": "",
+    "description": "Stair Case Step is an accessory for KEAA International's Ringlock system scaffold, part of the Scaffolding & Formworks range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: Accessories-Ringlock-SCS.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764019/keaa-products/stair-case-step-273-0.jpg"
@@ -37,7 +37,7 @@
     "id": 272,
     "name": "Toe Board",
     "itemCode": "Accessories-Ringlock-TB",
-    "description": "",
+    "description": "Toe Board is an accessory for KEAA International's Ringlock system scaffold, part of the Scaffolding & Formworks range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: Accessories-Ringlock-TB.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764022/keaa-products/toe-board-272-0.jpg"
@@ -50,7 +50,7 @@
     "id": 271,
     "name": "Wall Tie",
     "itemCode": "Accessories-Ringlock-WT",
-    "description": "",
+    "description": "Wall Tie is an accessory for KEAA International's Ringlock system scaffold, part of the Scaffolding & Formworks range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: Accessories-Ringlock-WT.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764024/keaa-products/wall-tie-271-0.jpg"
@@ -63,7 +63,7 @@
     "id": 270,
     "name": "Base Collar",
     "itemCode": "Accessories-Ringlock-BC",
-    "description": "",
+    "description": "Base Collar is an accessory for KEAA International's Ringlock system scaffold, part of the Scaffolding & Formworks range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: Accessories-Ringlock-BC.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764026/keaa-products/base-collar-270-0.jpg"
@@ -300,7 +300,7 @@
     "id": 10,
     "name": "Steel Plank",
     "itemCode": "KISP",
-    "description": "",
+    "description": "Steel Plank belongs to KEAA International's Ringlock system scaffold range (Scaffolding & Formworks). Available as three variants: KISWP (width 320 mm), KIDEP (width 241 mm) and KISSP (width 228.6 mm). Length (mm): 730, 1040, 1090, 1400, 1570, 2070, 2570, 3070. Finish: Hot Dip Galvanized as per DIN EN 1461. Item code: KISP.",
     "specs": [
       {
         "label": "Item No:",
@@ -617,7 +617,7 @@
     "id": 279,
     "name": "Cuplock Ladder Bracket",
     "itemCode": "Accessories-Cuplock-CLB",
-    "description": "",
+    "description": "Cuplock Ladder Bracket is an accessory for KEAA International's Cuplock system scaffold, part of the Scaffolding & Formworks range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: Accessories-Cuplock-CLB.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764072/keaa-products/cuplock-ladder-bracket-279-0.jpg"
@@ -630,7 +630,7 @@
     "id": 278,
     "name": "Truss Ledger",
     "itemCode": "Accessories-Cuplock-TL",
-    "description": "",
+    "description": "Truss Ledger is an accessory for KEAA International's Cuplock system scaffold, part of the Scaffolding & Formworks range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: Accessories-Cuplock-TL.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764074/keaa-products/truss-ledger-278-0.jpg"
@@ -643,7 +643,7 @@
     "id": 277,
     "name": "Ledger Blade",
     "itemCode": "Accessories-Cuplock-LB",
-    "description": "",
+    "description": "Ledger Blade is an accessory for KEAA International's Cuplock system scaffold, part of the Scaffolding & Formworks range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: Accessories-Cuplock-LB.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764076/keaa-products/ledger-blade-277-0.jpg"
@@ -656,7 +656,7 @@
     "id": 276,
     "name": "Top Cup",
     "itemCode": "Accessories-Cuplock-TC",
-    "description": "",
+    "description": "Top Cup is an accessory for KEAA International's Cuplock system scaffold, part of the Scaffolding & Formworks range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: Accessories-Cuplock-TC.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764078/keaa-products/top-cup-276-0.jpg"
@@ -669,7 +669,7 @@
     "id": 275,
     "name": "Bottom Cup",
     "itemCode": "Accessories-cuplock-BC",
-    "description": "",
+    "description": "Bottom Cup is an accessory for KEAA International's Cuplock system scaffold, part of the Scaffolding & Formworks range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: Accessories-cuplock-BC.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764081/keaa-products/bottom-cup-275-0.jpg"
@@ -824,7 +824,7 @@
     "id": 280,
     "name": "Guard Rail Connector",
     "itemCode": "KIST-GRC",
-    "description": "",
+    "description": "Guard Rail Connector belongs to KEAA International's shoring tower load-bearing system range (Scaffolding & Formworks). Size: 1200 mm. Finish: Hot Dip Galvanized as per DIN EN 1461. Item code: KIST-GRC.",
     "specs": [
       {
         "label": "Size(mm)",
@@ -846,7 +846,7 @@
     "id": 9,
     "name": "Guard Rail Frame",
     "itemCode": "KIST-GRF",
-    "description": "",
+    "description": "Guard Rail Frame belongs to KEAA International's shoring tower load-bearing system range (Scaffolding & Formworks). Size (mm): 1200. Finish: Hot Dip Galvanized as per DIN EN 1461. Item code: KIST-GRF.",
     "specs": [
       {
         "label": "Item No:",
@@ -872,7 +872,7 @@
     "id": 8,
     "name": "V Brace",
     "itemCode": "KIST-VB",
-    "description": "",
+    "description": "V Brace belongs to KEAA International's shoring tower load-bearing system range (Scaffolding & Formworks). Size (mm): 1600. Finish: Hot Dip Galvanized as per DIN EN 1461. Item code: KIST-VB.",
     "specs": [
       {
         "label": "Size(mm)",
@@ -894,7 +894,7 @@
     "id": 7,
     "name": "Cross Braces",
     "itemCode": "KIST-CB",
-    "description": "",
+    "description": "Cross Braces belongs to KEAA International's shoring tower load-bearing system range (Scaffolding & Formworks). Size (mm): 1600. Finish: Hot Dip Galvanized as per DIN EN 1461. Item code: KIST-CB.",
     "specs": [
       {
         "label": "Size(mm)",
@@ -994,7 +994,7 @@
     "id": 288,
     "name": "Jack Nut-Casted",
     "itemCode": "KIJN-SL",
-    "description": "",
+    "description": "Jack Nut-Casted belongs to KEAA International's scaffold jacks and nuts range (Scaffolding & Formworks). Tube OD: 48 mm. Tube rest: 60 mm. Finish: Paint/EZP/Hot Dip Galvanized as per DIN EN 1461. Item code: KIJN-SL.",
     "specs": [
       {
         "label": "Item No:",
@@ -1024,7 +1024,7 @@
     "id": 287,
     "name": "Jack Nut-Forged",
     "itemCode": "KIJN-SS",
-    "description": "",
+    "description": "Jack Nut-Forged belongs to KEAA International's scaffold jacks and nuts range (Scaffolding & Formworks). Tube OD: 32, 34, 38 mm. Tube rest: 42, 48 mm. Finish: Paint/EZP/Hot Dip Galvanized as per DIN EN 1461. Item code: KIJN-SS.",
     "specs": [
       {
         "label": "Item No:",
@@ -1054,7 +1054,7 @@
     "id": 286,
     "name": "Jack Nut-Casted",
     "itemCode": "KIJN-CS",
-    "description": "",
+    "description": "Jack Nut-Casted belongs to KEAA International's scaffold jacks and nuts range (Scaffolding & Formworks). Tube OD: 38 mm. Tube rest: 42, 48 mm. Finish: Paint/EZP/Hot Dip Galvanized as per DIN EN 1461. Item code: KIJN-CS.",
     "specs": [
       {
         "label": "Item No:",
@@ -1084,7 +1084,7 @@
     "id": 285,
     "name": "Jack Nut-Forged",
     "itemCode": "KIJN-CL",
-    "description": "",
+    "description": "Jack Nut-Forged belongs to KEAA International's scaffold jacks and nuts range (Scaffolding & Formworks). Tube OD: 32, 38 mm. Tube rest: 48 mm. Finish: Paint/EZP/Hot Dip Galvanized as per DIN EN 1461. Item code: KIJN-CL.",
     "specs": [
       {
         "label": "Item No:",
@@ -1114,7 +1114,7 @@
     "id": 284,
     "name": "Base Jack With Welded Tube",
     "itemCode": "KIBJ-WT",
-    "description": "",
+    "description": "Base Jack With Welded Tube belongs to KEAA International's scaffold jacks and nuts range (Scaffolding & Formworks). Tube OD: 38. Finish: Paint/EZP/Hot Dip Galvanized as per DIN EN 1461. Tube OD and thickness (mm): 32, 34, 38, 48 and 4, 5, 6. Total length (mm): 300, 350, 400, 500, 600, 650, 700, 800, 1000. Material grade: S235 JR, S275 JR, S355 JR-EN 10025/ EN 10219. Item code: KIBJ-WT.",
     "specs": [
       {
         "label": "Item No:",
@@ -1153,7 +1153,7 @@
     "id": 283,
     "name": "Adjustable Base Jack With Locking Wing Nut",
     "itemCode": "KIBJ-WN",
-    "description": "",
+    "description": "Adjustable Base Jack With Locking Wing Nut belongs to KEAA International's scaffold jacks and nuts range (Scaffolding & Formworks). Tube OD: 38. Finish: Paint/EZP/Hot Dip Galvanized as per DIN EN 1461. Tube OD and thickness (mm): 32, 34, 38, 48 and 4, 5, 6. Total length (mm): 300, 350, 400, 500, 600, 650, 700, 800, 1000. Material grade: S235 JR, S275 JR, S355 JR-EN 10025/ EN 10219. Item code: KIBJ-WN.",
     "specs": [
       {
         "label": "Item No:",
@@ -1192,7 +1192,7 @@
     "id": 282,
     "name": "Adjustable Base Jack",
     "itemCode": "KIBJ",
-    "description": "",
+    "description": "Adjustable Base Jack belongs to KEAA International's scaffold jacks and nuts range (Scaffolding & Formworks). Tube OD: 38. Finish: Paint/EZP/Hot Dip Galvanized as per DIN EN 1461. Tube OD and thickness (mm): 32, 34, 38, 48 and 4, 5, 6. Total length (mm): 300, 350, 400, 500, 600, 650, 700, 800, 1000. Material grade: S235 JR, S275 JR, S355 JR-EN 10025/ EN 10219. Item code: KIBJ.",
     "specs": [
       {
         "label": "Item No:",
@@ -1258,7 +1258,7 @@
     "id": 30,
     "name": "Swivel Base Jack - Heavy Duty",
     "itemCode": "KISBJ-HD",
-    "description": "",
+    "description": "Swivel Base Jack - Heavy Duty belongs to KEAA International's scaffold jacks and nuts range (Scaffolding & Formworks). Tube OD: 38. Finish: Paint/EZP/Hot Dip Galvanized as per DIN EN 1461. Tube OD and thickness (mm): 32, 34, 38, 48 and 4, 5, 6. Total length (mm): 300, 350, 400, 500, 600, 650, 700, 800, 1000. Material grade: S235 JR, S275 JR, S355 JR-EN 10025/ EN 10219. Item code: KISBJ-HD.",
     "specs": [
       {
         "label": "Item No:",
@@ -1296,7 +1296,7 @@
     "id": 29,
     "name": "Adjustable Base Jack With Locking Strip",
     "itemCode": "KIBJ-LS",
-    "description": "",
+    "description": "Adjustable Base Jack With Locking Strip belongs to KEAA International's scaffold jacks and nuts range (Scaffolding & Formworks). Tube OD: 48. Finish: Paint/EZP/Hot Dip Galvanized as per DIN EN 1461. Tube OD and thickness (mm): 48 and 4, 5, 6. Total length (mm): 300, 350, 400, 500, 600, 650, 700, 800, 1000. Material grade: S235 JR, S275 JR, S355 JR-EN 10025/ EN 10219. Item code: KIBJ-LS.",
     "specs": [
       {
         "label": "Item No:",
@@ -1334,7 +1334,7 @@
     "id": 28,
     "name": "Swivel Base Jack - Light Duty",
     "itemCode": "KISBJ-LD",
-    "description": "",
+    "description": "Swivel Base Jack - Light Duty belongs to KEAA International's scaffold jacks and nuts range (Scaffolding & Formworks). Tube OD: 38. Finish: Paint/EZP/Hot Dip Galvanized as per DIN EN 1461. Tube OD and thickness (mm): 32, 34, 38, 48 and 4, 5, 6. Total length (mm): 300, 350, 400, 500, 600, 650, 700, 800, 1000. Material grade: S235 JR, S275 JR, S355 JR-EN 10025/ EN 10219. Item code: KISBJ-LD.",
     "specs": [
       {
         "label": "Item No:",
@@ -1372,7 +1372,7 @@
     "id": 385,
     "name": "Canada Lock",
     "itemCode": "CL-ASAF",
-    "description": "",
+    "description": "Canada Lock belongs to KEAA International's American Frame access scaffold range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: CL-ASAF.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764141/keaa-products/canada-lock-385-0.jpg"
@@ -1385,7 +1385,7 @@
     "id": 384,
     "name": "C-Lock",
     "itemCode": "CL-ASAF",
-    "description": "",
+    "description": "C-Lock belongs to KEAA International's American Frame access scaffold range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: CL-ASAF.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764144/keaa-products/c-lock-384-0.jpg"
@@ -1398,7 +1398,7 @@
     "id": 383,
     "name": "V-Lock",
     "itemCode": "VL-ASAF",
-    "description": "",
+    "description": "V-Lock belongs to KEAA International's American Frame access scaffold range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: VL-ASAF.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764146/keaa-products/v-lock-383-0.jpg"
@@ -1411,7 +1411,7 @@
     "id": 382,
     "name": "Fast Lock",
     "itemCode": "FL-ASAF",
-    "description": "",
+    "description": "Fast Lock belongs to KEAA International's American Frame access scaffold range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: FL-ASAF.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764148/keaa-products/fast-lock-382-0.jpg"
@@ -1424,7 +1424,7 @@
     "id": 381,
     "name": "Snap-On-Lock",
     "itemCode": "SOL-ASAF",
-    "description": "",
+    "description": "Snap-On-Lock belongs to KEAA International's American Frame access scaffold range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: SOL-ASAF.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764151/keaa-products/snap-on-lock-381-0.jpg"
@@ -1437,7 +1437,7 @@
     "id": 380,
     "name": "Drop Lock",
     "itemCode": "DL-ASAF",
-    "description": "",
+    "description": "Drop Lock belongs to KEAA International's American Frame access scaffold range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: DL-ASAF.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764153/keaa-products/drop-lock-380-0.jpg"
@@ -1450,7 +1450,7 @@
     "id": 379,
     "name": "Flip Lock",
     "itemCode": "FL-ASAF",
-    "description": "",
+    "description": "Flip Lock belongs to KEAA International's American Frame access scaffold range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: FL-ASAF.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764156/keaa-products/flip-lock-379-0.jpg"
@@ -1463,7 +1463,7 @@
     "id": 378,
     "name": "Pig Tall Pin",
     "itemCode": "PTP-ASAF",
-    "description": "",
+    "description": "Pig Tall Pin belongs to KEAA International's American Frame access scaffold range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: PTP-ASAF.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764158/keaa-products/pig-tall-pin-378-0.jpg"
@@ -1476,7 +1476,7 @@
     "id": 377,
     "name": "Spring Pin",
     "itemCode": "SPP-ASAF",
-    "description": "",
+    "description": "Spring Pin belongs to KEAA International's American Frame access scaffold range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: SPP-ASAF.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764161/keaa-products/spring-pin-377-0.jpg"
@@ -1489,7 +1489,7 @@
     "id": 376,
     "name": "Span Pin",
     "itemCode": "SP-ASAF",
-    "description": "",
+    "description": "Span Pin belongs to KEAA International's American Frame access scaffold range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: SP-ASAF.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764163/keaa-products/span-pin-376-0.jpg"
@@ -1502,7 +1502,7 @@
     "id": 375,
     "name": "Gravity Pin",
     "itemCode": "GP-ASAF",
-    "description": "",
+    "description": "Gravity Pin belongs to KEAA International's American Frame access scaffold range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: GP-ASAF.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764165/keaa-products/gravity-pin-375-0.jpg"
@@ -1515,7 +1515,7 @@
     "id": 374,
     "name": "Roll Pin",
     "itemCode": "ROP-ASAF",
-    "description": "",
+    "description": "Roll Pin belongs to KEAA International's American Frame access scaffold range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: ROP-ASAF.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764168/keaa-products/roll-pin-374-0.jpg"
@@ -1528,7 +1528,7 @@
     "id": 373,
     "name": "Rivet Pin",
     "itemCode": "RP-ASAF",
-    "description": "",
+    "description": "Rivet Pin belongs to KEAA International's American Frame access scaffold range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: RP-ASAF.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764170/keaa-products/rivet-pin-373-0.jpg"
@@ -1541,7 +1541,7 @@
     "id": 372,
     "name": "Bridge Pole",
     "itemCode": "KIBP",
-    "description": "",
+    "description": "Bridge Pole belongs to KEAA International's American Frame access scaffold range (Scaffolding & Formworks). Size (mm): 2438, 3048, 3657, 4267, 4876, 5486. Item code: KIBP.",
     "specs": [
       {
         "label": "Item No.",
@@ -1563,7 +1563,7 @@
     "id": 371,
     "name": "Ladder Frame",
     "itemCode": "KIAF-LF",
-    "description": "",
+    "description": "Ladder Frame belongs to KEAA International's American Frame access scaffold range (Scaffolding & Formworks). Size W x H (mm): 609x1524, 609x1930, 914x1219, 914x1524, 914x1828. Item code: KIAF-LF.",
     "specs": [
       {
         "label": "Item No.",
@@ -1585,7 +1585,7 @@
     "id": 370,
     "name": "Walk Through Frame",
     "itemCode": "KIAF-WTF",
-    "description": "",
+    "description": "Walk Through Frame belongs to KEAA International's American Frame access scaffold range (Scaffolding & Formworks). Size W x H (mm): 1219x1700, 1219x1930, 1524x1219, 1524x1930, 1524x2006.6. Item code: KIAF-WTF.",
     "specs": [
       {
         "label": "Item No.",
@@ -1629,7 +1629,7 @@
     "id": 392,
     "name": "Accessories",
     "itemCode": "AC-SFSP-06",
-    "description": "",
+    "description": "Slab formwork prop accessory (item AC-SFSP-06) from KEAA International's slab formwork props range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764182/keaa-products/accessories-392-0.jpg"
@@ -1642,7 +1642,7 @@
     "id": 391,
     "name": "Accessories",
     "itemCode": "AC-SFSP-05",
-    "description": "",
+    "description": "Slab formwork prop accessory (item AC-SFSP-05) from KEAA International's slab formwork props range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764185/keaa-products/accessories-391-0.jpg"
@@ -1655,7 +1655,7 @@
     "id": 390,
     "name": "Accessories",
     "itemCode": "AC-SFSP-04",
-    "description": "",
+    "description": "Slab formwork prop accessory (item AC-SFSP-04) from KEAA International's slab formwork props range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764187/keaa-products/accessories-390-0.jpg"
@@ -1668,7 +1668,7 @@
     "id": 389,
     "name": "Accessories",
     "itemCode": "AC-SFSP-03",
-    "description": "",
+    "description": "Slab formwork prop accessory (item AC-SFSP-03) from KEAA International's slab formwork props range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764189/keaa-products/accessories-389-0.jpg"
@@ -1681,7 +1681,7 @@
     "id": 388,
     "name": "Accessories",
     "itemCode": "AC-SFSP-02",
-    "description": "",
+    "description": "Slab formwork prop accessory (item AC-SFSP-02) from KEAA International's slab formwork props range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764191/keaa-products/accessories-388-0.jpg"
@@ -1694,7 +1694,7 @@
     "id": 387,
     "name": "Accessories",
     "itemCode": "AC-SFSP-01",
-    "description": "",
+    "description": "Slab formwork prop accessory (item AC-SFSP-01) from KEAA International's slab formwork props range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764194/keaa-products/accessories-387-0.jpg"
@@ -1859,7 +1859,7 @@
     "id": 34,
     "name": "Props-Heavy Duty Special Size",
     "itemCode": "KIPHD",
-    "description": "",
+    "description": "Props-Heavy Duty Special Size belongs to KEAA International's slab formwork props range (Scaffolding & Formworks). Options: KIPHD-4.1: closing length 2300 mm, opening length 4100 mm. Item code: KIPHD.",
     "specs": [
       {
         "label": "Item No",
@@ -2172,7 +2172,7 @@
     "id": 151,
     "name": "Tripod - Square Tube Medium Duty",
     "itemCode": "KIT-ST-MD",
-    "description": "",
+    "description": "Tripod - Square Tube Medium Duty belongs to KEAA International's slab formwork tripods range (Scaffolding & Formworks). Options: KIT-ST-MD: sq. tube 30x30, tube filament Ø48, Ø76; KIT-ST-MD: sq. tube 30x30, tube filament Ø45, Ø82. Item code: KIT-ST-MD.",
     "specs": [
       {
         "label": "Item No.",
@@ -2198,7 +2198,7 @@
     "id": 150,
     "name": "Tripod - Heavy Duty",
     "itemCode": "KIT-RT-HD",
-    "description": "",
+    "description": "Tripod - Heavy Duty belongs to KEAA International's slab formwork tripods range (Scaffolding & Formworks). Options: KIT-RT-HD: tube 33.7, tube filament Ø48, Ø76. Item code: KIT-RT-HD.",
     "specs": [
       {
         "label": "Item No.",
@@ -2246,7 +2246,7 @@
     "id": 148,
     "name": "Tripod - ø27Light Duty",
     "itemCode": "KIT-RT-ø27LD",
-    "description": "",
+    "description": "Tripod - ø27Light Duty belongs to KEAA International's slab formwork tripods range (Scaffolding & Formworks). Options: KIT-RT-ø27LD: tube OD 27, tube filament Ø48, Ø76. Item code: KIT-RT-ø27LD.",
     "specs": [
       {
         "label": "Item No.",
@@ -2788,7 +2788,7 @@
     "id": 402,
     "name": "Single Anchor",
     "itemCode": "SA-WFSCP",
-    "description": "",
+    "description": "Single Anchor belongs to KEAA International's wall formwork clamps and panels range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: SA-WFSCP.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764322/keaa-products/single-anchor-402-0.jpg"
@@ -2801,7 +2801,7 @@
     "id": 401,
     "name": "Anchor Clamp Bend",
     "itemCode": "ACB-WFSCP",
-    "description": "",
+    "description": "Anchor Clamp Bend belongs to KEAA International's wall formwork clamps and panels range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: ACB-WFSCP.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764324/keaa-products/anchor-clamp-bend-401-0.jpg"
@@ -2814,7 +2814,7 @@
     "id": 400,
     "name": "Wedge Clamp Casted",
     "itemCode": "WCC-WFSCP",
-    "description": "",
+    "description": "Wedge Clamp Casted belongs to KEAA International's wall formwork clamps and panels range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: WCC-WFSCP.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764326/keaa-products/wedge-clamp-casted-400-0.jpg"
@@ -2827,7 +2827,7 @@
     "id": 399,
     "name": "Anchor Foot",
     "itemCode": "AFWFSCP",
-    "description": "",
+    "description": "Anchor Foot belongs to KEAA International's wall formwork clamps and panels range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: AFWFSCP.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764329/keaa-products/anchor-foot-399-0.jpg"
@@ -2840,7 +2840,7 @@
     "id": 398,
     "name": "Anchor Footdw 15",
     "itemCode": "",
-    "description": "",
+    "description": "Anchor Footdw 15 belongs to KEAA International's wall formwork clamps and panels range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764332/keaa-products/anchor-footdw-15-398-0.jpg"
@@ -2853,7 +2853,7 @@
     "id": 397,
     "name": "Steel Cone",
     "itemCode": "SC-WFS-CP",
-    "description": "",
+    "description": "Steel Cone belongs to KEAA International's wall formwork clamps and panels range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: SC-WFS-CP.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764334/keaa-products/steel-cone-397-0.jpg"
@@ -3010,7 +3010,7 @@
     "id": 403,
     "name": "Half Coupler",
     "itemCode": "KIHC",
-    "description": "",
+    "description": "Half Coupler belongs to KEAA International's European scaffold tube fittings range (Scaffolding & Formworks). Tube fitting: 48.3 mm. Standard: EN 74-1. Item code: KIHC.",
     "specs": [
       {
         "label": "Item No.",
@@ -3861,7 +3861,7 @@
     "id": 213,
     "name": "Guard Rail - Special Type",
     "itemCode": "GRSP",
-    "description": "",
+    "description": "Guard Rail - Special Type belongs to KEAA International's guard rails and railing posts range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: GRSP.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764442/keaa-products/guard-rail-special-type-213-0.jpg"
@@ -4264,7 +4264,7 @@
     "id": 404,
     "name": "Access Scaffold Euro Frame",
     "itemCode": "KIEF",
-    "description": "",
+    "description": "Access Scaffold Euro Frame belongs to KEAA International's Euro Frame access scaffold range (Scaffolding & Formworks). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: KIEF.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764487/keaa-products/access-scaffold-euro-frame-404-0.jpg"
@@ -4277,7 +4277,7 @@
     "id": 290,
     "name": "Post With Plate",
     "itemCode": "325013",
-    "description": "",
+    "description": "Post With Plate is a cattle housing product from KEAA International's Livestock Housing Solutions range. Length: 145 cm. Item code: 325013.",
     "specs": [
       {
         "label": "Length/td>",
@@ -4295,7 +4295,7 @@
     "id": 86,
     "name": "TUBE WALL SUPPORT CLAMP",
     "itemCode": "325051",
-    "description": "",
+    "description": "Tube Wall Support Clamp is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325051.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764491/keaa-products/tube-wall-support-clamp-86-0.jpg"
@@ -4308,7 +4308,7 @@
     "id": 85,
     "name": "PIPE CLAMP 2 ½ \" ROTATION PART 2",
     "itemCode": "325050",
-    "description": "",
+    "description": "Pipe Clamp 2 ½ \" Rotation Part 2 is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325050.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764494/keaa-products/pipe-clamp-2-rotation-part-2-85-0.jpg"
@@ -4321,7 +4321,7 @@
     "id": 84,
     "name": "PIPE CLAMP 2 ½ \" ROTATION PART 1",
     "itemCode": "325049",
-    "description": "",
+    "description": "Pipe Clamp 2 ½ \" Rotation Part 1 is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325049.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764496/keaa-products/pipe-clamp-2-rotation-part-1-84-0.jpg"
@@ -4334,7 +4334,7 @@
     "id": 83,
     "name": "PIPE CLAMP 2 ½ \" WITH 4 TABS",
     "itemCode": "325048",
-    "description": "",
+    "description": "Pipe Clamp 2 ½ \" With 4 Tabs is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325048.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764498/keaa-products/pipe-clamp-2-with-4-tabs-83-0.jpg"
@@ -4347,7 +4347,7 @@
     "id": 82,
     "name": "PIPE CLAMP 2 ½ \" WITH 3 TABS",
     "itemCode": "325047",
-    "description": "",
+    "description": "Pipe Clamp 2 ½ \" With 3 Tabs is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325047.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764501/keaa-products/pipe-clamp-2-with-3-tabs-82-0.jpg"
@@ -4360,7 +4360,7 @@
     "id": 81,
     "name": "PIPE CLAMP 2 ½ \" WITH 2 TABS 180°",
     "itemCode": "325046",
-    "description": "",
+    "description": "Pipe Clamp 2 ½ \" With 2 Tabs 180° is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325046.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764503/keaa-products/pipe-clamp-2-with-2-tabs-180-81-0.jpg"
@@ -4373,7 +4373,7 @@
     "id": 80,
     "name": "PIPE CLAMP 2 ½ \" WITH 2 TABS 90°",
     "itemCode": "325045",
-    "description": "",
+    "description": "Pipe Clamp 2 ½ \" With 2 Tabs 90° is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325045.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764507/keaa-products/pipe-clamp-2-with-2-tabs-90-80-0.jpg"
@@ -4386,7 +4386,7 @@
     "id": 79,
     "name": "PIPE CLAMP 2 ½ \" WITH 1 TABS",
     "itemCode": "325044",
-    "description": "",
+    "description": "Pipe Clamp 2 ½ \" With 1 Tabs is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325044.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764509/keaa-products/pipe-clamp-2-with-1-tabs-79-0.jpg"
@@ -4399,7 +4399,7 @@
     "id": 78,
     "name": "HEAD LOCK HANDLE PLATE TYPE",
     "itemCode": "325043",
-    "description": "",
+    "description": "Head Lock Handle Plate Type is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325043.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764511/keaa-products/head-lock-handle-plate-type-78-0.jpg"
@@ -4412,7 +4412,7 @@
     "id": 77,
     "name": "HEAD LOCK HANDLE TUBE TYPE",
     "itemCode": "325042",
-    "description": "",
+    "description": "Head Lock Handle Tube Type is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325042.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764514/keaa-products/head-lock-handle-tube-type-77-0.jpg"
@@ -4425,7 +4425,7 @@
     "id": 76,
     "name": "POST CLAMP WITH 2 TABS AND CHAIN",
     "itemCode": "325041",
-    "description": "",
+    "description": "Post Clamp With 2 Tabs And Chain is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325041.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764516/keaa-products/post-clamp-with-2-tabs-and-chain-76-0.jpg"
@@ -4438,7 +4438,7 @@
     "id": 75,
     "name": "POST MOUNT BOTTOM BRACKET",
     "itemCode": "325039",
-    "description": "",
+    "description": "Post Mount Bottom Bracket is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325039.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764518/keaa-products/post-mount-bottom-bracket-75-0.jpg"
@@ -4451,7 +4451,7 @@
     "id": 74,
     "name": "POST MOUNT FLAT TOP BRACKET",
     "itemCode": "325038",
-    "description": "",
+    "description": "Post Mount Flat Top Bracket is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325038.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764521/keaa-products/post-mount-flat-top-bracket-74-0.jpg"
@@ -4464,7 +4464,7 @@
     "id": 73,
     "name": "POST MOUNT ANGLE TOP BRACKET",
     "itemCode": "325037",
-    "description": "",
+    "description": "Post Mount Angle Top Bracket is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325037.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764523/keaa-products/post-mount-angle-top-bracket-73-0.jpg"
@@ -4477,7 +4477,7 @@
     "id": 72,
     "name": "WALL MOUNT FLAT TOP BRACKET",
     "itemCode": "325035",
-    "description": "",
+    "description": "Wall Mount Flat Top Bracket is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325035.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764525/keaa-products/wall-mount-flat-top-bracket-72-0.jpg",
@@ -4491,7 +4491,7 @@
     "id": 71,
     "name": "WALL MOUNT BOTTOM BRACKET",
     "itemCode": "325036",
-    "description": "",
+    "description": "Wall Mount Bottom Bracket is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325036.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764529/keaa-products/wall-mount-bottom-bracket-71-0.jpg"
@@ -4504,7 +4504,7 @@
     "id": 70,
     "name": "WALL MOUNT ANGLE TOP BRACKET",
     "itemCode": "325034",
-    "description": "",
+    "description": "Wall Mount Angle Top Bracket is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325034.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764531/keaa-products/wall-mount-angle-top-bracket-70-0.jpg"
@@ -4517,7 +4517,7 @@
     "id": 69,
     "name": "TUBE CLAMP WITH PLATE",
     "itemCode": "325033",
-    "description": "",
+    "description": "Tube Clamp With Plate is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325033.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764534/keaa-products/tube-clamp-with-plate-69-0.jpg"
@@ -4530,7 +4530,7 @@
     "id": 68,
     "name": "L POST CLAMP",
     "itemCode": "325032",
-    "description": "",
+    "description": "L Post Clamp is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325032.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764536/keaa-products/l-post-clamp-68-0.jpg"
@@ -4543,7 +4543,7 @@
     "id": 67,
     "name": "U-BOLTS",
     "itemCode": "325031",
-    "description": "",
+    "description": "U-Bolts is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325031.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764538/keaa-products/u-bolts-67-0.jpg"
@@ -4556,7 +4556,7 @@
     "id": 66,
     "name": "TUBE CONNECTOR",
     "itemCode": "325030",
-    "description": "",
+    "description": "Tube Connector is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325030.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764540/keaa-products/tube-connector-66-0.jpg"
@@ -4569,7 +4569,7 @@
     "id": 65,
     "name": "TUBE PLATE CLAMP",
     "itemCode": "325029",
-    "description": "",
+    "description": "Tube Plate Clamp is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325029.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764543/keaa-products/tube-plate-clamp-65-0.jpg"
@@ -4582,7 +4582,7 @@
     "id": 64,
     "name": "BRISKET BOARD PLATE",
     "itemCode": "325028",
-    "description": "",
+    "description": "Brisket Board Plate is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325028.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764545/keaa-products/brisket-board-plate-64-0.jpg"
@@ -4595,7 +4595,7 @@
     "id": 63,
     "name": "BRISKET BOARD CLAMP",
     "itemCode": "325027",
-    "description": "",
+    "description": "Brisket Board Clamp is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325027.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764548/keaa-products/brisket-board-clamp-63-0.jpg"
@@ -4608,7 +4608,7 @@
     "id": 62,
     "name": "DOUBLE MOUNTING BRACKET FOR CUBICLE DIVIDER",
     "itemCode": "325026",
-    "description": "",
+    "description": "Double Mounting Bracket For Cubicle Divider is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325026.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764551/keaa-products/double-mounting-bracket-for-cubicle-divider-62-0.jpg"
@@ -4621,7 +4621,7 @@
     "id": 61,
     "name": "SINGLE MOUNTING BRACKET FOR CUBICLE DIVIDER",
     "itemCode": "325025",
-    "description": "",
+    "description": "Single Mounting Bracket For Cubicle Divider is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325025.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764553/keaa-products/single-mounting-bracket-for-cubicle-divider-61-0.jpg"
@@ -4634,7 +4634,7 @@
     "id": 60,
     "name": "SQ PIPE U-BOLT CLAMP",
     "itemCode": "325024",
-    "description": "",
+    "description": "SQ Pipe U-Bolt Clamp is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325024.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764555/keaa-products/sq-pipe-u-bolt-clamp-60-0.jpg"
@@ -4647,7 +4647,7 @@
     "id": 59,
     "name": "NECK RAIL SUPPORT CLAMP",
     "itemCode": "325023",
-    "description": "",
+    "description": "Neck Rail Support Clamp is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325023.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764557/keaa-products/neck-rail-support-clamp-59-0.jpg"
@@ -4660,7 +4660,7 @@
     "id": 58,
     "name": "U BOLT CLAMP WITH 2 SLOTS AND 2 HOLES",
     "itemCode": "325022",
-    "description": "",
+    "description": "U Bolt Clamp With 2 Slots And 2 Holes is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325022.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764560/keaa-products/u-bolt-clamp-with-2-slots-and-2-holes-58-0.jpg"
@@ -4673,7 +4673,7 @@
     "id": 57,
     "name": "Neck Rail Clamp With HEX BOLTS",
     "itemCode": "325021",
-    "description": "",
+    "description": "Neck Rail Clamp With HEX BOLTS is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325021.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764562/keaa-products/neck-rail-clamp-with-hex-bolts-57-0.jpg"
@@ -4686,7 +4686,7 @@
     "id": 56,
     "name": "Neck Rail Clamp With 12 Holes",
     "itemCode": "325020",
-    "description": "",
+    "description": "Neck Rail Clamp With 12 Holes is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325020.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764564/keaa-products/neck-rail-clamp-with-12-holes-56-0.jpg"
@@ -4699,7 +4699,7 @@
     "id": 55,
     "name": "Neck Rail Clamp With Long Plate",
     "itemCode": "325019",
-    "description": "",
+    "description": "Neck Rail Clamp With Long Plate is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325019.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764566/keaa-products/neck-rail-clamp-with-long-plate-55-0.jpg"
@@ -4712,7 +4712,7 @@
     "id": 54,
     "name": "Double Head Clamp",
     "itemCode": "325018",
-    "description": "",
+    "description": "Double Head Clamp is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325018.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764569/keaa-products/double-head-clamp-54-0.jpg"
@@ -4725,7 +4725,7 @@
     "id": 53,
     "name": "Double Head Clamp",
     "itemCode": "325017",
-    "description": "",
+    "description": "Double Head Clamp is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325017.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764572/keaa-products/double-head-clamp-53-0.jpg"
@@ -4738,7 +4738,7 @@
     "id": 52,
     "name": "Single Head Clamp",
     "itemCode": "325016",
-    "description": "",
+    "description": "Single Head Clamp is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325016.",
     "specs": [],
     "cloudinaryImages": []
   },
@@ -4749,7 +4749,7 @@
     "id": 51,
     "name": "Single Head Clamp",
     "itemCode": "325015",
-    "description": "",
+    "description": "Single Head Clamp is a cattle housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 325015.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764575/keaa-products/single-head-clamp-51-0.jpg"
@@ -4762,7 +4762,7 @@
     "id": 50,
     "name": "Calf Panel",
     "itemCode": "325060",
-    "description": "",
+    "description": "Calf Panel is a cattle housing product from KEAA International's Livestock Housing Solutions range. Finish: Hot Dip Galvanized as per DIN 1461. Item code: 325060.",
     "specs": [
       {
         "label": "FINISH",
@@ -4780,7 +4780,7 @@
     "id": 49,
     "name": "Treatment Shut",
     "itemCode": "325059",
-    "description": "",
+    "description": "Treatment Shut is a cattle housing product from KEAA International's Livestock Housing Solutions range. Finish: Hot Dip Galvanized as per DIN 1461. Item code: 325059.",
     "specs": [
       {
         "label": "FINISH",
@@ -4798,7 +4798,7 @@
     "id": 48,
     "name": "Calf Feed Trough",
     "itemCode": "325058",
-    "description": "",
+    "description": "Calf Feed Trough is a cattle housing product from KEAA International's Livestock Housing Solutions range. Finish: Available in galvanized and SS finish. Length: 4 ft, 5 ft, 6 ft, 8 ft, 9 ft. Item code: 325058.",
     "specs": [
       {
         "label": "FINISH",
@@ -4820,7 +4820,7 @@
     "id": 47,
     "name": "Water Trough",
     "itemCode": "325055",
-    "description": "",
+    "description": "Water Trough is a cattle housing product from KEAA International's Livestock Housing Solutions range. Diameter: 2160 mm. Number of spaces: 20. Finish: Available in galvanized and SS finish. Item code: 325055.",
     "specs": [
       {
         "label": "DIAMETER",
@@ -4846,7 +4846,7 @@
     "id": 46,
     "name": "ROUND FEEDERS (FOR COWS)",
     "itemCode": "325062",
-    "description": "",
+    "description": "Round Feeders (For Cows) is a cattle housing product from KEAA International's Livestock Housing Solutions range. Diameter: 2160 mm. Number of spaces: 20. Finish: Hot Dip Galvanized. Item code: 325062.",
     "specs": [
       {
         "label": "DIAMETER",
@@ -4872,7 +4872,7 @@
     "id": 45,
     "name": "TRAINING HEADLOCKS",
     "itemCode": "325012",
-    "description": "",
+    "description": "Training Headlocks is a cattle housing product from KEAA International's Livestock Housing Solutions range. Finish: Hot Dip Galvanized. Used for heifer cows. Item code: 325012.",
     "specs": [
       {
         "label": "FINISH",
@@ -4894,7 +4894,7 @@
     "id": 44,
     "name": "HIEFER SAFETY HEADLOCKS",
     "itemCode": "325010",
-    "description": "",
+    "description": "Hiefer Safety Headlocks is a cattle housing product from KEAA International's Livestock Housing Solutions range. Finish: Hot Dip Galvanized. Used for heifer cows. Item code: 325010.",
     "specs": [
       {
         "label": "FINISH",
@@ -4918,7 +4918,7 @@
     "id": 43,
     "name": "Wave Headlock",
     "itemCode": "32501WH",
-    "description": "",
+    "description": "Wave Headlock is a cattle housing product from KEAA International's Livestock Housing Solutions range. Finish: Hot Dip Galvanized. Also available for 2, 3, 4, 5 cows. Used for feeding, vaccination and any treatment to the cattle. Item code: 32501WH.",
     "specs": [
       {
         "label": "FINISH",
@@ -4942,7 +4942,7 @@
     "id": 42,
     "name": "Diagonal Barriers",
     "itemCode": "325011",
-    "description": "",
+    "description": "Diagonal Barriers is a cattle housing product from KEAA International's Livestock Housing Solutions range. Finish: Hot Dip Galvanized. Used for heifer cows. Item code: 325011.",
     "specs": [
       {
         "label": "FINISH",
@@ -4964,7 +4964,7 @@
     "id": 41,
     "name": "Self Lock Safety Barriers",
     "itemCode": "325008",
-    "description": "",
+    "description": "Self Lock Safety Barriers is a cattle housing product from KEAA International's Livestock Housing Solutions range. Length per cow: 646 mm. Finish: Hot Dip Galvanized. Cow head opening: 380 mm. Also available for 2, 3, 4 cows. Used for feeding, vaccination and any treatment to the cattle. Item code: 325008.",
     "specs": [
       {
         "label": "LENGTH PER COW",
@@ -4998,7 +4998,7 @@
     "id": 40,
     "name": "Giant Feed Headlock",
     "itemCode": "325007",
-    "description": "",
+    "description": "Giant Feed Headlock is a cattle housing product from KEAA International's Livestock Housing Solutions range. Length per cow: 646 mm. Finish: Hot Dip Galvanized. Cow head opening: 380 mm. Also available for 2, 3, 4 cows. Used for feeding, vaccination and any treatment to the cattle. Item code: 325007.",
     "specs": [
       {
         "label": "LENGTH PER COW",
@@ -5035,7 +5035,7 @@
     "id": 39,
     "name": "Multipurpose Cubicle Divider",
     "itemCode": "325003",
-    "description": "",
+    "description": "Multipurpose Cubicle Divider is a cattle housing product from KEAA International's Livestock Housing Solutions range. Length: 1982, 2134, 2286 mm. Height: 660 mm. Pipe OD: Ø60 mm. Finish: Hot Dip Galvanized. Item code: 325003.",
     "specs": [
       {
         "label": "LENGTH",
@@ -5066,7 +5066,7 @@
     "id": 38,
     "name": "Comfot Cubicle Divider",
     "itemCode": "325006",
-    "description": "",
+    "description": "Comfot Cubicle Divider is a cattle housing product from KEAA International's Livestock Housing Solutions range. Length: 1982, 2134, 2286 mm. Height: 660 mm. Pipe OD: Ø60 mm. Finish: Hot Dip Galvanized. Item code: 325006.",
     "specs": [
       {
         "label": "LENGTH",
@@ -5097,7 +5097,7 @@
     "id": 37,
     "name": "Pasture Cubicle Divider",
     "itemCode": "325001",
-    "description": "",
+    "description": "Pasture Cubicle Divider is a cattle housing product from KEAA International's Livestock Housing Solutions range. Length: 1982, 2134, 2286 mm. Height: 660 mm. Pipe OD: Ø60 mm. Finish: Hot Dip Galvanized. Item code: 325001.",
     "specs": [
       {
         "label": "LENGTH",
@@ -5160,7 +5160,7 @@
     "id": 132,
     "name": "Ground Trough",
     "itemCode": "425007",
-    "description": "",
+    "description": "Ground Trough is a sheep housing product from KEAA International's Livestock Housing Solutions range. Finish: Hot Dip Galvanized. Length: 4 ft, 5 ft, 6 ft, 8 ft, 9 ft. Item code: 425007.",
     "specs": [
       {
         "label": "FINISH",
@@ -5182,7 +5182,7 @@
     "id": 131,
     "name": "Hang on Trough",
     "itemCode": "425006",
-    "description": "",
+    "description": "Hang on Trough is a sheep housing product from KEAA International's Livestock Housing Solutions range. Finish: Hot Dip Galvanized. Length: 4 ft, 5 ft, 6 ft, 8 ft, 9 ft. Item code: 425006.",
     "specs": [
       {
         "label": "FINISH",
@@ -5204,7 +5204,7 @@
     "id": 99,
     "name": "Joiner",
     "itemCode": "425011(c)",
-    "description": "",
+    "description": "Joiner is a sheep housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 425011(c).",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764628/keaa-products/joiner-99-0.jpg"
@@ -5217,7 +5217,7 @@
     "id": 98,
     "name": "Non Return Gate",
     "itemCode": "425011(b)",
-    "description": "",
+    "description": "Non Return Gate is a sheep housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 425011(b).",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764630/keaa-products/non-return-gate-98-0.jpg"
@@ -5230,7 +5230,7 @@
     "id": 97,
     "name": "Drafting Gate",
     "itemCode": "425011(a)",
-    "description": "",
+    "description": "Drafting Gate is a sheep housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 425011(a).",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764633/keaa-products/drafting-gate-97-0.jpg"
@@ -5243,7 +5243,7 @@
     "id": 96,
     "name": "Sheep Race",
     "itemCode": "425011",
-    "description": "",
+    "description": "Sheep Race is a sheep housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 425011.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764635/keaa-products/sheep-race-96-0.jpg"
@@ -5256,7 +5256,7 @@
     "id": 95,
     "name": "Weighing Scales",
     "itemCode": "425010",
-    "description": "",
+    "description": "Weighing Scales is a sheep housing product from KEAA International's Livestock Housing Solutions range. Weighing capacity: Up to 200 kg. Plate: Aluminium chequered plate on floor. Used for small as well as big cows. Item code: 425010.",
     "specs": [
       {
         "label": "WEIGHING CAPACITY",
@@ -5282,7 +5282,7 @@
     "id": 94,
     "name": "Round Feeders",
     "itemCode": "425009",
-    "description": "",
+    "description": "Round Feeders is a sheep housing product from KEAA International's Livestock Housing Solutions range. Diameter: 1800 mm. Number of spaces: 28. Finish: Hot Dip Galvanized. Item code: 425009.",
     "specs": [
       {
         "label": "DIAMETER",
@@ -5308,7 +5308,7 @@
     "id": 93,
     "name": "Hang on Feeders",
     "itemCode": "425005HF",
-    "description": "",
+    "description": "Hang on Feeders is a sheep housing product from KEAA International's Livestock Housing Solutions range. Finish: Hot Dip Galvanized. Used for feeding. Item code: 425005HF.",
     "specs": [
       {
         "label": "FINISH",
@@ -5328,7 +5328,7 @@
     "id": 92,
     "name": "Bucket Holder",
     "itemCode": "425004",
-    "description": "",
+    "description": "Bucket Holder is a sheep housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 425004.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764644/keaa-products/bucket-holder-92-0.jpg"
@@ -5341,7 +5341,7 @@
     "id": 91,
     "name": "Hang on Basket",
     "itemCode": "425008",
-    "description": "",
+    "description": "Hang on Basket is a sheep housing product from KEAA International's Livestock Housing Solutions range. Finish: Hot Dip Galvanized. Used for feeding. Item code: 425008.",
     "specs": [
       {
         "label": "FINISH",
@@ -5363,7 +5363,7 @@
     "id": 90,
     "name": "Double Side Hay Basket",
     "itemCode": "425005",
-    "description": "",
+    "description": "Double Side Hay Basket is a sheep housing product from KEAA International's Livestock Housing Solutions range. Length: 714 mm. Height: 510 mm. Width: 490 mm. Finish: Hot Dip Galvanized. Used for feeding. Item code: 425005.",
     "specs": [
       {
         "label": "LENGTH",
@@ -5397,7 +5397,7 @@
     "id": 89,
     "name": "Sheep Headlocks",
     "itemCode": "425003",
-    "description": "",
+    "description": "Sheep Headlocks is a sheep housing product from KEAA International's Livestock Housing Solutions range. Finish: Hot Dip Galvanized. Used for locking sheep. Item code: 425003.",
     "specs": [
       {
         "label": "FINISH",
@@ -5419,7 +5419,7 @@
     "id": 88,
     "name": "Sheep Panels (Pin Drop)",
     "itemCode": "425001",
-    "description": "",
+    "description": "Sheep Panels (Pin Drop) is a sheep housing product from KEAA International's Livestock Housing Solutions range. Length: 4', 5', 6', 8'. Height: 965 mm. Pipe: Ø25 mm. Finish: Hot Dip Galvanized. Item code: 425001.",
     "specs": [
       {
         "label": "LENGTH",
@@ -5449,7 +5449,7 @@
     "id": 87,
     "name": "Sheep Panels (Interlocking)",
     "itemCode": "425002",
-    "description": "",
+    "description": "Sheep Panels (Interlocking) is a sheep housing product from KEAA International's Livestock Housing Solutions range. Length: 4', 5', 6', 8'. Height: 1110 mm. Finish: Hot Dip Galvanized. Item code: 425002.",
     "specs": [
       {
         "label": "LENGTH",
@@ -5475,7 +5475,7 @@
     "id": 306,
     "name": "5 Bar Full Mesh",
     "itemCode": "525023",
-    "description": "",
+    "description": "5 Bar Full Mesh is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525023.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764658/keaa-products/5-bar-full-mesh-306-0.jpg",
@@ -5489,7 +5489,7 @@
     "id": 305,
     "name": "5 Bar Half Mesh Field Gates",
     "itemCode": "525003",
-    "description": "",
+    "description": "5 Bar Half Mesh Field Gates is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525003.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764662/keaa-products/5-bar-half-mesh-field-gates-305-0.jpg",
@@ -5503,7 +5503,7 @@
     "id": 292,
     "name": "7 Bar National Gates",
     "itemCode": "525008",
-    "description": "",
+    "description": "7 Bar National Gates is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525008.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764666/keaa-products/7-bar-national-gates-292-0.jpg"
@@ -5516,7 +5516,7 @@
     "id": 291,
     "name": "Imperial Gates",
     "itemCode": "525007",
-    "description": "",
+    "description": "Imperial Gates is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525007.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764668/keaa-products/imperial-gates-291-0.jpg"
@@ -5529,7 +5529,7 @@
     "id": 289,
     "name": "Gate Posts",
     "itemCode": "525023",
-    "description": "",
+    "description": "Gate Posts is a field gate product from KEAA International's Livestock Housing Solutions range. Hanging post: Ø114 mm. Stile post: 90 mm. Finish: Hot Dip Galvanized. Item code: 525023.",
     "specs": [
       {
         "label": "HANGING POST",
@@ -5555,7 +5555,7 @@
     "id": 133,
     "name": "Gate Posts",
     "itemCode": "525024",
-    "description": "",
+    "description": "Gate Posts is a field gate product from KEAA International's Livestock Housing Solutions range. Hanging post: Ø114 mm. Stile post: 90 mm. Finish: Hot Dip Galvanized. Item code: 525024.",
     "specs": [
       {
         "label": "HANGING POST",
@@ -5581,7 +5581,7 @@
     "id": 118,
     "name": "Wall Gate Hanger Without Washer",
     "itemCode": "525022",
-    "description": "",
+    "description": "Wall Gate Hanger Without Washer is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525022.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764677/keaa-products/wall-gate-hanger-without-washer-118-0.jpg"
@@ -5594,7 +5594,7 @@
     "id": 117,
     "name": "Wall Gate Hanger With Washer",
     "itemCode": "525021",
-    "description": "",
+    "description": "Wall Gate Hanger With Washer is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525021.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764679/keaa-products/wall-gate-hanger-with-washer-117-0.jpg"
@@ -5607,7 +5607,7 @@
     "id": 116,
     "name": "Post Gate Hanger Without Washer",
     "itemCode": "525020",
-    "description": "",
+    "description": "Post Gate Hanger Without Washer is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525020.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764681/keaa-products/post-gate-hanger-without-washer-116-0.jpg"
@@ -5620,7 +5620,7 @@
     "id": 115,
     "name": "Post Gate Hanger With Washer",
     "itemCode": "525019",
-    "description": "",
+    "description": "Post Gate Hanger With Washer is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525019.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764683/keaa-products/post-gate-hanger-with-washer-115-0.jpg"
@@ -5633,7 +5633,7 @@
     "id": 114,
     "name": "Guarder Gate Hanger Without Washer",
     "itemCode": "525018",
-    "description": "",
+    "description": "Guarder Gate Hanger Without Washer is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525018.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764686/keaa-products/guarder-gate-hanger-without-washer-114-0.jpg"
@@ -5646,7 +5646,7 @@
     "id": 113,
     "name": "Guarder Gate Hanger With Washer",
     "itemCode": "525017",
-    "description": "",
+    "description": "Guarder Gate Hanger With Washer is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525017.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764688/keaa-products/guarder-gate-hanger-with-washer-113-0.jpg"
@@ -5659,7 +5659,7 @@
     "id": 112,
     "name": "Stud Gate Hanger Without Washer",
     "itemCode": "525016",
-    "description": "",
+    "description": "Stud Gate Hanger Without Washer is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525016.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764690/keaa-products/stud-gate-hanger-without-washer-112-0.jpg"
@@ -5672,7 +5672,7 @@
     "id": 111,
     "name": "Stud Gate Hanger With Washer",
     "itemCode": "525015",
-    "description": "",
+    "description": "Stud Gate Hanger With Washer is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525015.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764693/keaa-products/stud-gate-hanger-with-washer-111-0.jpg"
@@ -5685,7 +5685,7 @@
     "id": 110,
     "name": "Stud Type L Gate Hanger With Extra Leg",
     "itemCode": "525014",
-    "description": "",
+    "description": "Stud Type L Gate Hanger With Extra Leg is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525014.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764695/keaa-products/stud-type-l-gate-hanger-with-extra-leg-110-0.jpg"
@@ -5698,7 +5698,7 @@
     "id": 109,
     "name": "Stud Type L Gate Hanger",
     "itemCode": "525013",
-    "description": "",
+    "description": "Stud Type L Gate Hanger is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525013.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764697/keaa-products/stud-type-l-gate-hanger-109-0.jpg"
@@ -5711,7 +5711,7 @@
     "id": 108,
     "name": "Eye Bolts",
     "itemCode": "525012",
-    "description": "",
+    "description": "Eye Bolts is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525012.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764700/keaa-products/eye-bolts-108-0.jpg"
@@ -5724,7 +5724,7 @@
     "id": 107,
     "name": "Extra Spaced Gate Hanger",
     "itemCode": "525011",
-    "description": "",
+    "description": "Extra Spaced Gate Hanger is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525011.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764703/keaa-products/extra-spaced-gate-hanger-107-0.jpg"
@@ -5737,7 +5737,7 @@
     "id": 106,
     "name": "Spaced Gate Hanger",
     "itemCode": "525010",
-    "description": "",
+    "description": "Spaced Gate Hanger is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525010.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764705/keaa-products/spaced-gate-hanger-106-0.jpg"
@@ -5750,7 +5750,7 @@
     "id": 105,
     "name": "Flate Gate Hanger",
     "itemCode": "525009",
-    "description": "",
+    "description": "Flate Gate Hanger is a field gate product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 525009.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764707/keaa-products/flate-gate-hanger-105-0.jpg"
@@ -5763,7 +5763,7 @@
     "id": 102,
     "name": "9 BAR FIELD GATES",
     "itemCode": "525005",
-    "description": "",
+    "description": "9 Bar Field Gates is a field gate product from KEAA International's Livestock Housing Solutions range. Pipe: Ø40 mm. Length: 9, 10, 11, 12, 13, 14, 15, 16 ft. Finish: Hot Dip Galvanized. Used in sheep farms. Item code: 525005.",
     "specs": [
       {
         "label": "PIPE",
@@ -5794,7 +5794,7 @@
     "id": 101,
     "name": "6 Bar Field Gates",
     "itemCode": "525004",
-    "description": "",
+    "description": "6 Bar Field Gates is a field gate product from KEAA International's Livestock Housing Solutions range. Pipe: Ø40 mm. Length: 9, 10, 11, 12, 13, 14, 15, 16 ft. Finish: Hot Dip Galvanized. Used in cattle farms. Item code: 525004.",
     "specs": [
       {
         "label": "PIPE",
@@ -5825,7 +5825,7 @@
     "id": 100,
     "name": "5 Bar Field Gates",
     "itemCode": "525001",
-    "description": "",
+    "description": "5 Bar Field Gates is a field gate product from KEAA International's Livestock Housing Solutions range. Pipe: Ø40 mm. Length: 9, 10, 11, 12, 13, 14, 15, 16 ft. Finish: Hot Dip Galvanized. Used in sheep farms. Item code: 525001.",
     "specs": [
       {
         "label": "PIPE",
@@ -5856,7 +5856,7 @@
     "id": 122,
     "name": "Pail ring",
     "itemCode": "PR001",
-    "description": "",
+    "description": "Pail ring is a calf housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: PR001.",
     "specs": [],
     "cloudinaryImages": []
   },
@@ -5867,7 +5867,7 @@
     "id": 121,
     "name": "Calf Pen",
     "itemCode": "CP001",
-    "description": "",
+    "description": "Calf Pen is a calf housing product from KEAA International's Livestock Housing Solutions range. Pipe: Ø25 mm. Finish: Hot Dip Galvanized. Length: 4 ft. Item code: CP001.",
     "specs": [
       {
         "label": "PIPE",
@@ -5891,7 +5891,7 @@
     "id": 119,
     "name": "Calf House",
     "itemCode": "CH001",
-    "description": "",
+    "description": "Calf House is a calf housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: CH001.",
     "specs": [],
     "cloudinaryImages": []
   },
@@ -5902,7 +5902,7 @@
     "id": 298,
     "name": "Lamb Jackets",
     "itemCode": "925006",
-    "description": "",
+    "description": "Lamb Jackets is a pig housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 925006.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764724/keaa-products/lamb-jackets-298-0.jpg"
@@ -5915,7 +5915,7 @@
     "id": 297,
     "name": "Calf Jackets",
     "itemCode": "925005",
-    "description": "",
+    "description": "Calf Jackets is a pig housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 925005.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764727/keaa-products/calf-jackets-297-0.jpg"
@@ -5928,7 +5928,7 @@
     "id": 296,
     "name": "Manure Srapper",
     "itemCode": "925004",
-    "description": "",
+    "description": "Manure Srapper is a pig housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 925004.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764730/keaa-products/manure-srapper-296-0.jpg"
@@ -5941,7 +5941,7 @@
     "id": 295,
     "name": "Veterniary Gloves",
     "itemCode": "925003",
-    "description": "",
+    "description": "Veterniary Gloves is a pig housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 925003.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764732/keaa-products/veterniary-gloves-295-0.jpg"
@@ -5954,7 +5954,7 @@
     "id": 294,
     "name": "Hygiene Gloves",
     "itemCode": "925002",
-    "description": "",
+    "description": "Hygiene Gloves is a pig housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 925002.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764735/keaa-products/hygiene-gloves-294-0.jpg"
@@ -5967,7 +5967,7 @@
     "id": 293,
     "name": "Apron",
     "itemCode": "925001",
-    "description": "",
+    "description": "Apron is a pig housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 925001.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764737/keaa-products/apron-293-0.jpg"
@@ -5980,7 +5980,7 @@
     "id": 130,
     "name": "Adjustable Clamp",
     "itemCode": "625006",
-    "description": "",
+    "description": "Adjustable Clamp is a pig housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 625006.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764739/keaa-products/adjustable-clamp-130-0.jpg"
@@ -5993,7 +5993,7 @@
     "id": 129,
     "name": "Foot Clamp",
     "itemCode": "625005",
-    "description": "",
+    "description": "Foot Clamp is a pig housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 625005.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764742/keaa-products/foot-clamp-129-0.jpg"
@@ -6006,7 +6006,7 @@
     "id": 128,
     "name": "Hinge Clamp",
     "itemCode": "625004",
-    "description": "",
+    "description": "Hinge Clamp is a pig housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 625004.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764744/keaa-products/hinge-clamp-128-0.jpg"
@@ -6019,7 +6019,7 @@
     "id": 127,
     "name": "Feed Bowls",
     "itemCode": "625003",
-    "description": "",
+    "description": "Feed Bowls is a pig housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 625003.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764747/keaa-products/feed-bowls-127-0.jpg"
@@ -6032,7 +6032,7 @@
     "id": 125,
     "name": "Stainless steel casting hooks",
     "itemCode": "SSCH001",
-    "description": "",
+    "description": "Stainless steel casting hooks is a pig housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: SSCH001.",
     "specs": [],
     "cloudinaryImages": []
   },
@@ -6043,7 +6043,7 @@
     "id": 124,
     "name": "GESTATION PEN",
     "itemCode": "625002",
-    "description": "",
+    "description": "Gestation Pen is a pig housing product from KEAA International's Livestock Housing Solutions range. Finish: Hot Dip Galvanized as per DIN ISO 1461. Used in pig farms as partition for pigs. Item code: 625002.",
     "specs": [
       {
         "label": "FINISH",
@@ -6065,7 +6065,7 @@
     "id": 123,
     "name": "Farrowing Crate",
     "itemCode": "625001",
-    "description": "",
+    "description": "Farrowing Crate is a pig housing product from KEAA International's Livestock Housing Solutions range. Finish: Hot Dip Galvanized as per DIN ISO 1461. Used in pig farms as partition for pigs. Item code: 625001.",
     "specs": [
       {
         "label": "FINISH",
@@ -6087,7 +6087,7 @@
     "id": 304,
     "name": "Guard For Water Bowl",
     "itemCode": "725006",
-    "description": "",
+    "description": "Guard For Water Bowl is a horse housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 725006.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764757/keaa-products/guard-for-water-bowl-304-0.jpg"
@@ -6100,7 +6100,7 @@
     "id": 303,
     "name": "Feeding Trough",
     "itemCode": "725005",
-    "description": "",
+    "description": "Feeding Trough is a horse housing product from KEAA International's Livestock Housing Solutions range. Available in: Circular, Rectangular, Semi Circle. Item code: 725005.",
     "specs": [
       {
         "label": "Available in:/td>",
@@ -6118,7 +6118,7 @@
     "id": 302,
     "name": "Fence Panels",
     "itemCode": "725004",
-    "description": "",
+    "description": "Fence Panels is a horse housing product from KEAA International's Livestock Housing Solutions range. Length: 2, 2.5, 3.0 m. Height: 1.5 m. Item code: 725004.",
     "specs": [
       {
         "label": "Length/td>",
@@ -6140,7 +6140,7 @@
     "id": 301,
     "name": "Hay Racks",
     "itemCode": "725003",
-    "description": "",
+    "description": "Hay Racks is a horse housing product from KEAA International's Livestock Housing Solutions range. Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: 725003.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764764/keaa-products/hay-racks-301-0.jpg"
@@ -6153,7 +6153,7 @@
     "id": 300,
     "name": "Round Hay Feeders",
     "itemCode": "725002",
-    "description": "",
+    "description": "Round Hay Feeders is a horse housing product from KEAA International's Livestock Housing Solutions range. Inner diameter: 2.10 m. Height: 1.20 m. Sheet height: 55 cm. Spaces: 12 Feed Spaces. Item code: 725002.",
     "specs": [
       {
         "label": "Inner Diameter/td>",
@@ -6184,7 +6184,7 @@
     "id": 299,
     "name": "Hay Feeders",
     "itemCode": "725001",
-    "description": "",
+    "description": "Hay Feeders is a horse housing product from KEAA International's Livestock Housing Solutions range. Length available in: 1 m, 1.5 m. Mounting options: Wall Mount, Hanging Type. Item code: 725001.",
     "specs": [
       {
         "label": "Length Available in:/td>",
@@ -6207,7 +6207,7 @@
     "id": 320,
     "name": "Perforated Plates Type B",
     "itemCode": "PPTB",
-    "description": "",
+    "description": "Perforated Plates Type B is part of KEAA International's indoor wood connectors range (Wood Connectors and DIY Hardware). Material: S 250GD + Z 275 according to DIN EN 10346. Corrosion protection: 275 g/m2 on both sides, corresponding to a zinc layer thickness of approx 20 µm. Mechanical properties: YS min. 250 MPa, UTS min. 350 MPa. Available in 5 sizes (35 to 55 mm); see the specification table for full dimensions. Selected sizes carry CE marking to ETAG 015. Item code: PPTB.",
     "specs": [
       {
         "label": "Material",
@@ -6263,7 +6263,7 @@
     "id": 319,
     "name": "Perforated Plates Type A",
     "itemCode": "PPTA",
-    "description": "",
+    "description": "Perforated Plates Type A is part of KEAA International's indoor wood connectors range (Wood Connectors and DIY Hardware). Material: S 250GD + Z 275 according to DIN EN 10346. Corrosion protection: 275 g/m2 on both sides, corresponding to a zinc layer thickness of approx 20 µm. Mechanical properties: YS min. 250 MPa, UTS min. 350 MPa. Available in 12 sizes (40 to 120 mm); see the specification table for full dimensions. Selected sizes carry CE marking to ETAG 015. Item code: PPTA.",
     "specs": [
       {
         "label": "Material",
@@ -6347,7 +6347,7 @@
     "id": 318,
     "name": "Perforated Strips",
     "itemCode": "PS",
-    "description": "",
+    "description": "Perforated Strips is part of KEAA International's indoor wood connectors range (Wood Connectors and DIY Hardware). Material: S 250GD + Z 275 according to DIN EN 10346. Corrosion protection: 275 g/m2 on both sides, corresponding to a zinc layer thickness of approx 20 µm. Mechanical properties: YS min. 250 MPa, UTS min. 350 MPa. Available in 11 sizes (13 to 80 mm); see the specification table for full dimensions. Selected sizes carry CE marking to ETAG 015. Item code: PS.",
     "specs": [
       {
         "label": "Material",
@@ -6425,7 +6425,7 @@
     "id": 317,
     "name": "Joist Hangers TYPE C",
     "itemCode": "JHTC",
-    "description": "",
+    "description": "Joist Hangers TYPE C is part of KEAA International's indoor wood connectors range (Wood Connectors and DIY Hardware). Material: S 250GD + Z 275 according to DIN EN 10346. Corrosion protection: 275 g/m2 on both sides, corresponding to a zinc layer thickness of approx 20 µm. Mechanical properties: YS min. 250 MPa, UTS min. 350 MPa. Available in 2 sizes (46 to 71 mm); see the specification table for full dimensions. All sizes carry CE marking to ETAG 015. Item code: JHTC.",
     "specs": [
       {
         "label": "Material",
@@ -6468,7 +6468,7 @@
     "id": 316,
     "name": "Joist Hangers type B",
     "itemCode": "JHTB",
-    "description": "",
+    "description": "Joist Hangers type B is part of KEAA International's indoor wood connectors range (Wood Connectors and DIY Hardware). Material: S 250GD + Z 275 according to DIN EN 10346. Corrosion protection: 275 g/m2 on both sides, corresponding to a zinc layer thickness of approx 20 µm. Mechanical properties: YS min. 250 MPa, UTS min. 350 MPa. Available in 10 sizes (45 to 140 mm); see the specification table for full dimensions. Selected sizes carry CE marking to ETAG 015. Item code: JHTB.",
     "specs": [
       {
         "label": "Material",
@@ -6544,7 +6544,7 @@
     "id": 315,
     "name": "Joist Hangers Type A",
     "itemCode": "JHTA",
-    "description": "",
+    "description": "Joist Hangers Type A is part of KEAA International's indoor wood connectors range (Wood Connectors and DIY Hardware). Material: S 250GD + Z 275 according to DIN EN 10346. Corrosion protection: 275 g/m2 on both sides, corresponding to a zinc layer thickness of approx 20 µm. Mechanical properties: YS min. 250 MPa, UTS min. 350 MPa. Available in 12 sizes (45 to 140 mm); see the specification table for full dimensions. Selected sizes carry CE marking to ETAG 015. Item code: JHTA.",
     "specs": [
       {
         "label": "Material",
@@ -6628,7 +6628,7 @@
     "id": 314,
     "name": "Purlin Anchors",
     "itemCode": "PA-1",
-    "description": "",
+    "description": "Purlin Anchors is part of KEAA International's indoor wood connectors range (Wood Connectors and DIY Hardware). Material: S 250GD + Z 275 according to DIN EN 10346. Corrosion protection: 275 g/m2 on both sides, corresponding to a zinc layer thickness of approx 20 µm. Mechanical properties: YS min. 250 MPa, UTS min. 350 MPa. Available in 3 sizes (170 to 250 mm); see the specification table for full dimensions. All sizes carry CE marking to ETAG 015. Item code: PA-1.",
     "specs": [
       {
         "label": "Material",
@@ -6676,7 +6676,7 @@
     "id": 313,
     "name": "Purlin Anchors",
     "itemCode": "PA",
-    "description": "",
+    "description": "Purlin Anchors is part of KEAA International's indoor wood connectors range (Wood Connectors and DIY Hardware). Material: S 250GD + Z 275 according to DIN EN 10346. Corrosion protection: 275 g/m2 on both sides, corresponding to a zinc layer thickness of approx 20 µm. Mechanical properties: YS min. 250 MPa, UTS min. 350 MPa. Available in 8 sizes (170 to 290 mm), in left and right versions; see the specification table for full dimensions. Selected sizes carry CE marking to ETAG 015. Item code: PA.",
     "specs": [
       {
         "label": "Material",
@@ -6744,7 +6744,7 @@
     "id": 312,
     "name": "Universal Connectors",
     "itemCode": "UC",
-    "description": "",
+    "description": "Universal Connectors is part of KEAA International's indoor wood connectors range (Wood Connectors and DIY Hardware). Material: S 250GD + Z 275 according to DIN EN 10346. Corrosion protection: 275 g/m2 on both sides, corresponding to a zinc layer thickness of approx 20 µm. Mechanical properties: YS min. 250 MPa, UTS min. 350 MPa. Available in one size (100 mm); see the specification table for full dimensions. All sizes carry CE marking to ETAG 015. Item code: UC.",
     "specs": [
       {
         "label": "Material",
@@ -6788,7 +6788,7 @@
     "id": 311,
     "name": "Angle Connectors Adjustable",
     "itemCode": "ACA",
-    "description": "",
+    "description": "Angle Connectors Adjustable is part of KEAA International's indoor wood connectors range (Wood Connectors and DIY Hardware). Material: S 250GD + Z 275 according to DIN EN 10346. Corrosion protection: 275 g/m2 on both sides, corresponding to a zinc layer thickness of approx 20 µm. Mechanical properties: YS min. 250 MPa, UTS min. 350 MPa. Available in 2 sizes (60 to 80 mm); see the specification table for full dimensions. All sizes carry CE marking to ETAG 015. Item code: ACA.",
     "specs": [
       {
         "label": "Material",
@@ -6832,7 +6832,7 @@
     "id": 310,
     "name": "Angle Connectors",
     "itemCode": "AC1",
-    "description": "",
+    "description": "Angle Connectors is part of KEAA International's indoor wood connectors range (Wood Connectors and DIY Hardware). Material: S250GD + Z 275 according to DIN EN 10346. Corrosion protection: 275 g/m2 on both sides, corresponding to a zinc layer thickness of approx 20 µm. Mechanical properties: YS min. 250 MPa, UTS min. 350 MPa. Available in one size (40 mm); see the specification table for full dimensions. All sizes carry CE marking to ETAG 015. Item code: AC1.",
     "specs": [
       {
         "label": "Material",
@@ -6900,7 +6900,7 @@
     "id": 309,
     "name": "Angle Connectors",
     "itemCode": "AC",
-    "description": "",
+    "description": "Angle Connectors is part of KEAA International's indoor wood connectors range (Wood Connectors and DIY Hardware). Material: S250GD + Z 275 according to DIN EN 10346. Corrosion protection: 275 g/m2 on both sides, corresponding to zinc layer thickness of approx 20 µm. Mechanical properties: YS min. 250 MPa, UTS min. 350 MPa. Available in 4 sizes (40 to 80 mm); see the specification table for full dimensions. All sizes carry CE marking to ETAG 015. Item code: AC.",
     "specs": [
       {
         "label": "Material",
@@ -6952,7 +6952,7 @@
     "id": 308,
     "name": "Angle Connectors Without Rib",
     "itemCode": "ACWHR",
-    "description": "",
+    "description": "Angle Connectors Without Rib is part of KEAA International's indoor wood connectors range (Wood Connectors and DIY Hardware). Material: S250GD + Z 275 according to DIN EN 10346. Corrosion protection: 275 g/m2 on both sides, corresponding to zinc layer thickness of approx 20 µm. Mechanical properties: YS min. 250 MPa, UTS min. 350 MPa. Available in 6 sizes (50 to 105 mm); see the specification table for full dimensions. All sizes carry CE marking to ETAG 015. Item code: ACWHR.",
     "specs": [
       {
         "label": "Material",
@@ -7013,7 +7013,7 @@
     "id": 307,
     "name": "Angle Connectors With Rib",
     "itemCode": "ACWR",
-    "description": "",
+    "description": "Angle Connectors With Rib is part of KEAA International's indoor wood connectors range (Wood Connectors and DIY Hardware). Material: S250GD + Z 275 according to DIN EN 10346. Corrosion protection: 275 g/m2 on both sides, corresponding to zinc layer thickness of approx 20 µm. Mechanical properties: YS min. 250 MPa, UTS min. 350 MPa. Available in 7 sizes (50 to 125 mm); see the specification table for full dimensions. All sizes carry CE marking to ETAG 015. Item code: ACWR.",
     "specs": [
       {
         "label": "Material",
@@ -7077,7 +7077,7 @@
     "id": 332,
     "name": "T-Blade Post Supports",
     "itemCode": "TBPS",
-    "description": "",
+    "description": "T-Blade Post Supports is part of KEAA International's post supports range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005, or stainless steel 304/316. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: TBPS.",
     "specs": [
       {
         "label": "Material",
@@ -7101,7 +7101,7 @@
     "id": 331,
     "name": "U-Type Post Supports",
     "itemCode": "UTPS",
-    "description": "",
+    "description": "U-Type Post Supports is part of KEAA International's post supports range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005, or stainless steel 304/316. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: UTPS.",
     "specs": [
       {
         "label": "Material",
@@ -7125,7 +7125,7 @@
     "id": 330,
     "name": "Boltdown Post Supports",
     "itemCode": "BPS",
-    "description": "",
+    "description": "Boltdown Post Supports is part of KEAA International's post supports range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005, or stainless steel 304/316. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: BPS.",
     "specs": [
       {
         "label": "Material",
@@ -7173,7 +7173,7 @@
     "id": 328,
     "name": "I-Type Post Support",
     "itemCode": "ITPSBPM",
-    "description": "",
+    "description": "I-Type Post Support is part of KEAA International's post supports range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005, or stainless steel 304/316. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: ITPSBPM.",
     "specs": [
       {
         "label": "Material",
@@ -7245,7 +7245,7 @@
     "id": 325,
     "name": "U-Type Post Supports with Base Plate",
     "itemCode": "UTPSWBP",
-    "description": "",
+    "description": "U-Type Post Supports with Base Plate is part of KEAA International's post supports range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: UTPSWBP.",
     "specs": [
       {
         "label": "Material",
@@ -7269,7 +7269,7 @@
     "id": 324,
     "name": "U-Type Post Supports",
     "itemCode": "UTPS",
-    "description": "",
+    "description": "U-Type Post Supports is part of KEAA International's post supports range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: UTPS.",
     "specs": [
       {
         "label": "Material",
@@ -7293,7 +7293,7 @@
     "id": 323,
     "name": "H-Type Post Supports",
     "itemCode": "HTPS",
-    "description": "",
+    "description": "H-Type Post Supports is part of KEAA International's post supports range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: HTPS.",
     "specs": [
       {
         "label": "Material",
@@ -7317,7 +7317,7 @@
     "id": 322,
     "name": "L-Type Post Supports",
     "itemCode": "LTPS",
-    "description": "",
+    "description": "L-Type Post Supports is part of KEAA International's post supports range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: LTPS.",
     "specs": [
       {
         "label": "Material",
@@ -7341,7 +7341,7 @@
     "id": 321,
     "name": "Y Type Post Supports",
     "itemCode": "YTPS",
-    "description": "",
+    "description": "Y Type Post Supports is part of KEAA International's post supports range (Wood Connectors and DIY Hardware). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: YTPS.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764871/keaa-products/y-type-post-supports-321-0.jpg",
@@ -7356,7 +7356,7 @@
     "id": 359,
     "name": "Ground Plates Wedge Grip",
     "itemCode": "GPWG",
-    "description": "",
+    "description": "Ground Plates Wedge Grip is part of KEAA International's pole anchors and ground plates range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Powder coated with coating thickness 60-180 µm. Item code: GPWG.",
     "specs": [
       {
         "label": "Material",
@@ -7379,7 +7379,7 @@
     "id": 358,
     "name": "Ground Plates Bolt Type",
     "itemCode": "GPBT",
-    "description": "",
+    "description": "Ground Plates Bolt Type is part of KEAA International's pole anchors and ground plates range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Powder coated with coating thickness 60-180 µm. Item code: GPBT.",
     "specs": [
       {
         "label": "Material",
@@ -7402,7 +7402,7 @@
     "id": 357,
     "name": "Pole Anchors Wedge Grip",
     "itemCode": "PAWG",
-    "description": "",
+    "description": "Pole Anchors Wedge Grip is part of KEAA International's pole anchors and ground plates range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Powder coated with coating thickness 60-180 µm. Item code: PAWG.",
     "specs": [
       {
         "label": "Material",
@@ -7425,7 +7425,7 @@
     "id": 356,
     "name": "Pole Anchors Bolt Type",
     "itemCode": "PABT",
-    "description": "",
+    "description": "Pole Anchors Bolt Type is part of KEAA International's pole anchors and ground plates range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: PABT.",
     "specs": [
       {
         "label": "Material",
@@ -7448,7 +7448,7 @@
     "id": 355,
     "name": "Ground Plates For Round Post",
     "itemCode": "GPFRP",
-    "description": "",
+    "description": "Ground Plates For Round Post is part of KEAA International's pole anchors and ground plates range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: GPFRP.",
     "specs": [
       {
         "label": "Material",
@@ -7471,7 +7471,7 @@
     "id": 354,
     "name": "Ground Plates For Square Post",
     "itemCode": "GPFSP",
-    "description": "",
+    "description": "Ground Plates For Square Post is part of KEAA International's pole anchors and ground plates range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: GPFSP.",
     "specs": [
       {
         "label": "Material",
@@ -7494,7 +7494,7 @@
     "id": 353,
     "name": "Rotatable Pole Anchors For Square Post",
     "itemCode": "RPAFSP",
-    "description": "",
+    "description": "Rotatable Pole Anchors For Square Post is part of KEAA International's pole anchors and ground plates range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: RPAFSP.",
     "specs": [
       {
         "label": "Material",
@@ -7517,7 +7517,7 @@
     "id": 352,
     "name": "Spiral Pole Anchor For Round Post",
     "itemCode": "SPAFRP01",
-    "description": "",
+    "description": "Spiral Pole Anchor For Round Post is part of KEAA International's pole anchors and ground plates range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: SPAFRP01.",
     "specs": [
       {
         "label": "Material",
@@ -7541,7 +7541,7 @@
     "id": 350,
     "name": "Spiral Pole Anchors For Square Post",
     "itemCode": "SPAFSP",
-    "description": "",
+    "description": "Spiral Pole Anchors For Square Post is part of KEAA International's pole anchors and ground plates range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: SPAFSP.",
     "specs": [
       {
         "label": "Material",
@@ -7564,7 +7564,7 @@
     "id": 349,
     "name": "Pole Anchors For Concrete",
     "itemCode": "PAFC",
-    "description": "",
+    "description": "Pole Anchors For Concrete is part of KEAA International's pole anchors and ground plates range (Wood Connectors and DIY Hardware). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: PAFC.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764904/keaa-products/pole-anchors-for-concrete-349-0.jpg",
@@ -7578,7 +7578,7 @@
     "id": 348,
     "name": "Pole Anchors For Round Post",
     "itemCode": "PAFRP",
-    "description": "",
+    "description": "Pole Anchors For Round Post is part of KEAA International's pole anchors and ground plates range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: PAFRP.",
     "specs": [
       {
         "label": "Material",
@@ -7601,7 +7601,7 @@
     "id": 347,
     "name": "Pole Anchors For Square Post",
     "itemCode": "PAFSP",
-    "description": "",
+    "description": "Pole Anchors For Square Post is part of KEAA International's pole anchors and ground plates range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: PAFSP.",
     "specs": [
       {
         "label": "Material",
@@ -7624,7 +7624,7 @@
     "id": 362,
     "name": "Post Caps With SS Nail",
     "itemCode": "PPWSSN",
-    "description": "",
+    "description": "Post Caps With SS Nail is part of KEAA International's post caps range (Wood Connectors and DIY Hardware). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: PPWSSN.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764914/keaa-products/post-caps-with-ss-nail-362-0.jpg",
@@ -7639,7 +7639,7 @@
     "id": 361,
     "name": "Post Caps Ball",
     "itemCode": "PCB",
-    "description": "",
+    "description": "Post Caps Ball is part of KEAA International's post caps range (Wood Connectors and DIY Hardware). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: PCB.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764917/keaa-products/post-caps-ball-361-0.jpg",
@@ -7654,7 +7654,7 @@
     "id": 360,
     "name": "Post Caps Pyramid",
     "itemCode": "PCP",
-    "description": "",
+    "description": "Post Caps Pyramid is part of KEAA International's post caps range (Wood Connectors and DIY Hardware). Manufactured in KEAA's own facilities in Ludhiana, India; sizes, finish and full specifications are available on request. Item code: PCP.",
     "specs": [],
     "cloudinaryImages": [
       "https://res.cloudinary.com/keaa-assets/image/upload/v1783764923/keaa-products/post-caps-pyramid-360-0.jpg",
@@ -7692,7 +7692,7 @@
     "id": 367,
     "name": "Bicycle Stands",
     "itemCode": "BS-GH",
-    "description": "",
+    "description": "Bicycle Stands is part of KEAA International's garden and DIY hardware range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: BS-GH.",
     "specs": [
       {
         "label": "Material",
@@ -7761,7 +7761,7 @@
     "id": 364,
     "name": "Earth Sieve",
     "itemCode": "ES-GH",
-    "description": "",
+    "description": "Earth Sieve is part of KEAA International's garden and DIY hardware range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: ES-GH.",
     "specs": [
       {
         "label": "Material",
@@ -7784,7 +7784,7 @@
     "id": 363,
     "name": "Composter Basket For Riddle Leaves",
     "itemCode": "CBFRL",
-    "description": "",
+    "description": "Composter Basket For Riddle Leaves is part of KEAA International's garden and DIY hardware range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: CBFRL.",
     "specs": [
       {
         "label": "Material",
@@ -7807,7 +7807,7 @@
     "id": 346,
     "name": "Adjustable Post Supports",
     "itemCode": "APS-04",
-    "description": "",
+    "description": "Adjustable Post Supports is part of KEAA International's adjustable post supports range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm, or zinc plated Fe/Zn 25c according EN ISO 2081 with minimum coating thickness of 25 µm. Item code: APS-04.",
     "specs": [
       {
         "label": "Material",
@@ -7830,7 +7830,7 @@
     "id": 345,
     "name": "Adjustable Post Supports",
     "itemCode": "APS-03",
-    "description": "",
+    "description": "Adjustable Post Supports is part of KEAA International's adjustable post supports range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm, or zinc plated Fe/Zn 25c according EN ISO 2081 with minimum coating thickness of 25 µm. Item code: APS-03.",
     "specs": [
       {
         "label": "Material",
@@ -7853,7 +7853,7 @@
     "id": 344,
     "name": "Post Support",
     "itemCode": "PS-01",
-    "description": "",
+    "description": "Post Support is part of KEAA International's adjustable post supports range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: PS-01.",
     "specs": [
       {
         "label": "Material",
@@ -7876,7 +7876,7 @@
     "id": 343,
     "name": "Adjustable Post Support With Long Nut",
     "itemCode": "APSWLN",
-    "description": "",
+    "description": "Adjustable Post Support With Long Nut is part of KEAA International's adjustable post supports range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: APSWLN.",
     "specs": [
       {
         "label": "Material",
@@ -7947,7 +7947,7 @@
     "id": 340,
     "name": "Adjustable T-Type Post Support With Base Plate",
     "itemCode": "ATTPSWBP",
-    "description": "",
+    "description": "Adjustable T-Type Post Support With Base Plate is part of KEAA International's adjustable post supports range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: ATTPSWBP.",
     "specs": [
       {
         "label": "Material",
@@ -7971,7 +7971,7 @@
     "id": 339,
     "name": "Adjustable T-Type Post Support",
     "itemCode": "ATTPS-02",
-    "description": "",
+    "description": "Adjustable T-Type Post Support is part of KEAA International's adjustable post supports range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: ATTPS-02.",
     "specs": [
       {
         "label": "Material",
@@ -7995,7 +7995,7 @@
     "id": 338,
     "name": "Adjustable Y-Type Post Supports With Long Nut & Base Plate",
     "itemCode": "AYTPSWLNBP",
-    "description": "",
+    "description": "Adjustable Y-Type Post Supports With Long Nut & Base Plate is part of KEAA International's adjustable post supports range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: AYTPSWLNBP.",
     "specs": [
       {
         "label": "Material",
@@ -8019,7 +8019,7 @@
     "id": 337,
     "name": "Adjustable Y-Type Post Support With Long Nut",
     "itemCode": "AYTPS",
-    "description": "",
+    "description": "Adjustable Y-Type Post Support With Long Nut is part of KEAA International's adjustable post supports range (Wood Connectors and DIY Hardware). Material: S235 JR according to DIN EN 10025-2:2005. Corrosion protection: Hot Dip Galvanized as per ISO 1461 with minimum coating thickness of 55 µm. Item code: AYTPS.",
     "specs": [
       {
         "label": "Material",
