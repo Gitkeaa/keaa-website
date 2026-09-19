@@ -39,10 +39,50 @@ const bannerStats = [
 
 export default function Careers() {
   const lt = useLT('careers');
+  /**
+   * JobPosting structured data, one entry per open role, so the openings can appear in
+   * Google for Jobs rather than only on this page. Built from the same `careers` array the
+   * list below renders, so the markup and the copy cannot drift apart.
+   *
+   * Only roles marked open are emitted: advertising a closed one wastes a candidate's time
+   * and Google treats stale postings as a quality problem.
+   *
+   * Google also wants datePosted, and this data carries no per-role date. It is left out
+   * rather than invented, which costs a little eligibility and keeps the markup honest. Add
+   * a real date to each entry in data/content.js and it can be filled in here.
+   */
+  const jobSchema = careers
+    .filter((job) => job.status === 'open')
+    .map((job) => ({
+      '@context': 'https://schema.org',
+      '@type': 'JobPosting',
+      title: job.title,
+      description: job.description,
+      employmentType: job.type === 'Full Time' ? 'FULL_TIME' : job.type,
+      hiringOrganization: {
+        '@type': 'Organization',
+        name: company.name,
+        sameAs: `https://${company.website}`,
+      },
+      jobLocation: {
+        '@type': 'Place',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: company.manufacturing.line1,
+          addressLocality: 'Ludhiana',
+          addressRegion: 'Punjab',
+          addressCountry: 'IN',
+        },
+      },
+      directApply: true,
+    }));
+
   useSEO({
     title: lt('seo.title', 'Careers'),
     description:
       lt('seo.desc', 'Join KEAA International\'s team: explore current openings in production, quality, exports and more.'),
+    breadcrumbs: [{ label: 'Home', to: '/' }, { label: 'Careers' }],
+    schema: jobSchema,
   });
 
   const [activeJob, setActiveJob] = useState(null);
