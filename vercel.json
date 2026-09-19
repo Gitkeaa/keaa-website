@@ -241,6 +241,26 @@
       "source": "/coming-soon",
       "destination": "/products",
       "permanent": true
+    },
+    {
+      "source": "/success-stories",
+      "destination": "/faq#testimonials",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(nl|de|fr|es|it|pt|pl|ru|tr|ar|hi)/success-stories",
+      "destination": "/:locale/faq#testimonials",
+      "permanent": true
+    },
+    {
+      "source": "/rfq",
+      "destination": "/contact?tab=rfq",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(nl|de|fr|es|it|pt|pl|ru|tr|ar|hi)/rfq",
+      "destination": "/:locale/contact?tab=rfq",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -253,7 +273,11 @@
       "destination": "https://api-production-4259d.up.railway.app/uploads/$1"
     },
     {
-      "source": "/(.*)",
+      "source": "/portal",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/portal/(.*)",
       "destination": "/index.html"
     }
   ],

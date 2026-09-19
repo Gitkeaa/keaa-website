@@ -77,13 +77,23 @@ function buildBreadcrumbList(crumbs) {
  * @param {string}   opts.image        Social share image; falls back to DEFAULT_IMAGE.
  * @param {Array}    opts.breadcrumbs  `[{ label, to }]` -> emitted as a BreadcrumbList.
  * @param {object|Array} opts.schema   Extra schema.org object(s), e.g. a Product.
+ * @param {boolean}  opts.noindex      Keep the page out of the index entirely.
  */
-export default function useSEO({ title, description, image, breadcrumbs, schema }) {
+export default function useSEO({ title, description, image, breadcrumbs, schema, noindex = false }) {
   const location = useLocation();
 
   useEffect(() => {
     const fullTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
     document.title = fullTitle;
+
+    /**
+     * robots. Removed rather than set to "index, follow" when a page is indexable, because
+     * the absence of the tag already means exactly that and an explicit one is one more
+     * thing that can contradict the canonical.
+     */
+    const robots = document.querySelector('meta[name="robots"]');
+    if (noindex) setMeta('name', 'robots', 'noindex, follow');
+    else if (robots) robots.remove();
 
     setMeta('name', 'description', description);
     setMeta('property', 'og:title', fullTitle);
@@ -114,7 +124,8 @@ export default function useSEO({ title, description, image, breadcrumbs, schema 
      */
     document.querySelectorAll('link[data-seo-hreflang]').forEach((el) => el.remove());
     const locales = liveLocales();
-    if (locales.length) {
+    // A page that is not indexed has nothing to offer alternates of.
+    if (locales.length && !noindex) {
       const alternates = [
         [DEFAULT_LANGUAGE, `${SITE_URL}${location.pathname}`],
         ...locales.map((code) => [code, `${SITE_URL}/${code}${location.pathname}`]),
@@ -129,7 +140,7 @@ export default function useSEO({ title, description, image, breadcrumbs, schema 
         document.head.appendChild(el);
       }
     }
-  }, [title, description, image, location.pathname]);
+  }, [title, description, image, noindex, location.pathname]);
 
   /**
    * Serialised rather than passed by reference: pages build these arrays/objects inline in

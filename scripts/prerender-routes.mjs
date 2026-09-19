@@ -44,7 +44,6 @@ const STATIC_ROUTES = [
   '/contact',
   '/manufacturing',
   '/projects-gallery',
-  '/rfq',
   '/certifications',
   '/faq',
   '/downloads',
@@ -54,6 +53,12 @@ const STATIC_ROUTES = [
   '/terms',
   // Prerendered so the search index carries it: it is a real page a visitor may look for.
   '/cookie-policy',
+  /**
+   * Not a page anyone navigates to: React Router's catch-all renders NotFound here, and
+   * scripts/make-404.mjs copies the result to dist/404.html, which is the body Vercel serves
+   * with a real 404 status. It carries noindex and is kept out of the sitemap.
+   */
+  '/404',
 ];
 
 export function getPrerenderRoutes({ includeProducts = false } = {}) {

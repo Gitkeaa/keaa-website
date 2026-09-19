@@ -9,10 +9,12 @@
  * sees. Parsing it gives a true whole-site index — headings and body copy included — with
  * no per-page registration to keep in sync and nothing that can silently drift.
  *
- * Runs AFTER `vite build`, so the prerendered files exist. Product pages are not prerendered
- * by default (355 routes, see prerender-routes.mjs), which is fine: products are searched
- * directly against the catalogue at runtime, so they are deliberately skipped here to keep
- * the index small.
+ * Runs AFTER `vite build`, so the prerendered files exist. PRODUCT PAGES ARE EXCLUDED, by
+ * the pattern below rather than by accident: the search box already matches products against
+ * the catalogue at runtime, with their codes and specifications, which is better than
+ * matching scraped page text. Including them as well is pure duplication, and because
+ * production prerenders all 355 products in 12 languages it took this file from 1.5 MB to
+ * 8.5 MB, downloaded by every visitor who types in the search box.
  *
  * The index is fetched lazily, only once the visitor actually types.
  */
@@ -32,6 +34,14 @@ const STRIP_SELECTOR_TAGS = ['script', 'style', 'noscript', 'svg', 'header', 'fo
  * answer them. If a page is on the site and a visitor can read it, it is findable.
  */
 const SKIP_ROUTES = new Set();
+
+/**
+ * Routes excluded by shape rather than by name.
+ *   /product/<id>  the catalogue already answers these at runtime, with better data
+ *   /404           not a page anyone should be sent to from a search box
+ * Locale prefixes are stripped before this runs, so one pattern covers all languages.
+ */
+const SKIP_PATTERNS = [/^\/product\//, /^\/404$/];
 
 const decodeEntities = (s) =>
   s
@@ -108,6 +118,7 @@ for (const file of walk(DIST)) {
   const rel = relative(DIST, dirname(file)).split(sep).filter(Boolean).join('/');
   const route = rel ? `/${rel}` : '/';
   if (SKIP_ROUTES.has(route)) continue;
+  if (SKIP_PATTERNS.some((re) => re.test(route.replace(/^\/[a-z]{2}(?=\/|$)/, '') || '/'))) continue;
 
   const { title, description, headings, text } = extract(readFileSync(file, 'utf8'));
   if (!title && !text) continue;

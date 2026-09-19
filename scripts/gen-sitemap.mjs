@@ -32,7 +32,6 @@ const STATIC_ROUTES = [
   ['/contact', 0.9],
   ['/manufacturing', 0.8],
   ['/projects-gallery', 0.8],
-  ['/rfq', 0.8],
   ['/certifications', 0.7],
   ['/faq', 0.7],
   ['/downloads', 0.6],
