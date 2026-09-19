@@ -31,6 +31,7 @@ const Contact = lazy(() => import('./pages/Contact'));
 const DownloadsCenter = lazy(() => import('./pages/DownloadsCenter'));
 const Certifications = lazy(() => import('./pages/Certifications'));
 const Careers = lazy(() => import('./pages/Careers'));
+const Export = lazy(() => import('./pages/Export'));
 const FAQ = lazy(() => import('./pages/FAQ'));
 const Legal = lazy(() => import('./pages/Legal'));
 const NotFound = lazy(() => import('./pages/NotFound'));
@@ -143,6 +144,8 @@ function AppShell() {
                 that content instead of a 404. */}
             <Route path="success-stories" element={<Navigate to="/faq#testimonials" replace />} />
             <Route path="careers" element={<Careers />} />
+            {/* Export buyers search for the capability, not for a contact form. See pages/Export.jsx. */}
+            <Route path="export" element={<Export />} />
             <Route path="faq" element={<FAQ />} />
             <Route path="rfq" element={<RfqRedirect />} />
 

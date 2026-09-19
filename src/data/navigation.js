@@ -58,6 +58,7 @@ export const mainNav = [
       { label: 'Leadership', to: '/about#leadership', desc: 'Message from our Managing Directors' },
       { label: 'Our Team', to: '/contact#team', desc: 'The people behind the products' },
       { label: 'Careers', to: '/careers', desc: 'Open roles and life at KEAA' },
+      { label: 'Export', to: '/export', desc: 'Supplying buyers in 42+ countries' },
       { label: 'Contact Us', to: '/contact', desc: 'Offices, phone and email' },
     ],
     feature: {

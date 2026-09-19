@@ -36,6 +36,7 @@ const STATIC_ROUTES = [
   ['/certifications', 0.7],
   ['/faq', 0.7],
   ['/downloads', 0.6],
+  ['/export', 0.9],
   ['/careers', 0.6],
   ['/privacy-policy', 0.3],
   ['/terms', 0.3],
