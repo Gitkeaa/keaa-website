@@ -88,6 +88,7 @@ export default function CertificationStrip() {
                   src={markSrc(c.id, 96)}
                   srcSet={`${markSrc(c.id, 96)} 1x, ${markSrc(c.id, 192)} 2x`}
                   alt={c.name}
+                  loading="lazy"
                   decoding="async"
                   className="h-8 w-auto max-w-[140px] object-contain sm:h-10 sm:max-w-[170px]"
                 />

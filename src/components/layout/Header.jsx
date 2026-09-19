@@ -197,6 +197,20 @@ export default function Header({ onOpenDrawer }) {
             <span aria-hidden className="mx-1 h-5 w-px bg-border" />
           </div>
 
+          {/* The one commercial action the site exists for, reachable from every page.
+              Quote calls to action already sit on the products, category and product pages,
+              but a visitor who lands on About or Manufacturing had to go looking for one.
+              Styled as the only filled control in the row so it reads as the primary action
+              without another divider or box competing with the search and region controls.
+              Narrow screens keep it: it stays beside the Menu word rather than being hidden
+              behind it, because the drawer is one more tap between a buyer and an enquiry. */}
+          <Link
+            to="/contact?tab=rfq"
+            className="ml-1 inline-flex items-center rounded-full bg-primary-dark px-3.5 py-1.5 text-[13px] font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-primary-darker sm:px-4"
+          >
+            {t('header.requestQuote')}
+          </Link>
+
           {/* Icon + word, like the search and region controls beside it. It renders nothing
               while the session check is in flight, so the row does not flicker. The region
               block above already closes with a divider, so none is added here. */}

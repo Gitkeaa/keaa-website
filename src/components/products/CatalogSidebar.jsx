@@ -30,6 +30,8 @@ export default function CatalogSidebar({
           <img
             src={category.heroImage}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 h-full w-full object-cover"
             style={{ filter: 'saturate(0.5) brightness(0.55)' }}
           />

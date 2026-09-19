@@ -99,6 +99,8 @@ export default function Products() {
                       <img
                         src={cat.heroImage}
                         alt=""
+                        loading="lazy"
+                        decoding="async"
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         style={{ filter: 'saturate(0.6) brightness(0.7)' }}
                       />

@@ -174,7 +174,7 @@ export default function ProductDetail() {
                         i === active ? 'border-primary-dark' : 'border-navy-100 hover:border-navy-300'
                       }`}
                     >
-                      <img src={optimized(url, { w: 120, h: 120, crop: 'fill' })} alt="" className="h-full w-full object-cover" />
+                      <img src={optimized(url, { w: 120, h: 120, crop: 'fill' })} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
                     </button>
                   ))}
                 </div>

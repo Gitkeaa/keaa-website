@@ -114,6 +114,8 @@ export default function ManufacturingBand() {
                     <img
                       src={cldImage(c.image, { w: 400, h: 300, crop: 'fill' })}
                       alt={c.title}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-48 object-cover"
                     />
                   )}

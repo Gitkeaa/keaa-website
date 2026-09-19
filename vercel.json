@@ -16,6 +16,216 @@
       "source": "/category/:rest*",
       "destination": "/products",
       "permanent": true
+    },
+    {
+      "source": "/who-we-are",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/who-we-are.html",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/about-us",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/about-us.html",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/contact-us",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/contact-us.html",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/careers.html",
+      "destination": "/careers",
+      "permanent": true
+    },
+    {
+      "source": "/certifications.html",
+      "destination": "/certifications",
+      "permanent": true
+    },
+    {
+      "source": "/gallery",
+      "destination": "/projects-gallery",
+      "permanent": true
+    },
+    {
+      "source": "/gallery.html",
+      "destination": "/projects-gallery",
+      "permanent": true
+    },
+    {
+      "source": "/scaffolding-formworks",
+      "destination": "/products/scaffolding-formworks",
+      "permanent": true
+    },
+    {
+      "source": "/scaffolding-formworks.html",
+      "destination": "/products/scaffolding-formworks",
+      "permanent": true
+    },
+    {
+      "source": "/livestock-housing-solutions",
+      "destination": "/products/livestock-housing-solutions",
+      "permanent": true
+    },
+    {
+      "source": "/livestock-housing-solutions.html",
+      "destination": "/products/livestock-housing-solutions",
+      "permanent": true
+    },
+    {
+      "source": "/wood-connectors",
+      "destination": "/products/wood-connectors",
+      "permanent": true
+    },
+    {
+      "source": "/wood-connectors.html",
+      "destination": "/products/wood-connectors",
+      "permanent": true
+    },
+    {
+      "source": "/post-supports",
+      "destination": "/products/wood-connectors/post-supports",
+      "permanent": true
+    },
+    {
+      "source": "/post-supports.html",
+      "destination": "/products/wood-connectors/post-supports",
+      "permanent": true
+    },
+    {
+      "source": "/adjustable-post-supports",
+      "destination": "/products/wood-connectors/adjustable-post-supports",
+      "permanent": true
+    },
+    {
+      "source": "/adjustable-post-supports.html",
+      "destination": "/products/wood-connectors/adjustable-post-supports",
+      "permanent": true
+    },
+    {
+      "source": "/pole-anchors-ground-plates",
+      "destination": "/products/wood-connectors/pole-anchors-ground-plates",
+      "permanent": true
+    },
+    {
+      "source": "/post-caps",
+      "destination": "/products/wood-connectors/post-caps",
+      "permanent": true
+    },
+    {
+      "source": "/indoor-wood-connectors",
+      "destination": "/products/wood-connectors/indoor-wood-connectors",
+      "permanent": true
+    },
+    {
+      "source": "/slab-formwork-system-props",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-props",
+      "permanent": true
+    },
+    {
+      "source": "/slab-formwork-system-props.html",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-props",
+      "permanent": true
+    },
+    {
+      "source": "/slab-formwork-system-fork-heads",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-fork-heads",
+      "permanent": true
+    },
+    {
+      "source": "/formwork-accessories",
+      "destination": "/products/scaffolding-formworks/formwork-accessories",
+      "permanent": true
+    },
+    {
+      "source": "/system-scaffolds-ringlock",
+      "destination": "/products/scaffolding-formworks/system-scaffolds-ringlock",
+      "permanent": true
+    },
+    {
+      "source": "/system-scaffold-cuplock",
+      "destination": "/products/scaffolding-formworks/system-scaffold-cuplock",
+      "permanent": true
+    },
+    {
+      "source": "/scaffold-tube-fitting-european",
+      "destination": "/products/scaffolding-formworks/scaffold-tube-fitting-european",
+      "permanent": true
+    },
+    {
+      "source": "/scaffold-tube-fitting-british-american",
+      "destination": "/products/scaffolding-formworks/scaffold-tube-fitting-british-american",
+      "permanent": true
+    },
+    {
+      "source": "/trestles-barriers",
+      "destination": "/products/scaffolding-formworks/trestles-barriers",
+      "permanent": true
+    },
+    {
+      "source": "/calf-house",
+      "destination": "/products/livestock-housing-solutions/calves",
+      "permanent": true
+    },
+    {
+      "source": "/calf-house.html",
+      "destination": "/products/livestock-housing-solutions/calves",
+      "permanent": true
+    },
+    {
+      "source": "/calves",
+      "destination": "/products/livestock-housing-solutions/calves",
+      "permanent": true
+    },
+    {
+      "source": "/cattle",
+      "destination": "/products/livestock-housing-solutions/cattle",
+      "permanent": true
+    },
+    {
+      "source": "/sheep",
+      "destination": "/products/livestock-housing-solutions/sheep",
+      "permanent": true
+    },
+    {
+      "source": "/field-gates",
+      "destination": "/products/livestock-housing-solutions/field-gates",
+      "permanent": true
+    },
+    {
+      "source": "/pigs",
+      "destination": "/products/livestock-housing-solutions/pigs",
+      "permanent": true
+    },
+    {
+      "source": "/horse",
+      "destination": "/products/livestock-housing-solutions/horse",
+      "permanent": true
+    },
+    {
+      "source": "/product/:slug/:id(d+)",
+      "destination": "/product/:id",
+      "permanent": true
+    },
+    {
+      "source": "/:page(index|home|products|product-list).html",
+      "destination": "/products",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -30,6 +240,35 @@
     {
       "source": "/(.*)",
       "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/fonts/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(sitemap.xml|robots.txt|search-index.json)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
+      ]
     }
   ]
 }

@@ -19,6 +19,7 @@
  */
 
 const en = {
+  'header.requestQuote': "Request a Quote",
   'nav.home': 'Home',
   'nav.about': 'About Us',
   'nav.products': 'Products',
@@ -119,6 +120,7 @@ const en = {
  * safest way to add one is to copy the key from the block above.
  */
 const nl = {
+  'header.requestQuote': "Offerte aanvragen",
   'nav.home': 'Home',
   'nav.about': 'Over ons',
   'nav.products': 'Producten',
@@ -158,6 +160,7 @@ const nl = {
 };
 
 const de = {
+  'header.requestQuote': "Angebot anfordern",
   'nav.home': 'Startseite',
   'nav.about': 'Über uns',
   'nav.products': 'Produkte',
@@ -197,6 +200,7 @@ const de = {
 };
 
 const fr = {
+  'header.requestQuote': "Demander un devis",
   'nav.home': 'Accueil',
   'nav.about': 'À propos',
   'nav.products': 'Produits',
@@ -236,6 +240,7 @@ const fr = {
 };
 
 const es = {
+  'header.requestQuote': "Solicitar presupuesto",
   'nav.home': 'Inicio',
   'nav.about': 'Sobre nosotros',
   'nav.products': 'Productos',
@@ -275,6 +280,7 @@ const es = {
 };
 
 const it = {
+  'header.requestQuote': "Richiedi un preventivo",
   'nav.home': 'Home',
   'nav.about': 'Chi siamo',
   'nav.products': 'Prodotti',
@@ -312,6 +318,7 @@ const it = {
 };
 
 const pt = {
+  'header.requestQuote': "Solicitar orcamento",
   'nav.home': 'Início',
   'nav.about': 'Sobre nós',
   'nav.products': 'Produtos',
@@ -349,6 +356,7 @@ const pt = {
 };
 
 const pl = {
+  'header.requestQuote': "Poprosic o wycene",
   'nav.home': 'Strona główna',
   'nav.about': 'O nas',
   'nav.products': 'Produkty',
@@ -386,6 +394,7 @@ const pl = {
 };
 
 const ru = {
+  'header.requestQuote': "Запросить расчет",
   'nav.home': 'Главная',
   'nav.about': 'О нас',
   'nav.products': 'Продукция',
@@ -423,6 +432,7 @@ const ru = {
 };
 
 const tr = {
+  'header.requestQuote': "Teklif isteyin",
   'nav.home': 'Ana Sayfa',
   'nav.about': 'Hakkımızda',
   'nav.products': 'Ürünler',
@@ -460,6 +470,7 @@ const tr = {
 };
 
 const ar = {
+  'header.requestQuote': "اطلب عرض سعر",
   'nav.home': 'الرئيسية',
   'nav.about': 'من نحن',
   'nav.products': 'المنتجات',
@@ -497,6 +508,7 @@ const ar = {
 };
 
 const hi = {
+  'header.requestQuote': "कोटेशन का अनुरोध करें",
   'nav.home': 'होम',
   'nav.about': 'हमारे बारे में',
   'nav.products': 'उत्पाद',

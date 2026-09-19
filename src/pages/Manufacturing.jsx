@@ -216,6 +216,8 @@ export default function Manufacturing() {
                 <img
                   src={cldImage(machineryImages[i], { w: 600, h: 450, crop: 'fill' })}
                   alt={lt(`machinery.items.${i}.name`, m.name)}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full aspect-[4/3] object-cover"
                 />
                 <div className="p-5">
