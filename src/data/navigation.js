@@ -60,6 +60,7 @@ export const mainNav = [
       { label: 'Careers', to: '/careers', desc: 'Open roles and life at KEAA' },
       { label: 'Export', to: '/export', desc: 'Supplying buyers in 42+ countries' },
       { label: 'Guides', to: '/blog', desc: 'How to choose the right system' },
+      { label: 'Request a Quote', to: '/request-a-quote', desc: 'What to send us, and what happens next' },
       { label: 'Contact Us', to: '/contact', desc: 'Offices, phone and email' },
     ],
     feature: {

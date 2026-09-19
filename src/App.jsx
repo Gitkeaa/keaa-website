@@ -34,6 +34,7 @@ const Careers = lazy(() => import('./pages/Careers'));
 const Export = lazy(() => import('./pages/Export'));
 const Blog = lazy(() => import('./pages/Blog'));
 const ThankYou = lazy(() => import('./pages/ThankYou'));
+const RequestQuote = lazy(() => import('./pages/RequestQuote'));
 const BlogPost = lazy(() => import('./pages/BlogPost'));
 const FAQ = lazy(() => import('./pages/FAQ'));
 const Legal = lazy(() => import('./pages/Legal'));
@@ -151,6 +152,9 @@ function AppShell() {
             <Route path="export" element={<Export />} />
             {/* Guides answer the question a specifier asks before they look for a supplier,
                 which no product page can rank for. See src/data/blog.js. */}
+            {/* Quotation intent gets its own address. The FORM stays on /contact: two
+                addresses carrying the same form would compete for the same searches. */}
+            <Route path="request-a-quote" element={<RequestQuote />} />
             <Route path="blog" element={<Blog />} />
             <Route path="blog/:slug" element={<BlogPost />} />
             {/* One address per completed form, so enquiries can actually be counted.

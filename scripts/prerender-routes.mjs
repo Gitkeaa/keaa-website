@@ -49,6 +49,7 @@ const STATIC_ROUTES = [
   '/faq',
   '/downloads',
   '/export',
+  '/request-a-quote',
   '/blog',
   '/careers',
   '/privacy-policy',
