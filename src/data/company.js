@@ -1,4 +1,3 @@
-import { emaiil } from "lucide-react";
 
 
 export const company = {
