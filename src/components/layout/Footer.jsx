@@ -234,6 +234,16 @@ export default function Footer() {
           <div className="container-page flex flex-col items-center gap-4 py-5 text-xs text-text/70 lg:flex-row lg:justify-between lg:pr-44">
             <p className="order-1 text-center lg:text-left">
               {lt('footer.copyright', '© {year} {name} All Rights Reserved.', { year, name: company.name })}
+              {/* The certification the SEO brief asks the footer to carry. Read from
+                  company.js so it cannot contradict the Certifications page, and rendered as
+                  plain text rather than a badge image: it is a fact, not decoration. */}
+              {company.certifications[0]?.name && (
+                <span className="ml-2 text-text/55">
+                  {lt('footer.certified', '{cert} certified manufacturer and exporter', {
+                    cert: company.certifications[0].name,
+                  })}
+                </span>
+              )}
             </p>
 
 

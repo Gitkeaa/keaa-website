@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import CatalogSidebar from '../components/products/CatalogSidebar';
 import ProductCard from '../components/products/ProductCard';
 import CtaBand from '../components/CtaBand';
+import CategoryPillar from '../components/products/CategoryPillar';
+import { getCategoryPillar } from '../data/categoryPillars';
 import ImagePlaceholder from '../components/ui/ImagePlaceholder';
 import Button from '../components/ui/Button';
 import useSEO, { absoluteUrl } from '../hooks/useSEO';
@@ -129,13 +131,31 @@ export default function ProductCatalog() {
       }
     : undefined;
 
+  /**
+   * FAQPage markup for the questions the pillar section renders. Only on the category page,
+   * never a subcategory: the pillar is not rendered there, and describing text that is not on
+   * the page is a structured data policy violation.
+   */
+  const pillar = category && !activeSub ? getCategoryPillar(category.slug) : undefined;
+  const faqSchema = pillar?.faqs?.length
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: pillar.faqs.map((f, i) => ({
+          '@type': 'Question',
+          name: lt(`pillar.${category.slug}.faqs.${i}.q`, f.q),
+          acceptedAnswer: { '@type': 'Answer', text: lt(`pillar.${category.slug}.faqs.${i}.a`, f.a) },
+        })),
+      }
+    : undefined;
+
   useSEO({
     title: category
       ? lt('seo.listTitle', '{name}, Products', { name: activeSub ? subName : catName })
       : lt('seo.title', 'Products'),
     description: category?.short ? lt(`cat.${category.slug}.short`, category.short) : undefined,
     breadcrumbs,
-    schema: collectionSchema,
+    schema: [collectionSchema, faqSchema].filter(Boolean),
   });
 
   if (!category) {
@@ -318,6 +338,9 @@ export default function ProductCatalog() {
           </div>
         </div>
       </section>
+
+      {/* Long-form copy, and only on the category page. See components/products/CategoryPillar. */}
+      {category && !activeSub && <CategoryPillar category={category} />}
 
       <CtaBand
         title={lt('cta.title', 'Need Help Choosing')}
