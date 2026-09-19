@@ -1,3 +1,5 @@
+import { localPhoto } from '../../data/images';
+
 /**
  * The backdrop shared by every light band that closes a page: the export map whispered on
  * the left, the hero tower held right back on the right, and a wash of the page colour
@@ -13,13 +15,15 @@ export default function BrandTexture({ photo = true }) {
       <div
         aria-hidden
         className="pointer-events-none absolute inset-y-0 left-0 z-0 hidden w-1/2 bg-contain bg-left bg-no-repeat opacity-[0.05] lg:block"
-        style={{ backgroundImage: "url('/images/global-presence-map.png')" }}
+        style={{ backgroundImage: `url('${localPhoto('/images/global-presence-map.png', 1280)}')` }}
       />
       {photo && (
         <div
           aria-hidden
           className="pointer-events-none absolute inset-y-0 right-0 z-0 w-2/3 bg-cover bg-center opacity-[0.14]"
-          style={{ backgroundImage: "url('/images/hero2.jpg')" }}
+          /* 736 KB original, shown here at 14% opacity as a texture. It does not need to
+              be anywhere near that size to do that job. */
+          style={{ backgroundImage: `url('${localPhoto('/images/hero2.jpg', 1280)}')` }}
         />
       )}
       <div

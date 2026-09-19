@@ -1,3 +1,4 @@
+import { emaiil } from "lucide-react";
 
 
 export const company = {
@@ -184,18 +185,19 @@ export const leadership = [
     bio: 'Drives the overall strategic vision, global partnerships, and long-term growth of Keaa International.',
     photo: '/images/raveesh-moudgil.jpg',
     linkedin: 'https://www.linkedin.com/in/raveesh-moudgil-b0618642',
+    email: 'raveesh@keaa-international.net',
   },
   {
     name: 'Sumit Moudgil',
     role: 'Managing Director',
     bio: 'Oversees day-to-day operations, manufacturing facilities, and technology integration.',
     photo: '/images/sumit.jpg',
-    linkedin: 'https://www.linkedin.com/in/sumit-moudgil'
+    linkedin: 'https://www.linkedin.com/in/sumit-moudgil',
+    email: 'sumit@keaa-international.net',
   },
   {
     name: 'Bhupesh Gautam',
     role: 'Global Business Head',
-    bio: 'Leads international trade compliance, global sales strategy, and client relations across 42+ countries.',
     photo: '/images/Bhupesh.jpg',
     linkedin: 'https://www.linkedin.com/in/bhupesh-gautam-13867a7b/',
     email: 'bhupesh@keaa-international.net',
@@ -204,7 +206,6 @@ export const leadership = [
   {
     name: 'Jaskamal Singh',
     role: 'Sales Manager',
-    bio: 'Experienced Sales Manager responsible for managing customer relationships, handling RFQs, preparing quotations, and driving business growth across assigned international markets.',
     photo: '/images/jaskamal Sir.jpg',
     linkedin: 'https://www.linkedin.com/in/jaskamal-singh-37b469377/',
     email: 'team2@keaa-international.net',
@@ -213,7 +214,6 @@ export const leadership = [
   {
     name: 'Vikram Singh',
     role: 'Sales Manager',
-    bio: 'Results-driven Sales Manager specializing in export sales, client communication, quotation management, and successful deal execution for assigned regions and product categories.',
     photo: '/images/Vikram.jpg',
     linkedin: 'https://www.linkedin.com/in/vikram-singh-panwar%E2%9C%A8/',
     email: 'team8@keaa-international.net',
@@ -223,7 +223,6 @@ export const leadership = [
   {
     name: 'Ajay Rana',
     role: 'Sales Manager',
-    bio: 'Dedicated Sales Manager focused on developing international business opportunities, managing customer inquiries, coordinating negotiations, and delivering exceptional client support.',
     photo: '/images/Ajay.jpg',
     linkedin: 'https://www.linkedin.com/in/ajay-rana-00410241/',
     email: 'team4@keaa-international.net',
@@ -232,7 +231,6 @@ export const leadership = [
   {
     name: 'Sumeet Dogra',
     role: 'Asst. Sales Manager',
-    bio: 'Assistant Sales Manager supporting customer inquiries, quotation preparation, follow-ups, and sales coordination while ensuring timely communication and efficient order processing.',
     photo: '/images/sumeet.jpg',
     linkedin: 'https://www.linkedin.com/in/sumeet-dogra-20b575116/',
     email: 'team5@keaa-international.net',
@@ -241,7 +239,6 @@ export const leadership = [
   {
     name: 'Harpreet Singh',
     role: 'Sales Manager',
-    bio: 'Sales Manager handling client enquiries, quotation preparation and order follow-up across assigned export markets.',
     photo: '/images/Harpreet.jpg',
     linkedin: 'https://www.linkedin.com/in/harpreet-singh-ahluwalia-540b41b4/',
     email: 'team@keaa-international.net',
@@ -250,7 +247,6 @@ export const leadership = [
   {
     name: 'Amarjot Singh',
     role: 'Sales Manager',
-    bio: 'Sales Manager supporting international customers with product selection, pricing and end-to-end order coordination.',
     photo: '/images/Amarjot.jpg',
     linkedin: 'https://www.linkedin.com/in/amarjot--singh/',
     email: 'team3@keaa-international.net',
@@ -276,6 +272,7 @@ export const managingDirectors = [
     photo: '/images/raveesh-moudgil.jpg',
     linkedin: 'https://www.linkedin.com/in/raveesh-moudgil-b0618642/',
     whatsapp: 'https://wa.me/919876701926',
+    email: 'raveesh@keaa-international.net',
   },
   {
     name: 'Sumit Moudgil',
@@ -285,6 +282,7 @@ export const managingDirectors = [
     photo: '/images/sumit.jpg',
     linkedin: 'https://www.linkedin.com/in/sumit-moudgil',
     whatsapp: 'https://wa.me/919872984707',
+    mail: 'sumit@keaa-international.net',
   },
 ];
 

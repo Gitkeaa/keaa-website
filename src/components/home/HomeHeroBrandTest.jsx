@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { Play } from 'lucide-react';
 import { droneFilmUrl, heroFilms } from '../../data/content';
 import { useLT } from '../../i18n/LocaleContext';
+import { isPrerender } from '../../lib/prerender';
 
 /**
  * How long each second-line phrase holds before the next one takes over.
@@ -103,35 +104,80 @@ export default function HomeHeroBrandTest() {
   const filmSrc = film ? (isDesktop || !film.srcMobile ? film.src : film.srcMobile) : null;
   const poster = film?.poster ?? '/images/hero2.jpg';
   const showVideo = Boolean(film) && !saveData && !filmBroken;
+
+  /**
+   * THE FILM IS NOT ALLOWED TO BE THE LARGEST CONTENTFUL PAINT.
+   *
+   * It was. The hero rendered a <video preload="auto"> with a poster, so the browser began
+   * pulling 3.5 MB of video during the initial load and Lighthouse measured the moment the
+   * film painted as the LCP: 6.2 seconds on mobile, which on its own held the homepage to a
+   * performance score of 63.
+   *
+   * The poster still is the same picture at a fraction of the size. So the poster is now a
+   * real <img>, painted immediately, and the film is mounted only AFTER the first load has
+   * settled, fading in over the top. LCP becomes the poster, the film still plays, and
+   * nothing about how the hero looks changes.
+   *
+   * requestIdleCallback rather than a timer: it waits for the main thread to be free, which
+   * is the condition that actually matters, and degrades to a short timeout where it does
+   * not exist (Safari). Reduced motion and Save-Data never reach here, because showVideo is
+   * already false for them.
+   */
+  const [filmReady, setFilmReady] = useState(false);
+  useEffect(() => {
+    if (!showVideo) return undefined;
+    /**
+     * Never during prerendering. The prerenderer IS a headless browser, so the idle callback
+     * below fires before the snapshot is taken and the <video> ends up baked into the
+     * delivered HTML. It would then start loading on the browser's first parse, which is
+     * exactly the 3.5 MB download this whole change exists to move off the critical path.
+     */
+    if (isPrerender()) return undefined;
+    const start = () => setFilmReady(true);
+    if (typeof window.requestIdleCallback === 'function') {
+      const id = window.requestIdleCallback(start, { timeout: 2500 });
+      return () => window.cancelIdleCallback?.(id);
+    }
+    const id = setTimeout(start, 1200);
+    return () => clearTimeout(id);
+  }, [showVideo]);
   return (
     <>
       {/* ---- HERO: full-bleed film in a rounded inset card ---- */}
       <section className="px-3 sm:px-5 lg:px-6">
         <div className="relative isolate flex min-h-[max(500px,72vh)] overflow-hidden rounded-3xl lg:min-h-[max(706px,80vh)]">
-          {showVideo ? (
+          {/* The poster, always. This is the element the browser paints first and the one
+              LCP is measured against, so it is eager, high priority and responsive. It stays
+              underneath the film rather than being replaced, which is also what stops a flash
+              of empty box if the film is slow or never arrives. */}
+          <img
+            src={poster}
+            srcSet={film?.posterSrcSet}
+            sizes="100vw"
+            alt=""
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+
+          {showVideo && filmReady && (
             <video
               key={filmSrc}
               src={filmSrc}
-              poster={poster}
               autoPlay
               muted
               loop
               playsInline
-              preload="auto"
+              /* Nothing is fetched until this element mounts, which is after first paint. */
+              preload="none"
               /* Cross-origin (Cloudinary, which always sends Access-Control-Allow-Origin: *). */
               crossOrigin="anonymous"
               tabIndex={-1}
               aria-hidden
-              /* A dead CDN id falls through to the poster still rather than a black box. */
+              /* A dead CDN id falls through to the poster underneath rather than a black box. */
               onError={() => setFilmBroken(true)}
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          ) : (
-            <img
-              src={poster}
-              alt=""
-              loading="eager"
-              className="absolute inset-0 h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover motion-safe:animate-[fadeIn_600ms_ease-out]"
             />
           )}
 

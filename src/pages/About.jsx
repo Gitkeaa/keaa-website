@@ -8,6 +8,7 @@ import AnimatedCounter from '../components/ui/AnimatedCounter';
 import { company, managingDirectors, chairmanMessage } from '../data/company';
 import { img } from '../data/images';
 import useSEO from '../hooks/useSEO';
+import Photo from '../components/ui/Photo';
 import { useLT } from '../i18n/LocaleContext';
 
 /**
@@ -344,10 +345,12 @@ export default function About() {
                 1:1 source. The column is 400px, so a 900×900 file still has better than 2×
                 pixel density on a retina screen. */}
             <div className="group overflow-hidden rounded-card ring-1 ring-text/[0.08]">
-              <img
+              <Photo
                 src={chairmanMessage.photo}
                 alt={lt('chairman.photoAlt', '{name}, KEAA International', { name: chairmanMessage.name || lt('chairman.photoAltFallback', 'Chairman') })}
-                loading="lazy"
+                /* A fixed 400px column on desktop, full width on a phone. */
+                sizes="(min-width: 1024px) 400px, 90vw"
+                width={800}
                 className="aspect-square w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
               />
             </div>
@@ -399,10 +402,11 @@ export default function About() {
                     <div className={flip ? 'lg:order-2' : ''}>
                       {/* Same frame as the chairman above and the team cards below. */}
                       <div className="group overflow-hidden rounded-card ring-1 ring-text/[0.08]">
-                        <img
+                        <Photo
                           src={m.photo}
                           alt={lt('directors.photoAlt', '{name}, {role}', { name: m.name, role: lt(`directors.${i}.role`, m.role) })}
-                          loading="lazy"
+                          sizes="(min-width: 1024px) 400px, 90vw"
+                          width={800}
                           className="aspect-square w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                         />
                       </div>

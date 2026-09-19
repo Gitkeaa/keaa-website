@@ -153,6 +153,14 @@ export const heroFilms = HERO_VIDEO_ID
         src: cldVideo(HERO_VIDEO_ID, { w: 1920, raw: HERO_VIDEO_RAW }),
         srcMobile: cldVideo(HERO_VIDEO_ID, { w: 720, raw: HERO_VIDEO_RAW }),
         poster: cldVideoPoster(HERO_VIDEO_ID, { so: 1, w: 1280 }),
+        /**
+         * The poster at three widths. It is the hero's Largest Contentful Paint element now
+         * that the film no longer is, so a phone pulling the 1280px still was paying for
+         * pixels it cannot show. See the note in HomeHeroBrandTest.
+         */
+        posterSrcSet: [640, 960, 1280, 1920]
+          .map((w) => `${cldVideoPoster(HERO_VIDEO_ID, { so: 1, w })} ${w}w`)
+          .join(', '),
         clip: null, // a single loop-ready clip; no logo bookends to trim
         label: 'the KEAA film',
         alt: 'KEAA International manufacturing and projects film',

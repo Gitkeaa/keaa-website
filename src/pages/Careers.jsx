@@ -8,6 +8,7 @@ import JobApplicationModal from '../components/JobApplicationModal';
 import { careers } from '../data/content';
 import { company } from '../data/company';
 import useSEO from '../hooks/useSEO';
+import { localPhoto, localPhotoSrcSet } from '../data/images';
 import CtaBand from '../components/CtaBand';
 import { EASE } from '../lib/motion';
 import { useLT } from '../i18n/LocaleContext';
@@ -101,7 +102,9 @@ export default function Careers() {
       <section className="px-3 sm:px-5 lg:px-6">
         <div className="relative isolate flex min-h-[460px] overflow-hidden rounded-3xl sm:min-h-[520px] lg:min-h-[600px]">
           <img
-            src="/images/Career.jpg"
+            src={localPhoto('/images/Career.jpg', 1600)}
+            srcSet={localPhotoSrcSet('/images/Career.jpg')}
+            sizes="100vw"
             alt={lt('hero.imgAlt', 'The KEAA team on the factory floor in branded uniform and safety gear')}
             loading="eager"
             fetchPriority="high"
@@ -270,13 +273,7 @@ export default function Careers() {
       </section>
 
       {/* No phone line here: the number on file is the sales line, not recruitment. */}
-      <CtaBand
-        title={lt('cta.title', 'Can’t Find')}
-        accent={lt('cta.accent', 'the Right Role?')}
-        desc={lt('cta.desc', 'Send us your resume and we’ll reach out when a suitable opportunity is available.')}
-        cta={{ label: lt('cta.label', 'Send Resume'), href: 'mailto:careers@keaa-international.net' }}
-        showPhone={false}
-      />
+     
 
       <AnimatePresence>
         {activeJob && (

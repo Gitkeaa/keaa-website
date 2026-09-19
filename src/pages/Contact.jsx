@@ -27,6 +27,7 @@ import { company, leadership, waLink } from '../data/company';
 import { img } from '../data/images';
 import { defaultCountry } from '../data/countriesData';
 import { submitPublicForm } from '../data/adminApi';
+import Photo from '../components/ui/Photo';
 import { track, EVENTS } from '../lib/analytics';
 import { useConsent, openCookiePreferences } from '../components/CookieConsent';
 import { useRegion } from '../context/RegionContext';
@@ -730,10 +731,14 @@ export default function Contact() {
                   {/* Same photo-or-initials fallback the About rail used, so a missing
                       portrait leaves a branded tile rather than a hole in the grid. */}
                   {l.photo ? (
-                    <img
+                    <Photo
                       src={l.photo}
                       alt={l.name}
-                      loading="lazy"
+                      /* A portrait tile, never full width: one column on a phone, then two,
+                         three and four as the grid widens. Telling the browser that is what
+                         stops it fetching a desktop rendition for a 360px screen. */
+                      sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+                      width={640}
                       className="aspect-[3/4] w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                     />
                   ) : (

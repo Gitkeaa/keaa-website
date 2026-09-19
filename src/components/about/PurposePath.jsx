@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { company } from '../../data/company';
-import { img, atWidth } from '../../data/images';
+import { img, atWidth, localPhoto, localPhotoSrcSet } from '../../data/images';
 import { EASE } from '../../lib/motion';
 import { useLT } from '../../i18n/LocaleContext';
 
@@ -225,7 +225,9 @@ export default function PurposePath() {
       className="section-pad relative overflow-hidden bg-surface-bright"
     >
       <img
-        src="/images/hero2.jpg"
+        src={localPhoto('/images/hero2.jpg', 1280)}
+        srcSet={localPhotoSrcSet('/images/hero2.jpg')}
+        sizes="100vw"
         alt=""
         aria-hidden="true"
         loading="lazy"

@@ -50,7 +50,7 @@ export default function CoreSolutions() {
         <div className="grid gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-center lg:gap-12">
           {/* Overview — "Who We Are": copy, then the three pillars. */}
           <motion.div {...rise()}>
-            <span className="eyebrow text-primary-darker">{lt('who.eyebrow', 'About KEAA')}</span>
+           
 
             <h2 className="mt-3 font-display text-4xl font-bold leading-[1.06] tracking-[-0.025em] text-text sm:text-5xl">
               {lt('who.title', 'Who We Are')}

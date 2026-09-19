@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import Button from '../ui/Button';
 import { getAllCategories, TOTAL_PRODUCTS } from '../../data/categories';
-import { img } from '../../data/images';
+import { img, atWidth, imgSrcSet } from '../../data/images';
 import { company } from '../../data/company';
 import { EASE } from '../../lib/motion';
 import { useLT } from '../../i18n/LocaleContext';
@@ -257,7 +257,12 @@ export default function ProductsShowcase() {
                       /* Keyed on the slug so React swaps the element rather than mutating
                          `src`, which is what lets the change read as a change. */
                       key={active.slug ?? 'all'}
-                      src={active.heroImage}
+                      src={atWidth(active.heroImage, 1280)}
+                      /* These are 1920px renditions and were being handed whole to a 360px
+                         phone: two of them were the largest downloads on the homepage after
+                         the film. */
+                      srcSet={imgSrcSet(active.heroImage)}
+                      sizes="(min-width: 1024px) 60vw, 100vw"
                       alt=""
                       loading="lazy"
                       decoding="async"

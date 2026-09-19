@@ -9,6 +9,7 @@ import Logo from './Logo';
 import { openCookiePreferences } from '../CookieConsent';
 import { company } from '../../data/company';
 import { track, EVENTS } from '../../lib/analytics';
+import { localPhoto } from '../../data/images';
 import { footerLinks } from '../../data/navigation';
 import { getAllCategories } from '../../data/categories';
 import { useLT } from '../../i18n/LocaleContext';
@@ -106,7 +107,11 @@ export default function Footer() {
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 z-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/images/footer.jpg')" }}
+          /* Through the image proxy: the original is a 352 KB camera JPEG and this appears
+             on every page of the site. A background image cannot take a srcset, so one
+             rendition wide enough for a large screen is the trade, and f_auto still hands
+             modern browsers WebP or AVIF instead of JPEG. */
+          style={{ backgroundImage: `url('${localPhoto('/images/footer.jpg', 1600)}')` }}
         />
         <div
           aria-hidden

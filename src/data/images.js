@@ -29,6 +29,33 @@ const u = (id, w = 1920) =>
 const cldImage = (id, w = 1920) =>
   `https://res.cloudinary.com/keaa-assets/image/upload/f_auto,q_auto,w_${w},c_limit/${id}`;
 
+/**
+ * The site's own photographs, delivered through the same Cloudinary proxy as the stock ones.
+ *
+ * WHY: public/images holds 8.9 MB of unprocessed camera JPEGs, and they were served raw at
+ * full resolution to every device. One team portrait on the contact page was 2.2 MB and
+ * another 1.5 MB, which is why that page measured a Largest Contentful Paint of 11.2 seconds
+ * on a phone. The pictures are fine; the delivery was not.
+ *
+ * Cloudinary's fetch mode takes a public URL, re-encodes it to the best format the browser
+ * accepts (`f_auto`, so AVIF or WebP instead of JPEG), picks a quality that still looks
+ * right (`q_auto`) and caps the width (`c_limit` never upscales). It is the same mechanism
+ * already used for the Unsplash photography, so no new service is involved and nothing in
+ * the repository changes.
+ *
+ * The source must be publicly reachable, which is why this always points at the production
+ * domain rather than at whatever host is rendering. A preview deploy and a laptop therefore
+ * both show the same picture as production, which is the behaviour you want anyway.
+ */
+const SITE_ORIGIN = 'https://www.keaainternational.com';
+
+export const localPhoto = (path, w = 1200) =>
+  `${CLOUDINARY_FETCH}/f_auto,q_auto,w_${w},c_limit/${encodeURIComponent(`${SITE_ORIGIN}${path}`)}`;
+
+/** Widths for a responsive `srcset`; a phone then never downloads a desktop rendition. */
+export const localPhotoSrcSet = (path, widths = [320, 480, 640, 960, 1280, 1600]) =>
+  widths.map((w) => `${localPhoto(path, w)} ${w}w`).join(', ');
+
 /* Only the photographs a component actually renders. `img` is exported whole and every
    value is a string literal, so an unreferenced entry is not tree-shaken — it ships in the
    bundle and its Cloudinary URL is dead weight. Curated-but-unused candidates were removed;
