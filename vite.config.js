@@ -43,7 +43,18 @@ const prerenderPlugin = browser
          * Any future body-portalled overlay must check this flag too.
          */
         inject: { prerender: true },
-        maxConcurrentRoutes: 4,
+        /**
+         * How many pages render at once. Four was fine when this rendered forty pages; with
+         * all 355 products in twelve languages it is 4,788, and a Vercel build was taking
+         * about forty minutes, which makes every deploy painful and stacks up a queue when
+         * several land together.
+         *
+         * Each concurrent route is one more browser tab holding one small page, so this is
+         * bounded by memory rather than by CPU, and eight tabs is comfortable in a standard
+         * build container. PRERENDER_CONCURRENCY overrides it: lower it if a build ever dies
+         * without an error, which is what an out-of-memory kill looks like from here.
+         */
+        maxConcurrentRoutes: Number(process.env.PRERENDER_CONCURRENCY) || 8,
         timeout: 30000,
         launchOptions: {
           executablePath: browser.executablePath,
