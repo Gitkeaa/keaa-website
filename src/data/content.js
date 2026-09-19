@@ -38,63 +38,71 @@ export const testimonials = [
   },
 ];
 
+/**
+ * Application areas: the kinds of work KEAA equipment is built for.
+ *
+ * WHAT THIS REPLACED, AND WHY
+ * ---------------------------
+ * This list used to hold eight named "featured projects" with cities, clients and scope
+ * ("Riverside Residences, Ludhiana", "Export Distribution Hub, Eindhoven"). None of them
+ * were real. They were placeholder copy waiting on genuine project records that never
+ * arrived, and a named project with a location reads to a buyer as a reference they could
+ * check. Invented references are the kind of claim that costs trust when someone does check,
+ * and search engines increasingly treat them as a quality signal too.
+ *
+ * So the entries are now sectors rather than projects. Every one is a true statement about
+ * what the products are for, and none names a client, a city or a job.
+ *
+ * GOING BACK TO REAL PROJECTS
+ * ---------------------------
+ * The shape is unchanged on purpose, so this is a data edit and nothing else. Add `location`
+ * back to an entry and the card renders it again; ProjectCard shows the line only when it is
+ * present. Then change the two section headings back from "Applications" to "Featured
+ * Projects" in pages/Home.jsx and pages/ProjectsGallery.jsx.
+ *
+ * Keep this array the same length as `featuredProjectImages` below: a card takes the image
+ * at its own index.
+ */
 export const featuredProjects = [
   {
-    title: 'Metro Rail Project',
-    location: 'Mumbai, India',
-    category: 'Infrastructure',
-    desc: 'Supplied scaffolding and formwork solutions for the metro rail construction.',
+    title: 'High-Rise Buildings',
+    category: 'Access scaffolding',
+    desc: 'Facade access and edge protection at height, where a system scaffold has to repeat the same geometry floor after floor.',
   },
   {
-    title: 'Industrial Plant Project',
-    location: 'Riyadh, Saudi Arabia',
-    category: 'Industrial',
-    desc: 'Complete scaffolding solution for a large-scale industrial plant shutdown project.',
+    title: 'Commercial Construction',
+    category: 'Formwork and access',
+    desc: 'Slab and wall casting on concrete frames, with props, fork heads and tripods carrying the soffit until the pour can carry itself.',
   },
   {
-    title: 'High Rise Building',
-    location: 'Dubai, UAE',
-    category: 'Commercial',
-    desc: 'Formwork and access support for a high-rise commercial building.',
+    title: 'Industrial Facilities',
+    category: 'Maintenance and shutdowns',
+    desc: 'Plant maintenance and shutdown work, where the structure is irregular and the bracing has to run where the job needs it.',
   },
   {
-    title: 'Bridge Construction',
-    location: 'Doha, Qatar',
-    category: 'Infrastructure',
-    desc: 'Scaffolding and access solutions for a bridge construction project.',
+    title: 'Infrastructure Projects',
+    category: 'Shoring and access',
+    desc: 'Bridges, tunnels and civil works, carried on load bearing shoring towers rather than on props alone.',
   },
   {
-    title: 'Riverside Residences',
-    location: 'Ludhiana, India',
-    category: 'Residential',
-    desc: 'Ringlock scaffolding deployed across a large multi-tower residential development.',
+    title: 'Large-Scale Construction',
+    category: 'System scaffolding',
+    desc: 'Long programmes where components are struck, stored and reused across phases, so interchangeability matters more than the first purchase price.',
   },
   {
-    title: 'Export Distribution Hub',
-    location: 'Eindhoven, Netherlands',
-    category: 'International',
-    desc: 'KEAA supplied livestock housing structures for a regional distribution project.',
-  },
-  /*
-   * Eight, not six. The gallery lays these out four across, so six left two empty cells on
-   * the second row. These two also cover ground the first six missed: livestock housing is
-   * a full KEAA product line that appeared nowhere, and Germany/Oman are named export
-   * markets in `company.countries` that had no project against them.
-   *
-   * PLACEHOLDER COPY, like the six above — generic titles and one-line descriptions. Swap
-   * in real project records (client, scope, dates) when they are available.
-   */
-  {
-    title: 'Dairy Housing Facility',
-    location: 'Muscat, Oman',
-    category: 'International',
-    desc: 'Cattle housing frames, gates and feed barriers supplied for a commercial dairy unit.',
+    title: 'Livestock Housing',
+    category: 'Agricultural buildings',
+    desc: 'Cattle, sheep, pig and horse housing, where galvanized steel has to survive slurry and ammonia without developing an edge an animal can catch.',
   },
   {
-    title: 'Warehouse Expansion',
-    location: 'Hamburg, Germany',
-    category: 'Industrial',
-    desc: 'Cuplock scaffolding and shoring towers for a phased warehouse expansion.',
+    title: 'Timber Structures',
+    category: 'Garden and fencing',
+    desc: 'Decking, pergolas, carports and fencing, where the connector and the ground anchor decide how long the timber lasts.',
+  },
+  {
+    title: 'Export and Distribution',
+    category: 'Supply',
+    desc: 'Dealers, builders merchants and rental fleets restocking a consistent range in container volumes.',
   },
 ];
 
@@ -231,12 +239,29 @@ export const galleryFilms = [
 //   'open'   → "Apply Now" opens the application form
 //   'closed' → button shows "Applications Closed" (not clickable)
 // Add, remove or edit positions freely — the Careers page updates automatically.
+/**
+ * Open roles.
+ *
+ * ALL POSITIONS ARE CURRENTLY CLOSED, deliberately and temporarily. The entries are kept so
+ * a role can be reopened by changing two fields rather than retyping it:
+ *
+ *   status: 'closed' -> 'open'
+ *   postedDate: ''   -> the real date the role opened, as 'YYYY-MM-DD'
+ *
+ * Both matter. `status` drives the badge, the Apply button and whether the role is
+ * published as structured data at all; only open roles are. `postedDate` fills datePosted
+ * in that markup, which Google asks for and which must never be guessed: a wrong date claims
+ * a vacancy has been open longer or shorter than it has.
+ */
 export const careers = [
   {
     title: 'Sales Executive – International Business',
     location: 'Ludhiana, India',
     type: 'Full Time',
-    status: 'open',
+    status: 'closed',
+    /* ISO date, e.g. '2026-10-01'. Fill this in when the role reopens: the JobPosting
+       markup uses it, and Google wants it. Left empty rather than invented. */
+    postedDate: '',
     description:
       "Drive global business growth by identifying new markets, managing international client relationships, preparing quotations, and coordinating export sales. The role requires excellent communication skills, customer-focused thinking, and a passion for expanding KEAA's worldwide presence.",
   },
@@ -244,7 +269,10 @@ export const careers = [
     title: 'Production Engineer',
     location: 'Ludhiana, India',
     type: 'Full Time',
-    status: 'open',
+    status: 'closed',
+    /* ISO date, e.g. '2026-10-01'. Fill this in when the role reopens: the JobPosting
+       markup uses it, and Google wants it. Left empty rather than invented. */
+    postedDate: '',
     description:
       'Oversee daily manufacturing operations, optimize production efficiency, ensure quality standards, and coordinate with cross-functional teams to deliver products safely, efficiently, and on schedule. Experience in engineering manufacturing environments is preferred.',
   },
@@ -253,6 +281,9 @@ export const careers = [
     location: 'Ludhiana, India',
     type: 'Full Time',
     status: 'closed',
+    /* ISO date, e.g. '2026-10-01'. Fill this in when the role reopens: the JobPosting
+       markup uses it, and Google wants it. Left empty rather than invented. */
+    postedDate: '',
     description:
       "Inspect raw materials, monitor production processes, and perform quality checks to ensure every product meets KEAA's international quality standards, technical specifications, and customer expectations before dispatch.",
   },
@@ -261,6 +292,9 @@ export const careers = [
     location: 'Ludhiana, India',
     type: 'Full Time',
     status: 'closed',
+    /* ISO date, e.g. '2026-10-01'. Fill this in when the role reopens: the JobPosting
+       markup uses it, and Google wants it. Left empty rather than invented. */
+    postedDate: '',
     description:
       "Develop and execute digital marketing campaigns, manage website content, improve SEO performance, create engaging social media strategies, and strengthen KEAA's global online presence through data-driven marketing initiatives.",
   },

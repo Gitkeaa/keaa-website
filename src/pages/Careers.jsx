@@ -48,9 +48,13 @@ export default function Careers() {
    * Only roles marked open are emitted: advertising a closed one wastes a candidate's time
    * and Google treats stale postings as a quality problem.
    *
-   * Google also wants datePosted, and this data carries no per-role date. It is left out
-   * rather than invented, which costs a little eligibility and keeps the markup honest. Add
-   * a real date to each entry in data/content.js and it can be filled in here.
+   * datePosted is included the moment a role carries one. Every entry now has a
+   * `postedDate` field, empty until someone reopens the role and fills in the real date.
+   * An empty one is omitted rather than defaulted to today, because a guessed date claims a
+   * vacancy has been open for a length of time that is not true.
+   *
+   * While every role is closed this produces an empty array and no JobPosting markup at all,
+   * which is correct: there is nothing to advertise.
    */
   const jobSchema = careers
     .filter((job) => job.status === 'open')
@@ -60,6 +64,7 @@ export default function Careers() {
       title: job.title,
       description: job.description,
       employmentType: job.type === 'Full Time' ? 'FULL_TIME' : job.type,
+      ...(job.postedDate ? { datePosted: job.postedDate } : {}),
       hiringOrganization: {
         '@type': 'Organization',
         name: company.name,

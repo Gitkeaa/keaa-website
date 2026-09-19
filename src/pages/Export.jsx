@@ -4,6 +4,7 @@ import Reveal from '../components/ui/Reveal';
 import Button from '../components/ui/Button';
 import CtaBand from '../components/CtaBand';
 import { company } from '../data/company';
+import { exportTermsPdfUrl, EXPORT_TERMS_PDF_FILENAME } from '../data/exportTerms';
 import useSEO from '../hooks/useSEO';
 import { absoluteUrl } from '../hooks/useSEO';
 import { useLT } from '../i18n/LocaleContext';
@@ -48,6 +49,7 @@ export default function Export() {
   const lt = useLT('export');
 
   const countries = statValue('Countries Exported');
+  const termsPdf = exportTermsPdfUrl();
 
   const highlights = [
     {
@@ -219,10 +221,11 @@ export default function Export() {
         </div>
       </section>
 
-      {/* Renders only once the owner has confirmed these terms in company.js. An export page
-          that states an Incoterm the company has not agreed to is worse than one that omits
-          it, so nothing here is a placeholder. */}
-      {EXPORT_TERMS.length > 0 && (
+      {/* The terms grid renders only once the owner has confirmed those values in company.js:
+          an export page that states an Incoterm the company has not agreed to is worse than
+          one that omits it, so nothing here is a placeholder. The download renders as soon as
+          a PDF address exists, independently, because the two arrive at different times. */}
+      {(EXPORT_TERMS.length > 0 || termsPdf) && (
         <section className="section-pad">
           <div className="container-page">
             <SectionHeading
@@ -231,16 +234,34 @@ export default function Export() {
               title={lt('terms.title', 'Commercial terms')}
               className="!mx-0"
             />
-            <dl className="mt-8 grid gap-5 sm:grid-cols-2">
-              {EXPORT_TERMS.map((t) => (
-                <div key={t.key} className="rounded-card border border-navy-100 bg-white p-5 shadow-card">
-                  <dt className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
-                    {lt(`terms.${t.key}`, t.label)}
-                  </dt>
-                  <dd className="mt-2 text-sm text-navy-800">{t.value}</dd>
-                </div>
-              ))}
-            </dl>
+            {EXPORT_TERMS.length > 0 && (
+              <dl className="mt-8 grid gap-5 sm:grid-cols-2">
+                {EXPORT_TERMS.map((t) => (
+                  <div key={t.key} className="rounded-card border border-navy-100 bg-white p-5 shadow-card">
+                    <dt className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
+                      {lt(`terms.${t.key}`, t.label)}
+                    </dt>
+                    <dd className="mt-2 text-sm text-navy-800">{t.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+
+            {/* Nothing renders while src/data/exportTerms.js is empty. A download button that
+                leads to a missing file reads as a broken site to the buyer it is meant to
+                reassure. `download` asks the browser to save rather than open it, and the
+                filename is a readable one rather than a Cloudinary id. */}
+            {termsPdf && (
+              <a
+                href={termsPdf}
+                download={EXPORT_TERMS_PDF_FILENAME}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary-dark px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-primary-darker"
+              >
+                {lt('terms.download', 'Download Export Terms PDF')}
+              </a>
+            )}
           </div>
         </section>
       )}

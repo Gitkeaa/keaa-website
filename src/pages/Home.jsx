@@ -56,7 +56,10 @@ export default function Home() {
       <section className="section-pad">
         <div className="container-page">
           <Reveal>
-            <SectionHeading eyebrow={lt('projects.eyebrow', 'Featured Projects')} title={lt('projects.title', 'Trusted by Clients Worldwide')} />
+            {/* "Applications", not "Featured Projects": the entries below are the sectors the
+                equipment is built for, not named jobs. See the note on featuredProjects in
+                data/content.js for how to switch this back when real records exist. */}
+            <SectionHeading eyebrow={lt('projects.eyebrow', 'Applications')} title={lt('projects.title', 'Where KEAA Equipment Is Used')} />
           </Reveal>
           {/* All six projects on one snap-scrolling rail — see ProjectCarousel for why this is
               a native scroll container rather than a transformed track. Every card already

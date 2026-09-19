@@ -103,7 +103,7 @@ export default function ProjectsGallery() {
       <section id="projects" className="section-pad">
         <div className="container-page">
           <Reveal>
-            <SectionHeading align="left" eyebrow={lt('featured.eyebrow', 'Featured Projects')} title={lt('featured.title', 'Trusted by Clients Worldwide')} className="!mx-0" />
+            <SectionHeading align="left" eyebrow={lt('featured.eyebrow', 'Applications')} title={lt('featured.title', 'Where KEAA Equipment Is Used')} className="!mx-0" />
           </Reveal>
 
           {/* The same rail as the Home page — a snap-scrolling row of cards with the

@@ -35,7 +35,11 @@ export default function ProjectCard({ project, image, to, withDesc = false, clas
       />
       <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
         <p className="text-[13px] font-bold leading-tight text-white/85">
-          {project.category} &middot; {project.location}
+          {/* The separator appears only when there is a location to separate. Application
+              areas carry none; a real project record does, and this renders it again with no
+              other change. */}
+          {project.category}
+          {project.location ? <> &middot; {project.location}</> : null}
         </p>
         <h3 className="mt-1.5 font-display text-xl font-semibold leading-snug text-white">
           {project.title}
