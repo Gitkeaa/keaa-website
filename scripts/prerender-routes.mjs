@@ -156,34 +156,80 @@ function findPuppeteerChrome() {
  * were about. scripts/check-prerender.mjs fails the build instead of letting that ship.
  */
 /**
- * Resolve a browser for the build, including the one a cloud build image can actually run.
+ * Resolve a browser the build can actually PRERENDER with, and prove it before returning it.
  *
- * Why the sync findChromium below is not enough: Puppeteer's bundled Chrome is a normal
- * desktop build and expects a desktop Linux's shared libraries (libnss3, libatk, libgbm and
- * friends). A minimal cloud build container usually has none of them, so the binary is
- * present, downloads fine, and then fails to launch. @sparticuz/chromium is a Chromium built
- * for exactly that environment, with those libraries bundled, and it exposes the binary
- * through an async call. Hence this wrapper and the async vite config.
+ * THE BUG THIS EXISTS TO PREVENT
+ * ------------------------------
+ * Finding a browser binary is not the same as being able to run one. Puppeteer's bundled
+ * Chrome is an ordinary desktop build: it downloads onto any machine, but it needs a
+ * desktop Linux's shared libraries (libnss3, libatk, libgbm and friends) to start. A minimal
+ * cloud build container has none of them.
  *
- * Returns { executablePath, args } or null. `args` are extra flags the serverless build
- * needs; an ordinary desktop Chrome needs none of them.
+ * Before this, the lookup only checked that a file existed. On Vercel that meant: browser
+ * "found", handed to the prerender plugin, plugin launches it, launch fails, the exception
+ * takes the whole build down. Four deploys failed that way. The previous behaviour was not
+ * better, it just failed differently: no browser was found at all, prerendering was skipped,
+ * and the build happily shipped one shell for all 4,800 URLs.
+ *
+ * So each candidate is LAUNCHED here, headless, and discarded. Whatever survives that can
+ * render pages. If nothing survives, this returns null and the caller skips prerendering
+ * with a loud warning, which keeps a browser problem from blocking every deploy.
+ *
+ * Order matters: on Linux the serverless Chromium goes first, because it is the one built
+ * for this case and carries its own libraries.
+ *
+ * Returns { executablePath, args, source } or null.
  */
 export async function resolveBrowser() {
-  const direct = findChromium();
-  if (direct) return { executablePath: direct, args: [] };
+  const candidates = [];
 
-  // Only worth trying on Linux. On a developer's Windows or macOS machine the sync lookup
-  // above has already found a real browser, and this package ships a Linux binary only.
-  if (process.platform !== 'linux') return null;
+  if (process.env.PRERENDER_BROWSER) {
+    candidates.push({ executablePath: process.env.PRERENDER_BROWSER, args: [], source: 'PRERENDER_BROWSER' });
+  }
 
+  // Linux only: this package ships a Linux binary, and on a developer's Windows or macOS
+  // machine the ordinary lookups below already find a real browser.
+  if (process.platform === 'linux') {
+    try {
+      const mod = await import('@sparticuz/chromium');
+      const chromium = mod.default ?? mod;
+      const executablePath = await chromium.executablePath();
+      if (executablePath) {
+        candidates.push({ executablePath, args: chromium.args ?? [], source: '@sparticuz/chromium' });
+      }
+    } catch {
+      // Not installed, or failed to unpack. The other candidates still get their turn.
+    }
+  }
+
+  const sync = findChromium();
+  if (sync) candidates.push({ executablePath: sync, args: [], source: 'system or puppeteer cache' });
+
+  for (const candidate of candidates) {
+    if (!candidate.executablePath || !existsSync(candidate.executablePath)) continue;
+    if (await canLaunch(candidate)) return candidate;
+    console.warn(`[prerender] ${candidate.source} at ${candidate.executablePath} cannot launch here; trying the next option.`);
+  }
+  return null;
+}
+
+/** Start the browser and close it again. The only reliable test that it works. */
+async function canLaunch({ executablePath, args }) {
+  let browser;
   try {
-    const mod = await import('@sparticuz/chromium');
-    const chromium = mod.default ?? mod;
-    const executablePath = await chromium.executablePath();
-    if (!executablePath || !existsSync(executablePath)) return null;
-    return { executablePath, args: chromium.args ?? [] };
-  } catch {
-    return null;
+    const { default: puppeteer } = await import('puppeteer');
+    browser = await puppeteer.launch({
+      executablePath,
+      headless: true,
+      args: [...new Set(['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', ...args])],
+      timeout: 30000,
+    });
+    return true;
+  } catch (err) {
+    console.warn(`[prerender] launch test failed: ${String(err?.message || err).split('\n')[0]}`);
+    return false;
+  } finally {
+    try { await browser?.close(); } catch { /* the process may already be gone */ }
   }
 }
 

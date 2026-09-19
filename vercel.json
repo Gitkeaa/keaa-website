@@ -226,6 +226,21 @@
       "source": "/:page(index|home|products|product-list).html",
       "destination": "/products",
       "permanent": true
+    },
+    {
+      "source": "/page-coming-soon",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/page-coming-soon.html",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/coming-soon",
+      "destination": "/products",
+      "permanent": true
     }
   ],
   "rewrites": [
