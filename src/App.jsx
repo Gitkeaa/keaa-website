@@ -33,6 +33,7 @@ const Certifications = lazy(() => import('./pages/Certifications'));
 const Careers = lazy(() => import('./pages/Careers'));
 const Export = lazy(() => import('./pages/Export'));
 const Blog = lazy(() => import('./pages/Blog'));
+const ThankYou = lazy(() => import('./pages/ThankYou'));
 const BlogPost = lazy(() => import('./pages/BlogPost'));
 const FAQ = lazy(() => import('./pages/FAQ'));
 const Legal = lazy(() => import('./pages/Legal'));
@@ -152,6 +153,9 @@ function AppShell() {
                 which no product page can rank for. See src/data/blog.js. */}
             <Route path="blog" element={<Blog />} />
             <Route path="blog/:slug" element={<BlogPost />} />
+            {/* One address per completed form, so enquiries can actually be counted.
+                noindex, and deliberately absent from the sitemap. See pages/ThankYou.jsx. */}
+            <Route path="thank-you/:type" element={<ThankYou />} />
             <Route path="faq" element={<FAQ />} />
             <Route path="rfq" element={<RfqRedirect />} />
 

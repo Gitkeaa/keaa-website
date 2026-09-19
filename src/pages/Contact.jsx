@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Mail } from 'lucide-react';
 /* Full-colour brand marks, the sanctioned exception to the site's icon-free rule. The client
@@ -242,6 +242,7 @@ export default function Contact() {
       lt('seo.description', 'Get in touch with KEAA International for inquiries, quotes and partnership opportunities. Manufacturing plant in Ludhiana, Punjab, India.'),
   });
 
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const initialTab = MAIN_TABS.some((tb) => tb.id === searchParams.get('tab')) ? searchParams.get('tab') : 'contact';
   const [mainTab, setMainTab] = useState(initialTab);
@@ -320,6 +321,8 @@ export default function Contact() {
         message: `${message}\n\nProduct interest: ${categories.length ? categories.join(', ') : 'N/A'}\nCompany: ${val('company') || 'N/A'} · Phone: ${country?.dial || ''} ${phone || 'N/A'} · Country: ${country?.name || 'N/A'}`,
       });
       setSubmitted(true);
+      // Only after the POST resolved, so a lead can never be lost to this navigation.
+      navigate('/thank-you/contact');
     } catch {
       setSendError(lt('form.sendError', 'Could not send your message. Please try again, or email us directly.'));
     } finally {
@@ -364,6 +367,7 @@ export default function Contact() {
           .join('\n\n'),
       });
       setSubmitted(true);
+      navigate(mainTab === 'export' ? '/thank-you/export' : '/thank-you/quote');
     } catch {
       setSendError(ltRfq('form.submitError', 'Could not submit your request. Please try again, or email us directly.'));
     } finally {
