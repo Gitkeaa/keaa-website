@@ -59,6 +59,7 @@ export const mainNav = [
       { label: 'Our Team', to: '/contact#team', desc: 'The people behind the products' },
       { label: 'Careers', to: '/careers', desc: 'Open roles and life at KEAA' },
       { label: 'Export', to: '/export', desc: 'Supplying buyers in 42+ countries' },
+      { label: 'Guides', to: '/blog', desc: 'How to choose the right system' },
       { label: 'Contact Us', to: '/contact', desc: 'Offices, phone and email' },
     ],
     feature: {

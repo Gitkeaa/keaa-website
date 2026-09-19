@@ -18,6 +18,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { liveLocales } from '../src/i18n/languages.js';
+import { posts } from '../src/data/blog.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = join(ROOT, 'src', 'data');
@@ -36,6 +37,7 @@ const STATIC_ROUTES = [
   ['/faq', 0.7],
   ['/downloads', 0.6],
   ['/export', 0.9],
+  ['/blog', 0.7],
   ['/careers', 0.6],
   ['/privacy-policy', 0.3],
   ['/terms', 0.3],
@@ -46,6 +48,9 @@ const XML_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'"
 const escapeXml = (value) => String(value).replace(/[&<>"']/g, (c) => XML_ESCAPES[c]);
 
 const categories = JSON.parse(readFileSync(join(DATA, 'categories.json'), 'utf8'));
+
+/** Article slugs, read from the module the site renders so the two cannot drift. */
+const blogSlugs = posts.map((p) => p.slug);
 const products = JSON.parse(readFileSync(join(DATA, 'products.json'), 'utf8'));
 
 const urls = [];
@@ -57,6 +62,8 @@ const add = (path, priority) => {
 };
 
 for (const [path, priority] of STATIC_ROUTES) add(path, priority);
+
+for (const slug of blogSlugs) add(`/blog/${slug}`, 0.6);
 
 let subCount = 0;
 for (const c of categories) {
