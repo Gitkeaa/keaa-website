@@ -8,6 +8,7 @@ import { EASE } from '../lib/motion';
 import { isPrerender } from '../lib/prerender';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import { useFocusTrap } from '../hooks/useFocusTrap';
+import { ANALYTICS_CONFIGURED, ANALYTICS_CATEGORY } from '../lib/analyticsConfig';
 
 /**
  * Site-wide cookie consent: a full-bleed bottom bar plus a granular preferences dialog.
@@ -55,7 +56,14 @@ const STORAGE_KEY = 'keaa:cookie-consent';
  * and region keys were written regardless of the toggle — so the dialog was asking about
  * processing that did not happen while the one real third party went ungated.
  */
-const CONSENT_VERSION = 2;
+/**
+ * v3 introduces the analytics category, but ONLY in a build that actually carries a
+ * measurement ID. In a build without one the version stays at 2 and nothing changes for
+ * anyone: no new category, no re-prompt, no processing. The day VITE_GA4_ID is set the
+ * version moves to 3 and every visitor is asked again, which is the correct behaviour when
+ * a new category of processing is introduced rather than a nuisance.
+ */
+const CONSENT_VERSION = ANALYTICS_CONFIGURED ? 3 : 2;
 /**
  * Consent is a decision, not a permanent grant. EU guidance converges on refreshing it at
  * least every 6-12 months; 180 days is the conservative end. An expired record reuses the
@@ -170,6 +178,20 @@ const CATEGORIES = [
     title: 'External Content',
     desc: 'Lets us show content hosted by others, currently the Google Map on our Contact page. Turning this on shares your IP address with Google. With it off, we show the address and a plain link instead.',
   },
+  /**
+   * Present only in a build that carries a measurement ID, per the rule above: a toggle that
+   * governs nothing teaches people to ignore the dialog. src/lib/analytics.js reads the same
+   * variable and stays completely inert without it, so the two can never disagree.
+   */
+  ...(ANALYTICS_CONFIGURED
+    ? [
+        {
+          key: ANALYTICS_CATEGORY,
+          title: 'Analytics',
+          desc: 'Lets us count how many people reach the site and how many go on to send an enquiry, using Google Analytics. IP addresses are anonymised and the data is never used to build advertising audiences. With this off, nothing is loaded and nothing is recorded.',
+        },
+      ]
+    : []),
 ];
 
 /**

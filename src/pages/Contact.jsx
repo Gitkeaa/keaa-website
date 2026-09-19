@@ -27,6 +27,7 @@ import { company, leadership, waLink } from '../data/company';
 import { img } from '../data/images';
 import { defaultCountry } from '../data/countriesData';
 import { submitPublicForm } from '../data/adminApi';
+import { track, EVENTS } from '../lib/analytics';
 import { useConsent, openCookiePreferences } from '../components/CookieConsent';
 import { useRegion } from '../context/RegionContext';
 import { useAdminAuth } from '../admin/auth/AdminAuthContext';
@@ -321,6 +322,7 @@ export default function Contact() {
         message: `${message}\n\nProduct interest: ${categories.length ? categories.join(', ') : 'N/A'}\nCompany: ${val('company') || 'N/A'} · Phone: ${country?.dial || ''} ${phone || 'N/A'} · Country: ${country?.name || 'N/A'}`,
       });
       setSubmitted(true);
+      track(EVENTS.contactMessage, { country: country?.name || '' });
       // Only after the POST resolved, so a lead can never be lost to this navigation.
       navigate('/thank-you/contact');
     } catch {
@@ -367,6 +369,11 @@ export default function Contact() {
           .join('\n\n'),
       });
       setSubmitted(true);
+      track(mainTab === 'export' ? EVENTS.exportEnquiry : EVENTS.quoteRequest, {
+        category: category || '',
+        country: country?.name || '',
+        items: pickedItems.length,
+      });
       navigate(mainTab === 'export' ? '/thank-you/export' : '/thank-you/quote');
     } catch {
       setSendError(ltRfq('form.submitError', 'Could not submit your request. Please try again, or email us directly.'));

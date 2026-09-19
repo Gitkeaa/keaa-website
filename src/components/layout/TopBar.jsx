@@ -1,6 +1,7 @@
 import { Globe2, Phone, Mail, Linkedin } from 'lucide-react';
 import { company } from '../../data/company';
 import { useLT } from '../../i18n/LocaleContext';
+import { track, EVENTS } from '../../lib/analytics';
 
 export default function TopBar() {
   const lt = useLT('common');
@@ -14,7 +15,11 @@ export default function TopBar() {
           {lt('topBar.tagline', 'Exporting to 42+ countries worldwide')}
         </span>
         <div className="flex items-center gap-6 flex-shrink-0 pl-6">
-          <a href={`tel:${company.phones[0]}`} className="flex items-center gap-1.5 transition-colors hover:text-white">
+          <a
+            href={`tel:${company.phones[0]}`}
+            onClick={() => track(EVENTS.phoneClick, { location: 'topbar' })}
+            className="flex items-center gap-1.5 transition-colors hover:text-white"
+          >
             <Phone className="h-3.5 w-3.5 text-primary-light" />
             {company.phones[0]}
           </a>

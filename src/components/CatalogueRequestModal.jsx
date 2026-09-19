@@ -9,6 +9,7 @@ import { defaultCountry } from '../data/countriesData';
 import { submitPublicForm } from '../data/adminApi';
 import { EASE } from '../lib/motion';
 import { EMAIL_RE, fieldCls } from '../lib/forms';
+import { track, EVENTS } from '../lib/analytics';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import { useLT } from '../i18n/LocaleContext';
 
@@ -67,6 +68,8 @@ export default function CatalogueRequestModal({ item, onClose }) {
       category: item.category || '',
       catalogue: item.title,
     }).catch(() => {});
+
+    track(EVENTS.catalogueDownload, { catalogue: item.title, country: country?.name || '' });
 
     // Same user gesture as the submit click, so this survives popup blockers.
     window.open(item.url, '_blank', 'noopener,noreferrer');

@@ -8,6 +8,7 @@ import { WhatsApp, XLogo } from '../ui/BrandGlyphs';
 import Logo from './Logo';
 import { openCookiePreferences } from '../CookieConsent';
 import { company } from '../../data/company';
+import { track, EVENTS } from '../../lib/analytics';
 import { footerLinks } from '../../data/navigation';
 import { getAllCategories } from '../../data/categories';
 import { useLT } from '../../i18n/LocaleContext';
@@ -134,6 +135,9 @@ export default function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
+                  /* WhatsApp is a sales channel here rather than a social profile, so a tap
+                     on it is an enquiry starting. The other icons are not conversions. */
+                  onClick={social.label === 'WhatsApp' ? () => track(EVENTS.whatsappClick, { location: 'footer' }) : undefined}
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-white/[0.14] bg-white/[0.04] text-white/70 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-white hover:shadow-[0_10px_22px_-10px_rgb(var(--color-primary)_/_0.85)] motion-reduce:hover:translate-y-0"
                   aria-label={social.label}
                 >

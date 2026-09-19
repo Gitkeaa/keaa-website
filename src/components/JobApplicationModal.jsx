@@ -7,6 +7,7 @@ import PhoneField from './ui/PhoneField';
 import EmailField from './ui/EmailField';
 import { defaultCountry } from '../data/countriesData';
 import { submitPublicForm, submitPublicFormWithFile } from '../data/adminApi';
+import { track, EVENTS } from '../lib/analytics';
 import { EASE } from '../lib/motion';
 import { EMAIL_RE, fieldCls } from '../lib/forms';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
@@ -515,6 +516,7 @@ export default function JobApplicationModal({ job, onClose }) {
       }
       const id = created && created.id;
       setAppId(id ? `APP-${new Date().getFullYear()}-${String(id).padStart(5, '0')}` : `APP-${new Date().getFullYear()}`);
+      track(EVENTS.jobApplication, { position: job.title });
       setSubmitted(true);
     } catch {
       setSendError(lt('apply.err.submit', 'Could not submit your application. Please try again.'));
