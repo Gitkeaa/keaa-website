@@ -31,3 +31,8 @@ scripts/video-posters.report.json
 # not part of the site and must not bloat the repo.
 product-descriptions-review/
 translation-review/
+
+# Search Console coverage exports, the input to scripts/gen-legacy-redirects.mjs.
+# Re-export from the property and drop the folders back in when checking progress; they are
+# a point-in-time snapshot, not source, and they are large.
+seo_reports/

@@ -261,6 +261,1076 @@
       "source": "/:locale(nl|de|fr|es|it|pt|pl|ru|tr|ar|hi)/rfq",
       "destination": "/:locale/contact?tab=rfq",
       "permanent": true
+    },
+    {
+      "source": "/product/:slug/:id(\\d+)",
+      "destination": "/product/:id",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/product/:slug/:id(\\d+)",
+      "destination": "/product/:id",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/:slug/:id(\\d+)",
+      "destination": "/product/:id",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/enquiry/:slug/:id(\\d+)",
+      "destination": "/product/:id",
+      "permanent": true
+    },
+    {
+      "source": "/access-scaffold-euro-frame",
+      "destination": "/products/scaffolding-formworks/access-scaffold-euro-frame",
+      "permanent": true
+    },
+    {
+      "source": "/category/index.php",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/contact.php",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/5-bar-half-mesh-field-gates/enquiry.php",
+      "destination": "/product/305",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/5-bar-half-mesh-field-gates/index.php",
+      "destination": "/product/305",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/accessories/enquiry.php",
+      "destination": "/product/392",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/accessories/index.php",
+      "destination": "/product/392",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/adjustable-y-type-post-supports/enquiry.php",
+      "destination": "/product/335",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/adjustable-y-type-post-supports/index.php",
+      "destination": "/product/335",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/anchor-clamp-bend/index.php",
+      "destination": "/product/401",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/base-jack-with-welded-tube/enquiry.php",
+      "destination": "/product/284",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/bottom-cup/index.php",
+      "destination": "/product/275",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/calf-jackets/enquiry.php",
+      "destination": "/product/297",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/diagonal-barriers/enquiry.php",
+      "destination": "/product/42",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/double-side-hay-basket/index.php",
+      "destination": "/product/90",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/euro-assembly-frame/enquiry.php",
+      "destination": "/product/410",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/eye-bolts/index.php",
+      "destination": "/product/108",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/fence-coupler-carriage-bolt-m12/enquiry.php",
+      "destination": "/product/204",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/fork-head---rod/enquiry.php",
+      "destination": "/product/138",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/fork-head---rod/index.php",
+      "destination": "/product/138",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/fork-head-jack/index.php",
+      "destination": "/product/146",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/german-swivel-coupler/index.php",
+      "destination": "/product/181",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/ground-plates-wedge-grip/enquiry.php",
+      "destination": "/product/359",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/ground-plates-wedge-grip/index.php",
+      "destination": "/product/359",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/guarder-gate-hanger-with-washer/index.php",
+      "destination": "/product/113",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/hang-on-basket/enquiry.php",
+      "destination": "/product/91",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/hang-on-basket/index.php",
+      "destination": "/product/91",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/l-type-post-supports/index.php",
+      "destination": "/product/327",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/light-duty-props-10-kn/enquiry.php",
+      "destination": "/product/135",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/neck-rail-clamp-with-long-plate/index.php",
+      "destination": "/product/55",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/non-return-gate/index.php",
+      "destination": "/product/98",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/perforated-plates-type-b/enquiry.php",
+      "destination": "/product/320",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/toe-board/enquiry.php",
+      "destination": "/product/272",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/toe-board/index.php",
+      "destination": "/product/272",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/tripod---heavy-duty/enquiry.php",
+      "destination": "/product/150",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/tripod---square-tube-medium-duty/enquiry.php",
+      "destination": "/product/151",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/tripod---universal-model/enquiry.php",
+      "destination": "/product/152",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/u-head-jack/enquiry.php",
+      "destination": "/product/145",
+      "permanent": true
+    },
+    {
+      "source": "/enquiry/walk-through-frame/enquiry.php",
+      "destination": "/product/370",
+      "permanent": true
+    },
+    {
+      "source": "/headlocks",
+      "destination": "/products/livestock-housing-solutions/cattle",
+      "permanent": true
+    },
+    {
+      "source": "/horse-handling-equipments",
+      "destination": "/products/livestock-housing-solutions/horse",
+      "permanent": true
+    },
+    {
+      "source": "/index.php",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/listing.php",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/miscellaneous-products",
+      "destination": "/products/wood-connectors/miscellaneous-products",
+      "permanent": true
+    },
+    {
+      "source": "/post-for-gates",
+      "destination": "/products/wood-connectors/post-supports",
+      "permanent": true
+    },
+    {
+      "source": "/product/accessories/detail.php",
+      "destination": "/product/392",
+      "permanent": true
+    },
+    {
+      "source": "/product/adjustable-clamp/index.php",
+      "destination": "/product/130",
+      "permanent": true
+    },
+    {
+      "source": "/product/adjustable-l-type-post-supports/detail.php",
+      "destination": "/product/336",
+      "permanent": true
+    },
+    {
+      "source": "/product/adjustable-l-type-post-supports/index.php",
+      "destination": "/product/336",
+      "permanent": true
+    },
+    {
+      "source": "/product/anchor-clamp-bend/detail.php",
+      "destination": "/product/401",
+      "permanent": true
+    },
+    {
+      "source": "/product/anchor-footdw-15/detail.php",
+      "destination": "/product/398",
+      "permanent": true
+    },
+    {
+      "source": "/product/angle-connectors/detail.php",
+      "destination": "/product/310",
+      "permanent": true
+    },
+    {
+      "source": "/product/base-jack-with-welded-tube/detail.php",
+      "destination": "/product/284",
+      "permanent": true
+    },
+    {
+      "source": "/product/base-jack-with-welded-tube/index.php",
+      "destination": "/product/284",
+      "permanent": true
+    },
+    {
+      "source": "/product/boltdown-post-supports/detail.php",
+      "destination": "/product/330",
+      "permanent": true
+    },
+    {
+      "source": "/product/bottom-cup/index.php",
+      "destination": "/product/275",
+      "permanent": true
+    },
+    {
+      "source": "/product/brisket-board-clamp/detail.php",
+      "destination": "/product/63",
+      "permanent": true
+    },
+    {
+      "source": "/product/brisket-board-plate/index.php",
+      "destination": "/product/64",
+      "permanent": true
+    },
+    {
+      "source": "/product/builder-clamp/detail.php",
+      "destination": "/product/174",
+      "permanent": true
+    },
+    {
+      "source": "/product/calf-feed-trough/detail.php",
+      "destination": "/product/48",
+      "permanent": true
+    },
+    {
+      "source": "/product/calf-jackets/detail.php",
+      "destination": "/product/297",
+      "permanent": true
+    },
+    {
+      "source": "/product/calf-pen/index.php",
+      "destination": "/product/121",
+      "permanent": true
+    },
+    {
+      "source": "/product/crow-bars/detail.php",
+      "destination": "/product/220",
+      "permanent": true
+    },
+    {
+      "source": "/product/crowd-control-barrier/index.php",
+      "destination": "/product/224",
+      "permanent": true
+    },
+    {
+      "source": "/product/cuplock-standard/detail.php",
+      "destination": "/product/23",
+      "permanent": true
+    },
+    {
+      "source": "/product/cuplock-standard/index.php",
+      "destination": "/product/23",
+      "permanent": true
+    },
+    {
+      "source": "/product/diagonal-barriers/detail.php",
+      "destination": "/product/42",
+      "permanent": true
+    },
+    {
+      "source": "/product/diagonal-barriers/index.php",
+      "destination": "/product/42",
+      "permanent": true
+    },
+    {
+      "source": "/product/double-head-clamp/detail.php",
+      "destination": "/product/54",
+      "permanent": true
+    },
+    {
+      "source": "/product/enhak-standard/detail.php",
+      "destination": "/product/18",
+      "permanent": true
+    },
+    {
+      "source": "/product/enhak-standard/index.php",
+      "destination": "/product/18",
+      "permanent": true
+    },
+    {
+      "source": "/product/extension-assemblies/index.php",
+      "destination": "/product/175",
+      "permanent": true
+    },
+    {
+      "source": "/product/farrowing-crate/detail.php",
+      "destination": "/product/123",
+      "permanent": true
+    },
+    {
+      "source": "/product/feed-bowls/detail.php",
+      "destination": "/product/127",
+      "permanent": true
+    },
+    {
+      "source": "/product/feed-bowls/index.php",
+      "destination": "/product/127",
+      "permanent": true
+    },
+    {
+      "source": "/product/fence-coupler-allen-key-bolt-m-12/detail.php",
+      "destination": "/product/205",
+      "permanent": true
+    },
+    {
+      "source": "/product/foot-clamp/index.php",
+      "destination": "/product/129",
+      "permanent": true
+    },
+    {
+      "source": "/product/fork-head---rod/detail.php",
+      "destination": "/product/138",
+      "permanent": true
+    },
+    {
+      "source": "/product/fork-head---u-strip/detail.php",
+      "destination": "/product/142",
+      "permanent": true
+    },
+    {
+      "source": "/product/fork-head---u-strip/index.php",
+      "destination": "/product/142",
+      "permanent": true
+    },
+    {
+      "source": "/product/fork-head-jack/detail.php",
+      "destination": "/product/146",
+      "permanent": true
+    },
+    {
+      "source": "/product/german-right-angle-coupler/detail.php",
+      "destination": "/product/180",
+      "permanent": true
+    },
+    {
+      "source": "/product/german-swivel-coupler/detail.php",
+      "destination": "/product/181",
+      "permanent": true
+    },
+    {
+      "source": "/product/german-swivel-coupler/index.php",
+      "destination": "/product/181",
+      "permanent": true
+    },
+    {
+      "source": "/product/giant-feed-headlock/detail.php",
+      "destination": "/product/40",
+      "permanent": true
+    },
+    {
+      "source": "/product/girder-coupler/index.php",
+      "destination": "/product/192",
+      "permanent": true
+    },
+    {
+      "source": "/product/gravity-pin/index.php",
+      "destination": "/product/375",
+      "permanent": true
+    },
+    {
+      "source": "/product/ground-plates-wedge-grip/detail.php",
+      "destination": "/product/359",
+      "permanent": true
+    },
+    {
+      "source": "/product/ground-plates-wedge-grip/index.php",
+      "destination": "/product/359",
+      "permanent": true
+    },
+    {
+      "source": "/product/ground-trough/detail.php",
+      "destination": "/product/132",
+      "permanent": true
+    },
+    {
+      "source": "/product/guard-rail---planks/detail.php",
+      "destination": "/product/210",
+      "permanent": true
+    },
+    {
+      "source": "/product/guard-rail---tubes-(double-block)/index.php",
+      "destination": "/product/209",
+      "permanent": true
+    },
+    {
+      "source": "/product/guarder-gate-hanger-with-washer/detail.php",
+      "destination": "/product/113",
+      "permanent": true
+    },
+    {
+      "source": "/product/guarder-gate-hanger-with-washer/index.php",
+      "destination": "/product/113",
+      "permanent": true
+    },
+    {
+      "source": "/product/h-panel/detail.php",
+      "destination": "/product/178",
+      "permanent": true
+    },
+    {
+      "source": "/product/h-panel/index.php",
+      "destination": "/product/178",
+      "permanent": true
+    },
+    {
+      "source": "/product/half-coupler-with-l-strip-long--short/index.php",
+      "destination": "/product/189",
+      "permanent": true
+    },
+    {
+      "source": "/product/half-coupler-with-welded-v-strip/index.php",
+      "destination": "/product/191",
+      "permanent": true
+    },
+    {
+      "source": "/product/half-coupler/detail.php",
+      "destination": "/product/403",
+      "permanent": true
+    },
+    {
+      "source": "/product/half-coupler/index.php",
+      "destination": "/product/403",
+      "permanent": true
+    },
+    {
+      "source": "/product/hang-on-basket/detail.php",
+      "destination": "/product/91",
+      "permanent": true
+    },
+    {
+      "source": "/product/hiefer-safety-headlocks/detail.php",
+      "destination": "/product/44",
+      "permanent": true
+    },
+    {
+      "source": "/product/high-tensile-material/detail.php",
+      "destination": "/product/144",
+      "permanent": true
+    },
+    {
+      "source": "/product/inserted-railing-post---planks/index.php",
+      "destination": "/product/212",
+      "permanent": true
+    },
+    {
+      "source": "/product/jack-nut-casted/index.php",
+      "destination": "/product/288",
+      "permanent": true
+    },
+    {
+      "source": "/product/jack-nut-forged/index.php",
+      "destination": "/product/287",
+      "permanent": true
+    },
+    {
+      "source": "/product/l-post-clamp/index.php",
+      "destination": "/product/68",
+      "permanent": true
+    },
+    {
+      "source": "/product/l-type-post-supports/detail.php",
+      "destination": "/product/327",
+      "permanent": true
+    },
+    {
+      "source": "/product/light-duty-props-10-kn/index.php",
+      "destination": "/product/135",
+      "permanent": true
+    },
+    {
+      "source": "/product/manure-srapper/index.php",
+      "destination": "/product/296",
+      "permanent": true
+    },
+    {
+      "source": "/product/multipurpose-plus-cubicle-divider/detail.php",
+      "destination": "/product/36",
+      "permanent": true
+    },
+    {
+      "source": "/product/multipurpose-plus-cubicle-divider/index.php",
+      "destination": "/product/36",
+      "permanent": true
+    },
+    {
+      "source": "/product/nut-sw-22/index.php",
+      "destination": "/product/395",
+      "permanent": true
+    },
+    {
+      "source": "/product/perforated-plates-type-b/index.php",
+      "destination": "/product/320",
+      "permanent": true
+    },
+    {
+      "source": "/product/pig-tall-pin/index.php",
+      "destination": "/product/378",
+      "permanent": true
+    },
+    {
+      "source": "/product/pin-for-sleeve-coupler/index.php",
+      "destination": "/product/196",
+      "permanent": true
+    },
+    {
+      "source": "/product/pole-anchors-for-square-post/detail.php",
+      "destination": "/product/347",
+      "permanent": true
+    },
+    {
+      "source": "/product/pole-anchors-for-square-post/index.php",
+      "destination": "/product/347",
+      "permanent": true
+    },
+    {
+      "source": "/product/pole-anchors-wedge-grip/index.php",
+      "destination": "/product/357",
+      "permanent": true
+    },
+    {
+      "source": "/product/post-caps-ball/index.php",
+      "destination": "/product/361",
+      "permanent": true
+    },
+    {
+      "source": "/product/post-caps-pyramid/detail.php",
+      "destination": "/product/360",
+      "permanent": true
+    },
+    {
+      "source": "/product/post-caps-with-ss-nail/detail.php",
+      "destination": "/product/362",
+      "permanent": true
+    },
+    {
+      "source": "/product/post-with-plate/detail.php",
+      "destination": "/product/290",
+      "permanent": true
+    },
+    {
+      "source": "/product/post-with-plate/index.php",
+      "destination": "/product/290",
+      "permanent": true
+    },
+    {
+      "source": "/product/props-load-tested-for-20-kn/detail.php",
+      "destination": "/product/33",
+      "permanent": true
+    },
+    {
+      "source": "/product/push-pull-props/index.php",
+      "destination": "/product/136",
+      "permanent": true
+    },
+    {
+      "source": "/product/reinforced-props/detail.php",
+      "destination": "/product/134",
+      "permanent": true
+    },
+    {
+      "source": "/product/reinforced-props/index.php",
+      "destination": "/product/134",
+      "permanent": true
+    },
+    {
+      "source": "/product/ringlock-diagonal-brace/detail.php",
+      "destination": "/product/12",
+      "permanent": true
+    },
+    {
+      "source": "/product/ringlock-ledger/detail.php",
+      "destination": "/product/11",
+      "permanent": true
+    },
+    {
+      "source": "/product/single-head-clamp/detail.php",
+      "destination": "/product/52",
+      "permanent": true
+    },
+    {
+      "source": "/product/single-head-clamp/index.php",
+      "destination": "/product/52",
+      "permanent": true
+    },
+    {
+      "source": "/product/single-mounting-bracket-for-cubicle-divider/index.php",
+      "destination": "/product/61",
+      "permanent": true
+    },
+    {
+      "source": "/product/standard-prop-class-b/index.php",
+      "destination": "/product/35",
+      "permanent": true
+    },
+    {
+      "source": "/product/stud-gate-hanger-with-washer/detail.php",
+      "destination": "/product/111",
+      "permanent": true
+    },
+    {
+      "source": "/product/stud-gate-hanger-with-washer/index.php",
+      "destination": "/product/111",
+      "permanent": true
+    },
+    {
+      "source": "/product/stud-type-l-gate-hanger-with-extra-leg/detail.php",
+      "destination": "/product/110",
+      "permanent": true
+    },
+    {
+      "source": "/product/swivel-base-jack---light-duty/detail.php",
+      "destination": "/product/28",
+      "permanent": true
+    },
+    {
+      "source": "/product/swivel-base-jack---light-duty/index.php",
+      "destination": "/product/28",
+      "permanent": true
+    },
+    {
+      "source": "/product/swivel-coupler/index.php",
+      "destination": "/product/183",
+      "permanent": true
+    },
+    {
+      "source": "/product/swivel-wing-nut-with-combination-plate-100mm-casted/detail.php",
+      "destination": "/product/162",
+      "permanent": true
+    },
+    {
+      "source": "/product/swivel-wing-nut-with-combination-plate-forged/index.php",
+      "destination": "/product/161",
+      "permanent": true
+    },
+    {
+      "source": "/product/t-blade-post-supports/index.php",
+      "destination": "/product/332",
+      "permanent": true
+    },
+    {
+      "source": "/product/t-type-post-supports/detail.php",
+      "destination": "/product/329",
+      "permanent": true
+    },
+    {
+      "source": "/product/t-type-post-supports/index.php",
+      "destination": "/product/329",
+      "permanent": true
+    },
+    {
+      "source": "/product/three-wing-anchor-nut---casted/index.php",
+      "destination": "/product/158",
+      "permanent": true
+    },
+    {
+      "source": "/product/three-wing-anchor-nut---forged/detail.php",
+      "destination": "/product/159",
+      "permanent": true
+    },
+    {
+      "source": "/product/three-wing-anchor-nut---forged/index.php",
+      "destination": "/product/159",
+      "permanent": true
+    },
+    {
+      "source": "/product/toe-board/detail.php",
+      "destination": "/product/272",
+      "permanent": true
+    },
+    {
+      "source": "/product/toe-board/index.php",
+      "destination": "/product/272",
+      "permanent": true
+    },
+    {
+      "source": "/product/treatment-shut/detail.php",
+      "destination": "/product/49",
+      "permanent": true
+    },
+    {
+      "source": "/product/trestle/detail.php",
+      "destination": "/product/223",
+      "permanent": true
+    },
+    {
+      "source": "/product/tripod---heavy-duty/detail.php",
+      "destination": "/product/150",
+      "permanent": true
+    },
+    {
+      "source": "/product/tripod---heavy-duty/index.php",
+      "destination": "/product/150",
+      "permanent": true
+    },
+    {
+      "source": "/product/tripod---square-tube-medium-duty/detail.php",
+      "destination": "/product/151",
+      "permanent": true
+    },
+    {
+      "source": "/product/tripod---square-tube-medium-duty/index.php",
+      "destination": "/product/151",
+      "permanent": true
+    },
+    {
+      "source": "/product/tripod---universal-model/detail.php",
+      "destination": "/product/152",
+      "permanent": true
+    },
+    {
+      "source": "/product/tripod---universal-model/index.php",
+      "destination": "/product/152",
+      "permanent": true
+    },
+    {
+      "source": "/product/truss-ledger/detail.php",
+      "destination": "/product/278",
+      "permanent": true
+    },
+    {
+      "source": "/product/two-wing-anchor-nut-100mm---casted/index.php",
+      "destination": "/product/156",
+      "permanent": true
+    },
+    {
+      "source": "/product/v-brace/detail.php",
+      "destination": "/product/8",
+      "permanent": true
+    },
+    {
+      "source": "/product/v-brace/index.php",
+      "destination": "/product/8",
+      "permanent": true
+    },
+    {
+      "source": "/product/v-lock/detail.php",
+      "destination": "/product/383",
+      "permanent": true
+    },
+    {
+      "source": "/product/v-lock/index.php",
+      "destination": "/product/383",
+      "permanent": true
+    },
+    {
+      "source": "/product/walk-through-frame/detail.php",
+      "destination": "/product/370",
+      "permanent": true
+    },
+    {
+      "source": "/product/walk-through-frame/index.php",
+      "destination": "/product/370",
+      "permanent": true
+    },
+    {
+      "source": "/product/wall-gate-hanger-with-washer/detail.php",
+      "destination": "/product/117",
+      "permanent": true
+    },
+    {
+      "source": "/product/wall-gate-hanger-without-washer/detail.php",
+      "destination": "/product/118",
+      "permanent": true
+    },
+    {
+      "source": "/product/wall-mount-angle-top-bracket/detail.php",
+      "destination": "/product/70",
+      "permanent": true
+    },
+    {
+      "source": "/product/wall-mount-bottom-bracket/detail.php",
+      "destination": "/product/71",
+      "permanent": true
+    },
+    {
+      "source": "/product/wall-mount-bottom-bracket/index.php",
+      "destination": "/product/71",
+      "permanent": true
+    },
+    {
+      "source": "/product/wall-tie/index.php",
+      "destination": "/product/271",
+      "permanent": true
+    },
+    {
+      "source": "/product/water-trough/detail.php",
+      "destination": "/product/47",
+      "permanent": true
+    },
+    {
+      "source": "/product/water-trough/index.php",
+      "destination": "/product/47",
+      "permanent": true
+    },
+    {
+      "source": "/product/weighing-scales/detail.php",
+      "destination": "/product/95",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/access-scaffold-euro-frame",
+      "destination": "/products/scaffolding-formworks/access-scaffold-euro-frame",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/accessories-for-gates",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/contact",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/enquiry/adjustable-y-type-post-support-with-long-nut/enquiry.php",
+      "destination": "/product/337",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/enquiry/tube-connector/enquiry.php",
+      "destination": "/product/66",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/enquiry/water-barrier-with-disc/enquiry.php",
+      "destination": "/product/163",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/farrowing-pens",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/formwork-accessories",
+      "destination": "/products/scaffolding-formworks/formwork-accessories",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/gestation-pens",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/horse",
+      "destination": "/products/livestock-housing-solutions/horse",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/horse-handling-equipments",
+      "destination": "/products/livestock-housing-solutions/horse",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/load-bearing-system-shoring-tower",
+      "destination": "/products/scaffolding-formworks/load-bearing-system-shoring-tower",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/miscellaneous-products",
+      "destination": "/products/wood-connectors/miscellaneous-products",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/mounting-accessories",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/pasture-gates",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/product/props-en-1065-class-bd/detail.php",
+      "destination": "/product/386",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/product/standard-prop-class-b/detail.php",
+      "destination": "/product/35",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/product/stud-gate-hanger-without-washer/detail.php",
+      "destination": "/product/112",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/product/system-scaffolds---hk/detail.php",
+      "destination": "/product/19",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/product/tube-connector/detail.php",
+      "destination": "/product/66",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/product/wall-mount-bottom-bracket/detail.php",
+      "destination": "/product/71",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/quality-policy",
+      "destination": "/certifications",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/round-feeder",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/scaffold-tube-fitting-british-and-american",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/scaffolding-formworks",
+      "destination": "/products/scaffolding-formworks",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/sheep-headlocks",
+      "destination": "/product/89",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/slab-formwork-system-props",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-props",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/system-slab-formwork-tripods",
+      "destination": "/products/scaffolding-formworks/system-slab-formwork-tripods",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/wall-formwork-systems-clamps-panel",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/weighing-scale",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/public/index.php/who-we-are",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/public/who-we-are.php",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/sheep-headlocks",
+      "destination": "/product/89",
+      "permanent": true
+    },
+    {
+      "source": "/system-scaffolds---hk",
+      "destination": "/product/19",
+      "permanent": true
     }
   ],
   "rewrites": [
