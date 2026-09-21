@@ -130,7 +130,7 @@ export default function Footer() {
             2-up then 5-up desktop grid as before. */}
         <div className="container-page relative z-10 grid grid-cols-2 gap-x-8 gap-y-12 py-14 lg:grid-cols-[1.25fr_1fr_1.15fr_1fr_1.35fr] lg:py-16">
           <div className="col-span-2 lg:col-span-1">
-            <Logo light />
+            <Logo light belowFold />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/55">{lt('footer.about', company.description)}</p>
 
             <div className="mt-7 flex gap-2.5">
