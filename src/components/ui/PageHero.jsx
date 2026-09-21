@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import AnimatedCounter from './AnimatedCounter';
+import { heroSrcSet } from '../../data/images';
 import { EASE } from '../../lib/motion';
 import { useLT } from '../../i18n/LocaleContext';
 
@@ -47,6 +48,7 @@ const GRADE = { filter: 'saturate(0.4) contrast(1.2) brightness(0.99)', tint: 0.
  * a safe direction for the contrast solve.
  */
 const GUTTER = 'container-full';
+
 
 /**
  * `align="center"` is for the imageless heroes only (the legal pages). The default
@@ -111,6 +113,8 @@ export default function PageHero({
               <img
                 key={src}
                 src={src}
+                srcSet={heroSrcSet(src)}
+                sizes="100vw"
                 alt=""
                 loading="eager"
                 className={`absolute inset-0 h-full w-full object-cover object-[55%_40%] transition-opacity duration-1000 ${

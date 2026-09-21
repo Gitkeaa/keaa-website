@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import Button from '../ui/Button';
 import { EASE } from '../../lib/motion';
 import { useLT } from '../../i18n/LocaleContext';
+import { heroSrcSet } from '../../data/images';
 
 /**
  * The framed hero carousel used on every interior page except Home — in the style of the
@@ -47,6 +48,11 @@ export default function GalleryHero({ slides = [], crumbs = [], cta, interval = 
           <img
             key={s.image}
             src={s.image}
+            /* data/heroSlides.js builds one 1600px rendition per slide and every device
+               was downloading it, which is most of the contact page LCP on a phone. Same
+               Cloudinary transform, different `w_`. */
+            srcSet={heroSrcSet(s.image)}
+            sizes="100vw"
             alt=""
             loading="eager"
             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${

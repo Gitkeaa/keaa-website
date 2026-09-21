@@ -108,3 +108,17 @@ export const img = {
 export const atWidth = (url, w) => url.replace(/,w_\d+/, `,w_${w}`);
 export const imgSrcSet = (url, widths = [480, 768, 1024, 1280, 1600]) =>
   widths.map((w) => `${atWidth(url, w)} ${w}w`).join(', ');
+
+/**
+ * The srcSet for a full-bleed hero photograph.
+ *
+ * Hero sources are built at a single width (1600px or 1920px depending on which file
+ * declares them) and every device downloaded that one rendition, phones included. These are
+ * the same Cloudinary transform with a different `w_`, so the only cost is the attribute.
+ *
+ * Returns undefined when the URL carries no width transform to rewrite, which leaves images
+ * this cannot help exactly as they were rather than emitting a srcSet of identical URLs.
+ * Used by ui/PageHero and gallery/GalleryHero; both render at 100vw.
+ */
+export const heroSrcSet = (url) =>
+  url && /,w_\d+/.test(url) ? imgSrcSet(url, [640, 960, 1280, 1600, 1920]) : undefined;

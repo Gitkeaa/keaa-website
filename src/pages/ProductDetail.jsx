@@ -158,6 +158,10 @@ export default function ProductDetail() {
                   tone="light"
                   ratio="aspect-square"
                   zoom={false}
+                  /* This is the product page's LCP element. See the note on `priority` in
+                     ui/ImagePlaceholder.jsx: it was lazy, which is the one place lazy costs
+                     rather than saves. */
+                  priority
                   className="!rounded-none"
                   caption={mainSrc ? undefined : lt('gallery.comingSoon', 'Image coming soon')}
                 />

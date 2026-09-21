@@ -114,7 +114,7 @@ export default function ProjectsGallery() {
               `withDesc` because this is the page where projects are actually read, not teased.
               Card widths mirror the Home rail exactly so the two read as one component. */}
           <CardRail
-            label={lt('featured.railLabel', 'Featured projects')}
+            label={lt('featured.railLabel', 'Application areas')}
             labels={projects.map((p, i) => lt('featured.show', 'Show {title}', { title: lt(`projects.${i}.title`, p.title) }))}
           >
             {projects.map((p, i) => (

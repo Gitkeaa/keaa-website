@@ -21,7 +21,7 @@ export default function ProjectCarousel({ projects, images }) {
     desc: ltGallery(`projects.${i}.desc`, p.desc),
   }));
   return (
-    <CardRail label={lt('projects.rail.label', 'Featured projects')} labels={translated.map((p) => lt('projects.rail.show', 'Show {title}', { title: p.title }))}>
+    <CardRail label={lt('projects.rail.label', 'Application areas')} labels={translated.map((p) => lt('projects.rail.show', 'Show {title}', { title: p.title }))}>
       {translated.map((p, i) => (
         <ProjectCard
           key={projects[i].title}

@@ -24,6 +24,19 @@ export default function ImagePlaceholder({
   overlay = false,
   zoom = true,
   caption,
+  /**
+   * For the one image on a page that is its Largest Contentful Paint.
+   *
+   * The default treatment is right for the many photos that sit below the fold: lazy, and
+   * faded in over half a second once decoded. Applied to the image the page is MEASURED
+   * on, it is doubly wrong. Lazy loading tells the browser it may wait, and an image held
+   * at opacity 0 has not been painted, so the fade postpones the very moment LCP records.
+   * On a product page that image is the main product photograph.
+   *
+   * Set this on exactly one image per page. Setting it on several is the same as setting
+   * it on none, because it works by telling the browser what to fetch FIRST.
+   */
+  priority = false,
 }) {
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
@@ -59,11 +72,19 @@ export default function ImagePlaceholder({
           srcSet={resolvedSrcSet}
           sizes={resolvedSizes}
           alt={alt || label || ''}
-          loading="lazy"
+          loading={priority ? 'eager' : 'lazy'}
+          // Lowercase on purpose: React 18.3 does not recognise the camelCase spelling
+          // and drops it with a warning. Same reasoning as layout/Logo.jsx.
+          fetchpriority={priority ? 'high' : undefined}
+          decoding={priority ? 'sync' : 'async'}
           onLoad={() => setLoaded(true)}
           onError={() => setErrored(true)}
-          className={`h-full w-full object-cover transition-opacity duration-500 ${
-            loaded ? 'opacity-100' : 'opacity-0'
+          // A priority image is painted the moment it arrives. The fade is a nicety for
+          // photos that stream in below the fold; on the LCP element it is only a delay.
+          className={`h-full w-full object-cover ${
+            priority
+              ? ''
+              : `transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`
           } ${zoom ? 'group-hover:scale-110' : ''}`}
           style={{ transitionProperty: 'opacity, transform', transitionDuration: '500ms, 700ms' }}
         />
