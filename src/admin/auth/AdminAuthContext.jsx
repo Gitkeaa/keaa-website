@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { api, API_LABEL } from '../api/client';
+import { isPrerender } from '../../lib/prerender';
 
 /**
  * Map a failed login call to a stable code and the admin console's own wording.
@@ -68,6 +69,30 @@ export function AdminAuthProvider({ children }) {
   }, [user]);
 
   useEffect(() => {
+    /**
+     * Nobody is signed in while the site is being snapshotted at build time, and there is no
+     * API on the other end to ask.
+     *
+     * Without this guard the call was made anyway, the prerender server answered it with the
+     * index page rather than a 401, and a truthy non-user came back. Every page then had a
+     * SIGNED-IN header baked into its static HTML: a blank account button whose accessible
+     * name was literally "undefined, Account menu", shown to every visitor until JavaScript
+     * corrected it. Measured on the live site on 2026-09-21, every page except the home page
+     * carried it.
+     *
+     * It is also what stopped the page being hydrated. The prerendered markup said signed in,
+     * the browser said signed out, React gave up on the server HTML and rebuilt the whole
+     * tree, and the page visibly jumped. See the note in main.jsx.
+     *
+     * Signed out is the honest answer for a static page, and it is what a visitor sees first
+     * either way. A staff member with a live session gets the signed-in header a moment later
+     * when the real call resolves, which is a state change after hydration rather than a
+     * disagreement with it.
+     */
+    if (isPrerender()) {
+      setChecking(false);
+      return undefined;
+    }
     let alive = true;
     api
       .get('/api/auth/me')
