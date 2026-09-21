@@ -83,12 +83,28 @@ function buildBreadcrumbList(crumbs) {
  * @param {Array}    opts.breadcrumbs  `[{ label, to }]` -> emitted as a BreadcrumbList.
  * @param {object|Array} opts.schema   Extra schema.org object(s), e.g. a Product.
  * @param {boolean}  opts.noindex      Keep the page out of the index entirely.
+ * @param {boolean}  opts.appendSiteName
+   Whether to append " | KEAA International". True for the ordinary case, where a page
+   supplies a bare subject. Pass false when the title already ends in the brand, which
+   product and range pages do: their titles are composed to a 60 character budget by
+   data/seoKeywords.js, and appending to that would push the useful words past where
+   Google truncates.
  */
-export default function useSEO({ title, description, image, breadcrumbs, schema, noindex = false }) {
+export default function useSEO({
+  title,
+  description,
+  image,
+  breadcrumbs,
+  schema,
+  noindex = false,
+  appendSiteName = true,
+}) {
   const location = useLocation();
 
   useEffect(() => {
-    const fullTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
+    const fullTitle = title
+      ? (appendSiteName ? `${title} | ${SITE_NAME}` : title)
+      : SITE_NAME;
     document.title = fullTitle;
 
     /**
@@ -145,7 +161,7 @@ export default function useSEO({ title, description, image, breadcrumbs, schema,
         document.head.appendChild(el);
       }
     }
-  }, [title, description, image, noindex, location.pathname]);
+  }, [title, description, image, noindex, appendSiteName, location.pathname]);
 
   /**
    * Serialised rather than passed by reference: pages build these arrays/objects inline in

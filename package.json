@@ -20,7 +20,8 @@
     "check:leak": "node scripts/check-english-leak.mjs",
     "gen:proof": "node scripts/gen-proof-pdf.mjs",
     "snapshot:text": "node scripts/snapshot-text.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check:seo-keywords": "node scripts/check-seo-keywords.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",

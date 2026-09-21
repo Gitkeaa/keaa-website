@@ -6,6 +6,7 @@ import Badge from '../components/ui/Badge';
 import ProductCard from '../components/products/ProductCard';
 import CtaBand from '../components/CtaBand';
 import useSEO, { absoluteUrl } from '../hooks/useSEO';
+import { productTitle, productDescription } from '../data/seoKeywords';
 import { getProductById, getRelatedProducts, publicIdFromCloudinaryUrl } from '../data/productHelpers';
 import { cldImage } from '../data/cloudinary';
 import { useLT, useProductL10n } from '../i18n/LocaleContext';
@@ -99,9 +100,23 @@ export default function ProductDetail() {
       }
     : undefined;
 
+  /**
+   * The title used to be the bare product name, so 355 pages competed for phrases like
+   * "Accessories" and "Ledger" with nothing to say what they were. The description was
+   * the raw `description` field, which on many products is a spec string such as
+   * "Powder Coated / Hot Dip Galvanized as per DIN EN 1461": true, and useless as the one
+   * line a buyer reads in a search result.
+   *
+   * Both are now composed from the product data and its range keyword. See
+   * data/seoKeywords.js for the templates and the length budgets.
+   *
+   * Translated titles are deliberately NOT used here. The keyword is the English phrase
+   * buyers search, and a localised page still wants to be found for it.
+   */
   useSEO({
-    title: product ? product.name : lt('seo.title', 'Product'),
-    description: product?.description || subName,
+    title: product ? productTitle(product) : lt('seo.title', 'Product'),
+    description: product ? productDescription(product) : subName,
+    appendSiteName: !product,
     breadcrumbs,
     schema: productSchema,
   });

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import SectionHeading from '../ui/SectionHeading';
 import { getCategoryPillar } from '../../data/categoryPillars';
+import { getSubcategoryPillar } from '../../data/subcategoryPillars';
+import Button from '../ui/Button';
 import { company } from '../../data/company';
 import { useLT } from '../../i18n/LocaleContext';
 
@@ -16,23 +18,34 @@ import { useLT } from '../../i18n/LocaleContext';
  * the essay goes underneath. Search engines read the whole document either way. Putting it
  * above would push the products below the fold to serve a crawler, which is the wrong trade.
  *
- * ONLY ON THE CATEGORY PAGE, NEVER A SUBCATEGORY
- * ----------------------------------------------
- * The caller renders this only when no subcategory is selected. Repeating the same 400 words
- * on all seventeen subcategory pages of a category would make them near-duplicates of each
- * other, which is the problem this whole exercise exists to fix.
+ * ONE COMPONENT, TWO SCOPES
+ * -------------------------
+ * Pass `category` alone and it renders the category pillar. Pass `subcategory` as well and it
+ * renders that range's own pillar from data/subcategoryPillars.js instead.
  *
- * The component list is read from the live subcategory names rather than written out here,
- * so adding a subcategory to the catalogue updates the copy automatically.
+ * The two never carry the same words. That was the original reason this was category-only:
+ * repeating one essay across seventeen subcategory pages would make them near-duplicates,
+ * which is the problem the exercise exists to fix. Every subcategory now has copy written for
+ * it alone, so the pages are distinct rather than absent.
+ *
+ * The component list is read from the live subcategory names rather than written out here, so
+ * adding a subcategory to the catalogue updates the category copy automatically. A subcategory
+ * has no children, so it shows no chips and states its contents in prose instead.
  */
-export default function CategoryPillar({ category }) {
+export default function CategoryPillar({ category, subcategory }) {
   const lt = useLT('catalog');
-  const pillar = getCategoryPillar(category?.slug);
+  const pillar = subcategory
+    ? getSubcategoryPillar(subcategory.slug)
+    : getCategoryPillar(category?.slug);
   const [openFaq, setOpenFaq] = useState(null);
 
   if (!pillar) return null;
 
-  const subs = category.subcategories || [];
+  // Translation key namespace. Subcategory copy is new and untranslated, so `lt` falls back to
+  // the English written in the data file, which is the correct behaviour until it is translated.
+  const key = subcategory ? `subpillar.${subcategory.slug}` : `pillar.${category.slug}`;
+  const heading = subcategory ? lt(`sub.${subcategory.slug}.name`, subcategory.name) : category.name;
+  const subs = subcategory ? [] : category.subcategories || [];
   const countries = company.stats.find((s) => s.label === 'Countries Exported')?.value;
 
   return (
@@ -41,12 +54,12 @@ export default function CategoryPillar({ category }) {
         <SectionHeading
           align="left"
           eyebrow={lt('pillar.eyebrow', 'About this range')}
-          title={lt(`pillar.${category.slug}.title`, category.name)}
+          title={lt(`${key}.title`, heading)}
           className="!mx-0"
         />
 
         <div className="mt-6 max-w-3xl">
-          <p className="body-copy">{lt(`pillar.${category.slug}.intro`, pillar.intro)}</p>
+          <p className="body-copy">{lt(`${key}.intro`, pillar.intro)}</p>
         </div>
 
         {/* The component list, read from the catalogue rather than repeated in prose, and
@@ -76,9 +89,9 @@ export default function CategoryPillar({ category }) {
           {pillar.sections.map((sec, i) => (
             <div key={sec.heading}>
               <h3 className="font-display text-lg font-bold text-text">
-                {lt(`pillar.${category.slug}.sections.${i}.heading`, sec.heading)}
+                {lt(`${key}.sections.${i}.heading`, sec.heading)}
               </h3>
-              <p className="body-copy mt-2.5">{lt(`pillar.${category.slug}.sections.${i}.body`, sec.body)}</p>
+              <p className="body-copy mt-2.5">{lt(`${key}.sections.${i}.body`, sec.body)}</p>
             </div>
           ))}
         </div>
@@ -102,6 +115,26 @@ export default function CategoryPillar({ category }) {
             ))}
         </ul>
 
+        {/* The ask, at the point someone has just read what the range is and what it is made
+            to. Range pages only: the three category pages were signed off without one and
+            changing a page that is already working is not what this exercise is for. */}
+        {subcategory && (
+          <div className="mt-12 rounded-card border border-primary/25 bg-primary/5 px-6 py-6 sm:px-8">
+            <h3 className="font-display text-lg font-bold text-text">
+              {lt('pillar.ctaTitle', 'Need a quotation for this range?')}
+            </h3>
+            <p className="body-copy mt-2 max-w-2xl">
+              {lt(
+                'pillar.ctaBody',
+                'Send the sizes, finish and quantities you need. We manufacture in our own plants in Ludhiana, India and export to more than 42 countries, so quotations are for container volumes as readily as for single lines.',
+              )}
+            </p>
+            <Button to="/request-a-quote" className="mt-5">
+              {lt('pillar.ctaButton', 'Request a Quote')}
+            </Button>
+          </div>
+        )}
+
         {pillar.faqs?.length > 0 && (
           <div className="mt-14 max-w-3xl">
             <h3 className="font-display text-xl font-bold text-text">
@@ -119,7 +152,7 @@ export default function CategoryPillar({ category }) {
                       className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
                     >
                       <span className="text-sm font-semibold text-navy-800">
-                        {lt(`pillar.${category.slug}.faqs.${i}.q`, f.q)}
+                        {lt(`${key}.faqs.${i}.q`, f.q)}
                       </span>
                       <ChevronDown
                         className={`h-4 w-4 flex-shrink-0 text-muted transition-transform ${open ? 'rotate-180' : ''}`}
@@ -131,7 +164,7 @@ export default function CategoryPillar({ category }) {
                         correspond to. Structured data that describes text the page does not
                         contain is a Google policy violation. */}
                     <div className={open ? 'px-5 pb-5' : 'hidden'}>
-                      <p className="body-copy">{lt(`pillar.${category.slug}.faqs.${i}.a`, f.a)}</p>
+                      <p className="body-copy">{lt(`${key}.faqs.${i}.a`, f.a)}</p>
                     </div>
                   </div>
                 );
