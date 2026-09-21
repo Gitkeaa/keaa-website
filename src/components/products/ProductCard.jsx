@@ -3,6 +3,7 @@ import ImagePlaceholder from '../ui/ImagePlaceholder';
 import Badge from '../ui/Badge';
 import { productImage, productSrcSet } from '../../data/productHelpers';
 import { useLT, useProductL10n } from '../../i18n/LocaleContext';
+import { productPath } from '../../data/productPaths';
 
 // Card widths across the grid's breakpoints (2/3/4/5 columns), so the browser fetches a
 // right-sized WebP/AVIF instead of one fixed file.
@@ -25,7 +26,7 @@ export default function ProductCard({ product }) {
 
   return (
     <Link
-      to={`/product/${product.id}`}
+      to={productPath(product.id) || `/product/${product.id}`}
       className="group flex h-full flex-col overflow-hidden rounded-card border border-navy-100 bg-white shadow-card outline-none transition-shadow duration-300 hover:shadow-cardHover focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
     >
       <div className="relative overflow-hidden bg-navy-50">

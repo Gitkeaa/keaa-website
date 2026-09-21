@@ -7,6 +7,7 @@ import SectionHeading from '../components/ui/SectionHeading';
 import Button from '../components/ui/Button';
 import { getLandingPage } from '../data/landingPages';
 import { getProductById } from '../data/productHelpers';
+import { productPath } from '../data/productPaths';
 import { img } from '../data/images';
 import { useLT } from '../i18n/LocaleContext';
 
@@ -196,7 +197,7 @@ export default function LandingPage() {
                 {products.map((p) => (
                   <li key={p.id}>
                     <Link
-                      to={`/product/${p.id}`}
+                      to={productPath(p.id) || `/product/${p.id}`}
                       className="flex h-full flex-col rounded-card border border-navy-100 bg-white px-4 py-3.5 transition-colors hover:border-primary/60"
                     >
                       <span className="text-sm font-semibold text-navy-800">{p.name}</span>

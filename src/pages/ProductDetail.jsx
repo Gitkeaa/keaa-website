@@ -8,6 +8,7 @@ import CtaBand from '../components/CtaBand';
 import useSEO, { absoluteUrl } from '../hooks/useSEO';
 import { productTitle, productDescription } from '../data/seoKeywords';
 import { getProductById, getRelatedProducts, publicIdFromCloudinaryUrl } from '../data/productHelpers';
+import { productPath, productIdFromSlug } from '../data/productPaths';
 import { cldImage } from '../data/cloudinary';
 import { useLT, useProductL10n } from '../i18n/LocaleContext';
 
@@ -27,7 +28,17 @@ export default function ProductDetail() {
   const lt = useLT('product');
   const ltc = useLT('catalog');
   const { lp } = useProductL10n();
-  const { id } = useParams();
+  /**
+   * Two URL shapes reach this page.
+   *
+   * The readable one, /products/<category>/<subcategory>/<slug>, is what everything links to
+   * and what the sitemap carries. The numeric one, /product/136, is the old shape: middleware
+   * 301s it at the edge before React loads, so a visitor or a crawler only sees it if they
+   * navigate inside the app. Resolving both here means an in-app link that missed the
+   * migration still lands on the right product rather than a not-found page.
+   */
+  const { id: numericId, categorySlug, subSlug, productSlug } = useParams();
+  const id = productSlug ? String(productIdFromSlug(categorySlug, subSlug, productSlug) ?? '') : numericId;
   // The catalogue entry, with its name, description and specification rows in the active
   // language (the same object when nothing is translated, see localizeProduct.js).
   const product = lp(getProductById(id));
@@ -68,7 +79,7 @@ export default function ProductDetail() {
         '@context': 'https://schema.org',
         '@type': 'Product',
         name: product.name,
-        url: absoluteUrl(`/product/${product.id}`),
+        url: absoluteUrl(productPath(product.id) || `/product/${product.id}`),
         ...(product.description ? { description: product.description } : {}),
         ...(product.itemCode ? { sku: product.itemCode, mpn: product.itemCode } : {}),
         ...(product.cloudinaryImages?.length

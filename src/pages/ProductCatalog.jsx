@@ -11,6 +11,7 @@ import Button from '../components/ui/Button';
 import useSEO, { absoluteUrl } from '../hooks/useSEO';
 import { subcategoryTitle, subcategoryDescription } from '../data/seoKeywords';
 import { useLT, useProductL10n } from '../i18n/LocaleContext';
+import { productPath } from '../data/productPaths';
 import {
   getCategory,
   getProductsByCategory,
@@ -126,7 +127,7 @@ export default function ProductCatalog() {
           itemListElement: pageItems.map((p, i) => ({
             '@type': 'ListItem',
             position: start + i + 1,
-            url: absoluteUrl(`/product/${p.id}`),
+            url: absoluteUrl(productPath(p.id) || `/product/${p.id}`),
             name: lp(p).name,
           })),
         },
@@ -515,7 +516,7 @@ function ProductRow({ product }) {
   const src = productImage(product, { w: 200, h: 200, crop: 'fill' });
   return (
     <Link
-      to={`/product/${product.id}`}
+      to={productPath(product.id) || `/product/${product.id}`}
       className="group flex items-center gap-4 rounded-card border border-navy-100 bg-white p-3 shadow-card transition-shadow hover:shadow-cardHover"
     >
       <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-card">

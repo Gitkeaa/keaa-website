@@ -5,6 +5,7 @@ import { useT, useLT, useLocale, useProductL10n } from '../../i18n/LocaleContext
 import { localePrefixOf } from '../../i18n/languages';
 import { headerControl } from './headerControl';
 import HeaderHint from './HeaderHint';
+import { productPath } from '../../data/productPaths';
 
 /**
  * Site search, INLINE in the header.
@@ -237,7 +238,7 @@ export default function HeaderSearch({ onOpenChange }) {
           id: `p:${p.id}`,
           label: lp(p).name,
           hint: [p.itemCode, ltc(`sub.${p.subSlug}.name`, p.subcategory)].filter(Boolean).join(' · '),
-          to: `/product/${p.id}`,
+          to: productPath(p.id) || `/product/${p.id}`,
           kind: t('search.products'),
         });
       }

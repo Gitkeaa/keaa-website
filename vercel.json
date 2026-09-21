@@ -218,22 +218,7 @@
       "permanent": true
     },
     {
-      "source": "/product/:slug/:id(d+)",
-      "destination": "/product/:id",
-      "permanent": true
-    },
-    {
       "source": "/:page(index|home|products|product-list).html",
-      "destination": "/products",
-      "permanent": true
-    },
-    {
-      "source": "/page-coming-soon",
-      "destination": "/products",
-      "permanent": true
-    },
-    {
-      "source": "/page-coming-soon.html",
       "destination": "/products",
       "permanent": true
     },
@@ -263,26 +248,6 @@
       "permanent": true
     },
     {
-      "source": "/product/:slug/:id(\\d+)",
-      "destination": "/product/:id",
-      "permanent": true
-    },
-    {
-      "source": "/public/index.php/product/:slug/:id(\\d+)",
-      "destination": "/product/:id",
-      "permanent": true
-    },
-    {
-      "source": "/enquiry/:slug/:id(\\d+)",
-      "destination": "/product/:id",
-      "permanent": true
-    },
-    {
-      "source": "/public/index.php/enquiry/:slug/:id(\\d+)",
-      "destination": "/product/:id",
-      "permanent": true
-    },
-    {
       "source": "/access-scaffold-euro-frame",
       "destination": "/products/scaffolding-formworks/access-scaffold-euro-frame",
       "permanent": true
@@ -299,182 +264,182 @@
     },
     {
       "source": "/enquiry/5-bar-half-mesh-field-gates/enquiry.php",
-      "destination": "/product/305",
+      "destination": "/products/livestock-housing-solutions/field-gates/5-bar-half-mesh-field-gates",
       "permanent": true
     },
     {
       "source": "/enquiry/5-bar-half-mesh-field-gates/index.php",
-      "destination": "/product/305",
+      "destination": "/products/livestock-housing-solutions/field-gates/5-bar-half-mesh-field-gates",
       "permanent": true
     },
     {
       "source": "/enquiry/accessories/enquiry.php",
-      "destination": "/product/392",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-props/accessories-ac-sfsp-06",
       "permanent": true
     },
     {
       "source": "/enquiry/accessories/index.php",
-      "destination": "/product/392",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-props/accessories-ac-sfsp-06",
       "permanent": true
     },
     {
       "source": "/enquiry/adjustable-y-type-post-supports/enquiry.php",
-      "destination": "/product/335",
+      "destination": "/products/wood-connectors/adjustable-post-supports/adjustable-y-type-post-supports-aytps-2",
       "permanent": true
     },
     {
       "source": "/enquiry/adjustable-y-type-post-supports/index.php",
-      "destination": "/product/335",
+      "destination": "/products/wood-connectors/adjustable-post-supports/adjustable-y-type-post-supports-aytps-2",
       "permanent": true
     },
     {
       "source": "/enquiry/anchor-clamp-bend/index.php",
-      "destination": "/product/401",
+      "destination": "/products/scaffolding-formworks/wall-formwork-systems-clamps-panels/anchor-clamp-bend",
       "permanent": true
     },
     {
       "source": "/enquiry/base-jack-with-welded-tube/enquiry.php",
-      "destination": "/product/284",
+      "destination": "/products/scaffolding-formworks/accessories-jacks-nuts/base-jack-with-welded-tube",
       "permanent": true
     },
     {
       "source": "/enquiry/bottom-cup/index.php",
-      "destination": "/product/275",
+      "destination": "/products/scaffolding-formworks/system-scaffold-cuplock/bottom-cup",
       "permanent": true
     },
     {
       "source": "/enquiry/calf-jackets/enquiry.php",
-      "destination": "/product/297",
+      "destination": "/products/livestock-housing-solutions/pigs/calf-jackets",
       "permanent": true
     },
     {
       "source": "/enquiry/diagonal-barriers/enquiry.php",
-      "destination": "/product/42",
+      "destination": "/products/livestock-housing-solutions/cattle/diagonal-barriers",
       "permanent": true
     },
     {
       "source": "/enquiry/double-side-hay-basket/index.php",
-      "destination": "/product/90",
+      "destination": "/products/livestock-housing-solutions/sheep/double-side-hay-basket",
       "permanent": true
     },
     {
       "source": "/enquiry/euro-assembly-frame/enquiry.php",
-      "destination": "/product/410",
+      "destination": "/products/scaffolding-formworks/access-scaffold-euro-frame/euro-assembly-frame",
       "permanent": true
     },
     {
       "source": "/enquiry/eye-bolts/index.php",
-      "destination": "/product/108",
+      "destination": "/products/livestock-housing-solutions/field-gates/eye-bolts",
       "permanent": true
     },
     {
       "source": "/enquiry/fence-coupler-carriage-bolt-m12/enquiry.php",
-      "destination": "/product/204",
+      "destination": "/products/scaffolding-formworks/scaffold-tube-fitting-british-american/fence-coupler-carriage-bolt-m12",
       "permanent": true
     },
     {
       "source": "/enquiry/fork-head---rod/enquiry.php",
-      "destination": "/product/138",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-fork-heads/fork-head-rod",
       "permanent": true
     },
     {
       "source": "/enquiry/fork-head---rod/index.php",
-      "destination": "/product/138",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-fork-heads/fork-head-rod",
       "permanent": true
     },
     {
       "source": "/enquiry/fork-head-jack/index.php",
-      "destination": "/product/146",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-fork-heads/fork-head-jack",
       "permanent": true
     },
     {
       "source": "/enquiry/german-swivel-coupler/index.php",
-      "destination": "/product/181",
+      "destination": "/products/scaffolding-formworks/scaffold-tube-fitting-european/german-swivel-coupler",
       "permanent": true
     },
     {
       "source": "/enquiry/ground-plates-wedge-grip/enquiry.php",
-      "destination": "/product/359",
+      "destination": "/products/wood-connectors/pole-anchors-ground-plates/ground-plates-wedge-grip",
       "permanent": true
     },
     {
       "source": "/enquiry/ground-plates-wedge-grip/index.php",
-      "destination": "/product/359",
+      "destination": "/products/wood-connectors/pole-anchors-ground-plates/ground-plates-wedge-grip",
       "permanent": true
     },
     {
       "source": "/enquiry/guarder-gate-hanger-with-washer/index.php",
-      "destination": "/product/113",
+      "destination": "/products/livestock-housing-solutions/field-gates/guarder-gate-hanger-with-washer",
       "permanent": true
     },
     {
       "source": "/enquiry/hang-on-basket/enquiry.php",
-      "destination": "/product/91",
+      "destination": "/products/livestock-housing-solutions/sheep/hang-on-basket",
       "permanent": true
     },
     {
       "source": "/enquiry/hang-on-basket/index.php",
-      "destination": "/product/91",
+      "destination": "/products/livestock-housing-solutions/sheep/hang-on-basket",
       "permanent": true
     },
     {
       "source": "/enquiry/l-type-post-supports/index.php",
-      "destination": "/product/327",
+      "destination": "/products/wood-connectors/post-supports/l-type-post-supports-ltpsbtm",
       "permanent": true
     },
     {
       "source": "/enquiry/light-duty-props-10-kn/enquiry.php",
-      "destination": "/product/135",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-props/light-duty-props-10-kn",
       "permanent": true
     },
     {
       "source": "/enquiry/neck-rail-clamp-with-long-plate/index.php",
-      "destination": "/product/55",
+      "destination": "/products/livestock-housing-solutions/cattle/neck-rail-clamp-with-long-plate",
       "permanent": true
     },
     {
       "source": "/enquiry/non-return-gate/index.php",
-      "destination": "/product/98",
+      "destination": "/products/livestock-housing-solutions/sheep/non-return-gate",
       "permanent": true
     },
     {
       "source": "/enquiry/perforated-plates-type-b/enquiry.php",
-      "destination": "/product/320",
+      "destination": "/products/wood-connectors/indoor-wood-connectors/perforated-plates-type-b",
       "permanent": true
     },
     {
       "source": "/enquiry/toe-board/enquiry.php",
-      "destination": "/product/272",
+      "destination": "/products/scaffolding-formworks/system-scaffolds-ringlock/toe-board",
       "permanent": true
     },
     {
       "source": "/enquiry/toe-board/index.php",
-      "destination": "/product/272",
+      "destination": "/products/scaffolding-formworks/system-scaffolds-ringlock/toe-board",
       "permanent": true
     },
     {
       "source": "/enquiry/tripod---heavy-duty/enquiry.php",
-      "destination": "/product/150",
+      "destination": "/products/scaffolding-formworks/system-slab-formwork-tripods/tripod-heavy-duty",
       "permanent": true
     },
     {
       "source": "/enquiry/tripod---square-tube-medium-duty/enquiry.php",
-      "destination": "/product/151",
+      "destination": "/products/scaffolding-formworks/system-slab-formwork-tripods/tripod-square-tube-medium-duty",
       "permanent": true
     },
     {
       "source": "/enquiry/tripod---universal-model/enquiry.php",
-      "destination": "/product/152",
+      "destination": "/products/scaffolding-formworks/system-slab-formwork-tripods/tripod-universal-model",
       "permanent": true
     },
     {
       "source": "/enquiry/u-head-jack/enquiry.php",
-      "destination": "/product/145",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-fork-heads/u-head-jack",
       "permanent": true
     },
     {
       "source": "/enquiry/walk-through-frame/enquiry.php",
-      "destination": "/product/370",
+      "destination": "/products/scaffolding-formworks/access-scaffold-american-frame/walk-through-frame",
       "permanent": true
     },
     {
@@ -509,652 +474,652 @@
     },
     {
       "source": "/product/accessories/detail.php",
-      "destination": "/product/392",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-props/accessories-ac-sfsp-06",
       "permanent": true
     },
     {
       "source": "/product/adjustable-clamp/index.php",
-      "destination": "/product/130",
+      "destination": "/products/livestock-housing-solutions/pigs/adjustable-clamp",
       "permanent": true
     },
     {
       "source": "/product/adjustable-l-type-post-supports/detail.php",
-      "destination": "/product/336",
+      "destination": "/products/wood-connectors/adjustable-post-supports/adjustable-l-type-post-supports",
       "permanent": true
     },
     {
       "source": "/product/adjustable-l-type-post-supports/index.php",
-      "destination": "/product/336",
+      "destination": "/products/wood-connectors/adjustable-post-supports/adjustable-l-type-post-supports",
       "permanent": true
     },
     {
       "source": "/product/anchor-clamp-bend/detail.php",
-      "destination": "/product/401",
+      "destination": "/products/scaffolding-formworks/wall-formwork-systems-clamps-panels/anchor-clamp-bend",
       "permanent": true
     },
     {
       "source": "/product/anchor-footdw-15/detail.php",
-      "destination": "/product/398",
+      "destination": "/products/scaffolding-formworks/wall-formwork-systems-clamps-panels/anchor-footdw-15",
       "permanent": true
     },
     {
       "source": "/product/angle-connectors/detail.php",
-      "destination": "/product/310",
+      "destination": "/products/wood-connectors/indoor-wood-connectors/angle-connectors-ac1",
       "permanent": true
     },
     {
       "source": "/product/base-jack-with-welded-tube/detail.php",
-      "destination": "/product/284",
+      "destination": "/products/scaffolding-formworks/accessories-jacks-nuts/base-jack-with-welded-tube",
       "permanent": true
     },
     {
       "source": "/product/base-jack-with-welded-tube/index.php",
-      "destination": "/product/284",
+      "destination": "/products/scaffolding-formworks/accessories-jacks-nuts/base-jack-with-welded-tube",
       "permanent": true
     },
     {
       "source": "/product/boltdown-post-supports/detail.php",
-      "destination": "/product/330",
+      "destination": "/products/wood-connectors/post-supports/boltdown-post-supports",
       "permanent": true
     },
     {
       "source": "/product/bottom-cup/index.php",
-      "destination": "/product/275",
+      "destination": "/products/scaffolding-formworks/system-scaffold-cuplock/bottom-cup",
       "permanent": true
     },
     {
       "source": "/product/brisket-board-clamp/detail.php",
-      "destination": "/product/63",
+      "destination": "/products/livestock-housing-solutions/cattle/brisket-board-clamp",
       "permanent": true
     },
     {
       "source": "/product/brisket-board-plate/index.php",
-      "destination": "/product/64",
+      "destination": "/products/livestock-housing-solutions/cattle/brisket-board-plate",
       "permanent": true
     },
     {
       "source": "/product/builder-clamp/detail.php",
-      "destination": "/product/174",
+      "destination": "/products/scaffolding-formworks/wall-formwork-systems-clamps-panels/builder-clamp",
       "permanent": true
     },
     {
       "source": "/product/calf-feed-trough/detail.php",
-      "destination": "/product/48",
+      "destination": "/products/livestock-housing-solutions/cattle/calf-feed-trough",
       "permanent": true
     },
     {
       "source": "/product/calf-jackets/detail.php",
-      "destination": "/product/297",
+      "destination": "/products/livestock-housing-solutions/pigs/calf-jackets",
       "permanent": true
     },
     {
       "source": "/product/calf-pen/index.php",
-      "destination": "/product/121",
+      "destination": "/products/livestock-housing-solutions/calves/calf-pen",
       "permanent": true
     },
     {
       "source": "/product/crow-bars/detail.php",
-      "destination": "/product/220",
+      "destination": "/products/scaffolding-formworks/security-systems-guard-rails-railing-posts/crow-bars",
       "permanent": true
     },
     {
       "source": "/product/crowd-control-barrier/index.php",
-      "destination": "/product/224",
+      "destination": "/products/scaffolding-formworks/trestles-barriers/crowd-control-barrier",
       "permanent": true
     },
     {
       "source": "/product/cuplock-standard/detail.php",
-      "destination": "/product/23",
+      "destination": "/products/scaffolding-formworks/system-scaffold-cuplock/cuplock-standard",
       "permanent": true
     },
     {
       "source": "/product/cuplock-standard/index.php",
-      "destination": "/product/23",
+      "destination": "/products/scaffolding-formworks/system-scaffold-cuplock/cuplock-standard",
       "permanent": true
     },
     {
       "source": "/product/diagonal-barriers/detail.php",
-      "destination": "/product/42",
+      "destination": "/products/livestock-housing-solutions/cattle/diagonal-barriers",
       "permanent": true
     },
     {
       "source": "/product/diagonal-barriers/index.php",
-      "destination": "/product/42",
+      "destination": "/products/livestock-housing-solutions/cattle/diagonal-barriers",
       "permanent": true
     },
     {
       "source": "/product/double-head-clamp/detail.php",
-      "destination": "/product/54",
+      "destination": "/products/livestock-housing-solutions/cattle/double-head-clamp-325018",
       "permanent": true
     },
     {
       "source": "/product/enhak-standard/detail.php",
-      "destination": "/product/18",
+      "destination": "/products/scaffolding-formworks/system-scaffolds-hk/enhak-standard",
       "permanent": true
     },
     {
       "source": "/product/enhak-standard/index.php",
-      "destination": "/product/18",
+      "destination": "/products/scaffolding-formworks/system-scaffolds-hk/enhak-standard",
       "permanent": true
     },
     {
       "source": "/product/extension-assemblies/index.php",
-      "destination": "/product/175",
+      "destination": "/products/scaffolding-formworks/wall-formwork-systems-clamps-panels/extension-assemblies",
       "permanent": true
     },
     {
       "source": "/product/farrowing-crate/detail.php",
-      "destination": "/product/123",
+      "destination": "/products/livestock-housing-solutions/pigs/farrowing-crate",
       "permanent": true
     },
     {
       "source": "/product/feed-bowls/detail.php",
-      "destination": "/product/127",
+      "destination": "/products/livestock-housing-solutions/pigs/feed-bowls",
       "permanent": true
     },
     {
       "source": "/product/feed-bowls/index.php",
-      "destination": "/product/127",
+      "destination": "/products/livestock-housing-solutions/pigs/feed-bowls",
       "permanent": true
     },
     {
       "source": "/product/fence-coupler-allen-key-bolt-m-12/detail.php",
-      "destination": "/product/205",
+      "destination": "/products/scaffolding-formworks/scaffold-tube-fitting-british-american/fence-coupler-allen-key-bolt-m-12",
       "permanent": true
     },
     {
       "source": "/product/foot-clamp/index.php",
-      "destination": "/product/129",
+      "destination": "/products/livestock-housing-solutions/pigs/foot-clamp",
       "permanent": true
     },
     {
       "source": "/product/fork-head---rod/detail.php",
-      "destination": "/product/138",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-fork-heads/fork-head-rod",
       "permanent": true
     },
     {
       "source": "/product/fork-head---u-strip/detail.php",
-      "destination": "/product/142",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-fork-heads/fork-head-u-strip",
       "permanent": true
     },
     {
       "source": "/product/fork-head---u-strip/index.php",
-      "destination": "/product/142",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-fork-heads/fork-head-u-strip",
       "permanent": true
     },
     {
       "source": "/product/fork-head-jack/detail.php",
-      "destination": "/product/146",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-fork-heads/fork-head-jack",
       "permanent": true
     },
     {
       "source": "/product/german-right-angle-coupler/detail.php",
-      "destination": "/product/180",
+      "destination": "/products/scaffolding-formworks/scaffold-tube-fitting-european/german-right-angle-coupler",
       "permanent": true
     },
     {
       "source": "/product/german-swivel-coupler/detail.php",
-      "destination": "/product/181",
+      "destination": "/products/scaffolding-formworks/scaffold-tube-fitting-european/german-swivel-coupler",
       "permanent": true
     },
     {
       "source": "/product/german-swivel-coupler/index.php",
-      "destination": "/product/181",
+      "destination": "/products/scaffolding-formworks/scaffold-tube-fitting-european/german-swivel-coupler",
       "permanent": true
     },
     {
       "source": "/product/giant-feed-headlock/detail.php",
-      "destination": "/product/40",
+      "destination": "/products/livestock-housing-solutions/cattle/giant-feed-headlock",
       "permanent": true
     },
     {
       "source": "/product/girder-coupler/index.php",
-      "destination": "/product/192",
+      "destination": "/products/scaffolding-formworks/scaffold-tube-fitting-european/girder-coupler-kigc-e",
       "permanent": true
     },
     {
       "source": "/product/gravity-pin/index.php",
-      "destination": "/product/375",
+      "destination": "/products/scaffolding-formworks/access-scaffold-american-frame/gravity-pin",
       "permanent": true
     },
     {
       "source": "/product/ground-plates-wedge-grip/detail.php",
-      "destination": "/product/359",
+      "destination": "/products/wood-connectors/pole-anchors-ground-plates/ground-plates-wedge-grip",
       "permanent": true
     },
     {
       "source": "/product/ground-plates-wedge-grip/index.php",
-      "destination": "/product/359",
+      "destination": "/products/wood-connectors/pole-anchors-ground-plates/ground-plates-wedge-grip",
       "permanent": true
     },
     {
       "source": "/product/ground-trough/detail.php",
-      "destination": "/product/132",
+      "destination": "/products/livestock-housing-solutions/sheep/ground-trough",
       "permanent": true
     },
     {
       "source": "/product/guard-rail---planks/detail.php",
-      "destination": "/product/210",
+      "destination": "/products/scaffolding-formworks/security-systems-guard-rails-railing-posts/guard-rail-planks",
       "permanent": true
     },
     {
       "source": "/product/guard-rail---tubes-(double-block)/index.php",
-      "destination": "/product/209",
+      "destination": "/products/scaffolding-formworks/security-systems-guard-rails-railing-posts/guard-rail-tubes-double-block",
       "permanent": true
     },
     {
       "source": "/product/guarder-gate-hanger-with-washer/detail.php",
-      "destination": "/product/113",
+      "destination": "/products/livestock-housing-solutions/field-gates/guarder-gate-hanger-with-washer",
       "permanent": true
     },
     {
       "source": "/product/guarder-gate-hanger-with-washer/index.php",
-      "destination": "/product/113",
+      "destination": "/products/livestock-housing-solutions/field-gates/guarder-gate-hanger-with-washer",
       "permanent": true
     },
     {
       "source": "/product/h-panel/detail.php",
-      "destination": "/product/178",
+      "destination": "/products/scaffolding-formworks/wall-formwork-systems-clamps-panels/h-panel",
       "permanent": true
     },
     {
       "source": "/product/h-panel/index.php",
-      "destination": "/product/178",
+      "destination": "/products/scaffolding-formworks/wall-formwork-systems-clamps-panels/h-panel",
       "permanent": true
     },
     {
       "source": "/product/half-coupler-with-l-strip-long--short/index.php",
-      "destination": "/product/189",
+      "destination": "/products/scaffolding-formworks/scaffold-tube-fitting-european/half-coupler-with-l-strip-long-short",
       "permanent": true
     },
     {
       "source": "/product/half-coupler-with-welded-v-strip/index.php",
-      "destination": "/product/191",
+      "destination": "/products/scaffolding-formworks/scaffold-tube-fitting-european/half-coupler-with-welded-v-strip",
       "permanent": true
     },
     {
       "source": "/product/half-coupler/detail.php",
-      "destination": "/product/403",
+      "destination": "/products/scaffolding-formworks/scaffold-tube-fitting-european/half-coupler-kihc",
       "permanent": true
     },
     {
       "source": "/product/half-coupler/index.php",
-      "destination": "/product/403",
+      "destination": "/products/scaffolding-formworks/scaffold-tube-fitting-european/half-coupler-kihc",
       "permanent": true
     },
     {
       "source": "/product/hang-on-basket/detail.php",
-      "destination": "/product/91",
+      "destination": "/products/livestock-housing-solutions/sheep/hang-on-basket",
       "permanent": true
     },
     {
       "source": "/product/hiefer-safety-headlocks/detail.php",
-      "destination": "/product/44",
+      "destination": "/products/livestock-housing-solutions/cattle/hiefer-safety-headlocks",
       "permanent": true
     },
     {
       "source": "/product/high-tensile-material/detail.php",
-      "destination": "/product/144",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-fork-heads/high-tensile-material",
       "permanent": true
     },
     {
       "source": "/product/inserted-railing-post---planks/index.php",
-      "destination": "/product/212",
+      "destination": "/products/scaffolding-formworks/security-systems-guard-rails-railing-posts/inserted-railing-post-planks",
       "permanent": true
     },
     {
       "source": "/product/jack-nut-casted/index.php",
-      "destination": "/product/288",
+      "destination": "/products/scaffolding-formworks/accessories-jacks-nuts/jack-nut-casted-kijn-sl",
       "permanent": true
     },
     {
       "source": "/product/jack-nut-forged/index.php",
-      "destination": "/product/287",
+      "destination": "/products/scaffolding-formworks/accessories-jacks-nuts/jack-nut-forged-kijn-ss",
       "permanent": true
     },
     {
       "source": "/product/l-post-clamp/index.php",
-      "destination": "/product/68",
+      "destination": "/products/livestock-housing-solutions/cattle/l-post-clamp",
       "permanent": true
     },
     {
       "source": "/product/l-type-post-supports/detail.php",
-      "destination": "/product/327",
+      "destination": "/products/wood-connectors/post-supports/l-type-post-supports-ltpsbtm",
       "permanent": true
     },
     {
       "source": "/product/light-duty-props-10-kn/index.php",
-      "destination": "/product/135",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-props/light-duty-props-10-kn",
       "permanent": true
     },
     {
       "source": "/product/manure-srapper/index.php",
-      "destination": "/product/296",
+      "destination": "/products/livestock-housing-solutions/pigs/manure-srapper",
       "permanent": true
     },
     {
       "source": "/product/multipurpose-plus-cubicle-divider/detail.php",
-      "destination": "/product/36",
+      "destination": "/products/livestock-housing-solutions/cattle/multipurpose-plus-cubicle-divider",
       "permanent": true
     },
     {
       "source": "/product/multipurpose-plus-cubicle-divider/index.php",
-      "destination": "/product/36",
+      "destination": "/products/livestock-housing-solutions/cattle/multipurpose-plus-cubicle-divider",
       "permanent": true
     },
     {
       "source": "/product/nut-sw-22/index.php",
-      "destination": "/product/395",
+      "destination": "/products/scaffolding-formworks/scaffold-tube-fitting-british-american/nut-sw-22",
       "permanent": true
     },
     {
       "source": "/product/perforated-plates-type-b/index.php",
-      "destination": "/product/320",
+      "destination": "/products/wood-connectors/indoor-wood-connectors/perforated-plates-type-b",
       "permanent": true
     },
     {
       "source": "/product/pig-tall-pin/index.php",
-      "destination": "/product/378",
+      "destination": "/products/scaffolding-formworks/access-scaffold-american-frame/pig-tall-pin",
       "permanent": true
     },
     {
       "source": "/product/pin-for-sleeve-coupler/index.php",
-      "destination": "/product/196",
+      "destination": "/products/scaffolding-formworks/scaffold-tube-fitting-european/pin-for-sleeve-coupler",
       "permanent": true
     },
     {
       "source": "/product/pole-anchors-for-square-post/detail.php",
-      "destination": "/product/347",
+      "destination": "/products/wood-connectors/pole-anchors-ground-plates/pole-anchors-for-square-post",
       "permanent": true
     },
     {
       "source": "/product/pole-anchors-for-square-post/index.php",
-      "destination": "/product/347",
+      "destination": "/products/wood-connectors/pole-anchors-ground-plates/pole-anchors-for-square-post",
       "permanent": true
     },
     {
       "source": "/product/pole-anchors-wedge-grip/index.php",
-      "destination": "/product/357",
+      "destination": "/products/wood-connectors/pole-anchors-ground-plates/pole-anchors-wedge-grip",
       "permanent": true
     },
     {
       "source": "/product/post-caps-ball/index.php",
-      "destination": "/product/361",
+      "destination": "/products/wood-connectors/post-caps/post-caps-ball",
       "permanent": true
     },
     {
       "source": "/product/post-caps-pyramid/detail.php",
-      "destination": "/product/360",
+      "destination": "/products/wood-connectors/post-caps/post-caps-pyramid",
       "permanent": true
     },
     {
       "source": "/product/post-caps-with-ss-nail/detail.php",
-      "destination": "/product/362",
+      "destination": "/products/wood-connectors/post-caps/post-caps-with-ss-nail",
       "permanent": true
     },
     {
       "source": "/product/post-with-plate/detail.php",
-      "destination": "/product/290",
+      "destination": "/products/livestock-housing-solutions/cattle/post-with-plate",
       "permanent": true
     },
     {
       "source": "/product/post-with-plate/index.php",
-      "destination": "/product/290",
+      "destination": "/products/livestock-housing-solutions/cattle/post-with-plate",
       "permanent": true
     },
     {
       "source": "/product/props-load-tested-for-20-kn/detail.php",
-      "destination": "/product/33",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-props/props-load-tested-for-20-kn",
       "permanent": true
     },
     {
       "source": "/product/push-pull-props/index.php",
-      "destination": "/product/136",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-props/push-pull-props",
       "permanent": true
     },
     {
       "source": "/product/reinforced-props/detail.php",
-      "destination": "/product/134",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-props/reinforced-props",
       "permanent": true
     },
     {
       "source": "/product/reinforced-props/index.php",
-      "destination": "/product/134",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-props/reinforced-props",
       "permanent": true
     },
     {
       "source": "/product/ringlock-diagonal-brace/detail.php",
-      "destination": "/product/12",
+      "destination": "/products/scaffolding-formworks/system-scaffolds-ringlock/ringlock-diagonal-brace",
       "permanent": true
     },
     {
       "source": "/product/ringlock-ledger/detail.php",
-      "destination": "/product/11",
+      "destination": "/products/scaffolding-formworks/system-scaffolds-ringlock/ringlock-ledger",
       "permanent": true
     },
     {
       "source": "/product/single-head-clamp/detail.php",
-      "destination": "/product/52",
+      "destination": "/products/livestock-housing-solutions/cattle/single-head-clamp-325016",
       "permanent": true
     },
     {
       "source": "/product/single-head-clamp/index.php",
-      "destination": "/product/52",
+      "destination": "/products/livestock-housing-solutions/cattle/single-head-clamp-325016",
       "permanent": true
     },
     {
       "source": "/product/single-mounting-bracket-for-cubicle-divider/index.php",
-      "destination": "/product/61",
+      "destination": "/products/livestock-housing-solutions/cattle/single-mounting-bracket-for-cubicle-divider",
       "permanent": true
     },
     {
       "source": "/product/standard-prop-class-b/index.php",
-      "destination": "/product/35",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-props/standard-prop-class-b",
       "permanent": true
     },
     {
       "source": "/product/stud-gate-hanger-with-washer/detail.php",
-      "destination": "/product/111",
+      "destination": "/products/livestock-housing-solutions/field-gates/stud-gate-hanger-with-washer",
       "permanent": true
     },
     {
       "source": "/product/stud-gate-hanger-with-washer/index.php",
-      "destination": "/product/111",
+      "destination": "/products/livestock-housing-solutions/field-gates/stud-gate-hanger-with-washer",
       "permanent": true
     },
     {
       "source": "/product/stud-type-l-gate-hanger-with-extra-leg/detail.php",
-      "destination": "/product/110",
+      "destination": "/products/livestock-housing-solutions/field-gates/stud-type-l-gate-hanger-with-extra-leg",
       "permanent": true
     },
     {
       "source": "/product/swivel-base-jack---light-duty/detail.php",
-      "destination": "/product/28",
+      "destination": "/products/scaffolding-formworks/accessories-jacks-nuts/swivel-base-jack-light-duty",
       "permanent": true
     },
     {
       "source": "/product/swivel-base-jack---light-duty/index.php",
-      "destination": "/product/28",
+      "destination": "/products/scaffolding-formworks/accessories-jacks-nuts/swivel-base-jack-light-duty",
       "permanent": true
     },
     {
       "source": "/product/swivel-coupler/index.php",
-      "destination": "/product/183",
+      "destination": "/products/scaffolding-formworks/scaffold-tube-fitting-european/swivel-coupler-kiswc-g",
       "permanent": true
     },
     {
       "source": "/product/swivel-wing-nut-with-combination-plate-100mm-casted/detail.php",
-      "destination": "/product/162",
+      "destination": "/products/scaffolding-formworks/formwork-accessories/swivel-wing-nut-with-combination-plate-100mm-casted",
       "permanent": true
     },
     {
       "source": "/product/swivel-wing-nut-with-combination-plate-forged/index.php",
-      "destination": "/product/161",
+      "destination": "/products/scaffolding-formworks/formwork-accessories/swivel-wing-nut-with-combination-plate-forged",
       "permanent": true
     },
     {
       "source": "/product/t-blade-post-supports/index.php",
-      "destination": "/product/332",
+      "destination": "/products/wood-connectors/post-supports/t-blade-post-supports",
       "permanent": true
     },
     {
       "source": "/product/t-type-post-supports/detail.php",
-      "destination": "/product/329",
+      "destination": "/products/wood-connectors/post-supports/t-type-post-supports",
       "permanent": true
     },
     {
       "source": "/product/t-type-post-supports/index.php",
-      "destination": "/product/329",
+      "destination": "/products/wood-connectors/post-supports/t-type-post-supports",
       "permanent": true
     },
     {
       "source": "/product/three-wing-anchor-nut---casted/index.php",
-      "destination": "/product/158",
+      "destination": "/products/scaffolding-formworks/formwork-accessories/three-wing-anchor-nut-casted",
       "permanent": true
     },
     {
       "source": "/product/three-wing-anchor-nut---forged/detail.php",
-      "destination": "/product/159",
+      "destination": "/products/scaffolding-formworks/formwork-accessories/three-wing-anchor-nut-forged",
       "permanent": true
     },
     {
       "source": "/product/three-wing-anchor-nut---forged/index.php",
-      "destination": "/product/159",
+      "destination": "/products/scaffolding-formworks/formwork-accessories/three-wing-anchor-nut-forged",
       "permanent": true
     },
     {
       "source": "/product/toe-board/detail.php",
-      "destination": "/product/272",
+      "destination": "/products/scaffolding-formworks/system-scaffolds-ringlock/toe-board",
       "permanent": true
     },
     {
       "source": "/product/toe-board/index.php",
-      "destination": "/product/272",
+      "destination": "/products/scaffolding-formworks/system-scaffolds-ringlock/toe-board",
       "permanent": true
     },
     {
       "source": "/product/treatment-shut/detail.php",
-      "destination": "/product/49",
+      "destination": "/products/livestock-housing-solutions/cattle/treatment-shut",
       "permanent": true
     },
     {
       "source": "/product/trestle/detail.php",
-      "destination": "/product/223",
+      "destination": "/products/scaffolding-formworks/trestles-barriers/trestle",
       "permanent": true
     },
     {
       "source": "/product/tripod---heavy-duty/detail.php",
-      "destination": "/product/150",
+      "destination": "/products/scaffolding-formworks/system-slab-formwork-tripods/tripod-heavy-duty",
       "permanent": true
     },
     {
       "source": "/product/tripod---heavy-duty/index.php",
-      "destination": "/product/150",
+      "destination": "/products/scaffolding-formworks/system-slab-formwork-tripods/tripod-heavy-duty",
       "permanent": true
     },
     {
       "source": "/product/tripod---square-tube-medium-duty/detail.php",
-      "destination": "/product/151",
+      "destination": "/products/scaffolding-formworks/system-slab-formwork-tripods/tripod-square-tube-medium-duty",
       "permanent": true
     },
     {
       "source": "/product/tripod---square-tube-medium-duty/index.php",
-      "destination": "/product/151",
+      "destination": "/products/scaffolding-formworks/system-slab-formwork-tripods/tripod-square-tube-medium-duty",
       "permanent": true
     },
     {
       "source": "/product/tripod---universal-model/detail.php",
-      "destination": "/product/152",
+      "destination": "/products/scaffolding-formworks/system-slab-formwork-tripods/tripod-universal-model",
       "permanent": true
     },
     {
       "source": "/product/tripod---universal-model/index.php",
-      "destination": "/product/152",
+      "destination": "/products/scaffolding-formworks/system-slab-formwork-tripods/tripod-universal-model",
       "permanent": true
     },
     {
       "source": "/product/truss-ledger/detail.php",
-      "destination": "/product/278",
+      "destination": "/products/scaffolding-formworks/system-scaffold-cuplock/truss-ledger",
       "permanent": true
     },
     {
       "source": "/product/two-wing-anchor-nut-100mm---casted/index.php",
-      "destination": "/product/156",
+      "destination": "/products/scaffolding-formworks/formwork-accessories/two-wing-anchor-nut-100mm-casted",
       "permanent": true
     },
     {
       "source": "/product/v-brace/detail.php",
-      "destination": "/product/8",
+      "destination": "/products/scaffolding-formworks/load-bearing-system-shoring-tower/v-brace",
       "permanent": true
     },
     {
       "source": "/product/v-brace/index.php",
-      "destination": "/product/8",
+      "destination": "/products/scaffolding-formworks/load-bearing-system-shoring-tower/v-brace",
       "permanent": true
     },
     {
       "source": "/product/v-lock/detail.php",
-      "destination": "/product/383",
+      "destination": "/products/scaffolding-formworks/access-scaffold-american-frame/v-lock",
       "permanent": true
     },
     {
       "source": "/product/v-lock/index.php",
-      "destination": "/product/383",
+      "destination": "/products/scaffolding-formworks/access-scaffold-american-frame/v-lock",
       "permanent": true
     },
     {
       "source": "/product/walk-through-frame/detail.php",
-      "destination": "/product/370",
+      "destination": "/products/scaffolding-formworks/access-scaffold-american-frame/walk-through-frame",
       "permanent": true
     },
     {
       "source": "/product/walk-through-frame/index.php",
-      "destination": "/product/370",
+      "destination": "/products/scaffolding-formworks/access-scaffold-american-frame/walk-through-frame",
       "permanent": true
     },
     {
       "source": "/product/wall-gate-hanger-with-washer/detail.php",
-      "destination": "/product/117",
+      "destination": "/products/livestock-housing-solutions/field-gates/wall-gate-hanger-with-washer",
       "permanent": true
     },
     {
       "source": "/product/wall-gate-hanger-without-washer/detail.php",
-      "destination": "/product/118",
+      "destination": "/products/livestock-housing-solutions/field-gates/wall-gate-hanger-without-washer",
       "permanent": true
     },
     {
       "source": "/product/wall-mount-angle-top-bracket/detail.php",
-      "destination": "/product/70",
+      "destination": "/products/livestock-housing-solutions/cattle/wall-mount-angle-top-bracket",
       "permanent": true
     },
     {
       "source": "/product/wall-mount-bottom-bracket/detail.php",
-      "destination": "/product/71",
+      "destination": "/products/livestock-housing-solutions/cattle/wall-mount-bottom-bracket",
       "permanent": true
     },
     {
       "source": "/product/wall-mount-bottom-bracket/index.php",
-      "destination": "/product/71",
+      "destination": "/products/livestock-housing-solutions/cattle/wall-mount-bottom-bracket",
       "permanent": true
     },
     {
       "source": "/product/wall-tie/index.php",
-      "destination": "/product/271",
+      "destination": "/products/scaffolding-formworks/system-scaffolds-ringlock/wall-tie-accessories-ringlock-wt",
       "permanent": true
     },
     {
       "source": "/product/water-trough/detail.php",
-      "destination": "/product/47",
+      "destination": "/products/livestock-housing-solutions/cattle/water-trough",
       "permanent": true
     },
     {
       "source": "/product/water-trough/index.php",
-      "destination": "/product/47",
+      "destination": "/products/livestock-housing-solutions/cattle/water-trough",
       "permanent": true
     },
     {
       "source": "/product/weighing-scales/detail.php",
-      "destination": "/product/95",
+      "destination": "/products/livestock-housing-solutions/sheep/weighing-scales",
       "permanent": true
     },
     {
@@ -1179,17 +1144,17 @@
     },
     {
       "source": "/public/index.php/enquiry/adjustable-y-type-post-support-with-long-nut/enquiry.php",
-      "destination": "/product/337",
+      "destination": "/products/wood-connectors/adjustable-post-supports/adjustable-y-type-post-support-with-long-nut",
       "permanent": true
     },
     {
       "source": "/public/index.php/enquiry/tube-connector/enquiry.php",
-      "destination": "/product/66",
+      "destination": "/products/livestock-housing-solutions/cattle/tube-connector",
       "permanent": true
     },
     {
       "source": "/public/index.php/enquiry/water-barrier-with-disc/enquiry.php",
-      "destination": "/product/163",
+      "destination": "/products/scaffolding-formworks/formwork-accessories/water-barrier-with-disc",
       "permanent": true
     },
     {
@@ -1239,32 +1204,32 @@
     },
     {
       "source": "/public/index.php/product/props-en-1065-class-bd/detail.php",
-      "destination": "/product/386",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-props/props-en-1065-class-bd",
       "permanent": true
     },
     {
       "source": "/public/index.php/product/standard-prop-class-b/detail.php",
-      "destination": "/product/35",
+      "destination": "/products/scaffolding-formworks/slab-formwork-system-props/standard-prop-class-b",
       "permanent": true
     },
     {
       "source": "/public/index.php/product/stud-gate-hanger-without-washer/detail.php",
-      "destination": "/product/112",
+      "destination": "/products/livestock-housing-solutions/field-gates/stud-gate-hanger-without-washer",
       "permanent": true
     },
     {
       "source": "/public/index.php/product/system-scaffolds---hk/detail.php",
-      "destination": "/product/19",
+      "destination": "/products/scaffolding-formworks/system-scaffolds-hk/system-scaffolds-hk",
       "permanent": true
     },
     {
       "source": "/public/index.php/product/tube-connector/detail.php",
-      "destination": "/product/66",
+      "destination": "/products/livestock-housing-solutions/cattle/tube-connector",
       "permanent": true
     },
     {
       "source": "/public/index.php/product/wall-mount-bottom-bracket/detail.php",
-      "destination": "/product/71",
+      "destination": "/products/livestock-housing-solutions/cattle/wall-mount-bottom-bracket",
       "permanent": true
     },
     {
@@ -1289,7 +1254,7 @@
     },
     {
       "source": "/public/index.php/sheep-headlocks",
-      "destination": "/product/89",
+      "destination": "/products/livestock-housing-solutions/sheep/sheep-headlocks",
       "permanent": true
     },
     {
@@ -1324,12 +1289,12 @@
     },
     {
       "source": "/sheep-headlocks",
-      "destination": "/product/89",
+      "destination": "/products/livestock-housing-solutions/sheep/sheep-headlocks",
       "permanent": true
     },
     {
       "source": "/system-scaffolds---hk",
-      "destination": "/product/19",
+      "destination": "/products/scaffolding-formworks/system-scaffolds-hk/system-scaffolds-hk",
       "permanent": true
     },
     {

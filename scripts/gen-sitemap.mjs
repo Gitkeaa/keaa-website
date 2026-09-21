@@ -20,6 +20,7 @@ import { dirname, join } from 'node:path';
 import { liveLocales } from '../src/i18n/languages.js';
 import { posts } from '../src/data/blog.js';
 import { landingPagePaths } from '../src/data/landingPages.js';
+import { buildProductPaths } from '../src/data/productSlug.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = join(ROOT, 'src', 'data');
@@ -55,6 +56,12 @@ const categories = JSON.parse(readFileSync(join(DATA, 'categories.json'), 'utf8'
 const blogSlugs = posts.map((p) => p.slug);
 const products = JSON.parse(readFileSync(join(DATA, 'products.json'), 'utf8'));
 
+// Readable product URLs, from the same function the app and the middleware use, so the
+// sitemap can never list an address the site does not serve.
+const productPathById = Object.fromEntries(
+  buildProductPaths(products).entries.map((e) => [e.id, e.path]),
+);
+
 const urls = [];
 const seen = new Set();
 const add = (path, priority) => {
@@ -83,7 +90,10 @@ for (const c of categories) {
 let productCount = 0;
 for (const p of products) {
   if (p.id === undefined || p.id === null) continue;
-  add(`/product/${p.id}`, 0.6);
+  // The readable address. The numeric one is 301d by middleware.js and is deliberately
+  // absent from the sitemap: listing a URL that redirects wastes crawl budget and tells
+  // Google the opposite of what the redirect does.
+  add(productPathById[p.id] || `/product/${p.id}`, 0.6);
   productCount++;
 }
 

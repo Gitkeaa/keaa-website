@@ -34,6 +34,7 @@ import { homedir } from 'node:os';
 import { liveLocales } from '../src/i18n/languages.js';
 import { posts } from '../src/data/blog.js';
 import { landingPagePaths } from '../src/data/landingPages.js';
+import { buildProductPaths } from '../src/data/productSlug.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = join(ROOT, 'src', 'data');
@@ -95,9 +96,14 @@ export function getPrerenderRoutes({ includeProducts = false } = {}) {
     const productsPath = join(DATA, 'products.json');
     if (existsSync(productsPath)) {
       const products = JSON.parse(readFileSync(productsPath, 'utf8'));
+      // Readable product URLs, from the same function the app, the sitemap and the middleware
+      // use, so every one of the four agrees on the address of a given product.
+      const productPathById = Object.fromEntries(
+        buildProductPaths(products).entries.map((e) => [e.id, e.path]),
+      );
       for (const p of products) {
         if (p.id === undefined || p.id === null) continue;
-        routes.push(`/product/${p.id}`);
+        routes.push(productPathById[p.id] || `/product/${p.id}`);
       }
     }
   }

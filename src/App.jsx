@@ -137,6 +137,11 @@ function AppShell() {
             <Route path="products" element={<Products />} />
             <Route path="products/:categorySlug" element={<ProductCatalog />} />
             <Route path="products/:categorySlug/:subSlug" element={<ProductCatalog />} />
+            {/* Products live at a readable address now. The old numeric one is 301d by
+                middleware.js rather than by a route here, so the redirect happens at the
+                edge before React loads, which is what a search engine needs to see. The
+                numeric route is kept so a direct in-app navigation still resolves. */}
+            <Route path="products/:categorySlug/:subSlug/:productSlug" element={<ProductDetail />} />
             <Route path="product/:id" element={<ProductDetail />} />
             {/* Keyword landing pages. One component, content keyed by path in
                 data/landingPages.js. These occupy the addresses buyers guess at: /scaffolding,
