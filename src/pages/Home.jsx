@@ -24,7 +24,16 @@ import { featuredProjects, featuredProjectImages } from '../data/content';
 export default function Home() {
   const lt = useLT('home');
   useSEO({
-    title: lt('seo.title', 'KEAA International | Scaffolding, Formwork & Industrial Manufacturer'),
+    /**
+     * The brand name is appended by useSEO, so it is deliberately NOT repeated here. It
+     * used to be, which produced "KEAA International | ... | KEAA International", 88
+     * characters, truncated in every search result and wasting the opening words on a
+     * name nobody is searching for yet.
+     *
+     * The words that earn the click come first: what is made, and that it is made here
+     * rather than resold.
+     */
+    title: lt('seo.title', 'Scaffolding & Formwork Manufacturer & Exporter'),
     description:
       lt('seo.description', 'ISO 9001:2015 certified manufacturer and exporter of scaffolding systems, formwork accessories, safety products, livestock housing solutions and garden hardware. Exporting to 42+ countries since 2003.'),
   });

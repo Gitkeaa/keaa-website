@@ -13,14 +13,19 @@ const SITE_URL = 'https://www.keaainternational.com';
  */
 const LOCALE_PREFIX = typeof window === 'undefined' ? '' : localePrefixOf(window.location.pathname);
 /**
- * The default social-share image, proxied through Cloudinary like the rest of the stock
- * photography (see src/data/images.js). This one is only ever fetched by social crawlers
- * rather than by visitors, so it was never the privacy problem the in-page images were —
- * it is routed the same way so there is exactly one place Unsplash is referenced.
+ * The card shown when a link to this site is pasted into WhatsApp, LinkedIn or a search
+ * preview, for every page that does not supply its own.
+ *
+ * It used to be an Unsplash stock photograph of somebody else's scaffolding, which is a
+ * strange thing to put a company name against, and it meant the first impression of KEAA
+ * in a shared link was a picture KEAA did not take. This one is the real logo and only
+ * facts the site already publishes.
+ *
+ * Regenerate after a logo or tagline change with: node scripts/make-og-image.mjs
+ *
+ * Absolute on purpose. Open Graph crawlers do not resolve relative paths.
  */
-const DEFAULT_IMAGE =
-  'https://res.cloudinary.com/keaa-assets/image/fetch/f_auto,q_auto,w_1200,c_limit/' +
-  encodeURIComponent('https://images.unsplash.com/photo-1636362556682-11231883c01c');
+const DEFAULT_IMAGE = `${SITE_URL}/og-default.jpg`;
 
 /**
  * Marks the ONE <script> tag this hook owns. index.html ships a static Organization

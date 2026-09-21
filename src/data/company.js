@@ -7,7 +7,7 @@ export const company = {
   founded: 2003,
   group: 'Runi Industries B.V.',
   description:
-    'Keaa Established in 2003, KEAA International Pvt. Ltd. is a trusted manufacturing and export company delivering quality products and reliable solutions to customers worldwide. manufacturing and exporting scaffolding systems, formwork accessories, safety products, livestock housing solutions and garden hardware from 100,000+ sq. m of in-house manufacturing facilities in Ludhiana, India.',
+    'Keaa Established in 2003, KEAA International Pvt. Ltd. is a trusted manufacturing and export company delivering quality products and reliable solutions to customers worldwide. We manufacture and export scaffolding systems, formwork accessories, safety products, livestock housing solutions and garden hardware from 100,000+ sq. m of in-house manufacturing facilities in Ludhiana, India.',
 
   manufacturing: {
     label: 'Manufacturing Plant',
@@ -65,7 +65,7 @@ export const company = {
        Home band; centralised here so the two can never disagree. TODO: client to confirm. */
     capacity: '5,000+ MT',
     moldRooms: 'In House Tool Room, Research and Development',
-    galvanizingBaths:'3x In house Hot Dip Glavanizing Plant',
+    galvanizingBaths:'3x In house Hot Dip Galvanizing Plant',
     powderCoating: '2x In-house Powder coating Plant',
     Electroplating: 'Automatic Electroplating Plant',
     testing:
@@ -110,8 +110,8 @@ export const company = {
     { name: 'Tube Laser Cutting', desc: 'Accurate tube and pipe cutting for scaffolding and formwork frames.' },
     { name: 'Robotic Welding Stations', desc: 'Consistent, repeatable weld quality across high production volumes.' },
     { name: 'CNC Press Brake', desc: 'Precision bending for brackets, clamps and structural connectors.' },
-    { name: 'Hot Dip Galvanizing Plant', desc: '3x In-house Hot Dip Glavanizing Plant as per DIN EN 1461.' },
-    { name: 'Automatic Powder Coating Plant', desc: '2x In House Powder Coating Plant with Aoutomatic Robotic Spray Gun' },
+    { name: 'Hot Dip Galvanizing Plant', desc: '3x In-house Hot Dip Galvanizing Plant as per DIN EN 1461.' },
+    { name: 'Automatic Powder Coating Plant', desc: '2x In House Powder Coating Plant with Automatic Robotic Spray Gun' },
   ],
 
   processSteps: [
@@ -177,12 +177,40 @@ export const waLink = (value) => {
  *   email:    'firstname@keaa-international.net'
  *   whatsapp: '+91 98765 43210'   // any format; waLink() above normalises it
  */
+/**
+ * The people shown on the About page and, from "Global Business Head" down, on the Contact
+ * page team grid.
+ *
+ * CHANGING A PHOTOGRAPH
+ * --------------------
+ * Upload the picture to Cloudinary, copy its public_id, and paste it into that person's
+ * `cloudinaryId`. It takes over from `photo` immediately and is delivered resized and
+ * converted to the format the visitor's browser prefers, which the local files are not.
+ * Leave `cloudinaryId` empty and the local `photo` is used exactly as before, so people can
+ * be moved across one at a time.
+ *
+ * ADDING SOMEONE
+ * --------------
+ * Copy a block, change the fields. `name` and `role` are the only ones required. With no
+ * photograph and no cloudinaryId the card falls back to a branded tile with their initials,
+ * so a new person can be added before their picture exists.
+ *
+ * REMOVING SOMEONE
+ * ----------------
+ * Delete their block. Nothing else refers to them by position.
+ *
+ * WHO APPEARS WHERE: the Contact page filters out Chief Managing Director and Managing
+ * Director, because those two carry full message blocks on About instead. See the TEAM
+ * constant in pages/Contact.jsx.
+ */
 export const leadership = [
   {
     name: 'Raveesh Moudgil',
     role: 'Chief Managing Director',
     bio: 'Drives the overall strategic vision, global partnerships, and long-term growth of Keaa International.',
     photo: '/images/raveesh-moudgil.jpg',
+    /* Cloudinary public_id. Fill this in and it replaces the photo above. */
+    cloudinaryId: '',
     linkedin: 'https://www.linkedin.com/in/raveesh-moudgil-b0618642',
     email: 'raveesh@keaa-international.net',
   },
@@ -191,13 +219,17 @@ export const leadership = [
     role: 'Managing Director',
     bio: 'Oversees day-to-day operations, manufacturing facilities, and technology integration.',
     photo: '/images/sumit.jpg',
+    /* Cloudinary public_id. Fill this in and it replaces the photo above. */
+    cloudinaryId: '',
     linkedin: 'https://www.linkedin.com/in/sumit-moudgil',
     email: 'sumit@keaa-international.net',
   },
   {
     name: 'Bhupesh Gautam',
     role: 'Global Business Head',
-    photo: '/images/Bhupesh.jpg',
+    
+    /* Cloudinary public_id. Fill this in and it replaces the photo above. */
+    cloudinaryId: 'ChatGPT_Image_19_Sept_2026_16_18_05_t7pgv4',
     linkedin: 'https://www.linkedin.com/in/bhupesh-gautam-13867a7b/',
     email: 'bhupesh@keaa-international.net',
     whatsapp: '+91 98729 84707',
@@ -205,7 +237,9 @@ export const leadership = [
   {
     name: 'Jaskamal Singh',
     role: 'Sales Manager',
-    photo: '/images/jaskamal Sir.jpg',
+   
+    /* Cloudinary public_id. Fill this in and it replaces the photo above. */
+    cloudinaryId: 'Jaskamal_Keaa_nr05tj',
     linkedin: 'https://www.linkedin.com/in/jaskamal-singh-37b469377/',
     email: 'team2@keaa-international.net',
     whatsapp: '75080 07931',
@@ -213,7 +247,9 @@ export const leadership = [
   {
     name: 'Vikram Singh',
     role: 'Sales Manager',
-    photo: '/images/Vikram.jpg',
+  
+    /* Cloudinary public_id. Fill this in and it replaces the photo above. */
+    cloudinaryId: 'Vikram_keaa_kjc9cj',
     linkedin: 'https://www.linkedin.com/in/vikram-singh-panwar%E2%9C%A8/',
     email: 'team8@keaa-international.net',
     whatsapp: '7508007760',
@@ -222,7 +258,9 @@ export const leadership = [
   {
     name: 'Ajay Rana',
     role: 'Sales Manager',
-    photo: '/images/Ajay.jpg',
+    
+    /* Cloudinary public_id. Fill this in and it replaces the photo above. */
+    cloudinaryId: 'Ajay_RAna_Keaa_tn10ww',
     linkedin: 'https://www.linkedin.com/in/ajay-rana-00410241/',
     email: 'team4@keaa-international.net',
     whatsapp: '+91 788 849 2505',
@@ -230,7 +268,9 @@ export const leadership = [
   {
     name: 'Sumeet Dogra',
     role: 'Asst. Sales Manager',
-    photo: '/images/sumeet.jpg',
+    
+    /* Cloudinary public_id. Fill this in and it replaces the photo above. */
+    cloudinaryId: 'sumit_Dogra_keaa_enpham',
     linkedin: 'https://www.linkedin.com/in/sumeet-dogra-20b575116/',
     email: 'team5@keaa-international.net',
     whatsapp: '+91 75080 07980',
@@ -238,7 +278,9 @@ export const leadership = [
   {
     name: 'Harpreet Singh',
     role: 'Sales Manager',
-    photo: '/images/Harpreet.jpg',
+  
+    /* Cloudinary public_id. Fill this in and it replaces the photo above. */
+    cloudinaryId: 'ChatGPT_Image_19_Sept_2026_16_13_24_r2nb0b',
     linkedin: 'https://www.linkedin.com/in/harpreet-singh-ahluwalia-540b41b4/',
     email: 'team@keaa-international.net',
     whatsapp: '+31 6 23427362',
@@ -246,7 +288,9 @@ export const leadership = [
   {
     name: 'Amarjot Singh',
     role: 'Sales Manager',
-    photo: '/images/Amarjot.jpg',
+   
+    /* Cloudinary public_id. Fill this in and it replaces the photo above. */
+    cloudinaryId: 'Amarjot_keaa_m3uucm',
     linkedin: 'https://www.linkedin.com/in/amarjot--singh/',
     email: 'team3@keaa-international.net',
     whatsapp: '+91 80548 05002',
@@ -259,6 +303,8 @@ export const chairmanMessage = {
   message:
     'For over two decades, KEAA International has grown on a foundation of quality, integrity and trust, from a focused manufacturing vision to a name relied upon across 42+ countries. I am deeply proud of the people and partnerships behind this journey, and remain committed to building solutions that make the world safer and stronger for generations to come.',
   photo: '/images/chairman.jpg',
+  /* Cloudinary public_id. Fill this in and it replaces the photo above. */
+  cloudinaryId: '',
 };
 
 // Managing Directors — shown together on the About page under one heading.
@@ -269,6 +315,8 @@ export const managingDirectors = [
     message:
       'At Keaa International, our vision is to engineer safety and reliability into every scaffolding and formwork solution we deliver. Over the past two decades, our commitment to quality, innovation, and international standards has made us a trusted global partner. We continue to invest in advanced technology and our people to support the world\'s infrastructure with integrity.',
     photo: '/images/raveesh-moudgil.jpg',
+    /* Cloudinary public_id. Fill this in and it replaces the photo above. */
+    cloudinaryId: '',
     linkedin: 'https://www.linkedin.com/in/raveesh-moudgil-b0618642/',
     whatsapp: 'https://wa.me/919876701926',
     email: 'raveesh@keaa-international.net',
@@ -279,6 +327,8 @@ export const managingDirectors = [
     message:
       'Our focus at Keaa International is on manufacturing excellence and operational efficiency. By leveraging state-of-the-art machinery and certified processes at our Ludhiana plants, we ensure that every product meets the most stringent international quality benchmarks. We are dedicated to providing customized, high-performing solutions that drive value for our clients globally.',
     photo: '/images/sumit.jpg',
+    /* Cloudinary public_id. Fill this in and it replaces the photo above. */
+    cloudinaryId: '',
     linkedin: 'https://www.linkedin.com/in/sumit-moudgil',
     whatsapp: 'https://wa.me/919872984707',
     mail: 'sumit@keaa-international.net',

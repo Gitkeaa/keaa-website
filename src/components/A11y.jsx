@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useT } from '../i18n/LocaleContext';
 
@@ -44,8 +44,25 @@ export function SkipToContent() {
 export function RouteAnnouncer() {
   const location = useLocation();
   const [message, setMessage] = useState('');
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
+    /**
+     * The FIRST load is deliberately silent.
+     *
+     * A real page load already makes the browser announce the document title, so
+     * repeating it here says everything twice. It was also worse than noise: every page
+     * is prerendered, so this timer fired during the build and the title was written
+     * into the static HTML. Each page shipped a second copy of its own title as body
+     * text, sitting under the footer.
+     *
+     * From the second route onwards it does the job it exists for, because a React
+     * Router navigation changes the page silently and announces nothing by itself.
+     */
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return undefined;
+    }
     const id = setTimeout(() => setMessage(document.title), 300);
     return () => clearTimeout(id);
   }, [location.pathname]);

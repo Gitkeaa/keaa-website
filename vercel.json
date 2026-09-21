@@ -1331,6 +1331,21 @@
       "source": "/system-scaffolds---hk",
       "destination": "/product/19",
       "permanent": true
+    },
+    {
+      "source": "/scaffolding-couplers.html",
+      "destination": "/products/scaffolding-formworks/scaffold-tube-fitting-european",
+      "permanent": true
+    },
+    {
+      "source": "/mounting-accessories",
+      "destination": "/products/wood-connectors",
+      "permanent": true
+    },
+    {
+      "source": "/quality-policy",
+      "destination": "/certifications",
+      "permanent": true
     }
   ],
   "rewrites": [
