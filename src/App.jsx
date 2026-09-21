@@ -32,6 +32,7 @@ const DownloadsCenter = lazy(() => import('./pages/DownloadsCenter'));
 const Certifications = lazy(() => import('./pages/Certifications'));
 const Careers = lazy(() => import('./pages/Careers'));
 const Export = lazy(() => import('./pages/Export'));
+const LandingPage = lazy(() => import('./pages/LandingPage'));
 const Blog = lazy(() => import('./pages/Blog'));
 const ThankYou = lazy(() => import('./pages/ThankYou'));
 const RequestQuote = lazy(() => import('./pages/RequestQuote'));
@@ -137,6 +138,21 @@ function AppShell() {
             <Route path="products/:categorySlug" element={<ProductCatalog />} />
             <Route path="products/:categorySlug/:subSlug" element={<ProductCatalog />} />
             <Route path="product/:id" element={<ProductDetail />} />
+            {/* Keyword landing pages. One component, content keyed by path in
+                data/landingPages.js. These occupy the addresses buyers guess at: /scaffolding,
+                /formwork and /garden-hardware all returned a hard 404 before this. They answer
+                "which system do I need and who makes it", where the catalogue answers "show me
+                the parts", and each links into the other. */}
+            <Route path="scaffolding" element={<LandingPage />} />
+            <Route path="scaffolding/ringlock-scaffolding" element={<LandingPage />} />
+            <Route path="scaffolding/cuplock-scaffolding" element={<LandingPage />} />
+            <Route path="scaffolding/scaffold-couplers" element={<LandingPage />} />
+            <Route path="formwork" element={<LandingPage />} />
+            <Route path="formwork/adjustable-steel-props" element={<LandingPage />} />
+            <Route path="garden-hardware" element={<LandingPage />} />
+            <Route path="garden-hardware/ground-anchors" element={<LandingPage />} />
+            <Route path="livestock/cattle-headlocks" element={<LandingPage />} />
+
             <Route path="manufacturing" element={<Manufacturing />} />
             <Route path="projects-gallery" element={<ProjectsGallery />} />
             <Route path="contact" element={<Contact />} />

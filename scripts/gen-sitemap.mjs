@@ -19,6 +19,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { liveLocales } from '../src/i18n/languages.js';
 import { posts } from '../src/data/blog.js';
+import { landingPagePaths } from '../src/data/landingPages.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = join(ROOT, 'src', 'data');
@@ -65,6 +66,10 @@ const add = (path, priority) => {
 for (const [path, priority] of STATIC_ROUTES) add(path, priority);
 
 for (const slug of blogSlugs) add(`/blog/${slug}`, 0.6);
+
+// Keyword landing pages. 0.8: below the home page, above a single product, because these are
+// the pages the site is actively trying to rank.
+for (const p of landingPagePaths) add(p, 0.8);
 
 let subCount = 0;
 for (const c of categories) {
