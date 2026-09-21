@@ -9,6 +9,7 @@ import useSEO, { absoluteUrl } from '../hooks/useSEO';
 import { productTitle, productDescription } from '../data/seoKeywords';
 import { getProductById, getRelatedProducts, publicIdFromCloudinaryUrl } from '../data/productHelpers';
 import { productPath, productIdFromSlug } from '../data/productPaths';
+import { landingPageForSubcategory } from '../data/landingPages';
 import { cldImage } from '../data/cloudinary';
 import { useLT, useProductL10n } from '../i18n/LocaleContext';
 
@@ -148,6 +149,7 @@ export default function ProductDetail() {
     : null;
   const related = getRelatedProducts(product, 5);
   const hasSpecs = product.specs && product.specs.length > 0;
+  const landingPage = landingPageForSubcategory(product.subSlug);
 
   const facts = [
     product.itemCode && { label: lt('facts.itemCode', 'Item Code'), value: product.itemCode },
@@ -269,6 +271,26 @@ export default function ProductDetail() {
             ) : (
               <p className="mt-4 rounded-card border border-dashed border-navy-200 border-l-2 border-l-primary/40 bg-navy-50/40 px-5 py-6 text-body-compact text-text-muted">
                 {lt('specs.pending', 'Detailed specifications for this product are being added. Contact our team for the full datasheet.')}
+              </p>
+            )}
+
+            {/* One line back to the keyword landing page for this range.
+                Landing pages linked into the catalogue but nothing linked back, so the pages
+                carrying the phrases the site is trying to rank for had no internal links from
+                the 355 pages most closely related to them. The anchor text is the landing
+                page's own keyword rather than "click here" or the product name, because anchor
+                text is one of the few signals a link carries about what it points at.
+                Renders nothing for ranges with no landing page yet. */}
+            {landingPage && (
+              <p className="mt-4 text-body-compact text-text-muted">
+                {lt('specs.partOf', 'Part of our')}{' '}
+                <Link
+                  to={landingPage.to}
+                  className="font-semibold text-primary-dark underline-offset-2 hover:underline"
+                >
+                  {landingPage.keyword}
+                </Link>{' '}
+                {lt('specs.partOfRange', 'range')}
               </p>
             )}
           </div>

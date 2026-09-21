@@ -24,6 +24,7 @@
  * SHAPE
  * -----
  *   path        the URL, also the key used by the route
+ *   keyword     the primary phrase, used as the anchor text when a product page links here
  *   parent      the landing page above this one, for breadcrumbs, or null
  *   title       the exact <title>, already carrying the brand, so appendSiteName is false
  *   description the meta description, at most 160 characters
@@ -40,6 +41,7 @@
 
 export const landingPages = {
   '/scaffolding': {
+    keyword: 'scaffolding',
     path: '/scaffolding',
     parent: null,
     title: 'Scaffolding Manufacturer & Exporter India | KEAA International',
@@ -120,6 +122,7 @@ export const landingPages = {
   },
 
   '/scaffolding/ringlock-scaffolding': {
+    keyword: 'Ringlock scaffolding',
     path: '/scaffolding/ringlock-scaffolding',
     parent: '/scaffolding',
     title: 'Ringlock Scaffolding System Manufacturer | KEAA',
@@ -184,6 +187,7 @@ export const landingPages = {
   },
 
   '/scaffolding/cuplock-scaffolding': {
+    keyword: 'Cuplock scaffolding',
     path: '/scaffolding/cuplock-scaffolding',
     parent: '/scaffolding',
     title: 'Cuplock Scaffolding System Manufacturer | KEAA',
@@ -247,6 +251,7 @@ export const landingPages = {
   },
 
   '/scaffolding/scaffold-couplers': {
+    keyword: 'scaffold couplers',
     path: '/scaffolding/scaffold-couplers',
     parent: '/scaffolding',
     title: 'Scaffold Tube Couplers EN 74 Manufacturer | KEAA',
@@ -319,6 +324,7 @@ export const landingPages = {
   },
 
   '/formwork': {
+    keyword: 'formwork',
     path: '/formwork',
     parent: null,
     title: 'Formwork Accessories & Steel Props Manufacturer | KEAA',
@@ -396,6 +402,7 @@ export const landingPages = {
     children: ['/formwork/adjustable-steel-props'],
   },
   '/formwork/adjustable-steel-props': {
+    keyword: 'adjustable steel props',
     path: '/formwork/adjustable-steel-props',
     parent: '/formwork',
     title: 'Adjustable Steel Props EN 1065 Manufacturer | KEAA',
@@ -464,6 +471,7 @@ export const landingPages = {
   },
 
   '/garden-hardware': {
+    keyword: 'garden hardware',
     path: '/garden-hardware',
     parent: null,
     title: 'Garden Hardware & Post Support Manufacturer | KEAA',
@@ -540,6 +548,7 @@ export const landingPages = {
   },
 
   '/garden-hardware/ground-anchors': {
+    keyword: 'ground anchors',
     path: '/garden-hardware/ground-anchors',
     parent: '/garden-hardware',
     title: 'Ground & Spiral Post Anchors Manufacturer | KEAA',
@@ -606,6 +615,7 @@ export const landingPages = {
   },
 
   '/livestock/cattle-headlocks': {
+    keyword: 'cattle headlocks',
     path: '/livestock/cattle-headlocks',
     parent: null,
     title: 'Cattle Headlocks Manufacturer & Exporter | KEAA',
@@ -676,6 +686,67 @@ export const landingPages = {
     products: [44, 43, 45, 78, 77, 39],
   },
 };
+
+/**
+ * Which landing page a catalogue subcategory belongs to.
+ *
+ * Product pages use this to render one line under the specifications table, "Part of our
+ * Ringlock scaffolding range", with the landing page's own keyword as the anchor text. That is
+ * the link that was missing: landing pages pointed into the catalogue but nothing pointed back,
+ * so the pages carrying the phrases the site is trying to rank for had no internal links from
+ * the 355 pages most closely related to them.
+ *
+ * A subcategory maps to the MOST SPECIFIC page that covers it. Ringlock products point at the
+ * Ringlock page rather than the general scaffolding one, because the specific page is the one
+ * competing for the search. Where only a general page exists, they point at that.
+ *
+ * The five livestock ranges other than cattle are deliberately absent: the only livestock
+ * landing page is about cattle headlocks, and sending a sheep feeder to it would be a link that
+ * misleads a reader to flatter a metric. They render no line at all until a page exists.
+ */
+export const SUBCATEGORY_LANDING_PAGE = {
+  /* scaffolding */
+  'system-scaffolds-ringlock': '/scaffolding/ringlock-scaffolding',
+  'system-scaffold-cuplock': '/scaffolding/cuplock-scaffolding',
+  'scaffold-tube-fitting-european': '/scaffolding/scaffold-couplers',
+  'scaffold-tube-fitting-british-american': '/scaffolding/scaffold-couplers',
+  'system-scaffolds-hk': '/scaffolding',
+  'access-scaffold-american-frame': '/scaffolding',
+  'access-scaffold-euro-frame': '/scaffolding',
+  'load-bearing-system-shoring-tower': '/scaffolding',
+  'security-systems-guard-rails-railing-posts': '/scaffolding',
+  'accessories-jacks-nuts': '/scaffolding',
+  'trestles-barriers': '/scaffolding',
+
+  /* formwork */
+  'slab-formwork-system-props': '/formwork/adjustable-steel-props',
+  'slab-formwork-system-fork-heads': '/formwork',
+  'system-slab-formwork-tripods': '/formwork',
+  'formwork-accessories': '/formwork',
+  'wall-formwork-systems-clamps-panels': '/formwork',
+
+  /* garden hardware and wood connectors */
+  'pole-anchors-ground-plates': '/garden-hardware/ground-anchors',
+  'post-supports': '/garden-hardware',
+  'adjustable-post-supports': '/garden-hardware',
+  'post-caps': '/garden-hardware',
+  'indoor-wood-connectors': '/garden-hardware',
+  'miscellaneous-products': '/garden-hardware',
+
+  /* livestock */
+  cattle: '/livestock/cattle-headlocks',
+};
+
+/**
+ * The landing page a subcategory should link to, as { to, keyword }, or null when none covers
+ * it. Returns the keyword rather than the whole page so the caller cannot accidentally render
+ * a title where anchor text belongs.
+ */
+export function landingPageForSubcategory(subSlug) {
+  const path = SUBCATEGORY_LANDING_PAGE[subSlug];
+  const page = path && landingPages[path];
+  return page ? { to: path, keyword: page.keyword } : null;
+}
 
 /** The landing page for a path, or undefined. */
 export const getLandingPage = (path) => landingPages[path];

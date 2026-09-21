@@ -18,9 +18,10 @@
  * post support ranges, EN 10346 for the zinc coated sheet in the indoor connectors, EN 74-1
  * for the European couplers, EN 1065 for props, BS 1139 for the British pattern fittings.
  *
- * Sentences carrying [VERIFY] are ones the owner must confirm or delete. They are there
- * because the copy reads badly without them and the data does not settle them either way,
- * which is exactly the kind of claim that should not be published on somebody's behalf.
+ * Finishes and steel grades were supplied by the owner on 2026-09-21 for the ranges whose
+ * catalogue records carry none. Four of them, the American frames, the fork heads, the
+ * trestles and the post caps, carry a `// confirm with production` comment above the section
+ * so they can be checked against the shop floor rather than taken as settled.
  *
  * Deliberately absent everywhere: load ratings, safe working loads, stocking levels, lead
  * times and prices. They vary per item and per order, and a wrong number in a range page is
@@ -199,7 +200,7 @@ export const subcategoryPillars = {
 
   horse: {
     intro:
-      'Stable equipment is specified around one difference from cattle housing: horses are worked with individually and are far more likely to injure themselves on a fitting than to simply wear it out. Feeders, racks and panels have to present no edge a horse can catch, and they have to hold their shape under a weight that arrives suddenly rather than steadily. KEAA International manufactures six items for stables from Ludhiana, India, covering feeding troughs, hay feeders, hay racks, round hay feeders, fence panels and a guard for water bowls. The range is made in our own plants with fabrication and welding in house, by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany. [VERIFY] The stable range is finished to the same hot dip galvanized specification as the rest of the livestock housing ranges, which the product records do not currently state for these six items.',
+      'Stable equipment is specified around one difference from cattle housing: horses are worked with individually and are far more likely to injure themselves on a fitting than to simply wear it out. Feeders, racks and panels have to present no edge a horse can catch, and they have to hold their shape under a weight that arrives suddenly rather than steadily. KEAA International manufactures six items for stables from Ludhiana, India, covering feeding troughs, hay feeders, hay racks, round hay feeders, fence panels and a guard for water bowls. The range is made in our own plants with fabrication and welding in house, by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany, and is hot dip galvanized to DIN EN 1461 like the rest of the livestock housing ranges.',
     sections: [
       {
         heading: 'What the range includes',
@@ -209,7 +210,7 @@ export const subcategoryPillars = {
       {
         heading: 'Standards and finish',
         body:
-          'Welding is carried out by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany, and manufacturing quality management is certified to ISO 9001:2015 by TÜV Rheinland. [VERIFY] Finish for the stable range specifically: the catalogue records a finish for the cattle, calf, sheep and pig ranges but not yet for these six items.',
+          'Hot dip galvanized to DIN EN 1461, applied in our own plants. Welding is carried out by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany, and manufacturing quality management is certified to ISO 9001:2015 by TÜV Rheinland.',
       },
       {
         heading: 'Where it is used',
@@ -293,7 +294,7 @@ export const subcategoryPillars = {
       {
         heading: 'Standards and finish',
         body:
-          'Manufactured from structural steel to DIN EN 10025-2, the specification recorded against the products, which is the European standard for hot rolled structural steels. Welding is carried out by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany. [VERIFY] Finish for this range: the catalogue records the steel specification but not a coating specification for these items.',
+          'Manufactured from S235JR structural steel to DIN EN 10025-2, the European standard for hot rolled structural steels. Finish is hot dip galvanized to DIN EN 1461 or electro-galvanized, depending on the model, so confirm which you need when you enquire. Welding is carried out by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany.',
       },
       {
         heading: 'Where it is used',
@@ -334,7 +335,7 @@ export const subcategoryPillars = {
       {
         heading: 'Standards and finish',
         body:
-          'Manufactured from structural steel to DIN EN 10025-2, as recorded against the products. Welding is carried out by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany. [VERIFY] Finish for this range: the catalogue records the steel specification but not a coating specification for these items.',
+          'Manufactured from S235JR structural steel to DIN EN 10025-2. Finish is hot dip galvanized to DIN EN 1461 or electro-galvanized, depending on the model, so confirm which you need when you enquire. Welding is carried out by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany.',
       },
       {
         heading: 'Where it is used',
@@ -375,7 +376,7 @@ export const subcategoryPillars = {
       {
         heading: 'Standards and finish',
         body:
-          'Manufactured from structural steel to DIN EN 10025-2, as recorded against the products. Welding is carried out by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany. [VERIFY] Finish for this range: the catalogue records the steel specification but not a coating specification for these items.',
+          'Manufactured from S235JR structural steel to DIN EN 10025-2. Finish is hot dip galvanized to DIN EN 1461 or electro-galvanized, depending on the model, so confirm which you need when you enquire. Welding is carried out by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany.',
       },
       {
         heading: 'Where it is used',
@@ -456,8 +457,9 @@ export const subcategoryPillars = {
       },
       {
         heading: 'Standards and finish',
+        // confirm with production
         body:
-          'The nail supplied with the fixed pattern is stainless steel, chosen so the fastening does not corrode and stain the timber below it. [VERIFY] Material and finish for the caps themselves: the catalogue does not currently record a steel specification or coating for these three items.',
+          'The caps are hot dip galvanized to DIN EN 1461. The nail supplied with the fixed pattern is stainless steel, chosen so the fastening does not corrode and stain the timber below it.',
       },
       {
         heading: 'Where it is used',
@@ -498,7 +500,7 @@ export const subcategoryPillars = {
       {
         heading: 'Standards and finish',
         body:
-          'Manufactured from structural steel to DIN EN 10025-2, as recorded against the products. Welding is carried out by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany. [VERIFY] Finish for this range: the catalogue records the steel specification but not a coating specification for these items.',
+          'Manufactured from S235JR structural steel to DIN EN 10025-2. Finish is hot dip galvanized to DIN EN 1461 or electro-galvanized, depending on the model, so confirm which you need when you enquire. Welding is carried out by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany.',
       },
       {
         heading: 'Where it is used',
@@ -522,7 +524,7 @@ export const subcategoryPillars = {
       },
       {
         q: 'Are these suitable for outdoor use all year?',
-        a: 'They are made from structural steel to EN 10025-2 and are intended for outdoor use. The coating specification is not currently recorded in the catalogue for this range, so confirm the finish with us when you enquire.',
+        a: 'They are made from S235JR structural steel to EN 10025-2 and are hot dip galvanized to DIN EN 1461, or electro-galvanized depending on the model, so they are made for outdoor use. Confirm which finish you need when you enquire.',
       },
     ],
   },
@@ -703,8 +705,9 @@ export const subcategoryPillars = {
       },
       {
         heading: 'Standards and finish',
+        // confirm with production
         body:
-          'Fabrication and welding are in house, with welding carried out by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany. Management systems are certified to ISO 9001:2015, ISO 14001:2015 and ISO 45001:2018 by TÜV Rheinland. [VERIFY] Finish and steel specification for this range: the catalogue does not currently record either against these 17 items.',
+          'Manufactured from S235JR tube to EN 10219 and hot dip galvanized to DIN EN 1461 in our own plants. Fabrication and welding are in house, with welding carried out by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany. Management systems are certified to ISO 9001:2015, ISO 14001:2015 and ISO 45001:2018 by TÜV Rheinland.',
       },
       {
         heading: 'Where it is used',
@@ -908,8 +911,9 @@ export const subcategoryPillars = {
       },
       {
         heading: 'Standards and finish',
+        // confirm with production
         body:
-          'Welding is carried out by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany, and fabrication is in house. Management systems are certified to ISO 9001:2015, ISO 14001:2015 and ISO 45001:2018 by TÜV Rheinland. [VERIFY] Finish and steel specification for this range: the catalogue does not currently record either against these 11 items.',
+          'Manufactured from S235JR plate to DIN EN 10025-2 and hot dip galvanized to DIN EN 1461. Welding is carried out by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany, and fabrication is in house. Management systems are certified to ISO 9001:2015, ISO 14001:2015 and ISO 45001:2018 by TÜV Rheinland.',
       },
       {
         heading: 'Where it is used',
@@ -1154,8 +1158,9 @@ export const subcategoryPillars = {
       },
       {
         heading: 'Standards and finish',
+        // confirm with production
         body:
-          'Fabrication and welding are in house, with welding carried out by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany. Management systems are certified to ISO 9001:2015, ISO 14001:2015 and ISO 45001:2018 by TÜV Rheinland. [VERIFY] Finish and steel specification for this range: the catalogue does not currently record either against these four items.',
+          'Manufactured from S235JR tube to EN 10219 and hot dip galvanized to DIN EN 1461. Fabrication and welding are in house, with welding carried out by welders certified to EN 1090-2 and EN 3834-2, accredited by SLV Germany. Management systems are certified to ISO 9001:2015, ISO 14001:2015 and ISO 45001:2018 by TÜV Rheinland.',
       },
       {
         heading: 'Where it is used',
