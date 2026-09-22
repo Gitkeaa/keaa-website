@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npx --yes puppeteer browsers install chrome || true; PRERENDER_PRODUCTS=1 npm run build",
+  "buildCommand": "npx --yes puppeteer browsers install chrome || true; if [ \"$VERCEL_ENV\" = \"production\" ]; then PRERENDER_PRODUCTS=1 npm run build; else npm run build; fi",
   "outputDirectory": "dist",
   "redirects": [
     {
