@@ -49,6 +49,31 @@ assertScopeCoversLocales(liveLocales());
 const products = JSON.parse(readFileSync(join(ROOT, 'src', 'data', 'products.json'), 'utf8'));
 const { entries } = buildProductPaths(products);
 
+/**
+ * A build with no product pages at all is a PREVIEW, not a fault.
+ *
+ * vercel.json only sets PRERENDER_PRODUCTS on production, so a preview build has no English
+ * product page for this script to copy a head from. That is the intended arrangement, and
+ * there is nothing to stub, so it exits quietly.
+ *
+ * The distinction matters: SOME products missing means the prerender scope and this script
+ * disagree, which silently 404s real URLs and is worth failing a build over. NONE missing
+ * means products were never in scope. The check below tells the two apart by counting first
+ * rather than failing on the first absent file, which is exactly the bug that turned the
+ * first preview of this branch red after six minutes.
+ */
+const prerenderedCount = entries.filter((e) =>
+  existsSync(join(DIST, e.path.replace(/^\//, ''), 'index.html')),
+).length;
+
+if (prerenderedCount === 0) {
+  console.log(
+    `gen:product-stubs: skipped - no product pages in this build, so nothing to stub. ` +
+      'Expected on previews, where vercel.json leaves PRERENDER_PRODUCTS unset.',
+  );
+  process.exit(0);
+}
+
 /** Swap one attribute value on the first tag that carries it. */
 function replaceAttr(html, pattern, value) {
   return html.replace(pattern, (m, a, _old, c) => `${a}${value}${c}`);
