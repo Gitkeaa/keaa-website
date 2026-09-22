@@ -21,6 +21,7 @@ import { liveLocales } from '../src/i18n/languages.js';
 import { posts } from '../src/data/blog.js';
 import { landingPagePaths } from '../src/data/landingPages.js';
 import { buildProductPaths } from '../src/data/productSlug.js';
+import { PRODUCT_PRERENDER_LOCALES, assertScopeCoversLocales } from './prerender-scope.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = join(ROOT, 'src', 'data');
@@ -55,6 +56,9 @@ const categories = JSON.parse(readFileSync(join(DATA, 'categories.json'), 'utf8'
 /** Article slugs, read from the module the site renders so the two cannot drift. */
 const blogSlugs = posts.map((p) => p.slug);
 const products = JSON.parse(readFileSync(join(DATA, 'products.json'), 'utf8'));
+
+/** English product paths, so the locale loop below can tell them from everything else. */
+const productPaths = [];
 
 // Readable product URLs, from the same function the app and the middleware use, so the
 // sitemap can never list an address the site does not serve.
@@ -93,6 +97,7 @@ for (const p of products) {
   // The readable address. The numeric one is 301d by middleware.js and is deliberately
   // absent from the sitemap: listing a URL that redirects wastes crawl budget and tells
   // Google the opposite of what the redirect does.
+  productPaths.push(productPathById[p.id] || `/product/${p.id}`);
   add(productPathById[p.id] || `/product/${p.id}`, 0.6);
   productCount++;
 }
@@ -100,12 +105,22 @@ for (const p of products) {
 /**
  * Live languages list every URL again under their prefix — /de/about is a real page Google
  * should crawl. Not-yet-live languages get nothing: their URLs 404 by design, and a sitemap
- * that lists 404s erodes crawler trust. While no locale is live this loop adds zero URLs.
+ * that lists 404s erodes crawler trust.
+ *
+ * PRODUCTS ARE THE EXCEPTION. They are fully prerendered in English plus five locales only;
+ * the other six get a head stub written after the build (scripts/prerender-scope.mjs). The
+ * stubs are real pages that return 200 with their own canonical, and they stay OUT of the
+ * sitemap by choice: the sitemap is the list of pages we are confident enough to ask Google to
+ * crawl, and a page whose body needs JavaScript is not that. hreflang still names all twelve,
+ * which is what ties the versions together.
  */
 const locales = liveLocales();
+const productSet = new Set(productPaths);
 const base = [...urls];
 for (const code of locales) {
+  const allowsProducts = PRODUCT_PRERENDER_LOCALES.includes(code);
   for (const { path, priority } of base) {
+    if (!allowsProducts && productSet.has(path)) continue;
     add(path === '/' ? `/${code}` : `/${code}${path}`, priority);
   }
 }

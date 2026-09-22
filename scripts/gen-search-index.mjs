@@ -41,7 +41,25 @@ const SKIP_ROUTES = new Set();
  *   /404           not a page anyone should be sent to from a search box
  * Locale prefixes are stripped before this runs, so one pattern covers all languages.
  */
-const SKIP_PATTERNS = [/^\/product\//, /^\/404$/];
+const SKIP_PATTERNS = [
+  /**
+   * Product pages, at BOTH URL shapes.
+   *
+   * The four-segment form is the current one, /products/<category>/<subcategory>/<slug>.
+   * Category and subcategory pages are two and three segments and are NOT skipped: they are
+   * real destinations a search should return.
+   *
+   * The old /product/<id> form is kept because middleware only 301s it at the edge, so a file
+   * could still exist from an older build.
+   *
+   * This nearly went wrong. When product URLs changed shape the old pattern stopped matching,
+   * and the index went from 732 entries at 3.8 MB to 4,992 at 11.1 MB, a download every
+   * visitor pays for. Re-check this whenever a URL shape or the prerender scope changes.
+   */
+  /^\/products\/[^/]+\/[^/]+\/[^/]+$/,
+  /^\/product\//,
+  /^\/404$/,
+];
 
 const decodeEntities = (s) =>
   s

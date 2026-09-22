@@ -11,7 +11,7 @@
     "gen:categories": "node scripts/gen-categories.mjs",
     "gen:sitemap": "node scripts/gen-categories.mjs && node scripts/gen-sitemap.mjs && node scripts/gen-product-redirects.mjs",
     "prebuild": "node scripts/gen-categories.mjs && node scripts/gen-sitemap.mjs && node scripts/gen-product-redirects.mjs && node scripts/check-product-paths.mjs",
-    "build": "vite build && node scripts/check-prerender.mjs && node scripts/make-404.mjs && node scripts/gen-search-index.mjs",
+    "build": "vite build && node scripts/check-prerender.mjs && node scripts/make-404.mjs && node scripts/gen-product-stubs.mjs && node scripts/gen-search-index.mjs",
     "check:prerender": "node scripts/check-prerender.mjs",
     "export:chat-kb": "node scripts/export-chat-kb.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
@@ -23,7 +23,8 @@
     "preview": "vite preview",
     "check:seo-keywords": "node scripts/check-seo-keywords.mjs",
     "gen:product-redirects": "node scripts/gen-product-redirects.mjs",
-    "check:product-paths": "node scripts/check-product-paths.mjs"
+    "check:product-paths": "node scripts/check-product-paths.mjs",
+    "gen:product-stubs": "node scripts/gen-product-stubs.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",

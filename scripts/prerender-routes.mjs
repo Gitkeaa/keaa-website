@@ -14,8 +14,10 @@
  * Locally: the marketing routes plus every category and subcategory, in every live
  * language. About 530 pages, roughly 20 seconds on top of the JS build.
  *
- * On Vercel: that plus all 355 product pages, again in every language, because
- * vercel.json sets `PRERENDER_PRODUCTS=1`. About 4,800 pages and roughly 10 minutes.
+ * On Vercel PRODUCTION: that plus the 355 product pages in English and five more languages,
+ * because vercel.json sets `PRERENDER_PRODUCTS=1` there. 2,874 pages, about 23 to 27 minutes.
+ * The other six languages get a head stub instead, written after the build without a browser;
+ * see scripts/prerender-scope.mjs. Previews skip products entirely and build the 744.
  *
  * Products are worth those minutes. Without prerendering, a product URL serves the plain
  * SPA shell, whose canonical says "this page is the homepage" and whose title is the
@@ -23,9 +25,10 @@
  * and indexes none of them, which is the single largest SEO problem the site had. Google
  * executing JavaScript later does not undo a canonical it was handed in the HTML.
  *
- * Build time scales with pages times live languages, so adding a language adds about a
- * minute. If that ever becomes the binding constraint, drop `PRERENDER_PRODUCTS` for
- * preview deployments rather than for production.
+ * Build time scales with pages times live languages. Measured: 5,004 routes took 9m 40s on a
+ * developer machine and DIED at 45m 40s on Vercel, one minute past the ceiling, which is what
+ * the two-speed split below exists to prevent. Vercel runs roughly 4.5x slower than a laptop
+ * here, so check any scope increase against that ratio before pushing it.
  */
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -35,6 +38,7 @@ import { liveLocales } from '../src/i18n/languages.js';
 import { posts } from '../src/data/blog.js';
 import { landingPagePaths } from '../src/data/landingPages.js';
 import { buildProductPaths } from '../src/data/productSlug.js';
+import { PRODUCT_PRERENDER_LOCALES, assertScopeCoversLocales } from './prerender-scope.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = join(ROOT, 'src', 'data');
@@ -92,6 +96,12 @@ export function getPrerenderRoutes({ includeProducts = false } = {}) {
     }
   }
 
+  /**
+   * Kept apart from `routes` because product pages are expanded into FEWER locales than
+   * everything else. See scripts/prerender-scope.mjs for why.
+   */
+  const productRoutes = [];
+
   if (includeProducts) {
     const productsPath = join(DATA, 'products.json');
     if (existsSync(productsPath)) {
@@ -103,22 +113,39 @@ export function getPrerenderRoutes({ includeProducts = false } = {}) {
       );
       for (const p of products) {
         if (p.id === undefined || p.id === null) continue;
-        routes.push(productPathById[p.id] || `/product/${p.id}`);
+        productRoutes.push(productPathById[p.id] || `/product/${p.id}`);
       }
     }
   }
 
   /**
-   * Every LIVE language re-renders the full route list under its own prefix — /de/about is
-   * its own prerendered page with German copy and meta (the SPA reads the prefix and comes
-   * up in that language; see App.jsx). While no locale is live this adds nothing and the
-   * build is exactly the English build it always was. Expect build time to scale with the
-   * number of live languages — that is the known, accepted cost of Option B.
+   * TWO SPEEDS.
+   *
+   * Marketing, category and subcategory pages are prerendered in EVERY live language: /de/about
+   * is its own page with German copy and meta, and there are only 62 of them, so twelve
+   * languages is 744 pages and about two minutes.
+   *
+   * Product pages are prerendered in English plus five languages only. Twelve would be 4,260
+   * pages and, with the rest, the 5,004 route build that died one minute past Vercel's ceiling.
+   * The remaining six locales get a real file too, written by scripts/gen-product-stubs.mjs
+   * after the build: the same head, an empty body, and no browser needed. See
+   * scripts/prerender-scope.mjs for the reasoning and how to promote a locale.
    */
-  const base = [...new Set(routes)];
-  const localized = liveLocales().flatMap((code) => base.map((r) => (r === '/' ? `/${code}` : `/${code}${r}`)));
+  const locales = liveLocales();
+  assertScopeCoversLocales(locales);
 
-  return [...base, ...localized];
+  const base = [...new Set([...routes, ...productRoutes])];
+  const nonProduct = [...new Set(routes)];
+  const products = [...new Set(productRoutes)];
+
+  const localizedNonProduct = locales.flatMap((code) =>
+    nonProduct.map((r) => (r === '/' ? `/${code}` : `/${code}${r}`)),
+  );
+  const localizedProducts = PRODUCT_PRERENDER_LOCALES.flatMap((code) =>
+    products.map((r) => `/${code}${r}`),
+  );
+
+  return [...base, ...localizedNonProduct, ...localizedProducts];
 }
 
 /**
