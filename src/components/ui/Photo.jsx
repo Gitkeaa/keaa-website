@@ -32,6 +32,12 @@ export default function Photo({
   sizes = '100vw',
   className = '',
   loading = 'lazy',
+  /**
+   * Passed through to the DOM as the LOWERCASE `fetchpriority`. React 18.3 does not recognise
+   * the camelCase spelling: it warns and drops the attribute, so the hint never reaches the
+   * browser. The prop keeps its camelCase name because that is this component's API and every
+   * caller uses it. Same reasoning as layout/Logo.jsx.
+   */
   fetchPriority,
   ...rest
 }) {
@@ -45,7 +51,7 @@ export default function Photo({
         alt={alt}
         loading={loading}
         decoding="async"
-        fetchPriority={fetchPriority}
+        fetchpriority={fetchPriority}
         className={className}
         {...rest}
       />
@@ -66,7 +72,7 @@ export default function Photo({
       alt={alt}
       loading={loading}
       decoding="async"
-      fetchPriority={fetchPriority}
+      fetchpriority={fetchPriority}
       className={className}
       {...rest}
     />

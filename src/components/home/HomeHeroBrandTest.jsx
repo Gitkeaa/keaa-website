@@ -157,7 +157,8 @@ export default function HomeHeroBrandTest() {
             sizes="100vw"
             alt=""
             loading="eager"
-            fetchPriority="high"
+            // Lowercase: React 18.3 drops the camelCase spelling with a warning.
+            fetchpriority="high"
             decoding="async"
             className="absolute inset-0 h-full w-full object-cover"
           />

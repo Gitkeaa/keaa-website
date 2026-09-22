@@ -113,7 +113,8 @@ export default function Careers() {
             sizes="100vw"
             alt={lt('hero.imgAlt', 'The KEAA team on the factory floor in branded uniform and safety gear')}
             loading="eager"
-            fetchPriority="high"
+            // Lowercase: React 18.3 drops the camelCase spelling with a warning.
+            fetchpriority="high"
             decoding="async"
             className="absolute inset-0 h-full w-full object-cover object-[center_30%]"
           />
