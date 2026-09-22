@@ -414,3 +414,93 @@ and a two-character fix whenever you want them done.
    this and it gates the indexing recovery.
 4. Send the Export Terms PDF ID when you have it.
 5. Leave the desktop layout shift, the product slugs and the Featured Projects alone for now.
+
+---
+
+# Future task: fix the layout shift (CLS 0.31)
+
+Written 22 September 2026, after two failed attempts and one diagnostic build. **No code has been
+written for this.** The diagnostic branch `fix/cls-hydration` holds the experiment and is
+deliberately unmerged.
+
+## What is actually wrong
+
+Every page is prerendered to real HTML and the browser paints it immediately. `createRoot` in
+`src/main.jsx` then throws that markup away and rebuilds the tree. The document collapses for a
+frame and everything below snaps back: **CLS 0.310 on home and category, 0.267 on landing pages,
+0.251 on product pages**, against Google's 0.1 threshold.
+
+The obvious fix, `hydrateRoot`, adopts the existing markup instead. It was tried twice and
+failed both times, leaving CLS unchanged at 0.310 and adding four console errors per page. It
+fails because **React's first render does not match the prerendered HTML**, and React rejects
+the entire tree on any single mismatch, so partial fixes achieve nothing at all.
+
+## The rule the fix has to satisfy
+
+**The first client render must be deterministic from the URL alone.** Anything read from the
+browser (stored preferences, navigator languages, image load state, timers) or anything set by
+an effect produces a different first render than the build produced, and hydration fails.
+
+## The three pieces of work
+
+### (a) Language resolution must use only the URL prefix on first render
+
+`resolveInitialLanguage()` in `src/i18n/LocaleContext.jsx` runs inside a lazy `useState`
+initialiser and reads `localStorage` and `navigator.languages`. Prerendering always resolves
+`en`; a visitor's browser can resolve any of the twelve.
+
+Proved with a controlled experiment: same URL, same build, only the browser language changed,
+and `<html lang>` came back `en` for an English browser and `de` for a German one.
+
+The fix: first render takes the language from the URL prefix and nothing else. Detection moves
+into an effect that **suggests** a switch rather than changing the tree underneath React. That
+is a visible product decision, not only a technical one: today a German browser lands on the
+English URL and silently gets German, and afterwards it would get English with an offer to
+switch.
+
+### (b) The prerenderer must inline the dictionaries
+
+`LocaleProvider` starts `content` as `null` on any locale URL and **holds its children back**
+until the dictionary loads, while the prerendered HTML already contains the fully translated
+page. That is a guaranteed mismatch on all eleven locale prefixes.
+
+The comment above it explains why it exists: rendering early would let a page fire the
+prerender-ready event before its translations arrived, baking English into German HTML. So this
+is a deliberate design decision protecting translation correctness, and it cannot simply be
+deleted.
+
+The fix: the prerenderer writes the locale dictionary and the product dictionary into the HTML
+as a JSON script tag, and `LocaleProvider` reads it synchronously on first render. Children are
+never held back, because the translations are already there. Cost: a larger HTML payload per
+locale page, which needs measuring against the shift it removes.
+
+### (c) Bisect for the third mismatch
+
+A third mismatch survives on an English page in an English browser, where neither (a) nor (b)
+applies. React 18.3 reports only "the server HTML was replaced with client content in `<div>`"
+and will not name the element, so this needs bisection: stub one suspect provider or component
+at a time and rebuild until the error count drops from four.
+
+Known-settled suspects already ruled out by inspection, so do not start with these: the route
+announcer, the cookie banner, the feedback widget, the header account control and the header
+search history all begin from a state that matches the prerendered markup.
+
+## Build estimate
+
+| Step | Builds | Why |
+|---|---|---|
+| (a) language from URL | 1 | One change, one verification |
+| (b) inline dictionaries | 2 | One to get the script tag emitted and read, one to verify a locale page hydrates |
+| (c) bisection | 4 to 8 | One per suspect eliminated; unknown until (a) and (b) narrow it |
+| Final verification | 1 | CLS across all page types, hydration console clean |
+
+**Eight to twelve builds.** At roughly 90 seconds each for the no-products path and six minutes
+for a full one, most of it can run on the fast path, with two or three full builds at the end.
+
+## Worth deciding before starting
+
+CLS is currently 0.310 on desktop and **0.000 on mobile**, and Google weights mobile more
+heavily for ranking. This is a real Core Web Vitals failure but it is not a functional defect:
+nothing is broken, no content is lost, and nobody is blocked from enquiring. Item (a) also
+changes how language detection behaves for real visitors. Both are reasons to schedule this
+deliberately rather than fold it into another batch.
