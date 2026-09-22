@@ -5,6 +5,7 @@ import AnimatedCounter from './AnimatedCounter';
 import { heroSrcSet } from '../../data/images';
 import { EASE } from '../../lib/motion';
 import { useLT } from '../../i18n/LocaleContext';
+import { entryInitial } from '../../lib/firstPaint';
 
 /**
  * The interior-page hero, rebuilt to match the homepage: a light stage with the
@@ -99,7 +100,7 @@ export default function PageHero({
       {media && (
         <div className="absolute inset-0 z-0" style={{ isolation: 'isolate' }}>
           <motion.div
-            initial={{ scale: reduce ? 1 : 1.06 }}
+            initial={entryInitial({ scale: reduce ? 1 : 1.06 })}
             animate={{ scale: 1 }}
             transition={{ duration: 1.4, ease: EASE }}
             style={{ y: parallax }}
@@ -208,7 +209,7 @@ export default function PageHero({
         )}
 
         <motion.div
-          initial={reduce ? false : { opacity: 0, y: 18 }}
+          initial={reduce ? false : entryInitial({ opacity: 0, y: 18 })}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: EASE }}
         >

@@ -35,11 +35,20 @@
  * puts at about three minutes on Vercel. Check the total stays under the ceiling.
  */
 
-/** Locales whose product pages are fully prerendered. English is implicit and always is. */
-export const PRODUCT_PRERENDER_LOCALES = ['de', 'nl', 'pl', 'fr', 'es'];
+import { INDEXED_LOCALES, liveLocales } from '../src/i18n/languages.js';
 
-/** Locales whose product pages get a head stub. Must not overlap the list above. */
-export const PRODUCT_STUB_LOCALES = ['it', 'pt', 'ru', 'tr', 'ar', 'hi'];
+/**
+ * Locales whose product pages are fully prerendered. English is implicit and always is.
+ *
+ * Deliberately the SAME list as INDEXED_LOCALES: prerendering a locale we do not ask Google
+ * to index would spend build minutes on pages no crawler is coming for, and indexing a
+ * locale we have not prerendered would offer Google a page with no body. One list keeps the
+ * two decisions from drifting apart.
+ */
+export const PRODUCT_PRERENDER_LOCALES = INDEXED_LOCALES;
+
+/** Everything else live gets a head stub. Derived, so it cannot fall out of step. */
+export const PRODUCT_STUB_LOCALES = liveLocales().filter((c) => !INDEXED_LOCALES.includes(c));
 
 /**
  * Guards the two lists against drifting apart from the live locale set, which is the failure

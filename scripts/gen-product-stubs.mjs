@@ -9,8 +9,8 @@
  * as it does anywhere else.
  *
  * The head is copied rather than rebuilt from templates on purpose. It means the title, meta
- * description, Open Graph tags, the twelve hreflang alternates and the Product and
- * BreadcrumbList JSON-LD are byte-identical to the page React would have produced, and they
+ * description, Open Graph tags, the hreflang alternates and the Product and BreadcrumbList
+ * JSON-LD are byte-identical to the page React would have produced, and they
  * cannot drift when useSEO or seoKeywords change. Rebuilding them here would be a second
  * implementation of the same logic, and the two would disagree within a month.
  *
@@ -21,9 +21,11 @@
  *                      English's, which is what stops Google folding twelve URLs into one
  *   <meta og:url>      the same
  *
- * Nothing else changes. The hreflang block is already identical on every locale version of a
- * page, because useSEO lists all twelve alternates plus x-default from the unprefixed path, so
- * copying it verbatim is correct rather than lazy.
+ * Plus a noindex robots tag, because every stub locale is one we have asked Google not to
+ * index. The hreflang block is already identical on every locale version of a page, because
+ * useSEO lists the indexed alternates plus x-default from the unprefixed path, so copying it
+ * verbatim is correct rather than lazy. Note the stub's own locale is NOT in that set, which
+ * is the intended result of dropping it from search.
  *
  * Titles and descriptions stay in English because they are English by design: they are built
  * from the search keyword a buyer types, and a localised page still wants to be found for it.
@@ -110,6 +112,15 @@ for (const entry of entries) {
     html = replaceAttr(html, /(<html[^>]*\blang=")([^"]*)(")/, code);
     html = replaceAttr(html, /(<link rel="canonical" href=")([^"]*)(")/, localeUrl);
     html = replaceAttr(html, /(<meta property="og:url" content=")([^"]*)(")/, localeUrl);
+
+    /**
+     * Every stub locale is one we have asked Google not to index (INDEXED_LOCALES in
+     * i18n/languages.js), so the tag goes in here as well as being set by useSEO at runtime.
+     * A crawler that does not execute JavaScript must still see it.
+     */
+    if (!/<meta name="robots"/.test(html)) {
+      html = html.replace('</head>', '<meta name="robots" content="noindex, follow"></head>');
+    }
 
     html += '<body><div id="root"></div></body></html>';
 

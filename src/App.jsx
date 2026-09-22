@@ -1,6 +1,7 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Layout from './components/Layout';
+import { markPainted } from './lib/firstPaint';
 import ErrorBoundary from './components/ErrorBoundary';
 import { AdminAuthProvider } from './admin/auth/AdminAuthContext';
 import { localePrefixOf } from './i18n/languages';
@@ -88,6 +89,21 @@ const AdminProfile = lazy(() => import('./admin/pages/AdminProfile'));
 const AdminNotifications = lazy(() => import('./admin/pages/AdminNotifications'));
 
 export default function App() {
+  /**
+   * Re-enable entry animations once the first paint is on screen.
+   *
+   * requestAnimationFrame rather than the effect body: effects run BEFORE the browser paints,
+   * so flipping the flag there would let an animation start while React is still hydrating,
+   * which is the situation the flag exists to avoid. One frame later the prerendered markup is
+   * visibly on screen and adopted, and everything that mounts after this animates normally.
+   *
+   * See lib/firstPaint.js and main.jsx.
+   */
+  useEffect(() => {
+    const id = requestAnimationFrame(() => markPainted());
+    return () => cancelAnimationFrame(id);
+  }, []);
+
   return (
     <BrowserRouter basename={LOCALE_PREFIX || '/'}>
       <AdminAuthProvider>

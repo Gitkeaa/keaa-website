@@ -347,6 +347,7 @@ export default function About() {
             <div className="group overflow-hidden rounded-card ring-1 ring-text/[0.08]">
               <Photo
                 src={chairmanMessage.photo}
+                cloudinaryId={chairmanMessage.cloudinaryId}
                 alt={lt('chairman.photoAlt', '{name}, KEAA International', { name: chairmanMessage.name || lt('chairman.photoAltFallback', 'Chairman') })}
                 /* A fixed 400px column on desktop, full width on a phone. */
                 sizes="(min-width: 1024px) 400px, 90vw"
@@ -404,6 +405,7 @@ export default function About() {
                       <div className="group overflow-hidden rounded-card ring-1 ring-text/[0.08]">
                         <Photo
                           src={m.photo}
+                          cloudinaryId={m.cloudinaryId}
                           alt={lt('directors.photoAlt', '{name}, {role}', { name: m.name, role: lt(`directors.${i}.role`, m.role) })}
                           sizes="(min-width: 1024px) 400px, 90vw"
                           width={800}

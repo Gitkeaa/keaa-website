@@ -49,6 +49,33 @@ export function liveLocales() {
   return languages.filter((l) => l.live && l.code !== DEFAULT_LANGUAGE).map((l) => l.code);
 }
 
+/**
+ * The locales we ask Google to index. English is implicit and always is.
+ *
+ * WHY THIS IS SMALLER THAN liveLocales()
+ * --------------------------------------
+ * All eleven locales stay live and reachable. Six of them are no longer offered to search
+ * engines, on the Search Console evidence of 22 September 2026: 930 of a 1,000 row sample of
+ * "Discovered, currently not indexed" were locale product URLs, Google was declining to crawl
+ * them at all, and the whole locale estate produced 201 impressions and 8 clicks in nine days,
+ * mostly brand and noise. Asking a crawler to spend its budget on 2,796 pages it has already
+ * decided against costs the pages that can rank.
+ *
+ * So ar, hi, it, pt, ru and tr are dropped from hreflang and from the sitemap, and every URL
+ * under those prefixes carries noindex. The pages still work for a human who picks the
+ * language; they are simply not advertised.
+ *
+ * TO RE-ADD ONE: put its code back here. It needs real translated copy and a commercial reason
+ * first, not just a wish to be in more languages. See translation-review/GSC-FIXES-2026-09-22.md.
+ */
+export const INDEXED_LOCALES = ['de', 'nl', 'pl', 'fr', 'es'];
+
+/** True when a locale prefix should be indexed. '' (English) always is. */
+export function isIndexedLocale(code) {
+  if (!code) return true;
+  return INDEXED_LOCALES.includes(code.replace(/^\//, ''));
+}
+
 /** True when `code` is a live non-English locale, i.e. `/${code}/...` is a real URL space. */
 export function isLiveLocale(code) {
   return code !== DEFAULT_LANGUAGE && languages.some((l) => l.code === code && l.live);

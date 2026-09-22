@@ -840,7 +840,6 @@ export default {
  "home.showcase.title2": "Zaprojektowane dla doskonałości.",
  "home.who.badge.label": "Zaufało nam",
  "home.who.badge.value": "42+ krajów",
- "home.who.body": "KEAA International to cieszące się światowym zaufaniem przedsiębiorstwo inżynieryjno-produkcyjne, specjalizujące się w wysokowydajnych rusztowaniach, szalunkach i rozwiązaniach przemysłowych. Dzięki dziesięcioleciom doświadczenia, zaawansowanym zakładom produkcyjnym i niezmiennemu zaangażowaniu w jakość dostarczamy innowacyjne produkty, które zwiększają bezpieczeństwo, poprawiają wydajność i wspierają zrównoważony rozwój infrastruktury w ponad 42 krajach na całym świecie.",
  "home.who.cta": "Dowiedz się więcej",
  "home.who.eyebrow": "O KEAA",
  "home.who.imageAlt": "Wnętrze zakładu KEAA International: firmowa suwnica nad liniami obróbki, z regałami rur stalowych, profili i kręgów blachy",

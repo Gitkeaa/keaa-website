@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import BrandTexture from './ui/BrandTexture';
 import { EASE } from '../lib/motion';
+import { entryInitial } from '../lib/firstPaint';
 
 
 export default function FeatureStrip({ items, lead, photo = true, className = '' }) {
@@ -13,7 +14,7 @@ export default function FeatureStrip({ items, lead, photo = true, className = ''
       {/* Wide tier (2040), shared with CtaBand so the two cards line up. */}
       <div className="container-wide relative z-10">
         <motion.div
-          initial={reduce ? false : { opacity: 0, y: 20 }}
+          initial={reduce ? false : entryInitial({ opacity: 0, y: 20 })}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.6, ease: EASE }}

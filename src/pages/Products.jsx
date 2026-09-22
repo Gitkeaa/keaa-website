@@ -14,6 +14,7 @@ import { heroSlides } from '../data/heroSlides';
 import useSEO from '../hooks/useSEO';
 import { useLT, useProductL10n } from '../i18n/LocaleContext';
 import { EASE } from '../lib/motion';
+import { entryInitial } from '../lib/firstPaint';
 
 /**
  * Products landing page: the public catalogue overview at /products. Renders the gallery
@@ -86,7 +87,7 @@ export default function Products() {
             {categories.map((cat, i) => (
               <motion.div
                 key={cat.slug}
-                initial={{ opacity: 0, y: 20 }}
+                initial={entryInitial({ opacity: 0, y: 20 })}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: i * 0.06, ease: EASE }}
               >

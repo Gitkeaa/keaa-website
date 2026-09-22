@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 import { useLT } from '../i18n/LocaleContext';
+import { entryInitial } from '../lib/firstPaint';
 
 /**
  * Floating back-to-top button with a circular scroll-progress ring.
@@ -25,7 +26,7 @@ export default function BackToTop() {
     <AnimatePresence>
       {visible && (
         <motion.button
-          initial={{ opacity: 0, scale: 0.6 }}
+          initial={entryInitial({ opacity: 0, scale: 0.6 })}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.6 }}
           whileHover={{ scale: 1.08 }}

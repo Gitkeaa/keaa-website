@@ -840,7 +840,6 @@ export default {
  "home.showcase.title2": "Progettati per l'eccellenza.",
  "home.who.badge.label": "La fiducia di",
  "home.who.badge.value": "42+ paesi",
- "home.who.body": "KEAA International è un'azienda di ingegneria e produzione riconosciuta a livello globale, specializzata in ponteggi ad alte prestazioni, casseforme e soluzioni industriali. Forti di decenni di esperienza, di impianti produttivi avanzati e di un impegno costante per la qualità, forniamo prodotti innovativi che aumentano la sicurezza, migliorano l'efficienza e sostengono lo sviluppo di infrastrutture sostenibili in oltre 42 paesi nel mondo.",
  "home.who.cta": "Scopra di più",
  "home.who.eyebrow": "Chi è KEAA",
  "home.who.imageAlt": "All'interno dello stabilimento KEAA International: un carroponte con il logo aziendale sopra le linee di lavorazione, con tubi, profilati e coil d'acciaio a scaffale",

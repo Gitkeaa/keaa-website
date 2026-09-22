@@ -839,7 +839,6 @@ export default {
  "home.showcase.title2": "Mükemmellik İçin Tasarlandı.",
  "home.who.badge.label": "Güvenilen",
  "home.who.badge.value": "42+ Ülke",
- "home.who.body": "KEAA International, yüksek performanslı iskele, kalıp ve endüstriyel çözümler konusunda uzmanlaşmış, dünya genelinde güvenilen bir mühendislik ve üretim şirketidir. Onlarca yıllık uzmanlık, gelişmiş üretim tesisleri ve kaliteye kesintisiz bağlılığımızla; dünya genelinde 42'den fazla ülkede güvenliği artıran, verimliliği iyileştiren ve sürdürülebilir altyapı gelişimini destekleyen yenilikçi ürünler sunuyoruz.",
  "home.who.cta": "Daha Fazla Bilgi",
  "home.who.eyebrow": "KEAA Hakkında",
  "home.who.imageAlt": "KEAA International'ın tesisinin içi: işleme hatlarının üzerinde marka logolu bir köprülü vinç, raflarda istiflenmiş çelik boru, profil ve rulo stoğu",

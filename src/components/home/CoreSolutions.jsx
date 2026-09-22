@@ -57,7 +57,7 @@ export default function CoreSolutions() {
             </h2>
 
             <p className="body-copy mt-5 max-w-[34rem]">
-              {lt('who.body', 'KEAA International is a globally trusted engineering and manufacturing company specializing in high-performance scaffolding, formwork, and industrial solutions. Backed by decades of expertise, advanced manufacturing facilities, and an unwavering commitment to quality, we deliver innovative products that enhance safety, improve efficiency, and support sustainable infrastructure development across more than 42 countries worldwide.')}
+              {lt('who.body', 'KEAA International is a globally trusted engineering and manufacturing company delivering a diverse range of high-performance solutions across multiple industries. Backed by decades of expertise, advanced manufacturing facilities, and a strong commitment to quality, we manufacture solutions spanning scaffolding and formwork systems, livestock housing solutions, DIY and hardware products, as well as custom-engineered components tailored to specific customer requirements. Through continuous innovation, reliable manufacturing, and a focus on safety, efficiency, and sustainability, KEAA International supports customers and infrastructure projects across more than 42 countries worldwide.')}
             </p>
 
             {/* Phone: two columns so the three pillars fill the width instead of stacking into

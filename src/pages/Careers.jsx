@@ -12,6 +12,7 @@ import { localPhoto, localPhotoSrcSet } from '../data/images';
 import CtaBand from '../components/CtaBand';
 import { EASE } from '../lib/motion';
 import { useLT } from '../i18n/LocaleContext';
+import { entryInitial } from '../lib/firstPaint';
 
 /**
  * Careers page: hero, a KEAA stats band, perks, and expandable job listings with an apply modal.
@@ -258,7 +259,7 @@ export default function Careers() {
                     {expanded && job.description && (
                       <motion.div
                         key="detail"
-                        initial={{ opacity: 0, height: 0 }}
+                        initial={entryInitial({ opacity: 0, height: 0 })}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3, ease: EASE }}

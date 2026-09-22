@@ -17,11 +17,11 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { liveLocales } from '../src/i18n/languages.js';
+import { INDEXED_LOCALES } from '../src/i18n/languages.js';
 import { posts } from '../src/data/blog.js';
 import { landingPagePaths } from '../src/data/landingPages.js';
 import { buildProductPaths } from '../src/data/productSlug.js';
-import { PRODUCT_PRERENDER_LOCALES, assertScopeCoversLocales } from './prerender-scope.mjs';
+import { PRODUCT_PRERENDER_LOCALES } from './prerender-scope.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = join(ROOT, 'src', 'data');
@@ -114,7 +114,12 @@ for (const p of products) {
  * crawl, and a page whose body needs JavaScript is not that. hreflang still names all twelve,
  * which is what ties the versions together.
  */
-const locales = liveLocales();
+/**
+ * INDEXED_LOCALES, not liveLocales(). Six live locales are deliberately absent from the
+ * sitemap: Google had already declined to crawl 2,796 of their URLs, and a sitemap is a
+ * request to spend crawl budget. See i18n/languages.js.
+ */
+const locales = INDEXED_LOCALES;
 const productSet = new Set(productPaths);
 const base = [...urls];
 for (const code of locales) {

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { DEFAULT_LANGUAGE, liveLocales, localePrefixOf } from '../i18n/languages';
+import { DEFAULT_LANGUAGE, INDEXED_LOCALES, isIndexedLocale, localePrefixOf } from '../i18n/languages';
 
 const SITE_NAME = 'KEAA International';
 const SITE_URL = 'https://www.keaainternational.com';
@@ -99,6 +99,13 @@ export default function useSEO({
   noindex = false,
   appendSiteName = true,
 }) {
+  /**
+   * Six locales are live but no longer offered to search engines. Every page under those
+   * prefixes is noindex regardless of what the page itself asked for, because the decision
+   * is about the locale rather than the page. See INDEXED_LOCALES in i18n/languages.js.
+   */
+  const localeNoindex = !isIndexedLocale(LOCALE_PREFIX);
+  const isNoindex = noindex || localeNoindex;
   const location = useLocation();
 
   useEffect(() => {
@@ -113,7 +120,7 @@ export default function useSEO({
      * thing that can contradict the canonical.
      */
     const robots = document.querySelector('meta[name="robots"]');
-    if (noindex) setMeta('name', 'robots', 'noindex, follow');
+    if (isNoindex) setMeta('name', 'robots', 'noindex, follow');
     else if (robots) robots.remove();
 
     setMeta('name', 'description', description);
@@ -144,9 +151,15 @@ export default function useSEO({
      * documented reciprocal form Google requires (one-way links are ignored).
      */
     document.querySelectorAll('link[data-seo-hreflang]').forEach((el) => el.remove());
-    const locales = liveLocales();
+    /**
+     * INDEXED_LOCALES, not liveLocales(). Six live locales were dropped from search on the
+     * Search Console evidence of 22 September 2026; advertising an alternate we have asked
+     * Google not to index is a contradiction, and Google ignores hreflang sets that contain
+     * noindex members anyway.
+     */
+    const locales = INDEXED_LOCALES;
     // A page that is not indexed has nothing to offer alternates of.
-    if (locales.length && !noindex) {
+    if (locales.length && !isNoindex) {
       const alternates = [
         [DEFAULT_LANGUAGE, `${SITE_URL}${location.pathname}`],
         ...locales.map((code) => [code, `${SITE_URL}/${code}${location.pathname}`]),
@@ -161,7 +174,7 @@ export default function useSEO({
         document.head.appendChild(el);
       }
     }
-  }, [title, description, image, noindex, appendSiteName, location.pathname]);
+  }, [title, description, image, isNoindex, appendSiteName, location.pathname]);
 
   /**
    * Serialised rather than passed by reference: pages build these arrays/objects inline in

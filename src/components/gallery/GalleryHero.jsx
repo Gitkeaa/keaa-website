@@ -5,6 +5,7 @@ import Button from '../ui/Button';
 import { EASE } from '../../lib/motion';
 import { useLT } from '../../i18n/LocaleContext';
 import { heroSrcSet } from '../../data/images';
+import { entryInitial } from '../../lib/firstPaint';
 
 /**
  * The framed hero carousel used on every interior page except Home — in the style of the
@@ -90,7 +91,7 @@ export default function GalleryHero({ slides = [], crumbs = [], cta, interval = 
         <div className="relative z-10 mt-auto flex w-full flex-col gap-8 p-6 sm:p-10 lg:p-12">
           <motion.div
             key={slide}
-            initial={reduce ? false : { opacity: 0, y: 14 }}
+            initial={reduce ? false : entryInitial({ opacity: 0, y: 14 })}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: EASE }}
             className="max-w-2xl"

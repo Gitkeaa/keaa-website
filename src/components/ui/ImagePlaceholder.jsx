@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { imgSrcSet } from '../../data/images';
+import { hasPainted } from '../../lib/firstPaint';
 
 /**
  * Renders a real photo (premium, curated) with a subtle hover zoom, a skeleton
@@ -38,7 +39,15 @@ export default function ImagePlaceholder({
    */
   priority = false,
 }) {
-  const [loaded, setLoaded] = useState(false);
+  /**
+   * On the first paint of a page load the image is treated as already loaded.
+   *
+   * Prerendering waits for images, so the snapshot has opacity-100 baked in. A fresh render
+   * starting from `loaded: false` emits opacity-0, React sees markup it did not produce, and
+   * rejects the whole prerendered tree. The fade is a nicety for images that stream in later;
+   * on a page that was already painted there is nothing to fade from. See lib/firstPaint.js.
+   */
+  const [loaded, setLoaded] = useState(() => !hasPainted());
   const [errored, setErrored] = useState(false);
 
   // Right-size on delivery. Every `img.*` source is built at 1920px; in a half-width slot

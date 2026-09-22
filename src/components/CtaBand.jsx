@@ -4,6 +4,7 @@ import BrandTexture from './ui/BrandTexture';
 import { company } from '../data/company';
 import { EASE } from '../lib/motion';
 import { useLT } from '../i18n/LocaleContext';
+import { entryInitial } from '../lib/firstPaint';
 
 /**
  * The closing call-to-action, sitting between the last page section and the footer.
@@ -51,7 +52,7 @@ export default function CtaBand({
           an accent band should, and shares the tier with FeatureStrip so they line up. */}
       <div className="container-wide relative z-10">
         <motion.div
-          initial={reduce ? false : { opacity: 0, y: 24 }}
+          initial={reduce ? false : entryInitial({ opacity: 0, y: 24 })}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.6, ease: EASE }}
