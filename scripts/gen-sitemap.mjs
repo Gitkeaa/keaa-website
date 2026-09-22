@@ -17,8 +17,11 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { liveLocales } from '../src/i18n/languages.js';
+import { INDEXED_LOCALES } from '../src/i18n/languages.js';
 import { posts } from '../src/data/blog.js';
+import { landingPagePaths } from '../src/data/landingPages.js';
+import { buildProductPaths } from '../src/data/productSlug.js';
+import { PRODUCT_PRERENDER_LOCALES } from './prerender-scope.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = join(ROOT, 'src', 'data');
@@ -54,6 +57,15 @@ const categories = JSON.parse(readFileSync(join(DATA, 'categories.json'), 'utf8'
 const blogSlugs = posts.map((p) => p.slug);
 const products = JSON.parse(readFileSync(join(DATA, 'products.json'), 'utf8'));
 
+/** English product paths, so the locale loop below can tell them from everything else. */
+const productPaths = [];
+
+// Readable product URLs, from the same function the app and the middleware use, so the
+// sitemap can never list an address the site does not serve.
+const productPathById = Object.fromEntries(
+  buildProductPaths(products).entries.map((e) => [e.id, e.path]),
+);
+
 const urls = [];
 const seen = new Set();
 const add = (path, priority) => {
@@ -65,6 +77,10 @@ const add = (path, priority) => {
 for (const [path, priority] of STATIC_ROUTES) add(path, priority);
 
 for (const slug of blogSlugs) add(`/blog/${slug}`, 0.6);
+
+// Keyword landing pages. 0.8: below the home page, above a single product, because these are
+// the pages the site is actively trying to rank.
+for (const p of landingPagePaths) add(p, 0.8);
 
 let subCount = 0;
 for (const c of categories) {
@@ -78,19 +94,38 @@ for (const c of categories) {
 let productCount = 0;
 for (const p of products) {
   if (p.id === undefined || p.id === null) continue;
-  add(`/product/${p.id}`, 0.6);
+  // The readable address. The numeric one is 301d by middleware.js and is deliberately
+  // absent from the sitemap: listing a URL that redirects wastes crawl budget and tells
+  // Google the opposite of what the redirect does.
+  productPaths.push(productPathById[p.id] || `/product/${p.id}`);
+  add(productPathById[p.id] || `/product/${p.id}`, 0.6);
   productCount++;
 }
 
 /**
  * Live languages list every URL again under their prefix — /de/about is a real page Google
  * should crawl. Not-yet-live languages get nothing: their URLs 404 by design, and a sitemap
- * that lists 404s erodes crawler trust. While no locale is live this loop adds zero URLs.
+ * that lists 404s erodes crawler trust.
+ *
+ * PRODUCTS ARE THE EXCEPTION. They are fully prerendered in English plus five locales only;
+ * the other six get a head stub written after the build (scripts/prerender-scope.mjs). The
+ * stubs are real pages that return 200 with their own canonical, and they stay OUT of the
+ * sitemap by choice: the sitemap is the list of pages we are confident enough to ask Google to
+ * crawl, and a page whose body needs JavaScript is not that. hreflang still names all twelve,
+ * which is what ties the versions together.
  */
-const locales = liveLocales();
+/**
+ * INDEXED_LOCALES, not liveLocales(). Six live locales are deliberately absent from the
+ * sitemap: Google had already declined to crawl 2,796 of their URLs, and a sitemap is a
+ * request to spend crawl budget. See i18n/languages.js.
+ */
+const locales = INDEXED_LOCALES;
+const productSet = new Set(productPaths);
 const base = [...urls];
 for (const code of locales) {
+  const allowsProducts = PRODUCT_PRERENDER_LOCALES.includes(code);
   for (const { path, priority } of base) {
+    if (!allowsProducts && productSet.has(path)) continue;
     add(path === '/' ? `/${code}` : `/${code}${path}`, priority);
   }
 }

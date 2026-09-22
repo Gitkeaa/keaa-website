@@ -4,6 +4,7 @@ import { Play } from 'lucide-react';
 import { droneFilmUrl, heroFilms } from '../../data/content';
 import { useLT } from '../../i18n/LocaleContext';
 import { isPrerender } from '../../lib/prerender';
+import { entryInitial } from '../../lib/firstPaint';
 
 /**
  * How long each second-line phrase holds before the next one takes over.
@@ -191,7 +192,7 @@ export default function HomeHeroBrandTest() {
               to the top of the card, so the headline owns the whole bottom edge again. */}
           <div className="relative z-10 mt-auto flex w-full flex-col p-6 sm:p-10 lg:p-14">
             <motion.div
-              initial={reduce ? false : { opacity: 0, y: 18 }}
+              initial={reduce ? false : entryInitial({ opacity: 0, y: 18 })}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: EASE }}
               className="max-w-5xl"

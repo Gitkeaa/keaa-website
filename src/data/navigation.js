@@ -173,6 +173,23 @@ export const megaMenuItems = [
   },
 ];
 
+/**
+ * The nine keyword landing pages, linked from the footer on every page so they are reachable
+ * and so internal link equity reaches them. Kept here rather than derived from
+ * data/landingPages.js to avoid a data module importing a navigation module and back.
+ */
+export const solutionsLinks = [
+  { label: 'Scaffolding', to: '/scaffolding' },
+  { label: 'Ringlock Scaffolding', to: '/scaffolding/ringlock-scaffolding' },
+  { label: 'Cuplock Scaffolding', to: '/scaffolding/cuplock-scaffolding' },
+  { label: 'Scaffold Couplers', to: '/scaffolding/scaffold-couplers' },
+  { label: 'Formwork', to: '/formwork' },
+  { label: 'Adjustable Steel Props', to: '/formwork/adjustable-steel-props' },
+  { label: 'Garden Hardware', to: '/garden-hardware' },
+  { label: 'Ground Anchors', to: '/garden-hardware/ground-anchors' },
+  { label: 'Cattle Headlocks', to: '/livestock/cattle-headlocks' },
+];
+
 export const footerLinks = {
   quick: [
     { label: 'Home', to: '/' },

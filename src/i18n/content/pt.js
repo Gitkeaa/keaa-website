@@ -840,7 +840,6 @@ export default {
  "home.showcase.title2": "Concebidos para a Excelência.",
  "home.who.badge.label": "Com a confiança de",
  "home.who.badge.value": "42+ Países",
- "home.who.body": "A KEAA International é uma empresa de engenharia e fabrico com reconhecimento global, especializada em andaimes de alto desempenho, cofragem e soluções industriais. Com décadas de experiência, instalações de fabrico avançadas e um compromisso inabalável com a qualidade, fornecemos produtos inovadores que reforçam a segurança, aumentam a eficiência e apoiam o desenvolvimento de infraestruturas sustentáveis em mais de 42 países em todo o mundo.",
  "home.who.cta": "Saber Mais",
  "home.who.eyebrow": "Sobre a KEAA",
  "home.who.imageAlt": "No interior da fábrica da KEAA International: uma ponte rolante com a marca da empresa sobre as linhas de maquinagem, com stock de tubo, perfis e bobinas de aço em estantes",

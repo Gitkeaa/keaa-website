@@ -6,6 +6,7 @@ import { img, atWidth, imgSrcSet } from '../../data/images';
 import { company } from '../../data/company';
 import { EASE } from '../../lib/motion';
 import { useLT } from '../../i18n/LocaleContext';
+import { entryInitial } from '../../lib/firstPaint';
 
 /**
  * "Products at KEAA" — the catalogue's shop window on the home page, sitting directly under
@@ -211,7 +212,7 @@ export default function ProductsShowcase() {
                 {/* COPY — z-10 so its diagonal backdrop paints over the photo column. */}
                 <motion.div
                   key={active.slug ?? 'all'}
-                  initial={reduce ? false : { opacity: 0, y: 10 }}
+                  initial={reduce ? false : entryInitial({ opacity: 0, y: 10 })}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.35, ease: EASE }}
                   className="relative z-10 flex flex-col justify-center p-6 sm:p-8"

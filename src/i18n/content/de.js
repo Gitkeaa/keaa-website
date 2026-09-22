@@ -931,7 +931,7 @@ export default {
  "home.showcase.title2": "Entwickelt für Exzellenz.",
  "home.who.badge.label": "Vertrauen in",
  "home.who.badge.value": "42+ Ländern",
- "home.who.body": "KEAA International ist ein weltweit anerkanntes Engineering- und Fertigungsunternehmen, spezialisiert auf leistungsstarke Gerüste, Schalungen und Industrielösungen. Gestützt auf jahrzehntelange Erfahrung, moderne Fertigungsanlagen und ein kompromissloses Qualitätsbewusstsein liefern wir innovative Produkte, die die Sicherheit erhöhen, die Effizienz steigern und eine nachhaltige Infrastrukturentwicklung in mehr als 42 Ländern weltweit unterstützen.",
+ "home.who.body": "KEAA International ist ein weltweit anerkanntes Engineering- und Fertigungsunternehmen, das ein breites Spektrum an leistungsstarken Lösungen für unterschiedliche Branchen liefert. Gestützt auf jahrzehntelange Erfahrung, moderne Fertigungsanlagen und einen hohen Qualitätsanspruch fertigen wir Gerüst- und Schalungssysteme, Stalleinrichtungen für die Tierhaltung, DIY- und Beschlagprodukte sowie kundenspezifisch konstruierte Bauteile. Durch konsequente Innovation, verlässliche Fertigung und den Fokus auf Sicherheit, Effizienz und Nachhaltigkeit unterstützt KEAA International Kunden und Infrastrukturprojekte in mehr als 42 Ländern weltweit.",
  "home.who.cta": "Mehr erfahren",
  "home.who.eyebrow": "Über KEAA",
  "home.who.imageAlt": "Blick in das Werk von KEAA International: ein Brückenkran mit Firmenlogo über den Bearbeitungslinien, dazu gelagerte Stahlrohre, Profile und Coils",

@@ -57,7 +57,16 @@ const RATIO = 1066 / 962; // measured off the trimmed output, so the box never r
 
 const src = (chain, w) => cldRaw('Keaa_Logo_pcf86h', `${chain}/f_auto,q_auto,w_${w}`);
 
-export default function Logo({ light = false, className = '' }) {
+/**
+ * `belowFold` is for the footer copy of the mark.
+ *
+ * The header logo is above the fold on every page and is deliberately eager and high
+ * priority. The footer renders the same component, so without this it was also fetched
+ * eagerly, 234 times across the sampled build, competing with the image the page is
+ * actually measured on. Same artwork, so the second request is a cache hit either way,
+ * but the browser no longer treats it as urgent.
+ */
+export default function Logo({ light = false, className = '', belowFold = false }) {
   const chain = light ? LIGHT_CHAIN : BASE_CHAIN;
   const w = Math.round(HEIGHT * RATIO);
 
@@ -72,10 +81,12 @@ export default function Logo({ light = false, className = '' }) {
       alt="KEAA International"
       width={w}
       height={HEIGHT}
-      // Eager and high priority: it is above the fold on every page, and the header row
-      // collapses around a late-loading logo. Lowercase on purpose — React 18.3 does not
-      // recognise the camelCase `fetchPriority` and warns, passing it through unrendered.
-      fetchpriority="high"
+      // Eager and high priority in the header: it is above the fold on every page, and the
+      // header row collapses around a late-loading logo. The footer copy is neither.
+      // Lowercase on purpose — React 18.3 does not recognise the camelCase `fetchPriority`
+      // and warns, passing it through unrendered.
+      loading={belowFold ? 'lazy' : undefined}
+      fetchpriority={belowFold ? undefined : 'high'}
       decoding="async"
       className={`w-auto ${className}`}
       style={{ height: HEIGHT }}

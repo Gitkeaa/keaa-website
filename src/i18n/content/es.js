@@ -840,7 +840,6 @@ export default {
  "home.showcase.title2": "Diseñado para la excelencia.",
  "home.who.badge.label": "Con la confianza de",
  "home.who.badge.value": "Más de 42 países",
- "home.who.body": "KEAA International es una empresa de ingeniería y fabricación con confianza global, especializada en andamios de alto rendimiento, encofrado y soluciones industriales. Con décadas de experiencia, instalaciones de fabricación avanzadas y un compromiso inquebrantable con la calidad, ofrecemos productos innovadores que mejoran la seguridad, aumentan la eficiencia y apoyan el desarrollo de infraestructuras sostenibles en más de 42 países de todo el mundo.",
  "home.who.cta": "Saber más",
  "home.who.eyebrow": "Sobre KEAA",
  "home.who.imageAlt": "Interior de la planta de KEAA International: un puente grúa con la marca sobre las líneas de mecanizado, con existencias de tubo, perfil y bobina de acero en estanterías",

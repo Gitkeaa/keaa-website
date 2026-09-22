@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { EASE } from '../../lib/motion';
+import { entryInitial } from '../../lib/firstPaint';
 
 /**
  * Wraps any content in a graceful scroll-reveal animation. Animates once when
@@ -9,7 +10,7 @@ import { EASE } from '../../lib/motion';
 export default function Reveal({ children, delay = 0, y = 24, x = 0, className = '', ...rest }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y, x }}
+      initial={entryInitial({ opacity: 0, y, x })}
       whileInView={{ opacity: 1, y: 0, x: 0 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.6, delay, ease: EASE }}
@@ -28,7 +29,7 @@ export default function Reveal({ children, delay = 0, y = 24, x = 0, className =
 export function StaggerGroup({ children, className = '', stagger = 0.08, ...rest }) {
   return (
     <motion.div
-      initial="hidden"
+      initial={entryInitial('hidden')}
       whileInView="show"
       viewport={{ once: true, margin: '-60px' }}
       transition={{ staggerChildren: stagger }}

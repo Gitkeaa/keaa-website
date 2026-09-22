@@ -65,26 +65,19 @@ export default function HeaderAccount() {
   // `checking` counts as signed out here — see the note above on why this renders eagerly.
   // One login screen for the whole site: this goes straight to /portal/login rather than opening
   // an in-header dialog, so a signed-out visitor and a logged-out staffer see the same page.
-  if (!isAuthed) {
-    return (
-      <>
-        {/* Mobile: an icon-only sign-in beside the search icon, so login is one tap from any
-            page instead of buried at the foot of the drawer. Same styling as the search
-            button; hidden at sm+, where the worded link below takes over. */}
-        <Link
-          to="/portal/login"
-          aria-label={t('auth.signIn')}
-          className={`${headerControl} justify-center sm:hidden`}
-        >
-          <User aria-hidden className="h-[18px] w-[18px]" strokeWidth={2} />
-        </Link>
-        <Link to="/portal/login" className={triggerCls}>
-          <User aria-hidden className="h-[18px] w-[18px] flex-shrink-0" strokeWidth={2} />
-          {t('auth.signIn')}
-        </Link>
-      </>
-    );
-  }
+  /**
+   * SIGNED OUT: the header shows nothing at all.
+   *
+   * It used to carry a Sign in link on every public page. That is a staff door advertised
+   * to buyers and to crawlers alike: it appeared in the rendered text of all 4,884 pages,
+   * and an indexed login link is a liability rather than traffic. robots.txt already
+   * disallows /portal for the same reason, so the two now agree.
+   *
+   * Nothing about the route changes. /portal/login still works and is still reachable by
+   * typing or bookmarking it, staff who ARE signed in still get the account menu below,
+   * and the mobile drawer keeps its account row for them.
+   */
+  if (!isAuthed) return null;
 
   // Just the first name on the header line: full names run long enough to push the quote
   // CTA off a laptop-width row, and the menu shows the full name anyway.

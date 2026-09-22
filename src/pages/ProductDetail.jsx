@@ -6,7 +6,10 @@ import Badge from '../components/ui/Badge';
 import ProductCard from '../components/products/ProductCard';
 import CtaBand from '../components/CtaBand';
 import useSEO, { absoluteUrl } from '../hooks/useSEO';
+import { productTitle, productDescription } from '../data/seoKeywords';
 import { getProductById, getRelatedProducts, publicIdFromCloudinaryUrl } from '../data/productHelpers';
+import { productPath, productIdFromSlug } from '../data/productPaths';
+import { landingPageForSubcategory } from '../data/landingPages';
 import { cldImage } from '../data/cloudinary';
 import { useLT, useProductL10n } from '../i18n/LocaleContext';
 
@@ -26,7 +29,17 @@ export default function ProductDetail() {
   const lt = useLT('product');
   const ltc = useLT('catalog');
   const { lp } = useProductL10n();
-  const { id } = useParams();
+  /**
+   * Two URL shapes reach this page.
+   *
+   * The readable one, /products/<category>/<subcategory>/<slug>, is what everything links to
+   * and what the sitemap carries. The numeric one, /product/136, is the old shape: middleware
+   * 301s it at the edge before React loads, so a visitor or a crawler only sees it if they
+   * navigate inside the app. Resolving both here means an in-app link that missed the
+   * migration still lands on the right product rather than a not-found page.
+   */
+  const { id: numericId, categorySlug, subSlug, productSlug } = useParams();
+  const id = productSlug ? String(productIdFromSlug(categorySlug, subSlug, productSlug) ?? '') : numericId;
   // The catalogue entry, with its name, description and specification rows in the active
   // language (the same object when nothing is translated, see localizeProduct.js).
   const product = lp(getProductById(id));
@@ -67,7 +80,7 @@ export default function ProductDetail() {
         '@context': 'https://schema.org',
         '@type': 'Product',
         name: product.name,
-        url: absoluteUrl(`/product/${product.id}`),
+        url: absoluteUrl(productPath(product.id) || `/product/${product.id}`),
         ...(product.description ? { description: product.description } : {}),
         ...(product.itemCode ? { sku: product.itemCode, mpn: product.itemCode } : {}),
         ...(product.cloudinaryImages?.length
@@ -99,9 +112,23 @@ export default function ProductDetail() {
       }
     : undefined;
 
+  /**
+   * The title used to be the bare product name, so 355 pages competed for phrases like
+   * "Accessories" and "Ledger" with nothing to say what they were. The description was
+   * the raw `description` field, which on many products is a spec string such as
+   * "Powder Coated / Hot Dip Galvanized as per DIN EN 1461": true, and useless as the one
+   * line a buyer reads in a search result.
+   *
+   * Both are now composed from the product data and its range keyword. See
+   * data/seoKeywords.js for the templates and the length budgets.
+   *
+   * Translated titles are deliberately NOT used here. The keyword is the English phrase
+   * buyers search, and a localised page still wants to be found for it.
+   */
   useSEO({
-    title: product ? product.name : lt('seo.title', 'Product'),
-    description: product?.description || subName,
+    title: product ? productTitle(product) : lt('seo.title', 'Product'),
+    description: product ? productDescription(product) : subName,
+    appendSiteName: !product,
     breadcrumbs,
     schema: productSchema,
   });
@@ -122,6 +149,7 @@ export default function ProductDetail() {
     : null;
   const related = getRelatedProducts(product, 5);
   const hasSpecs = product.specs && product.specs.length > 0;
+  const landingPage = landingPageForSubcategory(product.subSlug);
 
   const facts = [
     product.itemCode && { label: lt('facts.itemCode', 'Item Code'), value: product.itemCode },
@@ -243,6 +271,26 @@ export default function ProductDetail() {
             ) : (
               <p className="mt-4 rounded-card border border-dashed border-navy-200 border-l-2 border-l-primary/40 bg-navy-50/40 px-5 py-6 text-body-compact text-text-muted">
                 {lt('specs.pending', 'Detailed specifications for this product are being added. Contact our team for the full datasheet.')}
+              </p>
+            )}
+
+            {/* One line back to the keyword landing page for this range.
+                Landing pages linked into the catalogue but nothing linked back, so the pages
+                carrying the phrases the site is trying to rank for had no internal links from
+                the 355 pages most closely related to them. The anchor text is the landing
+                page's own keyword rather than "click here" or the product name, because anchor
+                text is one of the few signals a link carries about what it points at.
+                Renders nothing for ranges with no landing page yet. */}
+            {landingPage && (
+              <p className="mt-4 text-body-compact text-text-muted">
+                {lt('specs.partOf', 'Part of our')}{' '}
+                <Link
+                  to={landingPage.to}
+                  className="font-semibold text-primary-dark underline-offset-2 hover:underline"
+                >
+                  {landingPage.keyword}
+                </Link>{' '}
+                {lt('specs.partOfRange', 'range')}
               </p>
             )}
           </div>

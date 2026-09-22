@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { DEFAULT_LANGUAGE, liveLocales, localePrefixOf } from '../i18n/languages';
+import { DEFAULT_LANGUAGE, INDEXED_LOCALES, isIndexedLocale, localePrefixOf } from '../i18n/languages';
 
 const SITE_NAME = 'KEAA International';
 const SITE_URL = 'https://www.keaainternational.com';
@@ -13,14 +13,19 @@ const SITE_URL = 'https://www.keaainternational.com';
  */
 const LOCALE_PREFIX = typeof window === 'undefined' ? '' : localePrefixOf(window.location.pathname);
 /**
- * The default social-share image, proxied through Cloudinary like the rest of the stock
- * photography (see src/data/images.js). This one is only ever fetched by social crawlers
- * rather than by visitors, so it was never the privacy problem the in-page images were —
- * it is routed the same way so there is exactly one place Unsplash is referenced.
+ * The card shown when a link to this site is pasted into WhatsApp, LinkedIn or a search
+ * preview, for every page that does not supply its own.
+ *
+ * It used to be an Unsplash stock photograph of somebody else's scaffolding, which is a
+ * strange thing to put a company name against, and it meant the first impression of KEAA
+ * in a shared link was a picture KEAA did not take. This one is the real logo and only
+ * facts the site already publishes.
+ *
+ * Regenerate after a logo or tagline change with: node scripts/make-og-image.mjs
+ *
+ * Absolute on purpose. Open Graph crawlers do not resolve relative paths.
  */
-const DEFAULT_IMAGE =
-  'https://res.cloudinary.com/keaa-assets/image/fetch/f_auto,q_auto,w_1200,c_limit/' +
-  encodeURIComponent('https://images.unsplash.com/photo-1636362556682-11231883c01c');
+const DEFAULT_IMAGE = `${SITE_URL}/og-default.jpg`;
 
 /**
  * Marks the ONE <script> tag this hook owns. index.html ships a static Organization
@@ -78,12 +83,35 @@ function buildBreadcrumbList(crumbs) {
  * @param {Array}    opts.breadcrumbs  `[{ label, to }]` -> emitted as a BreadcrumbList.
  * @param {object|Array} opts.schema   Extra schema.org object(s), e.g. a Product.
  * @param {boolean}  opts.noindex      Keep the page out of the index entirely.
+ * @param {boolean}  opts.appendSiteName
+   Whether to append " | KEAA International". True for the ordinary case, where a page
+   supplies a bare subject. Pass false when the title already ends in the brand, which
+   product and range pages do: their titles are composed to a 60 character budget by
+   data/seoKeywords.js, and appending to that would push the useful words past where
+   Google truncates.
  */
-export default function useSEO({ title, description, image, breadcrumbs, schema, noindex = false }) {
+export default function useSEO({
+  title,
+  description,
+  image,
+  breadcrumbs,
+  schema,
+  noindex = false,
+  appendSiteName = true,
+}) {
+  /**
+   * Six locales are live but no longer offered to search engines. Every page under those
+   * prefixes is noindex regardless of what the page itself asked for, because the decision
+   * is about the locale rather than the page. See INDEXED_LOCALES in i18n/languages.js.
+   */
+  const localeNoindex = !isIndexedLocale(LOCALE_PREFIX);
+  const isNoindex = noindex || localeNoindex;
   const location = useLocation();
 
   useEffect(() => {
-    const fullTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
+    const fullTitle = title
+      ? (appendSiteName ? `${title} | ${SITE_NAME}` : title)
+      : SITE_NAME;
     document.title = fullTitle;
 
     /**
@@ -92,7 +120,7 @@ export default function useSEO({ title, description, image, breadcrumbs, schema,
      * thing that can contradict the canonical.
      */
     const robots = document.querySelector('meta[name="robots"]');
-    if (noindex) setMeta('name', 'robots', 'noindex, follow');
+    if (isNoindex) setMeta('name', 'robots', 'noindex, follow');
     else if (robots) robots.remove();
 
     setMeta('name', 'description', description);
@@ -123,9 +151,15 @@ export default function useSEO({ title, description, image, breadcrumbs, schema,
      * documented reciprocal form Google requires (one-way links are ignored).
      */
     document.querySelectorAll('link[data-seo-hreflang]').forEach((el) => el.remove());
-    const locales = liveLocales();
+    /**
+     * INDEXED_LOCALES, not liveLocales(). Six live locales were dropped from search on the
+     * Search Console evidence of 22 September 2026; advertising an alternate we have asked
+     * Google not to index is a contradiction, and Google ignores hreflang sets that contain
+     * noindex members anyway.
+     */
+    const locales = INDEXED_LOCALES;
     // A page that is not indexed has nothing to offer alternates of.
-    if (locales.length && !noindex) {
+    if (locales.length && !isNoindex) {
       const alternates = [
         [DEFAULT_LANGUAGE, `${SITE_URL}${location.pathname}`],
         ...locales.map((code) => [code, `${SITE_URL}/${code}${location.pathname}`]),
@@ -140,7 +174,7 @@ export default function useSEO({ title, description, image, breadcrumbs, schema,
         document.head.appendChild(el);
       }
     }
-  }, [title, description, image, noindex, location.pathname]);
+  }, [title, description, image, isNoindex, appendSiteName, location.pathname]);
 
   /**
    * Serialised rather than passed by reference: pages build these arrays/objects inline in

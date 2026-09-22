@@ -11,6 +11,7 @@ import LanguageNotice from './LanguageNotice';
 import { SkipToContent, RouteAnnouncer } from './A11y';
 import { LocaleProvider } from '../i18n/LocaleContext';
 import { RegionProvider } from '../context/RegionContext';
+import { entryInitial } from '../lib/firstPaint';
 
 /**
  * The public shell. It owns the three pieces of chrome state that more than one child cares
@@ -76,7 +77,7 @@ export default function Layout() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0 }}
+                initial={entryInitial({ opacity: 0 })}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25, ease: 'easeInOut' }}

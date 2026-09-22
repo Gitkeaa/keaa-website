@@ -5,10 +5,13 @@ import ProductCard from '../components/products/ProductCard';
 import CtaBand from '../components/CtaBand';
 import CategoryPillar from '../components/products/CategoryPillar';
 import { getCategoryPillar } from '../data/categoryPillars';
+import { getSubcategoryPillar } from '../data/subcategoryPillars';
 import ImagePlaceholder from '../components/ui/ImagePlaceholder';
 import Button from '../components/ui/Button';
 import useSEO, { absoluteUrl } from '../hooks/useSEO';
+import { subcategoryTitle, subcategoryDescription } from '../data/seoKeywords';
 import { useLT, useProductL10n } from '../i18n/LocaleContext';
+import { productPath } from '../data/productPaths';
 import {
   getCategory,
   getProductsByCategory,
@@ -124,7 +127,7 @@ export default function ProductCatalog() {
           itemListElement: pageItems.map((p, i) => ({
             '@type': 'ListItem',
             position: start + i + 1,
-            url: absoluteUrl(`/product/${p.id}`),
+            url: absoluteUrl(productPath(p.id) || `/product/${p.id}`),
             name: lp(p).name,
           })),
         },
@@ -132,28 +135,49 @@ export default function ProductCatalog() {
     : undefined;
 
   /**
-   * FAQPage markup for the questions the pillar section renders. Only on the category page,
-   * never a subcategory: the pillar is not rendered there, and describing text that is not on
-   * the page is a structured data policy violation.
+   * FAQPage markup for the questions the pillar section renders, on category AND subcategory
+   * pages, because both now render one. The rule it has to respect is unchanged: the markup
+   * may only describe questions the page actually shows, so it is derived from the same
+   * pillar object the section renders from rather than written separately.
    */
-  const pillar = category && !activeSub ? getCategoryPillar(category.slug) : undefined;
+  const pillar = activeSub
+    ? getSubcategoryPillar(activeSub.slug)
+    : category
+      ? getCategoryPillar(category.slug)
+      : undefined;
+  const pillarKey = activeSub ? `subpillar.${activeSub.slug}` : `pillar.${category?.slug}`;
   const faqSchema = pillar?.faqs?.length
     ? {
         '@context': 'https://schema.org',
         '@type': 'FAQPage',
         mainEntity: pillar.faqs.map((f, i) => ({
           '@type': 'Question',
-          name: lt(`pillar.${category.slug}.faqs.${i}.q`, f.q),
-          acceptedAnswer: { '@type': 'Answer', text: lt(`pillar.${category.slug}.faqs.${i}.a`, f.a) },
+          name: lt(`${pillarKey}.faqs.${i}.q`, f.q),
+          acceptedAnswer: { '@type': 'Answer', text: lt(`${pillarKey}.faqs.${i}.a`, f.a) },
         })),
       }
     : undefined;
 
+  /**
+   * A SUBCATEGORY page is titled for the phrase buyers actually search, not for the
+   * catalogue's internal name. "Post Supports, Products" became "Post Supports
+   * Manufacturer & Exporter | KEAA International"; "System Scaffolds-Ringlock" becomes
+   * "Ringlock Scaffolding ...". See data/seoKeywords.js.
+   *
+   * Category pages are left as they were: all three already carry pillar content with
+   * their own copy, and their names are already the words people use.
+   */
+  const subSeoTitle = activeSub ? subcategoryTitle(activeSub.name) : null;
+
   useSEO({
-    title: category
-      ? lt('seo.listTitle', '{name}, Products', { name: activeSub ? subName : catName })
-      : lt('seo.title', 'Products'),
-    description: category?.short ? lt(`cat.${category.slug}.short`, category.short) : undefined,
+    title: subSeoTitle
+      || (category
+        ? lt('seo.listTitle', '{name}, Products', { name: activeSub ? subName : catName })
+        : lt('seo.title', 'Products')),
+    description: activeSub
+      ? subcategoryDescription(activeSub.name, baseList.length)
+      : category?.short ? lt(`cat.${category.slug}.short`, category.short) : undefined,
+    appendSiteName: !subSeoTitle,
     breadcrumbs,
     schema: [collectionSchema, faqSchema].filter(Boolean),
   });
@@ -339,8 +363,10 @@ export default function ProductCatalog() {
         </div>
       </section>
 
-      {/* Long-form copy, and only on the category page. See components/products/CategoryPillar. */}
-      {category && !activeSub && <CategoryPillar category={category} />}
+      {/* Long-form copy. The category pages had it already; every subcategory now has its own,
+          written for that range alone so the pages are distinct rather than duplicates.
+          See components/products/CategoryPillar and data/subcategoryPillars.js. */}
+      {category && <CategoryPillar category={category} subcategory={activeSub || undefined} />}
 
       <CtaBand
         title={lt('cta.title', 'Need Help Choosing')}
@@ -490,7 +516,7 @@ function ProductRow({ product }) {
   const src = productImage(product, { w: 200, h: 200, crop: 'fill' });
   return (
     <Link
-      to={`/product/${product.id}`}
+      to={productPath(product.id) || `/product/${product.id}`}
       className="group flex items-center gap-4 rounded-card border border-navy-100 bg-white p-3 shadow-card transition-shadow hover:shadow-cardHover"
     >
       <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-card">

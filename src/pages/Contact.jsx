@@ -35,6 +35,7 @@ import { useAdminAuth } from '../admin/auth/AdminAuthContext';
 import useSEO from '../hooks/useSEO';
 import { EASE } from '../lib/motion';
 import { useLT, useT } from '../i18n/LocaleContext';
+import { entryInitial } from '../lib/firstPaint';
 
 /**
  * Filtered on `href` for the same reason as the footer's row: these render as large,
@@ -488,7 +489,7 @@ export default function Contact() {
                   {showConsult && (
                     <motion.div
                       key="consult"
-                      initial={{ opacity: 0, height: 0 }}
+                      initial={entryInitial({ opacity: 0, height: 0 })}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.35, ease: EASE }}
@@ -583,7 +584,7 @@ export default function Contact() {
                   {showIntro && (
                     <motion.div
                       key="rfq-intro"
-                      initial={{ opacity: 0, height: 0 }}
+                      initial={entryInitial({ opacity: 0, height: 0 })}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.35, ease: EASE }}
@@ -730,9 +731,10 @@ export default function Contact() {
                 <article className="group flex h-full flex-col overflow-hidden rounded-card ring-1 ring-text/[0.08] transition-all duration-300 hover:-translate-y-1 hover:ring-text/[0.16]">
                   {/* Same photo-or-initials fallback the About rail used, so a missing
                       portrait leaves a branded tile rather than a hole in the grid. */}
-                  {l.photo ? (
+                  {l.photo || l.cloudinaryId ? (
                     <Photo
                       src={l.photo}
+                      cloudinaryId={l.cloudinaryId}
                       alt={l.name}
                       /* A portrait tile, never full width: one column on a phone, then two,
                          three and four as the grid widens. Telling the browser that is what

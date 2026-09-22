@@ -840,7 +840,6 @@ export default {
  "home.showcase.title2": "Conçu pour l’excellence.",
  "home.who.badge.label": "La confiance de",
  "home.who.badge.value": "42+ pays",
- "home.who.body": "KEAA International est une entreprise d’ingénierie et de fabrication reconnue dans le monde entier, spécialisée dans les solutions haute performance d’échafaudage, de coffrage et d’équipement industriel. Forts de décennies d’expertise, d’installations de production avancées et d’un engagement sans faille envers la qualité, nous livrons des produits innovants qui renforcent la sécurité, améliorent l’efficacité et soutiennent le développement d’infrastructures durables dans plus de 42 pays à travers le monde.",
  "home.who.cta": "En savoir plus",
  "home.who.eyebrow": "À propos de KEAA",
  "home.who.imageAlt": "À l’intérieur de l’usine de KEAA International : un pont roulant aux couleurs de la marque au-dessus des lignes d’usinage, avec des stocks de tubes, de profilés et de bobines d’acier sur racks",

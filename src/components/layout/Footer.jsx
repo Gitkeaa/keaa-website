@@ -10,7 +10,7 @@ import { openCookiePreferences } from '../CookieConsent';
 import { company } from '../../data/company';
 import { track, EVENTS } from '../../lib/analytics';
 import { localPhoto } from '../../data/images';
-import { footerLinks } from '../../data/navigation';
+import { footerLinks, solutionsLinks } from '../../data/navigation';
 import { getAllCategories } from '../../data/categories';
 import { useLT } from '../../i18n/LocaleContext';
 
@@ -130,7 +130,7 @@ export default function Footer() {
             2-up then 5-up desktop grid as before. */}
         <div className="container-page relative z-10 grid grid-cols-2 gap-x-8 gap-y-12 py-14 lg:grid-cols-[1.25fr_1fr_1.15fr_1fr_1.35fr] lg:py-16">
           <div className="col-span-2 lg:col-span-1">
-            <Logo light />
+            <Logo light belowFold />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/55">{lt('footer.about', company.description)}</p>
 
             <div className="mt-7 flex gap-2.5">
@@ -227,6 +227,35 @@ export default function Footer() {
               </ContactRow>
             </ul>
           </div>
+        </div>
+
+        {/**
+         * The nine keyword landing pages, on every page of the site.
+         *
+         * They live here rather than in the five column grid above because adding a sixth
+         * column would re-cut a layout that is already solved at every breakpoint. A wrapped
+         * row of pills costs nothing at any width.
+         *
+         * This is also the internal linking the pages need. A landing page nobody links to is
+         * a page search engines reach last and weight least, and these are the pages carrying
+         * the phrases the site is trying to rank for.
+         */}
+        <div className="container-page relative z-10 border-t border-white/10 py-7">
+          <h2 className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/45">
+            {lt('footer.solutions', 'Solutions')}
+          </h2>
+          <ul className="mt-3.5 flex flex-wrap gap-2">
+            {solutionsLinks.map((l) => (
+              <li key={l.to}>
+                <Link
+                  to={l.to}
+                  className="inline-flex rounded-full border border-white/[0.14] bg-white/[0.04] px-3.5 py-1.5 text-xs font-medium text-white/70 transition-colors duration-200 hover:border-primary hover:bg-primary hover:text-white"
+                >
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
 
         {/* The credentials strip (42+ Countries, 5 facilities, Quality Assured…) was removed

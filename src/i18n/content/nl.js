@@ -931,7 +931,7 @@ export default {
  "home.showcase.title2": "Ontworpen voor excellentie.",
  "home.who.badge.label": "Vertrouwd door",
  "home.who.badge.value": "42+ landen",
- "home.who.body": "KEAA International is een wereldwijd vertrouwde engineering- en productieonderneming, gespecialiseerd in hoogwaardige steigers, bekisting en industriële oplossingen. Gesteund door decennia aan expertise, geavanceerde productiefaciliteiten en een onwrikbare toewijding aan kwaliteit leveren wij innovatieve producten die de veiligheid verhogen, de efficiëntie verbeteren en duurzame infrastructuurontwikkeling ondersteunen in meer dan 42 landen wereldwijd.",
+ "home.who.body": "KEAA International is een wereldwijd vertrouwde engineering- en productieonderneming die een breed scala aan hoogwaardige oplossingen levert voor uiteenlopende sectoren. Op basis van decennia aan ervaring, geavanceerde productiefaciliteiten en een sterke focus op kwaliteit vervaardigen wij steiger- en bekistingssystemen, stalinrichting voor de veehouderij, doe-het-zelf- en beslagproducten en op maat ontworpen componenten. Door voortdurende innovatie, betrouwbare productie en aandacht voor veiligheid, efficiëntie en duurzaamheid ondersteunt KEAA International klanten en infrastructuurprojecten in meer dan 42 landen.",
  "home.who.cta": "Meer weten",
  "home.who.eyebrow": "Over KEAA",
  "home.who.imageAlt": "In de fabriek van KEAA International: een bovenloopkraan met bedrijfslogo boven de bewerkingslijnen, met stellingen vol stalen buizen, profielen en coils",

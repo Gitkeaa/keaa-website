@@ -1,4 +1,5 @@
 import { localPhoto, localPhotoSrcSet } from '../../data/images';
+import { cldImage, cldSrcSet } from '../../data/cloudinary';
 
 /**
  * One of the site's own photographs, delivered at the size the layout actually shows.
@@ -21,6 +22,11 @@ import { localPhoto, localPhotoSrcSet } from '../../data/images';
  */
 export default function Photo({
   src,
+  /**
+   * A Cloudinary public_id. When present it wins over `src`, which is what lets a
+   * photograph be moved to Cloudinary by pasting an id into the data with no code change.
+   */
+  cloudinaryId,
   alt = '',
   width = 1200,
   sizes = '100vw',
@@ -29,6 +35,23 @@ export default function Photo({
   fetchPriority,
   ...rest
 }) {
+  const id = cloudinaryId?.trim();
+  if (id) {
+    return (
+      <img
+        src={cldImage(id, { w: width })}
+        srcSet={cldSrcSet(id)}
+        sizes={sizes}
+        alt={alt}
+        loading={loading}
+        decoding="async"
+        fetchPriority={fetchPriority}
+        className={className}
+        {...rest}
+      />
+    );
+  }
+
   if (!src) return null;
 
   // An absolute URL is already someone else's to optimise (Cloudinary, an uploaded avatar),

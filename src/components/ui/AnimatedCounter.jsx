@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { hasPainted } from '../../lib/firstPaint';
 import { motion, useInView, animate } from 'framer-motion';
 import { EASE } from '../../lib/motion';
 
@@ -12,7 +13,16 @@ const DURATION = 1.4;
 export default function AnimatedCounter({ value, className = '' }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-40px' });
-  const [display, setDisplay] = useState(0);
+  /**
+   * Starts at the FINAL value on the first paint of a page load, and counts up on every mount
+   * after that.
+   *
+   * Prerendering snapshots the page once the counter has finished, so the HTML says "42". A
+   * fresh React render starting from 0 says "0", and that single difference is enough for React
+   * to reject the prerendered markup and rebuild the whole tree, which is worth 0.31 of layout
+   * shift. See lib/firstPaint.js.
+   */
+  const [display, setDisplay] = useState(() => (hasPainted() ? 0 : Number.NaN));
 
   // Split numeric part from any trailing characters (e.g. "30+" -> 30, "+")
   const match = String(value).match(/^([\d.,]+)(.*)$/);
@@ -43,7 +53,11 @@ export default function AnimatedCounter({ value, className = '' }) {
 
   return (
     <motion.span ref={ref} className={className}>
-      {decimals > 0 ? display.toFixed(decimals) : Math.round(display).toLocaleString()}
+      {(() => {
+        // NaN is the first-paint sentinel: render the destination, not the start.
+        const n = Number.isNaN(display) ? numeric : display;
+        return decimals > 0 ? n.toFixed(decimals) : Math.round(n).toLocaleString();
+      })()}
       {trailing}
     </motion.span>
   );

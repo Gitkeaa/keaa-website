@@ -87,8 +87,17 @@ export const posts = [
         body:
           'Straight facades, repeated heights, low training overhead: frames. Mixed general construction with some shoring and birdcage work: cuplock. Irregular geometry, industrial structures, a fleet that has to suit whatever comes next: ringlock. Most contractors of any size end up owning two of the three, and the useful question is which one is the backbone and which one fills the gaps.',
       },
+      {
+        heading: 'What it costs you to run two systems',
+        body:
+          'Most contractors who hold more than one system did not plan to. A job needed Ringlock, the yard already had Cuplock, and both stayed. That is a defensible position, but it has a running cost worth naming before it is chosen by accident.\\n\\nComponents do not cross over. A Cuplock ledger will not enter a Ringlock rosette, so every bay of stock has to be counted, stored and loaded separately, and a lorry going to site with the wrong half of the yard on it is a lost morning. Erectors have to be competent on both, and the inspection routine differs: on Cuplock you are looking at whether the top cup is driven home, on Ringlock whether each wedge is seated. Neither is difficult, but they are different habits and mixed crews get them wrong under time pressure.\\n\\nAgainst that, a single system means turning work away when the geometry does not suit it, or making up the difference with tube and fitting, which is slower to erect and slower to inspect than either system. The practical answer for most fleets is one primary system chosen for the work they actually win, with enough tube and couplers to handle what it cannot reach.',
+      },
     ],
     faqs: [
+      {
+        q: 'Can I extend an existing scaffold fleet with components from a different manufacturer?',
+        a: 'Sometimes, but it has to be checked rather than assumed. System geometry is set by factory tooling, so rosette position, cup depth and spigot fit can differ between makers even within the same system. Send a sample or the dimensions of your existing components and we will tell you whether ours assemble with them.',
+      },
       {
         q: 'Can ringlock and cuplock components be mixed?',
         a: 'No. The node geometry is completely different, so ledgers from one will not engage the other. Even within one family, components from different manufacturers should not be assumed interchangeable without checking the node dimensions.',
@@ -132,8 +141,17 @@ export const posts = [
         body:
           'Start with the slab height and pick the prop range that puts that height in the middle rather than at the end. Confirm the class, and ask for the evidence behind it. Decide the head arrangement, fork head or plate, based on the beam it carries. Add tripods for the erection sequence. Then check the finish against how many pours the props have to survive.\n\nFor tall or heavily loaded pours, a prop may be the wrong tool altogether and a load bearing shoring tower the right one. The transition point is a design decision, not a catalogue one.',
       },
+      {
+        heading: 'The three numbers to send with an enquiry',
+        body:
+          'Most prop enquiries arrive with one of these missing, and the quotation that comes back is then a guess dressed up as a price.\\n\\nThe first is the closed and extended length. A prop should be working somewhere in the middle of its adjustment, not wound out to its last thread, so the slab height tells you which prop in the range you want rather than which one will just about reach.\\n\\nThe second is the load, which comes out of the falsework design rather than out of the prop catalogue. It depends on the slab thickness, the prop spacing and the back propping arrangement, and it is the designer\'s number, not the supplier\'s.\\n\\nThe third is the class under EN 1065, because the class is what ties the first two together. It is the classification that tells you what that prop carries at that extension, which is exactly the relationship a single headline load figure hides.\\n\\nSend those three and a quotation can be specific. Send only a length and it cannot, which is why props bought on length alone are so often either over specified and heavy to carry, or under specified and quietly working outside what they were designed for.',
+      },
     ],
     faqs: [
+      {
+        q: 'Why do you not publish a safe working load for each prop?',
+        a: 'Because a single number would be wrong for most of the range. The load a telescopic prop carries depends on how far it is extended, so the honest answer is the EN 1065 class, which describes that relationship, rather than one figure that is only true at one extension.',
+      },
       {
         q: 'What does EN 1065 Class BD mean?',
         a: 'It identifies the class the prop has been made and tested to under the European standard for adjustable telescopic steel props. The class, rather than the standard number alone, is what tells you the performance category. Ask for the class and the conformity evidence together.',
@@ -181,8 +199,21 @@ export const posts = [
         body:
           'State the tube outside diameter and wall thickness, not just "scaffold tube". State the pattern, British, American or European. State the standard and class you need evidence for. If you are adding to existing stock, send a photograph of the fitting you already use alongside the dimensions, because a photograph resolves pattern questions faster than a description does.\n\nFinish matters here too. Couplers are dropped, kicked and left in the weather, and hot dip galvanizing to DIN EN 1461 is what keeps the thread turning after a few seasons.',
       },
+      {
+        heading: 'Why a mixed yard is the usual situation',
+        body:
+          'In principle a scaffold is built from one pattern of fitting. In practice yards accumulate. Stock arrives with a hired scaffold, a job in an export market comes back with fittings that stay, and within a few years a rack holds both British and European couplers that look broadly alike at arm\'s length.\\n\\nThat matters because the two are not interchangeable in the way their appearance suggests. They are built to different standards, BS 1139 and EN 74, with different dimensions and different test regimes behind them. A fitting that grips a tube is not the same as a fitting that has been shown to hold the load that standard requires at that grip, and the difference is invisible once both are galvanized.\\n\\nThe practical control is not a policy nobody follows, it is making the two visually distinguishable in the rack and buying replacements to one pattern deliberately. If your yard is already mixed, the useful question at the point of reorder is which pattern the majority of your working stock is, and standardising future purchases on that rather than on whichever is cheaper that month.',
+      },
     ],
     faqs: [
+      {
+        q: 'What is a half coupler for, and why are there so many versions of it?',
+        a: 'A half coupler is the adapter between a scaffold tube and something that is not a tube: a brace, a rod, a strip or a lock. Each welded attachment suits a different connection, which is why the range runs to welded rod, welded L rod, welded tube, welded V-strip, welded strip and L strip in long and short, rather than one generic part. Ordering the wrong variant is the usual cause of a box of fittings that cannot be used on the job they were bought for, so it is worth naming the attachment as well as the coupler type when you enquire.',
+      },
+      {
+        q: 'Do you supply couplers and scaffold tube together?',
+        a: 'Yes, and it is worth doing. A coupler grips a specific tube diameter and wall thickness, so its performance is partly a function of what it is clamping. Galvanized tube is catalogued alongside the fittings, and if you are buying couplers for tube you already hold, send the tube dimensions with the enquiry.',
+      },
       {
         q: 'Are British and European couplers interchangeable?',
         a: 'Not reliably. They are built around different tube dimensions, so a fitting for one pattern will not grip the other correctly. Specify the pattern and the tube dimensions together.',
@@ -226,8 +257,21 @@ export const posts = [
         body:
           'Work from the building, not from a catalogue. Measure the span, the passage widths and the fall of the floor, then decide the row layout, then select equipment to suit it. Modular systems are worth insisting on for one reason: herds change size, and a layout that can be extended without replacing what is installed is cheaper over ten years than one that cannot.\n\nCalf housing follows the same logic at a different scale, with pen divisions and gates sized for young stock and easy cleaning between batches.',
       },
+      {
+        heading: 'Specifying a feed fence without a second order',
+        body:
+          'The commonest reason a livestock housing order goes out twice is that the locks were specified and the fixings were not. A headlock run is a system: the lock, the handle assembly that operates it along the length of the fence, and the clamps that hold the whole thing to the building.\\n\\nStart with the animals, because that decides the lock. Giant feed headlocks are sized for mature cattle, heifer safety headlocks for younger and smaller stock, and using the adult size for heifers is a genuine welfare risk rather than a fit problem. Then the handle, in plate or tube type, which determines how the fence is released along its run. Then the fixings: brisket board clamps and plates set the standing position at the feed face, and L post clamps, double head clamps and adjustable clamps attach the assembly to whatever structure is there.\\n\\nSend the fence length, the animal type, the number of spaces and a photograph of the existing structure. Those four things are enough to quote a complete run, and they are the difference between one delivery and two.',
+      },
     ],
     faqs: [
+      {
+        q: 'Is a stainless steel finish worth specifying over hot dip galvanizing?',
+        a: 'It depends on the washdown regime rather than on the animals. Hot dip galvanizing to DIN EN 1461 is the standard finish and it coats the inside of hollow sections as well as the outside, which is where corrosion in a shed atmosphere actually starts. Stainless is available on selected items and is usually specified where a parlour is washed down often enough that the additional cost is recovered in service life.',
+      },
+      {
+        q: 'Can headlocks be retrofitted to an existing feed fence?',
+        a: 'Often, but it depends on the existing structure and its fixing centres rather than on the locks. Send photographs, the fence dimensions and the clamps currently in use, and we will tell you what fits rather than guess at it.',
+      },
       {
         q: 'Should equipment be galvanized before or after welding?',
         a: 'After fabrication. Hot dip galvanizing the finished assembly coats the weld seams and cut ends, which is where corrosion starts in a slurry and ammonia environment. Welding galvanized tube afterwards leaves bare steel at every joint.',
@@ -275,8 +319,17 @@ export const posts = [
         body:
           'Anything in ground contact or exposed to weather should be hot dip galvanized to DIN EN 1461. The coating has to survive being driven into soil or bolted down and then left outdoors for years, and a thin decorative finish will not.\n\nUse fixings of a matching specification. Mixing metals in a wet outdoor joint sets up galvanic corrosion, and the fixings are usually the smallest part of the cost and the first thing to fail.',
       },
+      {
+        heading: 'Matching the fixing to the ground, not to the catalogue',
+        body:
+          'Every post support and anchor in the range exists because a particular ground condition calls for it, and choosing on price rather than on ground is the reason fence lines move in their first winter.\\n\\nSoft ground with no existing surface suits a driven pattern, a T blade or a driven H, I or U type, hammered in without excavation. The same ground suits a spiral anchor, which screws in and holds on its thread, with the advantage that the post can be taken out again later without breaking out a foundation.\\n\\nAn existing concrete or paved surface calls for a boltdown support or a bolt type anchor instead, fixing to what is already there. Where the load needs spreading rather than concentrating, a ground plate or a base plate version does that. Where the post may need to come out, or where a hole through the timber is undesirable, a wedge grip clamps it rather than bolting through it.\\n\\nAnd where the ground is not level, which is most ground, an adjustable support lets the post height be corrected after the support is set, with long nut versions for when more correction is needed than the standard thread gives.',
+      },
     ],
     faqs: [
+      {
+        q: 'Do post supports and anchors from different ranges fit the same posts?',
+        a: 'Yes. The fixed supports, the adjustable supports, the pole anchors and the ground plates are made in the same plants to the same tolerances, so a project can use whichever fixing each part of the site calls for without the post fit changing from bay to bay.',
+      },
       {
         q: 'Do I still need to concrete a post if I use a drive in support?',
         a: 'No. That is the point of the drive in pattern: the spike develops its resistance from the surrounding ground. It does need ground firm enough to hold, so soft, made up or waterlogged ground calls for a bolt down support on a pad instead.',

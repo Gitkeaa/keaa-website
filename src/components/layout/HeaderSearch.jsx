@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, X } from 'lucide-react';
-import { useT, useLT, useLocale, useProductL10n } from '../../i18n/LocaleContext';
+import { useT, useLT, useProductL10n } from '../../i18n/LocaleContext';
 import { localePrefixOf } from '../../i18n/languages';
 import { headerControl } from './headerControl';
 import HeaderHint from './HeaderHint';
+import { productPath } from '../../data/productPaths';
 
 /**
  * Site search, INLINE in the header.
@@ -22,7 +23,8 @@ import HeaderHint from './HeaderHint';
  *     findable. Products are searched straight against the catalogue.
  *
  * Both data sources are LAZY and that is load-bearing: the catalogue is ~181 KB and the
- * index ~91 KB. Neither is fetched until the first keystroke, so the header costs nothing.
+ * index about 300 KB for the language being read. Neither is fetched until the first
+ * keystroke, so the header costs nothing until someone actually searches.
  */
 
 const MAX_PRODUCTS = 5;
@@ -62,9 +64,23 @@ const loadCatalog = () => {
 };
 
 let indexPromise = null;
+/**
+ * Fetches the index for the language being browsed.
+ *
+ * There is one file per locale rather than one for the site. A single index held twelve copies
+ * of the same 61 routes, 3.8 MB of which eleven twelfths were languages this visitor cannot
+ * read; per locale it is about 300 KB and the results are in their language. English keeps the
+ * unprefixed name, so nothing changes for the default site.
+ *
+ * Routes inside the file have no locale prefix; it is added back when a result is opened, which
+ * is what keeps the files small and identical in shape.
+ */
 const loadIndex = () => {
   if (!indexPromise) {
-    indexPromise = fetch('/search-index.json')
+    const prefix = typeof window === 'undefined' ? '' : localePrefixOf(window.location.pathname);
+    const code = prefix.replace(/^\//, '');
+    const file = code ? `/search-index.${code}.json` : '/search-index.json';
+    indexPromise = fetch(file)
       .then((r) => (r.ok ? r.json() : []))
       // Absent in `vite dev` (it is generated from dist/), and a failed fetch must not
       // break search — products and page titles still work.
@@ -113,7 +129,6 @@ function snippet(page, term) {
 export default function HeaderSearch({ onOpenChange }) {
   const t = useT();
   const ltc = useLT('catalog');
-  const { urlLocale } = useLocale();
   const { lp } = useProductL10n();
   const navigate = useNavigate();
 
@@ -237,7 +252,7 @@ export default function HeaderSearch({ onOpenChange }) {
           id: `p:${p.id}`,
           label: lp(p).name,
           hint: [p.itemCode, ltc(`sub.${p.subSlug}.name`, p.subcategory)].filter(Boolean).join(' · '),
-          to: `/product/${p.id}`,
+          to: productPath(p.id) || `/product/${p.id}`,
           kind: t('search.products'),
         });
       }
@@ -245,14 +260,15 @@ export default function HeaderSearch({ onOpenChange }) {
 
     if (pages) {
       /**
-       * The index covers every language's pages (it is built from all of dist/), so only
-       * the pages of the language being read are offered. Their routes carry the language
-       * prefix, which the router's basename would add a second time on navigation, so it
-       * is stripped from the target.
+       * The index file is already the one for the language being read, and its routes carry
+       * no locale prefix, so there is nothing to filter out and nothing to strip.
+       *
+       * It used to be one file covering all twelve languages, which meant filtering eleven
+       * twelfths of it away on every keystroke after downloading all of it. The router's
+       * basename supplies the prefix on navigation, which is why the stored route must not
+       * carry one.
        */
-      const prefix = urlLocale ? `/${urlLocale}` : '';
       const ranked = pages
-        .filter((page) => localePrefixOf(page.r) === prefix)
         .map((page) => ({ page, score: scorePage(page, terms) }))
         .filter((r) => r.score > 0)
         .sort((a, b) => b.score - a.score)
@@ -263,14 +279,14 @@ export default function HeaderSearch({ onOpenChange }) {
           id: `g:${page.r}`,
           label: page.t || page.r,
           hint: snippet(page, terms[0]),
-          to: prefix ? page.r.slice(prefix.length) || '/' : page.r,
+          to: page.r,
           kind: t('search.pages'),
         });
       }
     }
 
     return out;
-  }, [query, catalog, pages, t, ltc, lp, urlLocale]);
+  }, [query, catalog, pages, t, ltc, lp]);
 
   useEffect(() => setActive(0), [query]);
 

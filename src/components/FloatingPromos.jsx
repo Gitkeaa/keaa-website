@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { company } from '../data/company';
+import { entryInitial } from '../lib/firstPaint';
 
 const BASE_KEY = 'keaa-floating-promos';
 const MAX_CLOSES = 2;
@@ -101,7 +102,7 @@ export default function FloatingPromos() {
         {show && (
           <motion.div
             key={cert.name}
-            initial={{ opacity: 0, y: 24, scale: 0.96 }}
+            initial={entryInitial({ opacity: 0, y: 24, scale: 0.96 })}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.98 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
