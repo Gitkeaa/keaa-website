@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Pause, Play, X } from 'lucide-react';
+import { Play } from 'lucide-react';
 import { droneFilmUrl, heroFilms } from '../../data/content';
 import { useLT } from '../../i18n/LocaleContext';
 import { isPrerender } from '../../lib/prerender';
@@ -253,21 +253,10 @@ export default function HomeHeroBrandTest() {
    * carries on from where it was rather than restarting. The clip is the same URL and is
    * already in the browser cache, so the handover costs a seek, not a download.
    */
-  const [dismissed, setDismissed] = useState(false);
-  const [userPaused, setUserPaused] = useState(false);
   const resumeAtRef = useRef(0);
   const floatRef = useRef(null);
 
-  const floating = isDesktop && showVideo && filmReady && !heroVisible && !dismissed;
-
-  // Back at the hero, the card is offered again and a pause made inside it is forgotten:
-  // arriving at the top of the page should always find the film running.
-  useEffect(() => {
-    if (heroVisible) {
-      setDismissed(false);
-      setUserPaused(false);
-    }
-  }, [heroVisible]);
+  const floating = isDesktop && showVideo && filmReady && !heroVisible;
 
   /**
    * One place decides which element is playing, so the two can never both be running.
@@ -291,7 +280,8 @@ export default function HomeHeroBrandTest() {
       }
     }
 
-    if (userPaused || (!heroVisible && !floating)) {
+    // Below 1024px there is no floating card, so a hero that has scrolled away means stop.
+    if (!heroVisible && !floating) {
       wanted.pause();
       return;
     }
@@ -299,7 +289,7 @@ export default function HomeHeroBrandTest() {
     // blocked, but an unhandled rejection is console noise either way.
     const p = wanted.play();
     if (p && typeof p.catch === 'function') p.catch(() => {});
-  }, [floating, heroVisible, userPaused, filmReady]);
+  }, [floating, heroVisible, filmReady]);
 
   const rememberTime = (e) => {
     resumeAtRef.current = e.currentTarget.currentTime;
@@ -359,9 +349,18 @@ export default function HomeHeroBrandTest() {
             hero card is `isolate` and a fixed child of it cannot rise above the sections
             further down the page whatever z-index it is given.
 
-            `bottom` clears two things already in that corner: the chat launcher (h-14 at
-            bottom-6, so its top edge is at 80px) and the consent bar while it is up, via the
-            same `--consent-bar-h` contract CookieConsent publishes for the other widgets.
+            It is tucked into the right edge at `right-6`, the same inset as everything else
+            in that corner, and stacks directly ABOVE the chat launcher rather than beside it.
+            The two cannot share the bottom-right corner: the launcher is a 3.5rem circle at
+            `bottom-6 right-6` and renders about 4rem tall once its unread badge is counted,
+            so it reaches 5.5rem up the screen. 6rem is as low as this card goes before it
+            starts covering that button, and any further right and it leaves the screen.
+
+            No controls on it, by request. It is a silent, muted, looping thumbnail of the
+            film and nothing else; scrolling back to the hero is what dismisses it.
+
+            `bottom` still carries `--consent-bar-h`, the contract CookieConsent publishes, so
+            the card lifts with the other corner widgets while the consent bar is up.
           */}
           {typeof document !== 'undefined' &&
             createPortal(
@@ -373,7 +372,7 @@ export default function HomeHeroBrandTest() {
                     exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.9, y: 16 }}
                     transition={{ duration: 0.32, ease: EASE }}
                     style={{ bottom: 'calc(6rem + var(--consent-bar-h, 0px))' }}
-                    className="fixed right-6 z-[60] w-[288px] overflow-hidden rounded-card bg-navy-950 shadow-cardHover ring-1 ring-white/15"
+                    className="fixed right-6 z-[60] w-[168px] overflow-hidden rounded-card bg-navy-950 shadow-cardHover ring-1 ring-white/15"
                   >
                     <video
                       ref={floatRef}
@@ -397,33 +396,6 @@ export default function HomeHeroBrandTest() {
                       }}
                       className="block aspect-video w-full object-cover"
                     />
-
-                    <div className="absolute right-2 top-2 flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => setUserPaused((v) => !v)}
-                        aria-label={
-                          userPaused
-                            ? lt('hero.floatPlay', 'Play the film')
-                            : lt('hero.floatPause', 'Pause the film')
-                        }
-                        className="flex h-8 w-8 items-center justify-center rounded-full bg-navy-950/70 text-white backdrop-blur-sm transition-colors hover:bg-navy-950"
-                      >
-                        {userPaused ? (
-                          <Play aria-hidden className="h-4 w-4" strokeWidth={2} />
-                        ) : (
-                          <Pause aria-hidden className="h-4 w-4" strokeWidth={2} />
-                        )}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setDismissed(true)}
-                        aria-label={lt('hero.floatClose', 'Close the floating film')}
-                        className="flex h-8 w-8 items-center justify-center rounded-full bg-navy-950/70 text-white backdrop-blur-sm transition-colors hover:bg-navy-950"
-                      >
-                        <X aria-hidden className="h-4 w-4" strokeWidth={2} />
-                      </button>
-                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>,
