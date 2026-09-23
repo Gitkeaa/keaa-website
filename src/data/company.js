@@ -339,7 +339,9 @@ export const managingDirectors = [
     cloudinaryId: '',
     linkedin: 'https://www.linkedin.com/in/sumit-moudgil',
     whatsapp: 'https://wa.me/919872984707',
-    mail: 'sumit@keaa-international.net',
+    /* `email`, not `mail`. It was `mail` here and `email` on the entry above, so the About
+       page found an address for one director and nothing for the other. */
+    email: 'sumit@keaa-international.net',
   },
 ];
 

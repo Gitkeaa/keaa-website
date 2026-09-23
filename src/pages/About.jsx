@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Linkedin, ShieldCheck, Globe2, Factory, Handshake } from 'lucide-react';
+import { Linkedin, Mail, ShieldCheck, Globe2, Factory, Handshake } from 'lucide-react';
 import SectionHeading from '../components/ui/SectionHeading';
 import Reveal, { StaggerGroup, StaggerItem } from '../components/ui/Reveal';
 import { PANEL_CARD } from '../components/ui/panelCard';
@@ -422,16 +422,38 @@ export default function About() {
                       {/* Designation only — the name is already the eyebrow above this message,
                           so repeating it here printed the name twice. */}
                       <p className="mt-5 text-sm font-medium text-muted">{lt(`directors.${i}.role`, m.role)}</p>
+                      {/* Both addresses were already in data/company.js and neither reached
+                          the page, so a buyer who wanted to write to a Managing Director had
+                          no way to. Each link is rendered only when its field is filled, so
+                          blanking one in the data removes it here rather than leaving a
+                          control that goes nowhere. */}
                       <div className="mt-4 flex items-center gap-3">
-                        <a
-                          href={m.linkedin}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-navy-100 text-navy-700 transition-colors hover:border-primary/60 hover:text-primary-dark"
-                          aria-label={lt('directors.linkedinLabel', '{name} LinkedIn', { name: m.name })}
-                        >
-                          <Linkedin className="h-4 w-4" />
-                        </a>
+                        {m.linkedin && (
+                          <a
+                            href={m.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-navy-100 text-navy-700 transition-colors hover:border-primary/60 hover:text-primary-dark"
+                            aria-label={lt('directors.linkedinLabel', '{name} LinkedIn', { name: m.name })}
+                          >
+                            <Linkedin className="h-4 w-4" />
+                          </a>
+                        )}
+                        {m.email && (
+                          <a
+                            href={`mailto:${m.email.trim()}`}
+                            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-navy-100 text-navy-700 transition-colors hover:border-primary/60 hover:text-primary-dark"
+                            /* The address itself goes in the accessible name, not just
+                               "email": a screen reader user deciding whether to click, and
+                               speech input aiming at it, both need to hear which address. */
+                            aria-label={lt('directors.emailLabel', 'Email {name} at {email}', {
+                              name: m.name,
+                              email: m.email.trim(),
+                            })}
+                          >
+                            <Mail className="h-4 w-4" />
+                          </a>
+                        )}
                       </div>
                     </div>
                   </div>
