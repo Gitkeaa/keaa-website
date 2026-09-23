@@ -17,6 +17,26 @@ import { entryInitial } from '../../lib/firstPaint';
 const ROTATE_MS = 2600;
 
 /**
+ * The swap itself, in two halves: the phrase that is leaving fades out over FADE_MS, and only
+ * once it is gone does the next one fade in over the same FADE_MS.
+ *
+ * This used to be a single cross-fade, which is what produced the double exposure. Every
+ * phrase is stacked in one grid cell, so fading one up while the other faded down painted
+ * both at once for half a second, and because they are different lengths the overlap read as
+ * two headlines printed on top of each other rather than as a dissolve.
+ *
+ * SWAP_MS is deliberately longer than FADE_MS. Otherwise the timer that changes the phrase
+ * and the CSS transition that empties the old one finish on the same frame, and whichever
+ * loses by a frame puts the incoming phrase on screen while the outgoing one still has a few
+ * percent of opacity left. That is the flash this sequencing exists to remove, so the timer
+ * is given a couple of frames of margin.
+ *
+ * FADE_MS twice over is about the 500ms the cross-fade took, so the cadence is unchanged.
+ */
+const FADE_MS = 220;
+const SWAP_MS = FADE_MS + 40;
+
+/**
  * HOMEPAGE HERO — Lely-style single film.
  *
  * A rounded, inset full-bleed card (matching the interior GalleryHero): the KEAA cinematic
@@ -91,11 +111,30 @@ export default function HomeHeroBrandTest() {
    * second is exactly the kind of motion that setting exists to stop, and unlike the muted
    * background film this carries meaning a visitor has to read.
    */
+  /*
+   * Two pieces of state, not one. `phraseIdx` is which phrase owns the line; `shown` is
+   * whether it is currently on screen. The swap drops `shown` first, waits for the fade to
+   * finish, and only then moves the index and raises it again — which is what guarantees
+   * that exactly one phrase is ever visible.
+   */
   const [phraseIdx, setPhraseIdx] = useState(0);
+  const [shown, setShown] = useState(true);
+
   useEffect(() => {
     if (reduce) return undefined;
-    const id = setInterval(() => setPhraseIdx((i) => (i + 1) % ROTATING.length), ROTATE_MS);
-    return () => clearInterval(id);
+    let swap;
+    const id = setInterval(() => {
+      setShown(false);
+      clearTimeout(swap);
+      swap = setTimeout(() => {
+        setPhraseIdx((i) => (i + 1) % ROTATING.length);
+        setShown(true);
+      }, SWAP_MS);
+    }, ROTATE_MS);
+    return () => {
+      clearInterval(id);
+      clearTimeout(swap);
+    };
     // ROTATING is rebuilt every render (it closes over `lt`), so its identity is not a useful
     // dependency — its LENGTH is what the timer cares about, and that is fixed.
   }, [reduce, ROTATING.length]);
@@ -219,10 +258,16 @@ export default function HomeHeroBrandTest() {
               <h1 className="font-display text-[clamp(1.125rem,calc(6.4vw-4.6px),2.25rem)] font-bold leading-[1.08] tracking-[-0.02em] text-white sm:text-[clamp(2rem,calc(6.4vw-8.8px),3rem)] lg:text-[clamp(3rem,calc(4.375vw+8.2px),3.75rem)]">
                 <span className="block">{lt('hero.title1', 'Engineering Reliable')}</span>
                 {/*
-                  The second line cycles. All three phrases are in the DOM at once, stacked in
-                  a single grid cell (every child at grid-area 1/1), which is what keeps this
+                  The second line cycles. Every phrase is in the DOM at once, stacked in a
+                  single grid cell (every child at grid-area 1/1), which is what keeps this
                   stable: the box is always as tall as the LONGEST phrase, so the hero cannot
                   jump every second as the text swaps, and no height has to be measured in JS.
+
+                  Stacking them is also why the fade has to be SEQUENCED rather than crossed.
+                  Two phrases at partial opacity in the same cell are printed over each other,
+                  not blended, so the old line stayed legible under the new one for the length
+                  of the transition. Only the phrase that is both current AND `shown` is opaque
+                  now, and `shown` is false for the whole of the outgoing fade — see FADE_MS.
 
                   They are rendered, not swapped in and out, so the heading still reads as one
                   complete sentence to a screen reader and search engines see the whole product
@@ -238,8 +283,14 @@ export default function HomeHeroBrandTest() {
                   {ROTATING.map((phrase, i) => (
                     <span
                       key={phrase}
-                      style={{ gridArea: '1 / 1' }}
-                      className={`block transition-opacity duration-500 ${i === phraseIdx ? 'opacity-100' : 'opacity-0'}`}
+                      /* The duration is inline rather than a `duration-*` class because it has
+                         to stay tied to FADE_MS above: the timer and the transition are two
+                         halves of one movement, and a Tailwind class would let them drift
+                         apart the moment either is tuned. */
+                      style={{ gridArea: '1 / 1', transitionDuration: `${FADE_MS}ms` }}
+                      className={`block transition-opacity ${
+                        i === phraseIdx && shown ? 'opacity-100' : 'opacity-0'
+                      }`}
                     >
                       {phrase}
                     </span>
