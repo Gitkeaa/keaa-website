@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
-import { Play } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { Pause, Play, X } from 'lucide-react';
 import { droneFilmUrl, heroFilms } from '../../data/content';
 import { useLT } from '../../i18n/LocaleContext';
 import { isPrerender } from '../../lib/prerender';
@@ -45,11 +46,13 @@ const SWAP_MS = FADE_MS + 40;
  * heading, one line and a single CTA. Everything that used to crowd the film (the four stat
  * tiles) now lives in its own calm band directly below, so the film stays clean.
  *
- * The film autoplays natively (`autoPlay muted loop playsInline`) so it runs on every device
- * and even under reduced-motion — a muted background film is content, not gratuitous motion,
- * and a large share of Windows visitors browse with OS animations off. Data Saver is the one
- * opt-out: it falls back to the poster still so a metered connection is never charged. If the
- * film is missing or 404s, the poster (a still lifted from the same film) stands in.
+ * The film is `muted loop playsInline` so it runs on every device and even under
+ * reduced-motion — a muted background film is content, not gratuitous motion, and a large
+ * share of Windows visitors browse with OS animations off. It does NOT carry `autoPlay`: an
+ * IntersectionObserver plays it while the hero is on screen and pauses it the moment it is
+ * not (see the note above `heroRef`). Data Saver is the other opt-out: it falls back to the
+ * poster still so a metered connection is never charged. If the film is missing or 404s, the
+ * poster (a still lifted from the same film) stands in.
  */
 
 const EASE = [0.22, 1, 0.36, 1];
@@ -181,11 +184,135 @@ export default function HomeHeroBrandTest() {
     const id = setTimeout(start, 1200);
     return () => clearTimeout(id);
   }, [showVideo]);
+
+  /**
+   * THE FILM PLAYS ONLY WHILE THE HERO IS ON SCREEN.
+   *
+   * It used to carry `autoPlay` and run for as long as the page was open, looping, whether or
+   * not anybody could see it. On a looping background film that is the single largest draw on
+   * the Cloudinary account: delivery is metered per second of video, so a reader who leaves
+   * the homepage open while reading further down was being charged for a film playing behind
+   * them. Pausing it off screen costs nothing visually and stops that entirely.
+   *
+   * `autoPlay` is gone and the observer starts playback instead, so a visitor who arrives
+   * deep-linked below the hero never downloads the film at all. An IntersectionObserver
+   * callback fires once as soon as it observes, so the ordinary case (hero on screen at load)
+   * still starts the film immediately.
+   *
+   * RESUMES, NEVER RESTARTS: pause() and play() both leave `currentTime` alone, and nothing
+   * here touches `src` or calls load().
+   *
+   * 0.25 is comfortably reachable. `intersectionRatio` is measured against the TARGET, so a
+   * hero taller than the viewport can never reach 1.0; this one is capped at 72vh/80vh, and
+   * even a 500px hero in a 400px landscape viewport peaks at 0.8.
+   */
+  const heroRef = useRef(null);
+  const videoRef = useRef(null);
+  // Starts true so the film plays on an ordinary load without waiting for the first callback,
+  // and so the floating card can never flash before the observer has had its say.
+  const [heroVisible, setHeroVisible] = useState(true);
+
+  useEffect(() => {
+    if (!showVideo || !filmReady) return undefined;
+    const hero = heroRef.current;
+    if (!hero) return undefined;
+
+    // No observer (very old browser): treat the hero as always visible, which is the old
+    // behaviour, rather than a hero that never moves.
+    if (typeof IntersectionObserver !== 'function') {
+      setHeroVisible(true);
+      return undefined;
+    }
+
+    const io = new IntersectionObserver(([entry]) => setHeroVisible(entry.isIntersecting), {
+      threshold: 0.25,
+    });
+    io.observe(hero);
+    return () => io.disconnect();
+  }, [showVideo, filmReady]);
+
+  /**
+   * THE FLOATING CARD, DESKTOP ONLY.
+   *
+   * Scroll the hero off screen on a wide viewport and the film carries on in a small card at
+   * the bottom right; scroll back and the card goes away and the hero takes over again.
+   * Below 1024px it never appears at all and the film simply pauses off screen, which is the
+   * behaviour phones and tablets keep.
+   *
+   * WHY A SECOND <video> RATHER THAN MOVING THE FIRST ONE. Moving the element would be
+   * neater and would need no seeking, but it cannot work here: the hero card carries
+   * `isolate`, which opens a stacking context, and a `position: fixed` child of it is sealed
+   * inside that context. Measured, not assumed — a probe at z-index 2147483647 inside the
+   * hero still painted UNDER the section below it. Taking `isolate` off the hero to allow
+   * the escape would reorder the scrim and the copy sitting over the film, which is a much
+   * worse trade than one extra element.
+   *
+   * So there are two elements and NEVER two playing: whichever one is not on duty is paused
+   * before the other starts. `resumeAtRef` is written by whichever is playing (`timeupdate`
+   * fires about four times a second) and read by the other as it takes over, so the film
+   * carries on from where it was rather than restarting. The clip is the same URL and is
+   * already in the browser cache, so the handover costs a seek, not a download.
+   */
+  const [dismissed, setDismissed] = useState(false);
+  const [userPaused, setUserPaused] = useState(false);
+  const resumeAtRef = useRef(0);
+  const floatRef = useRef(null);
+
+  const floating = isDesktop && showVideo && filmReady && !heroVisible && !dismissed;
+
+  // Back at the hero, the card is offered again and a pause made inside it is forgotten:
+  // arriving at the top of the page should always find the film running.
+  useEffect(() => {
+    if (heroVisible) {
+      setDismissed(false);
+      setUserPaused(false);
+    }
+  }, [heroVisible]);
+
+  /**
+   * One place decides which element is playing, so the two can never both be running.
+   * `floating` flipping is what moves the duty between them; the ref carries the position.
+   */
+  useEffect(() => {
+    const hero = videoRef.current;
+    const float = floatRef.current;
+    const wanted = floating ? float : hero;
+    const other = floating ? hero : float;
+
+    other?.pause();
+    if (!wanted) return;
+
+    // Take over from wherever the other one had got to.
+    if (Number.isFinite(resumeAtRef.current) && Math.abs(wanted.currentTime - resumeAtRef.current) > 0.3) {
+      try {
+        wanted.currentTime = resumeAtRef.current;
+      } catch {
+        /* seeking before metadata lands throws; onLoadedMetadata sets it again */
+      }
+    }
+
+    if (userPaused || (!heroVisible && !floating)) {
+      wanted.pause();
+      return;
+    }
+    // play() rejects when the browser blocks playback. Muted and playsInline should never be
+    // blocked, but an unhandled rejection is console noise either way.
+    const p = wanted.play();
+    if (p && typeof p.catch === 'function') p.catch(() => {});
+  }, [floating, heroVisible, userPaused, filmReady]);
+
+  const rememberTime = (e) => {
+    resumeAtRef.current = e.currentTarget.currentTime;
+  };
+
   return (
     <>
       {/* ---- HERO: full-bleed film in a rounded inset card ---- */}
       <section className="px-3 sm:px-5 lg:px-6">
-        <div className="relative isolate flex min-h-[max(500px,72vh)] overflow-hidden rounded-3xl lg:min-h-[max(706px,80vh)]">
+        <div
+          ref={heroRef}
+          className="relative isolate flex min-h-[max(500px,72vh)] overflow-hidden rounded-3xl lg:min-h-[max(706px,80vh)]"
+        >
           {/* The poster, always. This is the element the browser paints first and the one
               LCP is measured against, so it is eager, high priority and responsive. It stays
               underneath the film rather than being replaced, which is also what stops a flash
@@ -205,22 +332,103 @@ export default function HomeHeroBrandTest() {
           {showVideo && filmReady && (
             <video
               key={filmSrc}
+              ref={videoRef}
               src={filmSrc}
-              autoPlay
+              /* No `autoPlay`. The IntersectionObserver above starts and stops playback, so
+                 the film runs only while the hero is actually on screen. */
               muted
               loop
               playsInline
-              /* Nothing is fetched until this element mounts, which is after first paint. */
-              preload="none"
+              /* Nothing is fetched until this element mounts, which is after first paint, and
+                 `metadata` keeps that to the header rather than the clip: the observer asks
+                 for the frames when the hero is visible, and never if it is not. */
+              preload="metadata"
               /* Cross-origin (Cloudinary, which always sends Access-Control-Allow-Origin: *). */
               crossOrigin="anonymous"
               tabIndex={-1}
               aria-hidden
               /* A dead CDN id falls through to the poster underneath rather than a black box. */
               onError={() => setFilmBroken(true)}
+              onTimeUpdate={rememberTime}
               className="absolute inset-0 h-full w-full object-cover motion-safe:animate-[fadeIn_600ms_ease-out]"
             />
           )}
+
+          {/*
+            The floating card. Portalled to <body> rather than rendered here, because this
+            hero card is `isolate` and a fixed child of it cannot rise above the sections
+            further down the page whatever z-index it is given.
+
+            `bottom` clears two things already in that corner: the chat launcher (h-14 at
+            bottom-6, so its top edge is at 80px) and the consent bar while it is up, via the
+            same `--consent-bar-h` contract CookieConsent publishes for the other widgets.
+          */}
+          {typeof document !== 'undefined' &&
+            createPortal(
+              <AnimatePresence>
+                {floating && (
+                  <motion.div
+                    initial={reduce ? false : { opacity: 0, scale: 0.9, y: 16 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.9, y: 16 }}
+                    transition={{ duration: 0.32, ease: EASE }}
+                    style={{ bottom: 'calc(6rem + var(--consent-bar-h, 0px))' }}
+                    className="fixed right-6 z-[60] w-[288px] overflow-hidden rounded-card bg-navy-950 shadow-cardHover ring-1 ring-white/15"
+                  >
+                    <video
+                      ref={floatRef}
+                      src={filmSrc}
+                      muted
+                      loop
+                      playsInline
+                      preload="auto"
+                      crossOrigin="anonymous"
+                      tabIndex={-1}
+                      aria-hidden
+                      onTimeUpdate={rememberTime}
+                      /* Metadata arrives after the element mounts, and a seek before that
+                         throws, so the handover position is applied again here. */
+                      onLoadedMetadata={(e) => {
+                        try {
+                          e.currentTarget.currentTime = resumeAtRef.current || 0;
+                        } catch {
+                          /* nothing to do: it simply starts from the top */
+                        }
+                      }}
+                      className="block aspect-video w-full object-cover"
+                    />
+
+                    <div className="absolute right-2 top-2 flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setUserPaused((v) => !v)}
+                        aria-label={
+                          userPaused
+                            ? lt('hero.floatPlay', 'Play the film')
+                            : lt('hero.floatPause', 'Pause the film')
+                        }
+                        className="flex h-8 w-8 items-center justify-center rounded-full bg-navy-950/70 text-white backdrop-blur-sm transition-colors hover:bg-navy-950"
+                      >
+                        {userPaused ? (
+                          <Play aria-hidden className="h-4 w-4" strokeWidth={2} />
+                        ) : (
+                          <Pause aria-hidden className="h-4 w-4" strokeWidth={2} />
+                        )}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setDismissed(true)}
+                        aria-label={lt('hero.floatClose', 'Close the floating film')}
+                        className="flex h-8 w-8 items-center justify-center rounded-full bg-navy-950/70 text-white backdrop-blur-sm transition-colors hover:bg-navy-950"
+                      >
+                        <X aria-hidden className="h-4 w-4" strokeWidth={2} />
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>,
+              document.body
+            )}
 
           {/* Bottom-weighted scrim so white copy clears AA over any frame of the film. */}
           <div
