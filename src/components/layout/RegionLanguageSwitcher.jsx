@@ -159,7 +159,7 @@ function Panel({ close }) {
   );
 }
 
-export default function RegionLanguageSwitcher() {
+export default function RegionLanguageSwitcher({ compact = false }) {
   const { entry, meta } = useRegion();
   const { language, t } = useLocale();
   const lt = useLT('common');
@@ -176,7 +176,11 @@ export default function RegionLanguageSwitcher() {
   const place = entry ? entry.short || countryName : regionLabel;
   const label = (
     <>
-      <Globe aria-hidden className="h-[18px] w-[18px] flex-shrink-0" strokeWidth={2} />
+      <Globe
+        aria-hidden
+        className={`${compact ? 'h-4 w-4' : 'h-[18px] w-[18px]'} flex-shrink-0`}
+        strokeWidth={2}
+      />
       <span className="whitespace-nowrap uppercase">
         {place} ({language})
       </span>
@@ -185,6 +189,7 @@ export default function RegionLanguageSwitcher() {
 
   return (
     <HeaderPopover
+      compact={compact}
       label={label}
       hint={t('region.hint')}
       srLabel={`${t('header.regionAria')}, ${entry ? `${countryName}, ` : ''}${regionLabel}, ${

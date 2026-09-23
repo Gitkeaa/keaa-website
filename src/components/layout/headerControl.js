@@ -39,3 +39,25 @@ export const headerControlOpen = `${BASE} text-navy-900 after:scale-x-100`;
 
 /** Pick one by state. */
 export const headerControlCls = (open) => (open ? headerControlOpen : headerControl);
+
+/**
+ * The same idiom, at utility-bar scale.
+ *
+ * The bar above the nav is a slim strip, so the `h-10` main-row control would set its height
+ * on its own and make it as tall as the row it is meant to sit above. This is the same
+ * shape at `h-8`/`text-xs`, with the underline lifted to match the shorter box, so the two
+ * rows still react identically to hover and focus.
+ */
+const COMPACT =
+  'relative flex h-8 items-center gap-1.5 px-2 text-xs font-semibold transition-colors ' +
+  'after:absolute after:bottom-1 after:left-2 after:right-2 after:h-0.5 after:origin-left ' +
+  'after:scale-x-0 after:bg-primary-dark after:transition-transform after:duration-200 after:content-[""]';
+
+/** Resting / hover state, utility bar. */
+export const utilityControl = `${COMPACT} text-ink hover:text-navy-900 hover:after:scale-x-100`;
+
+/** The utility control whose panel is currently open. */
+export const utilityControlOpen = `${COMPACT} text-navy-900 after:scale-x-100`;
+
+/** Pick one by state. */
+export const utilityControlCls = (open) => (open ? utilityControlOpen : utilityControl);

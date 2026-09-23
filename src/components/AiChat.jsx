@@ -318,7 +318,12 @@ export default function AiChat() {
     /* Sits above the consent bar while it is showing. `--consent-bar-h` is published by
        CookieConsent and removed once a decision is stored, so the fallback of 0px is the
        normal case. Without this the bar covered the launcher on exactly the visit where a
-       first-time visitor is most likely to want it. */
+       first-time visitor is most likely to want it.
+
+       `--actionbar-h` is the same contract for the phone action bar (layout/MobileActionBar),
+       and on a phone it is not an edge case: this launcher's home corner is bottom-LEFT, which
+       is precisely where that bar's first cell sits. Both are added, because a first visit on
+       a phone shows the consent bar and the action bar at once. */
     <div
       ref={wrapRef}
       /* The bottom transition belongs to the consent bar only. Once the widget has been
@@ -331,7 +336,10 @@ export default function AiChat() {
       style={
         pos
           ? { right: `${pos.right}px`, bottom: `${pos.bottom}px` }
-          : { bottom: 'calc(1.5rem + var(--consent-bar-h, 0px))' }
+          : {
+              bottom:
+                'calc(1.5rem + var(--consent-bar-h, 0px) + var(--actionbar-h, 0px))',
+            }
       }
     >
       {/*

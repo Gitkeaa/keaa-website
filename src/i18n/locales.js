@@ -19,7 +19,12 @@
  */
 
 const en = {
-  'header.requestQuote': "Request a Quote",
+  'header.requestQuote': "Get a Quote",
+  /* The phone action bar's third cell, and the accessible name on the utility
+     bar's WhatsApp link and on the action bar itself. */
+  'header.call': 'Call',
+  'header.whatsappAria': 'Chat with us on WhatsApp',
+  'header.quickActions': 'Quick actions',
   'nav.home': 'Home',
   'nav.about': 'About Us',
   'nav.products': 'Products',
@@ -39,10 +44,6 @@ const en = {
   'header.region': 'Region',
   'header.regionAria': 'Choose your region and find your local contact',
   'header.menuAria': 'Open menu',
-  /* The mobile menu control is a TEXT label, not a hamburger glyph. The header does carry
-     icons now (search, region, account), but each one sits BESIDE its word rather than
-     replacing it — the label is what has to survive translation. */
-  'header.menu': 'Menu',
   /* Visually hidden until focused — WCAG 2.4.1 Bypass Blocks. See components/A11y.jsx. */
   'a11y.skipToContent': 'Skip to content',
 
@@ -121,6 +122,9 @@ const en = {
  */
 const nl = {
   'header.requestQuote': "Offerte aanvragen",
+  'header.call': 'Bellen',
+  'header.whatsappAria': 'Chat met ons op WhatsApp',
+  'header.quickActions': 'Snelle acties',
   'nav.home': 'Home',
   'nav.about': 'Over ons',
   'nav.products': 'Producten',
@@ -129,7 +133,6 @@ const nl = {
   'nav.contact': 'Contact',
   'cta.requestQuote': 'Offerte aanvragen',
   'header.search': 'Zoeken',
-  'header.menu': 'Menu',
   'a11y.skipToContent': 'Naar inhoud springen',
   'header.language': 'Taal',
   'header.region': 'Regio',
@@ -161,6 +164,9 @@ const nl = {
 
 const de = {
   'header.requestQuote': "Angebot anfordern",
+  'header.call': 'Anrufen',
+  'header.whatsappAria': 'Schreiben Sie uns auf WhatsApp',
+  'header.quickActions': 'Schnellzugriff',
   'nav.home': 'Startseite',
   'nav.about': 'Über uns',
   'nav.products': 'Produkte',
@@ -169,7 +175,6 @@ const de = {
   'nav.contact': 'Kontakt',
   'cta.requestQuote': 'Angebot anfordern',
   'header.search': 'Suchen',
-  'header.menu': 'Menü',
   'a11y.skipToContent': 'Zum Inhalt springen',
   'header.language': 'Sprache',
   'header.region': 'Region',
@@ -201,6 +206,9 @@ const de = {
 
 const fr = {
   'header.requestQuote': "Demander un devis",
+  'header.call': 'Appeler',
+  'header.whatsappAria': 'Discutez avec nous sur WhatsApp',
+  'header.quickActions': 'Actions rapides',
   'nav.home': 'Accueil',
   'nav.about': 'À propos',
   'nav.products': 'Produits',
@@ -209,7 +217,6 @@ const fr = {
   'nav.contact': 'Contact',
   'cta.requestQuote': 'Demander un devis',
   'header.search': 'Rechercher',
-  'header.menu': 'Menu',
   'a11y.skipToContent': 'Aller au contenu',
   'header.language': 'Langue',
   'header.region': 'Région',
@@ -241,6 +248,9 @@ const fr = {
 
 const es = {
   'header.requestQuote': "Solicitar presupuesto",
+  'header.call': 'Llamar',
+  'header.whatsappAria': 'Chatea con nosotros por WhatsApp',
+  'header.quickActions': 'Acciones rápidas',
   'nav.home': 'Inicio',
   'nav.about': 'Sobre nosotros',
   'nav.products': 'Productos',
@@ -249,7 +259,6 @@ const es = {
   'nav.contact': 'Contacto',
   'cta.requestQuote': 'Solicitar presupuesto',
   'header.search': 'Buscar',
-  'header.menu': 'Menú',
   'a11y.skipToContent': 'Saltar al contenido',
   'header.language': 'Idioma',
   'header.region': 'Región',
@@ -281,6 +290,9 @@ const es = {
 
 const it = {
   'header.requestQuote': "Richiedi un preventivo",
+  'header.call': 'Chiama',
+  'header.whatsappAria': 'Scrivici su WhatsApp',
+  'header.quickActions': 'Azioni rapide',
   'nav.home': 'Home',
   'nav.about': 'Chi siamo',
   'nav.products': 'Prodotti',
@@ -319,6 +331,9 @@ const it = {
 
 const pt = {
   'header.requestQuote': "Solicitar orcamento",
+  'header.call': 'Ligar',
+  'header.whatsappAria': 'Fale connosco no WhatsApp',
+  'header.quickActions': 'Ações rápidas',
   'nav.home': 'Início',
   'nav.about': 'Sobre nós',
   'nav.products': 'Produtos',
@@ -357,6 +372,9 @@ const pt = {
 
 const pl = {
   'header.requestQuote': "Poprosic o wycene",
+  'header.call': 'Zadzwoń',
+  'header.whatsappAria': 'Napisz do nas na WhatsAppie',
+  'header.quickActions': 'Szybkie akcje',
   'nav.home': 'Strona główna',
   'nav.about': 'O nas',
   'nav.products': 'Produkty',
@@ -395,6 +413,9 @@ const pl = {
 
 const ru = {
   'header.requestQuote': "Запросить расчет",
+  'header.call': 'Позвонить',
+  'header.whatsappAria': 'Напишите нам в WhatsApp',
+  'header.quickActions': 'Быстрые действия',
   'nav.home': 'Главная',
   'nav.about': 'О нас',
   'nav.products': 'Продукция',
@@ -433,6 +454,9 @@ const ru = {
 
 const tr = {
   'header.requestQuote': "Teklif isteyin",
+  'header.call': 'Ara',
+  'header.whatsappAria': 'WhatsApp üzerinden bize yazın',
+  'header.quickActions': 'Hızlı işlemler',
   'nav.home': 'Ana Sayfa',
   'nav.about': 'Hakkımızda',
   'nav.products': 'Ürünler',
@@ -471,6 +495,9 @@ const tr = {
 
 const ar = {
   'header.requestQuote': "اطلب عرض سعر",
+  'header.call': 'اتصل',
+  'header.whatsappAria': 'تواصل معنا عبر واتساب',
+  'header.quickActions': 'إجراءات سريعة',
   'nav.home': 'الرئيسية',
   'nav.about': 'من نحن',
   'nav.products': 'المنتجات',
@@ -509,6 +536,9 @@ const ar = {
 
 const hi = {
   'header.requestQuote': "कोटेशन का अनुरोध करें",
+  'header.call': 'कॉल करें',
+  'header.whatsappAria': 'व्हाट्सएप पर हमसे चैट करें',
+  'header.quickActions': 'त्वरित कार्रवाई',
   'nav.home': 'होम',
   'nav.about': 'हमारे बारे में',
   'nav.products': 'उत्पाद',

@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu } from 'lucide-react';
 import Logo from './Logo';
-import RegionLanguageSwitcher from './RegionLanguageSwitcher';
+import TopBar from './TopBar';
 import HeaderSearch from './HeaderSearch';
-import HeaderAccount from './HeaderAccount';
 import NavPanel from './NavPanel';
 import { headerControl } from './headerControl';
 import { mainNav } from '../../data/navigation';
@@ -15,8 +15,8 @@ import { useT } from '../../i18n/LocaleContext';
 import { getAllCategories } from '../../data/categories';
 
 /**
- * The site header — one row: identity, navigation, then the utility cluster
- * (search · region · language · quote).
+ * The site header — a utility bar that scrolls away (layout/TopBar.jsx: region · language ·
+ * WhatsApp · account) over one pinned row: identity, navigation, then search and quote.
  *
  * The standalone "Explore KEAA" mega-menu is gone. It was a second discovery system sitting
  * beside the six-item nav, holding five pages that had no other home. Those pages are now
@@ -83,14 +83,23 @@ export default function Header({ onOpenDrawer }) {
     */
     <header
       ref={headerRef}
-      className={`sticky top-0 z-40 w-full border-b bg-white transition-[box-shadow,border-color] ${
+      className={`sticky z-40 w-full border-b bg-white transition-[box-shadow,border-color] ${
         scrolled ? 'border-border shadow-[0_1px_3px_rgba(10,35,66,0.06)]' : 'border-transparent'
       }`}
+      /*
+        NOT `top-0`. The header is offset upwards by exactly the utility bar's height, so the
+        bar scrolls off the top of the screen and the nav row alone pins there. The whole
+        header has to be the sticky element for this: a sticky child inside a static parent is
+        released the moment the parent's box scrolls past, so making only the row sticky would
+        send the row away with the bar.
+
+        `--topbar-h` is measured and published by TopBar. It is 0 below `md`, where the bar is
+        `display: none`, and 0 before hydration, which is also correct: a visitor at the top of
+        the page has not scrolled yet, so there is nothing to offset.
+      */
+      style={{ top: 'calc(-1 * var(--topbar-h, 0px))' }}
     >
-      {/* The navy utility strip (export tagline, phone, email, LinkedIn) is removed.
-          The component still lives in layout/TopBar.jsx — re-add <TopBar /> here to
-          bring it back. Its contact details are still reachable in the footer, and the
-          region control below now surfaces the desk for the visitor's own market. */}
+      <TopBar />
       {/*
         `container-full`, not `container-page`: the header runs edge to edge on the shared
         responsive gutter instead of being centred inside the 1760px content column. On a
@@ -120,8 +129,14 @@ export default function Header({ onOpenDrawer }) {
           also fires only toggle the panel open then shut before the navigation lands, so there
           is nothing left open behind the new route.
         */}
+        {/* `xl` (1280px), not `lg`. Six items, the search and the quote button stopped
+            fitting on one line below that once the items were measured in German and French
+            rather than English, and the row wrapped instead of scrolling. Below it the drawer
+            carries the same six, so nothing is lost. Keep this in step with the Menu button's
+            `xl:hidden` at the foot of this row: between the two breakpoints a visitor would
+            get either both or neither. */}
         <nav
-          className={`hidden items-center gap-5 transition-opacity duration-200 lg:flex xl:gap-7 ${
+          className={`hidden items-center gap-5 transition-opacity duration-200 xl:flex xl:gap-7 ${
             searchOpen ? 'pointer-events-none opacity-0' : 'opacity-100'
           }`}
         >
@@ -130,7 +145,7 @@ export default function Header({ onOpenDrawer }) {
             navigates. Clicking "Products" used to load /products immediately, which meant a
             visitor aiming for one category landed on the full catalogue first; the page is
             now reached only by choosing "All Products" inside the panel. Items with no panel
-            (Home, Contact Us) stay ordinary links, because there is nothing to open.
+            (Home) stay ordinary links, because there is nothing to open.
 
             This is safe precisely because every panel's first row IS its own parent page —
             see the note in data/navigation.js. Remove that row and the page becomes
@@ -173,7 +188,7 @@ export default function Header({ onOpenDrawer }) {
               <NavLink
                 key={item.key}
                 to={item.to}
-                /* A panelless item (Home, Contact Us) closes any open panel as it navigates.
+                /* A panelless item (Home) closes any open panel as it navigates.
                    The route effect already covers a real navigation; this also handles the
                    case where the target is the current route, so no route change fires. */
                 onClick={() => setOpenKey(null)}
@@ -189,13 +204,13 @@ export default function Header({ onOpenDrawer }) {
           {/* Search opens in place — see HeaderSearch. It owns its own ⌘K binding. */}
           <HeaderSearch onOpenChange={setSearchOpen} />
 
-          {/* One control for market AND language — see RegionLanguageSwitcher for why the
-              two were merged rather than sat side by side. */}
-          <div className="hidden items-center gap-0.5 xl:flex">
-            <span aria-hidden className="mx-1 h-5 w-px bg-border" />
-            <RegionLanguageSwitcher />
-            <span aria-hidden className="mx-1 h-5 w-px bg-border" />
-          </div>
+          {/* The market and language control is NOT here any more; it is in the utility bar
+              above (layout/TopBar.jsx), which is visible from `md` up. That placement is what
+              fixed the band it used to vanish in: while it was gated on this row's breakpoint
+              it disappeared between 1024px and 1279px, a width real laptops sit at constantly,
+              because Windows display scaling divides the CSS width (a 1366px laptop at 125%
+              reports 1093px). The bar appears 256px earlier than the nav collapses, so there
+              is no width where the control is missing from both places. */}
 
           {/* The one commercial action the site exists for, reachable from every page.
               Quote calls to action already sit on the products, category and product pages,
@@ -204,27 +219,30 @@ export default function Header({ onOpenDrawer }) {
               without another divider or box competing with the search and region controls.
               Narrow screens keep it: it stays beside the Menu word rather than being hidden
               behind it, because the drawer is one more tap between a buyer and an enquiry. */}
+          {/* Sentence case, not uppercase. The label used to be forced to REQUEST A QUOTE by
+              `uppercase tracking-[0.08em]`, which shouted the one control it did not need to:
+              it is already the only filled element in the row. Sentence case also stops the
+              longer translations (Offerte aanvragen, Demander un devis) from running the
+              button into the nav. */}
           <Link
             to="/contact?tab=rfq"
-            className="ml-1 inline-flex items-center rounded-full bg-primary-dark px-3.5 py-1.5 text-[13px] font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-primary-darker sm:px-4"
+            className="ml-1 inline-flex items-center whitespace-nowrap rounded-full bg-primary-dark px-3.5 py-1.5 text-[13px] font-bold text-white transition-colors hover:bg-primary-darker sm:px-4"
           >
             {t('header.requestQuote')}
           </Link>
 
-          {/* Icon + word, like the search and region controls beside it. It renders nothing
-              while the session check is in flight, so the row does not flicker. The region
-              block above already closes with a divider, so none is added here. */}
-          <HeaderAccount />
-
-          {/* "Menu" as a word, not a hamburger — the label survives; only the bordered box
-              is gone, so it reacts like every other control in the row. */}
+          {/* A hamburger, not the word "Menu". The word was chosen when this row stated
+              everything in type; the row now ends in a pill-shaped button, and a second
+              worded control beside it read as a pair of labels rather than an action. The
+              accessible name is unchanged, so nothing about it is icon-only to a screen
+              reader. Keep `xl:hidden` in step with the nav's `xl:flex` above. */}
           <button
             type="button"
             onClick={onOpenDrawer}
-            className={`${headerControl} text-[13px] font-bold uppercase tracking-[0.12em] lg:hidden`}
+            className={`${headerControl} justify-center xl:hidden`}
             aria-label={t('header.menuAria')}
           >
-            {t('header.menu')}
+            <Menu aria-hidden className="h-[22px] w-[22px]" strokeWidth={2} />
           </button>
         </div>
       </div>

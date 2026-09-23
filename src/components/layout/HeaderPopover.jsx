@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { headerControlCls } from './headerControl';
+import { headerControlCls, utilityControlCls } from './headerControl';
 import HeaderHint from './HeaderHint';
 
 /**
@@ -25,6 +25,8 @@ export default function HeaderPopover({
   children,
   panelClassName = 'w-72',
   align = 'right',
+  // Slim variant for the utility bar above the nav — same idiom, shorter box.
+  compact = false,
 }) {
   const [open, setOpen] = useState(false);
   // A small hover/focus prompt so the control reads as changeable, not just a status label.
@@ -78,7 +80,7 @@ export default function HeaderPopover({
         aria-expanded={open}
         aria-controls={panelId}
         aria-label={srLabel}
-        className={headerControlCls(open)}
+        className={compact ? utilityControlCls(open) : headerControlCls(open)}
       >
         {label}
       </button>

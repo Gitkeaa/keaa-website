@@ -1,23 +1,27 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { User } from 'lucide-react';
-import { headerControl, headerControlCls } from './headerControl';
+import { utilityControl, utilityControlCls } from './headerControl';
 import { useAdminAuth } from '../../admin/auth/AdminAuthContext';
 import { resolveUpload } from '../../admin/api/client';
 import { useT } from '../../i18n/LocaleContext';
 
 /**
- * The account control in the header's utility cluster — a text "Sign in" when nobody is
+ * The account control, in the utility bar above the nav — a text "Log in" when nobody is
  * signed in, the user's first name plus a small menu when somebody is.
  *
- * Icon plus word, matching the search and region controls beside it. The glyph alone would
- * over-promise — a bare silhouette reads as "your account", and there is no public account
- * system behind it (see SignInModal for what this actually signs into) — so the label carries
- * the meaning and the icon only marks the control in the row.
+ * Icon plus word, matching the region control beside it. The glyph alone would over-promise:
+ * a bare silhouette reads as "your account", and there is no public account system behind it,
+ * so the label carries the meaning and the icon only marks the control in the row.
+ *
+ * NO BREAKPOINTS OF ITS OWN any more. It used to carry `sm:hidden` / `hidden sm:flex` pairs
+ * to swap a worded link for an icon-only one on a narrow header. It now lives inside TopBar,
+ * which is hidden below `md` outright, so those variants could never render and the drawer's
+ * own account row is what a phone gets instead. One control, one shape.
  *
  * The signed-out control is what renders while `checking` is still true, and that is
  * deliberate. AdminAuthContext asks GET /api/auth/me on mount; rendering nothing until it
- * answers costs EVERY visitor a header that reflows when the control pops in, and it also
+ * answers costs EVERY visitor a bar that reflows when the control pops in, and it also
  * left the control out of the prerendered HTML entirely (the backend is not running at build
  * time, so `checking` never resolves during the snapshot). Signed out is the correct default
  * for the overwhelming majority, so it is drawn immediately and only upgrades to a name for
@@ -58,95 +62,72 @@ export default function HeaderAccount() {
     navigate('/');
   };
 
-  // `hidden sm:flex` overrides the shared idiom's `flex` at the narrow end: the mobile drawer
-  // carries its own account row, and a narrow header has room for the quote CTA or this, not both.
-  const triggerCls = `${headerControlCls(menuOpen)} hidden sm:flex`;
-
   // `checking` counts as signed out here — see the note above on why this renders eagerly.
-  // One login screen for the whole site: this goes straight to /portal/login rather than opening
-  // an in-header dialog, so a signed-out visitor and a logged-out staffer see the same page.
-  /**
-   * SIGNED OUT: the header shows nothing at all.
-   *
-   * It used to carry a Sign in link on every public page. That is a staff door advertised
-   * to buyers and to crawlers alike: it appeared in the rendered text of all 4,884 pages,
-   * and an indexed login link is a liability rather than traffic. robots.txt already
-   * disallows /portal for the same reason, so the two now agree.
-   *
-   * Nothing about the route changes. /portal/login still works and is still reachable by
-   * typing or bookmarking it, staff who ARE signed in still get the account menu below,
-   * and the mobile drawer keeps its account row for them.
-   */
-  if (!isAuthed) return null;
+  // One login screen for the whole site: this goes straight to /portal/login rather than
+  // opening an in-header dialog, so a signed-out visitor and a logged-out staffer see the
+  // same page.
+  if (!isAuthed) {
+    return (
+      <Link to="/portal/login" className={utilityControl}>
+        <User aria-hidden className="h-4 w-4 flex-shrink-0" strokeWidth={2} />
+        {t('auth.signIn')}
+      </Link>
+    );
+  }
 
-  // Just the first name on the header line: full names run long enough to push the quote
-  // CTA off a laptop-width row, and the menu shows the full name anyway.
+  // Just the first name on the bar: full names run long enough to crowd the region control
+  // beside them, and the menu shows the full name anyway.
   const firstName = user.name?.split(' ')[0] || user.name;
 
   return (
-    <>
-      {/* Mobile: icon-only shortcut into the portal, in the same slot as the signed-out
-          sign-in icon. It opens the dashboard; the drawer still carries sign-out. */}
-      <Link
-        to="/portal"
-        aria-label={t('auth.dashboard')}
-        className={`${headerControl} justify-center sm:hidden`}
+    <div ref={wrapRef} className="relative">
+      {/* No chevron. An item with a panel looks identical to one without in this header —
+          see the note above the nav in Header.jsx. `aria-expanded` carries the state to
+          anyone who needs it announced. */}
+      <button
+        type="button"
+        onClick={() => setMenuOpen((v) => !v)}
+        aria-expanded={menuOpen}
+        aria-haspopup="menu"
+        // The name FIRST, then the purpose. `aria-label` replaces the element's contents in
+        // the accessible name, so a bare "Account menu" would throw away the one word the
+        // control visibly shows — speech input ("click Kishlay") would find nothing to match,
+        // and a screen reader would never say which account is signed in. Same superset shape
+        // as RegionLanguageSwitcher's srLabel.
+        aria-label={`${firstName}, ${t('auth.accountAria')}`}
+        className={utilityControlCls(menuOpen)}
       >
         {user.avatarUrl ? (
-          <img src={resolveUpload(user.avatarUrl)} alt="" className="h-5 w-5 rounded-full object-cover" />
+          <img src={resolveUpload(user.avatarUrl)} alt="" className="h-4 w-4 flex-shrink-0 rounded-full object-cover" />
         ) : (
-          <User aria-hidden className="h-[18px] w-[18px]" strokeWidth={2} />
+          <User aria-hidden className="h-4 w-4 flex-shrink-0" strokeWidth={2} />
         )}
-      </Link>
-      <div ref={wrapRef} className="relative hidden sm:block">
-        {/* No chevron. An item with a panel looks identical to one without in this header —
-            see the note above the nav in Header.jsx. `aria-expanded` carries the state to
-            anyone who needs it announced. */}
-        <button
-          type="button"
-          onClick={() => setMenuOpen((v) => !v)}
-          aria-expanded={menuOpen}
-          aria-haspopup="menu"
-          // The name FIRST, then the purpose. `aria-label` replaces the element's contents in
-          // the accessible name, so a bare "Account menu" would throw away the one word the
-          // control visibly shows — speech input ("click Kishlay") would find nothing to match,
-          // and a screen reader would never say which account is signed in. Same superset shape
-          // as RegionLanguageSwitcher's srLabel, em dash included.
-          aria-label={`${firstName}, ${t('auth.accountAria')}`}
-          className={triggerCls}
-        >
-          {user.avatarUrl ? (
-            <img src={resolveUpload(user.avatarUrl)} alt="" className="h-5 w-5 flex-shrink-0 rounded-full object-cover" />
-          ) : (
-            <User aria-hidden className="h-[18px] w-[18px] flex-shrink-0" strokeWidth={2} />
-          )}
-          {firstName}
-        </button>
+        {firstName}
+      </button>
 
-        {menuOpen && (
-          <div className="absolute right-0 top-full z-50 mt-2 min-w-[13rem] rounded-card border border-border bg-white p-1.5 shadow-card">
-            <div className="border-b border-border px-3 pb-2.5 pt-2">
-              <p className="truncate text-sm font-semibold text-navy-900">{user.name}</p>
-            </div>
-
-            <Link
-              to="/portal"
-              onClick={() => setMenuOpen(false)}
-              className="block rounded-card px-3 py-2 text-sm font-medium text-ink transition-colors hover:bg-navy-50 hover:text-navy-900"
-            >
-              {t('auth.dashboard')}
-            </Link>
-
-            <button
-              type="button"
-              onClick={handleSignOut}
-              className="block w-full rounded-card px-3 py-2 text-left text-sm font-medium text-ink transition-colors hover:bg-navy-50 hover:text-navy-900"
-            >
-              {t('auth.signOut')}
-            </button>
+      {menuOpen && (
+        <div className="absolute right-0 top-full z-50 mt-2 min-w-[13rem] rounded-card border border-border bg-white p-1.5 shadow-card">
+          <div className="border-b border-border px-3 pb-2.5 pt-2">
+            <p className="truncate text-sm font-semibold text-navy-900">{user.name}</p>
           </div>
-        )}
-      </div>
-    </>
+
+          <Link
+            to="/portal"
+            onClick={() => setMenuOpen(false)}
+            className="block rounded-card px-3 py-2 text-sm font-medium text-ink transition-colors hover:bg-navy-50 hover:text-navy-900"
+          >
+            {t('auth.dashboard')}
+          </Link>
+
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className="block w-full rounded-card px-3 py-2 text-left text-sm font-medium text-ink transition-colors hover:bg-navy-50 hover:text-navy-900"
+          >
+            {t('auth.signOut')}
+          </button>
+        </div>
+      )}
+    </div>
   );
 }

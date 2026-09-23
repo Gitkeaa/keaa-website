@@ -4,6 +4,7 @@ import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
 import MobileDrawer from './layout/MobileDrawer';
+import MobileActionBar from './layout/MobileActionBar';
 import ScrollToTop from './ScrollToTop';
 import BackToTop from './BackToTop';
 import CookieConsent from './CookieConsent';
@@ -95,6 +96,10 @@ export default function Layout() {
             open={drawerOpen}
             onClose={() => setDrawerOpen(false)}
           />
+          {/* Quote / WhatsApp / Call, pinned to the bottom on phones only. It publishes its
+              height as `--actionbar-h`, which the three fixed corner widgets below add to
+              their own offsets so none of them ends up underneath it. */}
+          <MobileActionBar />
           {/* Desktop only (hidden below sm): on mobile the chat launcher moves to the
               bottom-left corner this button occupies, so it steps aside there. */}
           <BackToTop />

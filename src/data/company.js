@@ -24,6 +24,12 @@ export const company = {
   },
 
   phones: ['+91 98767 01926', '+91 98729 84707'],
+
+  /* The number behind `social.whatsapp` below, in the form it should be SHOWN. A wa.me link
+     needs bare digits and the header's utility bar needs something readable, so the two are
+     stated separately. Keep them pointing at the same line. */
+  whatsappNumber: '+91 98729 84707',
+
   emails: ['raveesh@keaa-international.net', 'sumit@keaa-international.net', 'bhupesh@keaa-international.net'],
   website: 'www.keaainternational.com',
 
@@ -103,6 +109,7 @@ export const company = {
       image: '/images/cert-zed-silver.jpg',
       note: 'Zero Defect Zero Effect (ZED) Silver certification recognising quality-driven and eco-conscious manufacturing.',
     },
+    
   ],
 
   machinery: [
@@ -117,10 +124,11 @@ export const company = {
   processSteps: [
     { step: '01', title: 'Raw Material Selection', desc: 'High-grade steel is carefully sourced from trusted, audited vendors.' },
     { step: '02', title: 'Cutting', desc: 'Precision sheet and tube laser cutting for accurate dimensions.' },
-    { step: '03', title: 'Welding', desc: 'Robotic and certified manual welding (EN 1090-2/3834-2) for strong, lasting joints.' },
-    { step: '04', title: 'Surface Treatment', desc: 'Hot dip galvanizing or powder coating per DIN EN 1461 for corrosion resistance.' },
-    { step: '05', title: 'Inspection & Testing', desc: 'Tensile, compression, bend and weld-penetration testing on every batch.' },
-    { step: '06', title: 'Packaging & Dispatch', desc: 'Secure export packaging and on-time worldwide dispatch.' },
+    { step: '03', title: 'Press Work', desc: 'Precision pressing and forming to shape components accurately and consistently.' },
+    { step: '04', title: 'Welding', desc: 'Robotic and certified manual welding (EN 1090-2/3834-2) for strong, lasting joints.' },
+    { step: '05', title: 'Surface Treatment', desc: 'Hot dip galvanizing or powder coating per DIN EN 1461 for corrosion resistance.' },
+    { step: '06', title: 'Inspection & Testing', desc: 'Tensile, compression, bend and weld-penetration testing on every batch.' },
+    { step: '07', title: 'Packaging & Dispatch', desc: 'Secure export packaging and on-time worldwide dispatch.' },
   ],
   
   timeline: [
@@ -229,7 +237,7 @@ export const leadership = [
     role: 'Global Business Head',
     
     /* Cloudinary public_id. Fill this in and it replaces the photo above. */
-    cloudinaryId: 'ChatGPT_Image_19_Sept_2026_16_18_05_t7pgv4',
+    cloudinaryId: 'Bhupesh_Gautam_sh5j0f',
     linkedin: 'https://www.linkedin.com/in/bhupesh-gautam-13867a7b/',
     email: 'bhupesh@keaa-international.net',
     whatsapp: '+91 98729 84707',
@@ -249,7 +257,7 @@ export const leadership = [
     role: 'Sales Manager',
   
     /* Cloudinary public_id. Fill this in and it replaces the photo above. */
-    cloudinaryId: 'Vikram_keaa_kjc9cj',
+    cloudinaryId: 'ChatGPT_Image_22_Sept_2026_15_38_28_nta0bu',
     linkedin: 'https://www.linkedin.com/in/vikram-singh-panwar%E2%9C%A8/',
     email: 'team8@keaa-international.net',
     whatsapp: '7508007760',

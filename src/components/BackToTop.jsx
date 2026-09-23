@@ -36,8 +36,11 @@ export default function BackToTop() {
           /* Bottom-LEFT, and DESKTOP-ONLY (`hidden sm:flex`). On desktop the chat launcher sits
              bottom-right, so the two never overlap; on mobile the launcher moves to bottom-left,
              so this button steps aside there. Offset above the consent bar for the same reason
-             as the chat launcher, see `--consent-bar-h` in CookieConsent. */
-          style={{ bottom: 'calc(1.5rem + var(--consent-bar-h, 0px))' }}
+             as the chat launcher, see `--consent-bar-h` in CookieConsent. `--actionbar-h`
+             is the same contract for the phone action bar: this button is visible from
+             `sm` and the bar is hidden from `md`, so the two do overlap between 640px
+             and 767px. */
+          style={{ bottom: 'calc(1.5rem + var(--consent-bar-h, 0px) + var(--actionbar-h, 0px))' }}
           className="fixed left-6 z-40 hidden sm:flex h-12 w-12 items-center justify-center rounded-full bg-navy-800 text-primary-light shadow-lg transition-[bottom] duration-300"
         >
           <svg aria-hidden className="absolute inset-0 -rotate-90" viewBox="0 0 48 48">

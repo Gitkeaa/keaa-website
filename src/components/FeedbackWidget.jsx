@@ -332,7 +332,9 @@ export default function FeedbackWidget() {
           /* Lifted by NUDGE_LIFT so it stacks above the bottom-left button. And
              `--consent-bar-h` is published by CookieConsent while the bar is up and removed
              once a decision is stored, so the 0px fallback is the normal case. */
-          style={{ bottom: `calc(1.5rem + ${NUDGE_LIFT} + var(--consent-bar-h, 0px))` }}
+          style={{
+            bottom: `calc(1.5rem + ${NUDGE_LIFT} + var(--consent-bar-h, 0px) + var(--actionbar-h, 0px))`,
+          }}
           className="fixed left-4 z-40 w-[320px] max-w-[calc(100vw-2rem)] rounded-card border border-border bg-white p-5 shadow-cardHover transition-[bottom] duration-300 sm:left-6"
         >
           {/* <p className="font-display text-body-compact font-bold leading-snug text-text">
