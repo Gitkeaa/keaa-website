@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { X } from 'lucide-react';
-import { certificatePageUrl, certificatePageCount } from '../../data/certificateDocuments';
+import { certificatePage, certificatePageCount } from '../../data/certificateDocuments';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { useLT } from '../../i18n/LocaleContext';
 
@@ -118,7 +118,7 @@ export default function CertificateViewer({ doc, onClose }) {
               <div key={n} className="relative w-full overflow-hidden rounded-card bg-white shadow-2xl">
                 <div className="aspect-[1/1.414] w-full">
                   <img
-                    src={certificatePageUrl(doc.pdf, n, 1400)}
+                    src={certificatePage(doc, n, 1400)}
                     alt={lt('docs.pageAlt', '{name}, page {page}', { name: doc.name, page: n })}
                     /* Page one is what the reader is looking at the moment this opens, so it
                        is fetched eagerly; the rest wait until they are scrolled towards. */

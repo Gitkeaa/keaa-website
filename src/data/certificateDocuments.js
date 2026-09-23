@@ -163,6 +163,8 @@ const MAX_PAGES = 32;
 const PROBE_BATCH = 8;
 
 export function certificatePageCount(doc, signal) {
+  // A plain-image certificate (the four in company.js) is one page by definition.
+  if (!doc.pdf) return Promise.resolve(1);
   if (Number.isInteger(doc.pages) && doc.pages > 0) return Promise.resolve(doc.pages);
 
   const probe = (n) =>
@@ -201,6 +203,28 @@ export function certificatePageCount(doc, signal) {
     }
     return known;
   })();
+}
+
+/**
+ * A certificate is one of two things, and the card and the viewer treat them alike.
+ *
+ *   { pdf: '<cloudinary ref>' }   a multi-page PDF, rendered page by page   (this file)
+ *   { image: '/images/x.jpg' }    a single picture already on the site      (company.js)
+ *
+ * The second shape exists so the four original ISO/ZED certificates go through the same
+ * view-only viewer as the PDFs. They used to link straight at their .jpg, which is a
+ * download by any other name, and left the page offering two different deals on the same
+ * kind of document.
+ */
+export function certificateThumb(doc, w = 800) {
+  if (doc.pdf) return certificateThumbUrl(doc.pdf, w);
+  return doc.image || null;
+}
+
+/** One page of either shape. A picture has exactly one. */
+export function certificatePage(doc, page = 1, w = 1400) {
+  if (doc.pdf) return certificatePageUrl(doc.pdf, page, w);
+  return page === 1 ? doc.image || null : null;
 }
 
 /** The slots that have actually been filled in, in the order written above. */

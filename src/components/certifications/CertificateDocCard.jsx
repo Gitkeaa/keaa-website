@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Eye, FileText } from 'lucide-react';
 import Button from '../ui/Button';
 import CertificateViewer from './CertificateViewer';
-import { certificateThumbUrl } from '../../data/certificateDocuments';
+import { certificateThumb } from '../../data/certificateDocuments';
 import { useLT } from '../../i18n/LocaleContext';
 
 /**
@@ -12,11 +12,12 @@ import { useLT } from '../../i18n/LocaleContext';
  * border, radius, shadow, hover lift, same picture frame and the same title / scope / note
  * stack underneath.
  *
- * VIEW ONLY. The button opens the in-page viewer (CertificateViewer) rather than linking at
- * the .pdf, because a link to the .pdf opens the browser's own PDF viewer and that comes with
- * Download and Print in its toolbar. Nothing here references the document file at all, only
- * pictures of its pages. See the note at the top of CertificateViewer for what that does and
- * does not actually prevent.
+ * VIEW ONLY, and that now covers BOTH kinds of certificate. The button opens the in-page
+ * viewer rather than linking at the file: a link to a .pdf opens the browser's own PDF viewer,
+ * which comes with Download and Print in its toolbar, and a link to a .jpg is a download with
+ * extra steps. The four original ISO/ZED certificates come through here too (they arrive as
+ * `{ image }` rather than `{ pdf }`), so the page no longer offers two different deals on the
+ * same kind of document. See the note at the top of CertificateViewer for the honest limit.
  *
  * THE THUMBNAIL IS ALLOWED TO FAIL. Cloudinary refuses PDF delivery until an account setting
  * is turned on, and a PDF uploaded as `raw` cannot be rendered as a picture at all (both are
@@ -30,7 +31,7 @@ export default function CertificateDocCard({ doc }) {
   const [thumbFailed, setThumbFailed] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const thumbUrl = certificateThumbUrl(doc.pdf);
+  const thumbUrl = certificateThumb(doc);
   const showThumb = Boolean(thumbUrl) && !thumbFailed;
 
   // A slot with nothing pasted into it is not a card. The page filters these out already;

@@ -67,36 +67,26 @@ export default function Certifications() {
             desc={lt('intro.desc', 'Independently audited and certified by TÜV Rheinland and the Government of India. Click any certificate to open the full document.')}
           />
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2">
+          {/* The ISO and ZED certificates go through the SAME card and the same view-only
+              viewer as the PDFs below. They used to be hand-rolled cards whose "View
+              Certificate" linked straight at the .jpg, which opened the raw file and offered
+              it for download, so the page was view-only for half its certificates and
+              download-anything for the other half. `image` in place of `pdf` is the only
+              difference the card sees.
+
+              The per-index `certs.N.scope` / `certs.N.note` translation keys are resolved
+              here and passed down, so the translations that already exist for them keep
+              working rather than needing new keys under `docs.`. */}
+          <div className={`mt-12 grid gap-6 ${gridFor(company.certifications.length)}`}>
             {company.certifications.map((c, i) => (
-              <div
+              <CertificateDocCard
                 key={c.name}
-                className="group flex flex-col overflow-hidden rounded-card border border-navy-100 bg-white shadow-card transition-all hover:-translate-y-1 hover:shadow-cardHover"
-              >
-                <div className="overflow-hidden border-b border-navy-100 bg-navy-50/40 p-4">
-                  <img
-                    src={c.image}
-                    alt={lt('certs.alt', '{name} certificate, KEAA International', { name: c.name })}
-                    loading="lazy"
-                    className="mx-auto max-h-[440px] w-auto object-contain transition-transform duration-500 group-hover:scale-[1.02]"
-                  />
-                </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <h3 className="font-display text-lg font-semibold text-text">{c.name}</h3>
-                  <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-primary-darker">
-                    {lt(`certs.${i}.scope`, c.scope)}, {c.body}
-                  </p>
-                  <p className="mt-2 text-body-compact leading-relaxed text-ink">{lt(`certs.${i}.note`, c.note)}</p>
-                  <a
-                    href={c.image}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 inline-flex w-fit items-center border-b border-transparent pb-0.5 text-[13px] font-bold uppercase tracking-[0.12em] text-navy-700 transition-colors hover:border-primary hover:text-primary-darker"
-                  >
-                    {lt('certs.view', 'View Certificate')}
-                  </a>
-                </div>
-              </div>
+                doc={{
+                  ...c,
+                  scope: lt(`certs.${i}.scope`, c.scope),
+                  note: lt(`certs.${i}.note`, c.note),
+                }}
+              />
             ))}
           </div>
         </div>
