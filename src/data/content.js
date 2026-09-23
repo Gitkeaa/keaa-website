@@ -322,7 +322,7 @@ export const catalogueDownloads = [
     title: 'Scaffolding & Formworks Catalogue',
     type: 'PDF',
     group: 'Catalogues',
-    url: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/web_support_keaa-international_net/IQDrlCW9_78jTbaxSmZFAXVFAUp5tsZGw32rbgfqVylfnaA?e=iznXeZ',
+    url: 'https://itkeaainternational-my.sharepoint.com/:b:/g/personal/web_support_keaa-international_net/IQC8Oazgx8WvSripzThu7VdEAWAPPyoaKGWJ9Em2dFVw_jc?e=TL69zt',
   },
   {
     title: 'Livestock Housing Solutions Catalogue',

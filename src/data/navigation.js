@@ -14,15 +14,16 @@ import {
  */
 /**
  * `children` turns a nav item into a half-height panel (see layout/NavPanel.jsx). Items
- * without it are plain links — Home and Contact Us have no sub-content, and inventing some
- * to make the nav symmetrical would be padding.
+ * without it are plain links — Home has no sub-content, and inventing some to make the nav
+ * symmetrical would be padding.
  *
  * WHY EACH PAGE SITS WHERE IT DOES. These five used to live in a separate "Explore KEAA"
  * mega-menu — a second discovery system beside the nav — and, when that was removed, in the
  * footer only. Each is now filed under the thing a visitor is actually doing when they want
  * it, rather than in a catch-all:
  *
- *   Careers            -> About Us      it is company/organisation information
+ *   Careers            -> Contact Us    applying is a way of getting in touch, and it sits
+ *                                       beside Our Team, the people you would be joining
  *   Downloads Center   -> Products      catalogues and datasheets are evaluated WITH the
  *                                       products they describe, during a purchase
  *   Certifications     -> Manufacturing ISO 9001 / EN 1090 / SLV welding are proof of
@@ -56,12 +57,8 @@ export const mainNav = [
       { label: 'About KEAA', to: '/about', desc: 'Who we are and what we build' },
       { label: 'Our Journey', to: '/about#journey', desc: 'From 2003 to 42+ countries' },
       { label: 'Leadership', to: '/about#leadership', desc: 'Message from our Managing Directors' },
-      { label: 'Our Team', to: '/contact#team', desc: 'The people behind the products' },
-      { label: 'Careers', to: '/careers', desc: 'Open roles and life at KEAA' },
       { label: 'Export', to: '/export', desc: 'Supplying buyers in 42+ countries' },
       { label: 'Guides', to: '/blog', desc: 'How to choose the right system' },
-      { label: 'Request a Quote', to: '/request-a-quote', desc: 'What to send us, and what happens next' },
-      { label: 'Contact Us', to: '/contact', desc: 'Offices, phone and email' },
     ],
     feature: {
       eyebrow: 'Careers',
@@ -127,7 +124,21 @@ export const mainNav = [
       cta: { label: 'Browse projects', to: '/projects-gallery' },
     },
   },
-  { key: 'nav.contact', label: 'Contact Us', to: '/contact' },
+  {
+    key: 'nav.contact',
+    label: 'Contact Us',
+    to: '/contact',
+    /* Contact Us and Book a Factory Visit both land on /contact: the page's default tab is
+       the contact form, and an unknown ?tab= falls back to it (Contact.jsx). Booking a visit
+       is an enquiry, so it needs no separate route. Rows are keyed by route AND label in both
+       renderers, so that shared `to` is safe. */
+    children: [
+      { label: 'Contact Us', to: '/contact', desc: 'Offices, phone and email' },
+      { label: 'Book a Factory Visit', to: '/contact', desc: 'See the plant in person before you order' },
+      { label: 'Our Team', to: '/contact#team', desc: 'The people behind the products' },
+      { label: 'Careers', to: '/careers', desc: 'Open roles and life at KEAA' },
+    ],
+  },
 ];
 
 export const megaMenuItems = [

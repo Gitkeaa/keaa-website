@@ -168,7 +168,10 @@ export default function MobileDrawer({ open, onClose }) {
 
                         {children.map((child) => (
                           <Link
-                            key={`${item.to}-${child.to}`}
+                            /* Label included: two rows in one section may share a `to`
+                               (Contact Us and Book a Factory Visit both point at /contact),
+                               and route alone would collide. NavPanel keys the same way. */
+                            key={`${item.to}-${child.to}-${child.label}`}
                             to={child.to}
                             className="group flex items-center rounded-card py-2 pl-6 pr-3 text-sm font-medium text-ink hover:bg-navy-50"
                           >

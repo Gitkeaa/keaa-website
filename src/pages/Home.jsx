@@ -11,8 +11,12 @@ import ProjectCarousel from '../components/home/ProjectCarousel';
 import CertificationStrip from '../components/home/CertificationStrip';
 import useSEO from '../hooks/useSEO';
 import { useLT } from '../i18n/LocaleContext';
-import { company } from '../data/company';
+import { certificationLogos } from '../data/certificationLogos';
+import { cldImage } from '../data/cloudinary';
 import { featuredProjects, featuredProjectImages } from '../data/content';
+
+/** Same rule as CertificationStrip: an `id` may be a public_id or an already-built URL. */
+const markSrc = (id, h) => (/^https?:\/\//.test(id) ? id : cldImage(id, { h, crop: 'fit' }));
 
 /**
  * The public home page at the index route "/": assembles the landing sections in order.
@@ -132,20 +136,28 @@ export default function Home() {
             <p className="mt-2 text-body-compact leading-relaxed text-ink">
               {lt('certsCard.body', 'Independently audited and certified by TÜV Rheinland and the Government of India.')}
             </p>
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              {company.certifications.map((c) => (
-                <a
+            {/* The marks themselves rather than their names — the same set as the strip under
+                the hero, read from data/certificationLogos.js, so adding a mark there shows it
+                in both places. The individual certificate documents are one click away behind
+                "View All Certificates" below. */}
+            <ul className="mt-6 grid grid-cols-3 gap-3">
+              {certificationLogos.map((c) => (
+                <li
                   key={c.name}
-                  href={c.image}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group block rounded-card border border-navy-100 bg-white px-4 py-3 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-card"
+                  title={c.body}
+                  className="flex items-center justify-center rounded-card border border-navy-100 bg-white px-2 py-3 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-card"
                 >
-                  <span className="mt-3 block truncate text-xs font-bold text-navy-800">{c.name}</span>
-                  <span className="block truncate text-[10px] text-muted">{c.body}</span>
-                </a>
+                  <img
+                    src={markSrc(c.id, 96)}
+                    srcSet={`${markSrc(c.id, 96)} 1x, ${markSrc(c.id, 192)} 2x`}
+                    alt={c.name}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-10 w-auto max-w-full object-contain"
+                  />
+                </li>
               ))}
-            </div>
+            </ul>
             <Button to="/certifications" variant="ghost" size="sm" className="mt-auto pt-6 !px-0">
               {lt('certsCard.cta', 'View All Certificates')}
             </Button>
