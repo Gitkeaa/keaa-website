@@ -1,17 +1,40 @@
 import GalleryHero from '../components/gallery/GalleryHero';
 import { heroSlides } from '../data/heroSlides';
 import SectionHeading from '../components/ui/SectionHeading';
+import CertificateDocCard from '../components/certifications/CertificateDocCard';
 import { company } from '../data/company';
+import { publishedCertificateDocuments } from '../data/certificateDocuments';
 import useSEO from '../hooks/useSEO';
 import { useLT } from '../i18n/LocaleContext';
 
 /**
  * Certifications & Compliance page: hero, a grid of certificate cards from company.certifications,
- * and the in-house testing plus certified-workforce blurbs.
+ * a second grid of full PDF certificates, and the in-house testing plus certified-workforce blurbs.
  *
  * Rendered at the /certifications route (lazy-loaded in App.jsx) and linked from the main
- * navigation. Edit the certificate list in src/data/company.js; adjust layout and copy here.
+ * navigation. Edit the image certificate list in src/data/company.js and the PDF ones in
+ * src/data/certificateDocuments.js; adjust layout and copy here.
  */
+
+/**
+ * How the PDF row lays itself out for the number of certificates that have actually been
+ * filled in.
+ *
+ * Three columns only makes sense with three cards in them. Left on `lg:grid-cols-3`, a single
+ * certificate would sit in a third of the page with two thirds of white space beside it, and
+ * two would hug the left edge. Capping the width and centring instead keeps any count looking
+ * deliberate, and all three cases stack to one column on a phone.
+ */
+const gridFor = (count) => {
+  if (count <= 1) return 'mx-auto max-w-sm';
+  if (count === 2) return 'mx-auto max-w-3xl sm:grid-cols-2';
+  if (count === 3) return 'sm:grid-cols-2 lg:grid-cols-3';
+  // Four goes to four columns rather than three, so the fourth is not left alone on a second
+  // row. Anything past four wraps in threes, where a short last row reads as a wrap and not
+  // as an orphan.
+  if (count === 4) return 'sm:grid-cols-2 lg:grid-cols-4';
+  return 'sm:grid-cols-2 lg:grid-cols-3';
+};
 export default function Certifications() {
   const lt = useLT('certifications');
   useSEO({
@@ -79,28 +102,30 @@ export default function Certifications() {
         </div>
       </section>
 
-      <section className="section-pad">
-        <div className="container-page grid gap-10 lg:grid-cols-2">
-          <div>
-            <span className="eyebrow text-primary-darker">
-              {lt('testing.eyebrow', 'In-House Testing')}
-            </span>
-            <h3 className="mt-2 font-display text-xl font-semibold text-text">
-              {lt('testing.title', 'Tested Before It Leaves Our Facility')}
-            </h3>
-            <p className="mt-3 text-body-compact leading-relaxed text-ink">{lt('testing.body', company.facilities.testing)}.</p>
+      {/* The full certificates, as PDFs. The whole section disappears when no links have been
+          pasted into data/certificateDocuments.js yet, so an unfilled slot never reaches the
+          live site as an empty heading. */}
+      {publishedCertificateDocuments.length > 0 && (
+        /* Bottom padding only, spelled out rather than `section-pad pt-0`: `section-pad` sets
+           its padding through a `lg:` variant, which outranks a plain `pt-0` and left 57px of
+           top padding in place. With the heading gone, that padding plus the grid's old
+           `mt-12` and the section above's own bottom padding stacked up to a 162px void
+           between the two sets of cards. The gap is now one section's worth. */
+        <section id="documents" className="pb-[37px] sm:pb-[47px] lg:pb-[57px]">
+          <div className="container-page">
+            <div className={`grid gap-6 ${gridFor(publishedCertificateDocuments.length)}`}>
+              {/* Keyed by position: the list is three fixed slots that are never reordered or
+                  filtered on screen, and neither the link nor the name is guaranteed unique
+                  while somebody is still pasting values in. */}
+              {publishedCertificateDocuments.map((doc, i) => (
+                <CertificateDocCard key={i} doc={doc} />
+              ))}
+            </div>
           </div>
-          <div>
-            <span className="eyebrow text-primary-darker">
-              {lt('welders.eyebrow', 'Certified Workforce')}
-            </span>
-            <h3 className="mt-2 font-display text-xl font-semibold text-text">
-              {lt('welders.title', 'Certified Welders, Verified Process')}
-            </h3>
-            <p className="mt-3 text-body-compact leading-relaxed text-ink">{lt('welders.body', company.facilities.welders)}.</p>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      
     </>
   );
 }
