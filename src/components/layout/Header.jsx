@@ -108,7 +108,21 @@ export default function Header({ onOpenDrawer }) {
         what made the row look cramped.
       */}
       <div className="container-full flex items-center justify-between gap-4 py-3.5">
-        <Link to="/" aria-label="KEAA International home" className="flex-shrink-0">
+        {/* The logo steps aside while search is open, but only below `md`.
+            The expanded field is anchored to the right of the row and is
+            `min(32rem, 72vw)` wide, so on a narrow row it reaches all the way back across it
+            and printed itself on top of the mark. Measured: the field still covers 62px of the
+            logo at 768px and first clears it at 1024px, so the hand-off is at `lg`, not `md`. Fading rather than
+            unmounting keeps the row's height and the field's anchor from shifting, and
+            `pointer-events-none` stops an invisible logo swallowing a tap meant for the
+            field. The nav beside it fades on the same state, just at a different breakpoint. */}
+        <Link
+          to="/"
+          aria-label="KEAA International home"
+          className={`flex-shrink-0 transition-opacity duration-200 ${
+            searchOpen ? 'pointer-events-none opacity-0 lg:pointer-events-auto lg:opacity-100' : 'opacity-100'
+          }`}
+        >
           <Logo />
         </Link>
 
@@ -129,14 +143,17 @@ export default function Header({ onOpenDrawer }) {
           also fires only toggle the panel open then shut before the navigation lands, so there
           is nothing left open behind the new route.
         */}
-        {/* `xl` (1280px), not `lg`. Six items, the search and the quote button stopped
-            fitting on one line below that once the items were measured in German and French
-            rather than English, and the row wrapped instead of scrolling. Below it the drawer
-            carries the same six, so nothing is lost. Keep this in step with the Menu button's
-            `xl:hidden` at the foot of this row: between the two breakpoints a visitor would
-            get either both or neither. */}
+        {/* `deck` (1152px), not `lg` and no longer `xl`. Six items, the search and the quote
+            button stopped fitting on one line below `lg` once the items were measured in
+            German and French rather than English, and the row wrapped instead of scrolling.
+            `xl` (1280px) was then too cautious: a 14-inch 1920x1080 laptop at 150% scaling
+            reports about 1265px and was handed the hamburger even though the bar fits.
+            `deck` is defined in tailwind.config.js. Below it the drawer carries the same six,
+            so nothing is lost. Keep this in step with the Menu button's `deck:hidden` at the
+            foot of this row: between the two breakpoints a visitor would get both or
+            neither. */}
         <nav
-          className={`hidden items-center gap-5 transition-opacity duration-200 xl:flex xl:gap-7 ${
+          className={`hidden items-center gap-4 transition-opacity duration-200 deck:flex deck:gap-5 xl:gap-7 ${
             searchOpen ? 'pointer-events-none opacity-0' : 'opacity-100'
           }`}
         >
@@ -204,29 +221,45 @@ export default function Header({ onOpenDrawer }) {
           {/* Search opens in place — see HeaderSearch. It owns its own ⌘K binding. */}
           <HeaderSearch onOpenChange={setSearchOpen} />
 
-          {/* The market and language control is NOT here any more; it is in the utility bar
-              above (layout/TopBar.jsx), which is visible from `md` up. That placement is what
-              fixed the band it used to vanish in: while it was gated on this row's breakpoint
-              it disappeared between 1024px and 1279px, a width real laptops sit at constantly,
-              because Windows display scaling divides the CSS width (a 1366px laptop at 125%
-              reports 1093px). The bar appears 256px earlier than the nav collapses, so there
-              is no width where the control is missing from both places. */}
+          {/* The market/language control and the staff sign-in, moved here from the utility
+              bar above (layout/TopBar.jsx) when the quote button left this row. They are the
+              two controls a visitor reaches for on arrival — read this in my language, and
+              get me into the portal — so they belong in the row they are looked for in
+              rather than in a slim strip above it. The country and language the site is
+              currently showing are spelled out on the trigger ("INDIA (EN)"), so the control
+              names the market it is set to rather than being an unlabelled glyph.
 
-          {/* The one commercial action the site exists for, reachable from every page.
-              Quote calls to action already sit on the products, category and product pages,
-              but a visitor who lands on About or Manufacturing had to go looking for one.
-              Styled as the only filled control in the row so it reads as the primary action
-              without another divider or box competing with the search and region controls.
-              Narrow screens keep it: it stays beside the Menu word rather than being hidden
-              behind it, because the drawer is one more tap between a buyer and an enquiry. */}
-          {/* Sentence case, not uppercase. The label used to be forced to REQUEST A QUOTE by
-              `uppercase tracking-[0.08em]`, which shouted the one control it did not need to:
-              it is already the only filled element in the row. Sentence case also stops the
-              longer translations (Offerte aanvragen, Demander un devis) from running the
-              button into the nav. */}
+              `md` and up, which is exactly where the utility bar used to reveal them, so no
+              width loses them: below it the drawer carries language and sign-in, and the bar
+              was hidden there anyway. Keeping them out of the phone row also leaves the
+              search and the hamburger uncrowded on a 390px screen.
+
+              The quote call to action that used to sit here is NOT lost: it is in the drawer,
+              in the footer's Resources column, in the mobile Resources section, and on every
+              product, category and contact page. */}
+          {/* The market and language control and the staff sign-in are NOT here: they sit in the
+              utility bar above (layout/TopBar.jsx), which shows from `md` up. This row carries
+              the one commercial action instead.
+
+              The one commercial action the site exists for, reachable from every page. Quote
+              calls to action already sit on the products, category and product pages, but a
+              visitor who lands on About or Manufacturing had to go looking for one. Styled as
+              the only filled control in the row so it reads as the primary action. Narrow
+              screens keep it: it stays beside the menu button rather than being hidden behind
+              it, because the drawer is one more tap between a buyer and an enquiry.
+
+              Sentence case, not uppercase. The label used to be forced to REQUEST A QUOTE by
+              `uppercase tracking-[0.08em]`, which shouted the one control it did not need to.
+              Sentence case also stops the longer translations (Offerte aanvragen, Demander un
+              devis) from running the button into the nav.
+
+              It steps out of the flow while search is open below `lg`, like the logo: the
+              expanded field is anchored to the right of this row and needs the width. */}
           <Link
             to="/contact?tab=rfq"
-            className="ml-1 inline-flex items-center whitespace-nowrap rounded-full bg-primary-dark px-3.5 py-1.5 text-[13px] font-bold text-white transition-colors hover:bg-primary-darker sm:px-4"
+            className={`ml-1 items-center whitespace-nowrap rounded-full bg-primary-dark px-3.5 py-1.5 text-[13px] font-bold text-white transition-colors hover:bg-primary-darker sm:px-4 ${
+              searchOpen ? 'hidden lg:inline-flex' : 'inline-flex'
+            }`}
           >
             {t('header.requestQuote')}
           </Link>
@@ -235,11 +268,11 @@ export default function Header({ onOpenDrawer }) {
               everything in type; the row now ends in a pill-shaped button, and a second
               worded control beside it read as a pair of labels rather than an action. The
               accessible name is unchanged, so nothing about it is icon-only to a screen
-              reader. Keep `xl:hidden` in step with the nav's `xl:flex` above. */}
+              reader. Keep `deck:hidden` in step with the nav's `deck:flex` above. */}
           <button
             type="button"
             onClick={onOpenDrawer}
-            className={`${headerControl} justify-center xl:hidden`}
+            className={`${headerControl} justify-center deck:hidden ${searchOpen ? 'hidden lg:flex' : ''}`}
             aria-label={t('header.menuAria')}
           >
             <Menu aria-hidden className="h-[22px] w-[22px]" strokeWidth={2} />

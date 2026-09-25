@@ -179,9 +179,13 @@ export default function Footer() {
           <div className="col-span-2 sm:col-span-1">
             <ColumnHeading>{lt('footer.resourcesHeading', 'Resources')}</ColumnHeading>
             <ul className="mt-8 grid grid-cols-2 gap-x-6 gap-y-3 text-sm sm:block sm:space-y-3">
+              {/* `l.k`, never the map index. The list is filtered in navigation.js so a page
+                  that already sits under a parent section is not repeated here, which changes
+                  the positions — and these labels are translated BY position, so an index
+                  would have printed the wrong word in every locale. */}
               {footerLinks.resources.map((l, i) => (
                 <NavLinkRow key={l.to} to={l.to}>
-                  {lt(`footer.resources.${i}`, l.label)}
+                  {lt(`footer.resources.${l.k ?? i}`, l.label)}
                 </NavLinkRow>
               ))}
             </ul>

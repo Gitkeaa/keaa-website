@@ -112,16 +112,14 @@ export default function Home() {
                   </p>
                   <p className="mt-0.5 font-display text-body-compact font-bold text-text">42+</p>
                 </div>
-                <div>
+                
+              </div>
+              <div>
                   <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">
                     {lt('global.clients', 'Happy Clients')}
                   </p>
                   <p className="mt-0.5 font-display text-body-compact font-bold text-text">1000+</p>
                 </div>
-              </div>
-              <Button to="/about" variant="ghost" size="sm" className="!px-0">
-                {lt('global.cta', 'View Our Global Presence')}
-              </Button>
             </div>
           </Reveal>
 

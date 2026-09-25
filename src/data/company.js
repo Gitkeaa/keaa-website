@@ -1,5 +1,3 @@
-
-
 export const company = {
   name: 'KEAA International Pvt. Ltd.',
   shortName: 'KEAA',
@@ -303,6 +301,27 @@ export const leadership = [
     email: 'team3@keaa-international.net',
     whatsapp: '+91 80548 05002',
   },
+{
+    name: 'Aryash Moudgil',
+    role: 'Assistant Director',
+   
+    /* Cloudinary public_id. Fill this in and it replaces the photo above. */
+    cloudinaryId: 'ChatGPT_Image_24_Sept_2026_14_20_33_rqqwzu',
+    linkedin: 'https://www.linkedin.com/in/aryash-moudgil-24a970214/',
+    email: 'aryash@keaa-international.net',
+    whatsapp: '+91 98159 43444',
+  },
+  {
+    name: 'Ananya Moudgil',
+    role: 'Assistant Director',
+   
+    /* Cloudinary public_id. Fill this in and it replaces the photo above. */
+    cloudinaryId: 'ChatGPT_Image_24_Sept_2026_14_23_40_bv5tdn',
+    linkedin: 'https://www.linkedin.com/in/ananya-moudgil-4189a1357/',
+    email: 'ananya@keaa-international.net',
+    whatsapp: '+91 75086 00798',
+  },
+
 ];
 
 export const chairmanMessage = {
@@ -314,7 +333,6 @@ export const chairmanMessage = {
   /* Cloudinary public_id. Fill this in and it replaces the photo above. */
   cloudinaryId: '',
 };
-
 // Managing Directors — shown together on the About page under one heading.
 export const managingDirectors = [
   {

@@ -4,6 +4,7 @@ import Reveal from '../components/ui/Reveal';
 import Button from '../components/ui/Button';
 import CtaBand from '../components/CtaBand';
 import { company } from '../data/company';
+import { img, atWidth, imgSrcSet } from '../data/images';
 import { exportTermsPdfUrl, EXPORT_TERMS_PDF_FILENAME } from '../data/exportTerms';
 import useSEO from '../hooks/useSEO';
 import { absoluteUrl } from '../hooks/useSEO';
@@ -64,12 +65,9 @@ export default function Export() {
       title: lt('highlights.since.title', 'Exporting since'),
       desc: lt('highlights.since.desc', 'An established supplier, not a trading intermediary. Everything shipped is made in our own plant.'),
     },
-    {
-      key: 'europe',
-      value: 'EU',
-      title: lt('highlights.europe.title', 'Sales office in Europe'),
-      desc: lt('highlights.europe.desc', 'A Netherlands office and warehouse for European buyers who want a local point of contact.'),
-    },
+    /* The third card named the European sales office and was removed with the office's
+       address card further down the page, on the owner's instruction. Two cards is a
+       deliberate count, not a leftover: the grid below sizes itself from this array. */
   ].filter((h) => h.value);
 
   useSEO({
@@ -187,37 +185,61 @@ export default function Export() {
       </section>
 
       <section className="section-pad bg-navy-50/40">
-        <div className="container-page">
-          <SectionHeading
-            align="left"
-            eyebrow={lt('standards.eyebrow', 'Compliance')}
-            title={lt('standards.title', 'Certified for the markets we ship to')}
-            desc={lt(
-              'standards.desc',
-              'Independently audited management systems, plus welding and product conformity assessed by European bodies. Full certificates are on the certifications page.'
-            )}
-            className="!mx-0"
-          />
+        {/* Two columns from `lg`. The copy here runs to about half the width of a desktop
+            container and the section left the other half empty, which read as a missing
+            element rather than as space. The photograph is the welding floor because that is
+            what the text beside it is about: EN 1090-2 / 3834-2 welders and product conformity.
+            One column on smaller screens, image last, so the certifications stay first. */}
+        <div className="container-page grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-14">
+          <div>
+            <SectionHeading
+              align="left"
+              eyebrow={lt('standards.eyebrow', 'Compliance')}
+              title={lt('standards.title', 'Certified for the markets we ship to')}
+              desc={lt(
+                'standards.desc',
+                'Independently audited management systems, plus welding and product conformity assessed by European bodies. Full certificates are on the certifications page.'
+              )}
+              className="!mx-0"
+            />
 
-          <ul className="mt-8 flex flex-wrap gap-2.5">
-            {company.certifications.map((c) => (
-              <li
-                key={c.name}
-                className="rounded-full border border-navy-100 bg-white px-4 py-2 text-sm font-semibold text-navy-800"
-              >
-                {c.name}
-              </li>
-            ))}
-          </ul>
+            <ul className="mt-8 flex flex-wrap gap-2.5">
+              {company.certifications.map((c) => (
+                <li
+                  key={c.name}
+                  className="rounded-full border border-navy-100 bg-white px-4 py-2 text-sm font-semibold text-navy-800"
+                >
+                  {c.name}
+                </li>
+              ))}
+            </ul>
 
-          <div className="mt-6 space-y-2 text-sm text-muted">
-            {company.facilities.welders && <p>{company.facilities.welders}</p>}
-            {company.facilities.quality && <p>{company.facilities.quality}</p>}
+            <div className="mt-6 space-y-2 text-sm text-muted">
+              {company.facilities.welders && <p>{company.facilities.welders}</p>}
+              {company.facilities.quality && <p>{company.facilities.quality}</p>}
+            </div>
+
+            <Button to="/certifications" variant="secondary" className="mt-7">
+              {lt('standards.cta', 'See the certificates')}
+            </Button>
           </div>
 
-          <Button to="/certifications" variant="secondary" className="mt-7">
-            {lt('standards.cta', 'See the certificates')}
-          </Button>
+          {/* `alt=""` and `aria-hidden`: the photograph illustrates the claim the text already
+              makes in full, so announcing it again would only lengthen the section for a screen
+              reader. `sizes` is the column's real width, not the viewport's, so a phone is not
+              sent a desktop rendition of it. */}
+          <div className="overflow-hidden rounded-card shadow-card">
+            <img
+              src={atWidth(img.weldersFactory, 1024)}
+              srcSet={imgSrcSet(img.weldersFactory)}
+              sizes="(min-width: 1024px) 26rem, 100vw"
+              alt=""
+              aria-hidden
+              loading="lazy"
+              decoding="async"
+              className="aspect-[4/3] w-full object-cover"
+            />
+          </div>
         </div>
       </section>
 
@@ -271,11 +293,16 @@ export default function Export() {
           <SectionHeading
             align="left"
             eyebrow={lt('offices.eyebrow', 'Where we are')}
-            title={lt('offices.title', 'Plant in India, sales office in Europe')}
+            title={lt('offices.title', 'Where we manufacture')}
             className="!mx-0"
           />
-          <div className="mt-8 grid gap-5 sm:grid-cols-2">
-            {[company.manufacturing, company.salesOffice].map((o) => (
+          {/* The European sales office card was removed on the owner's instruction, so this is
+              the manufacturing address alone. `sm:grid-cols-2` went with it: a lone card in a
+              two-column grid sits in the left half with an empty right half beside it.
+              `company.salesOffice` is still in data/company.js and is still named in the
+              privacy policy, which has to state the EU establishment. */}
+          <div className="mt-8 grid max-w-xl gap-5">
+            {[company.manufacturing].map((o) => (
               <address key={o.label} className="rounded-card border border-navy-100 bg-white p-5 not-italic shadow-card">
                 <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-darker">{o.label}</p>
                 <p className="mt-2 text-sm text-navy-800">{o.line1}</p>

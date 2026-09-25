@@ -82,6 +82,10 @@ export default function TopBar() {
 
         <span aria-hidden className="mx-1.5 h-4 w-px bg-border" />
 
+        {/* Staff sign-in, last in the strip. It shows "Log in" to a visitor and the signed-in
+            person's first name with a small menu to anyone with a session, which is why it sits
+            up here rather than in the nav row: it is a utility, not one of the six places a
+            buyer goes. A phone reaches the same thing from the first block of the drawer. */}
         <HeaderAccount />
       </div>
     </div>

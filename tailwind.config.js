@@ -127,6 +127,15 @@ export default {
         body: ['var(--text-body)', { lineHeight: 'var(--leading-body)' }],
         'body-compact': ['var(--text-body-compact)', { lineHeight: 'var(--leading-body)' }],
       },
+      // A 14-inch 1920x1080 laptop run at Windows' default 150% scaling reports a CSS
+      // viewport of about 1265px once the scrollbar is taken off, which is UNDER Tailwind's
+      // `xl` (1280px). That is why those machines were served the tablet header with a
+      // hamburger while an external monitor got the full navigation bar. `deck` is the width
+      // at which the full six-item bar, the search and the quote button genuinely fit, so the
+      // header switches on that rather than on `xl`. Everything below it is unchanged.
+      screens: {
+        deck: '1152px',
+      },
       // Layout width tokens. Values live in :root (src/index.css) so the CSS
       // container tiers and these utilities share one source of truth.
       maxWidth: {

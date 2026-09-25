@@ -181,7 +181,13 @@ export default function ProductsShowcase() {
               hairline. `overflow-hidden` is what crops the skewed photo frame to the card's
               own rounded corners — without it the lean spills past the card edge. */}
           <div className="overflow-hidden rounded-card border border-border bg-surface-raised">
-            <div className="grid xl:grid-cols-[minmax(0,1fr)_14rem]">
+            {/* `deck` (1152px), not `xl`. Above this the four figures sit in their own 14rem
+                  column beside the stage; below it they drop under the stage. A 14-inch
+                  1920x1080 laptop at 150% scaling reports about 1265px, which fell on the wrong
+                  side of `xl` — the figures unstacked into a full-width list, each on its own
+                  line, which stretched the card by nearly 200px and left the column beside the
+                  category rail empty. The side column fits comfortably at this width. */}
+              <div className="grid deck:grid-cols-[minmax(0,1fr)_14rem]">
               {/* ---------------------------------------------------------- STAGE */}
               {/*
                 READABILITY IS STRUCTURAL HERE, NOT A GRADIENT. An earlier cut floated the
@@ -280,7 +286,7 @@ export default function ProductsShowcase() {
               {/* Phone: a 2x2 grid so the four figures fill the width instead of running down
                   a tall single column. From `sm` up it is the original vertical list with the
                   hairlines between rows — desktop is untouched. */}
-              <ul className="grid grid-cols-2 gap-x-6 border-t border-border px-5 py-1 sm:flex sm:flex-col sm:justify-center xl:border-l xl:border-t-0">
+              <ul className="grid grid-cols-2 gap-x-6 border-t border-border px-5 py-1 sm:flex sm:flex-col sm:justify-center deck:border-l deck:border-t-0">
                 {STATS.map((s, i) => (
                   <li
                     key={s.label}

@@ -56,7 +56,7 @@ export const heroSlides = {
     { id: 'DJI_0082_p2qmld', title: "Let's Build", accent: 'Together.', desc: 'Get in touch for inquiries, quotes or partnerships.' },
     { id: 'IMG_9471_rxoaxo', title: 'From Idea', accent: 'to Delivery.', desc: 'Our team responds to every enquiry, fast.' },
     { id: 'Screenshot_2023-04-17_103327_cq7mkj', title: 'Wherever', accent: 'You Build.', desc: 'Serving customers across 42+ countries.' },
-    { id: 'DJI_0083_1_w7zuxk', title: 'Talk to', accent: 'KEAA.', desc: 'Sales in Eindhoven, manufacturing in Ludhiana.' },
+    { id: 'DJI_0083_1_w7zuxk', title: 'Talk to', accent: 'KEAA.', desc: 'Manufacturing in Ludhiana.' },
   ]),
 
   downloads: build([

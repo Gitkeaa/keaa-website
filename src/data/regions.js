@@ -13,15 +13,6 @@
 import { company } from './company';
 
 export const offices = {
-  europe: {
-    key: 'europe',
-    name: company.name,
-    role: 'Sales Office & Warehouse, Europe',
-    lines: [company.salesOffice.line1, company.salesOffice.line2],
-    country: company.salesOffice.country,
-    phones: [company.salesOffice.phone],
-    emails: [],
-  },
   hq: {
     key: 'hq',
     name: company.name,
@@ -53,8 +44,15 @@ export const regions = [
   {
     key: 'europe',
     label: 'Europe & UK',
-    blurb: 'Served from our Eindhoven warehouse',
-    office: 'europe',
+    blurb: 'Served from our Ludhiana export desk',
+    /* `hq`, not the `europe` record — that office was removed from `offices` above when the
+       Eindhoven sales office closed. Europe is now served from the global export desk like
+       every other market. Leaving this pointing at the deleted key made
+       getOfficeForRegion('europe') return undefined, and because DEFAULT_REGION is 'europe'
+       that took out `office.name` in the RFQ submit handler (pages/Contact.jsx) for every
+       visitor who had not picked a market — the quote form failed with a generic error
+       instead of sending. */
+    office: 'hq',
     match: ['NL', 'BE', 'DE', 'FR', 'ES', 'IT', 'PT', 'PL', 'GB', 'IE', 'AT', 'CH', 'SE', 'NO', 'DK', 'FI', 'CZ', 'SK', 'HU', 'RO', 'BG', 'GR', 'HR', 'SI', 'LT', 'LV', 'EE', 'LU', 'RS', 'UA'],
     locales: [
       { country: 'United Kingdom', short: 'UK', code: 'GB', lang: 'en' },

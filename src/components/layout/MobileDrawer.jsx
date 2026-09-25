@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
-import { mainNav } from '../../data/navigation';
+import { mainNav, resourcesNav, resourceRoutes } from '../../data/navigation';
 import { getAllCategories } from '../../data/categories';
 import { useLocale, useLT } from '../../i18n/LocaleContext';
 import { getLanguage, isLiveLocale } from '../../i18n/languages';
@@ -26,6 +26,10 @@ export default function MobileDrawer({ open, onClose }) {
   const lt = useLT('common');
   const { region, entry, setLocaleChoice, regions } = useRegion();
   const [openRegion, setOpenRegion] = useState(null);
+  /* Which nav section is expanded, by `key`. One at a time: the list is long enough with the
+     Resources block and the region rows below it that two open sections push the region
+     chooser off the bottom of a phone. */
+  const [openSection, setOpenSection] = useState(null);
 
   /*
     The drawer carries its own account rows rather than rendering <HeaderAccount />: that
@@ -113,83 +117,13 @@ export default function MobileDrawer({ open, onClose }) {
                 Nothing collapses here: on a phone, tapping to expand a two-item list costs
                 more than simply showing it.
               */}
-                <nav className="space-y-1">
-                  {mainNav.map((item) => {
-                    const own = item.children || [];
-                    /* The row pointing at the section's own page ("All Products"). On desktop
-                       it leads the panel; here it leads the indented list for the same
-                       reason — see the note in NavPanel.jsx. */
-                    const parentRow = own.find((c) => c.to === item.to);
-
-                    const children = [
-                      ...(parentRow ? [{ ...parentRow, label: lt(`nav.row.${parentRow.to}.label`, parentRow.label) }] : []),
-                      ...(item.categories
-                        ? getAllCategories().map((c) => ({
-                            label: lt(`cat.${c.slug}`, c.name),
-                            to: `/products/${c.slug}`,
-                          }))
-                        : []),
-                      ...own
-                        .filter((c) => c !== parentRow)
-                        .map((c) => ({ ...c, label: lt(`nav.row.${c.to}.label`, c.label) })),
-                    ];
-
-                    /*
-                      A section with sub-pages is a HEADING here, not a link — matching the
-                      desktop header, where the nav item only opens its panel. Tapping
-                      "Products" no longer loads the catalogue; "All Products" directly
-                      beneath it does. Sections with no children stay tappable links, since
-                      they have nowhere else to send you.
-
-                      It used to be the reverse: this row linked to the page and the "All
-                      Products" child was filtered out as a duplicate. Restoring that child
-                      is what makes dropping the link safe.
-                    */
-                    return (
-                      <div key={item.to}>
-                        {children.length ? (
-                          <p className="px-3 py-3 text-sm font-semibold text-text">
-                            {t(item.key)}
-                          </p>
-                        ) : (
-                          <NavLink
-                            to={item.to}
-                            className={({ isActive }) =>
-                              `group flex items-center rounded-card px-3 py-3 text-sm font-semibold ${
-                                isActive ? 'bg-navy-50 text-navy-900' : 'text-ink hover:bg-navy-50'
-                              }`
-                            }
-                          >
-                            <span className="border-b border-transparent pb-0.5 transition-colors group-hover:border-primary group-hover:text-primary-darker">
-                              {t(item.key)}
-                            </span>
-                          </NavLink>
-                        )}
-
-                        {children.map((child) => (
-                          <Link
-                            /* Label included: two rows in one section may share a `to`
-                               (Contact Us and Book a Factory Visit both point at /contact),
-                               and route alone would collide. NavPanel keys the same way. */
-                            key={`${item.to}-${child.to}-${child.label}`}
-                            to={child.to}
-                            className="group flex items-center rounded-card py-2 pl-6 pr-3 text-sm font-medium text-ink hover:bg-navy-50"
-                          >
-                            <span className="border-b border-transparent pb-0.5 transition-colors group-hover:border-primary group-hover:text-primary-darker">
-                              {child.label}
-                            </span>
-                          </Link>
-                        ))}
-                      </div>
-                    );
-                  })}
-                </nav>
-
-                {/* Team sign-in. Nothing renders while the session check is in flight, so the
-                  drawer never shows "Sign in" and then swaps it for a name. Text only, like
-                  every other row here. */}
+                {/* WHO YOU ARE, FIRST. The account rows used to sit under the whole navigation,
+                  which put the one block that changes per visitor last and made a signed-in
+                  admin scroll the entire site map to reach their dashboard or sign out. Nothing
+                  renders while the session check is in flight, so the drawer never shows
+                  "Sign in" and then swaps it for a name. Text only, like every other row here. */}
                 {!checking && (
-                  <div className="mt-3 border-t border-border pt-3">
+                  <div className="mb-3 border-b border-border pb-3">
                     {isAuthed ? (
                       <>
                         <div className="px-3 pb-1">
@@ -232,6 +166,132 @@ export default function MobileDrawer({ open, onClose }) {
                     )}
                   </div>
                 )}
+
+                <nav className="space-y-1">
+                  {mainNav.map((item) => {
+                    const own = item.children || [];
+                    /* The row pointing at the section's own page ("All Products"). On desktop
+                       it leads the panel; here it leads the indented list for the same
+                       reason — see the note in NavPanel.jsx. */
+                    const parentRow = own.find((c) => c.to === item.to);
+
+                    const children = [
+                      ...(parentRow ? [{ ...parentRow, label: lt(`nav.row.${parentRow.to}.label`, parentRow.label) }] : []),
+                      ...(item.categories
+                        ? getAllCategories().map((c) => ({
+                            label: lt(`cat.${c.slug}`, c.name),
+                            to: `/products/${c.slug}`,
+                          }))
+                        : []),
+                      ...own
+                        .filter((c) => c !== parentRow)
+                        /* Resource pages are pulled OUT of the sections here and shown in the
+                           Resources block at the foot of this list instead. Export and Guides
+                           sit under About Us in the desktop panel, which has two columns to
+                           fill; this list is one column and reads better with them gathered
+                           under their own heading. Subtracting them is what stops the drawer
+                           showing either page twice. */
+                        .filter((c) => !resourceRoutes.has(c.to))
+                        .map((c) => ({ ...c, label: lt(`nav.row.${c.to}.label`, c.label) })),
+                    ];
+
+                    /*
+                      A section with sub-pages is a DISCLOSURE: the row states the section and
+                      opens it, exactly as the desktop nav item opens its panel rather than
+                      navigating. Every section used to be expanded at once, which made the
+                      drawer a ~40 row wall that buried the Resources block and the region
+                      chooser below it. Sections with no children (Home) stay tappable links,
+                      since they have nowhere else to send you. "All Products" directly beneath
+                      the Products row is what reaches the catalogue page itself.
+                    */
+                    const expanded = openSection === item.key;
+                    return (
+                      <div key={item.to}>
+                        {children.length ? (
+                          <button
+                            type="button"
+                            onClick={() => setOpenSection(expanded ? null : item.key)}
+                            aria-expanded={expanded}
+                            className="flex w-full items-center justify-between rounded-card px-3 py-3 text-left text-sm font-semibold text-text transition-colors hover:bg-navy-50"
+                          >
+                            {t(item.key)}
+                            {/* Typographic, not an icon — the drawer states every affordance in
+                                type, the same choice the region rows below make with + and −.
+                                It turns a quarter turn when the section opens, so the glyph
+                                reports the state rather than just inviting a tap. */}
+                            <span
+                              aria-hidden
+                              className={`flex-shrink-0 text-base leading-none text-muted transition-transform duration-200 ${
+                                expanded ? 'rotate-90' : ''
+                              }`}
+                            >
+                              &rsaquo;
+                            </span>
+                          </button>
+                        ) : (
+                          <NavLink
+                            to={item.to}
+                            className={({ isActive }) =>
+                              `group flex items-center rounded-card px-3 py-3 text-sm font-semibold ${
+                                isActive ? 'bg-navy-50 text-navy-900' : 'text-ink hover:bg-navy-50'
+                              }`
+                            }
+                          >
+                            <span className="border-b border-transparent pb-0.5 transition-colors group-hover:border-primary group-hover:text-primary-darker">
+                              {t(item.key)}
+                            </span>
+                          </NavLink>
+                        )}
+
+                        {expanded &&
+                          children.map((child) => (
+                          <Link
+                            /* Label included: two rows in one section may share a `to`
+                               (Contact Us and Book a Factory Visit both point at /contact),
+                               and route alone would collide. NavPanel keys the same way. */
+                            key={`${item.to}-${child.to}-${child.label}`}
+                            to={child.to}
+                            className="group flex items-center rounded-card py-2 pl-6 pr-3 text-sm font-medium text-ink hover:bg-navy-50"
+                          >
+                            <span className="border-b border-transparent pb-0.5 transition-colors group-hover:border-primary group-hover:text-primary-darker">
+                              {child.label}
+                              </span>
+                            </Link>
+                          ))}
+                      </div>
+                    );
+                  })}
+
+                  {/*
+                    RESOURCES, last. The sections above are the site's structure; this one
+                    collects the pages that hang off none of them — Careers, Export, Guides,
+                    Success Stories and the quote form. It reads as a heading with indented
+                    rows exactly like the sections above it, so it needs no explaining.
+
+                    The list is derived in navigation.js and filtered so it can only ever hold
+                    pages no parent section already lists. Give one of them a parent and it
+                    leaves this block on its own; nothing here has to be edited to match.
+                    Renders nothing at all if every page ends up parented.
+                  */}
+                  {resourcesNav.length > 0 && (
+                    <div>
+                      <p className="px-3 py-3 text-sm font-semibold text-text">
+                        {lt('nav.resources', 'Resources')}
+                      </p>
+                      {resourcesNav.map((child) => (
+                        <Link
+                          key={child.to}
+                          to={child.to}
+                          className="group flex items-center rounded-card py-2 pl-6 pr-3 text-sm font-medium text-ink hover:bg-navy-50"
+                        >
+                          <span className="border-b border-transparent pb-0.5 transition-colors group-hover:border-primary group-hover:text-primary-darker">
+                            {lt(`nav.row.${child.to}.label`, child.label)}
+                          </span>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </nav>
 
                 {/* Region + language — one setting, as on desktop. The drawer expands a
                   region in place rather than drilling into a second screen: a slide-over

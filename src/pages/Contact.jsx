@@ -28,6 +28,7 @@ import { img } from '../data/images';
 import { defaultCountry } from '../data/countriesData';
 import { submitPublicForm } from '../data/adminApi';
 import Photo from '../components/ui/Photo';
+import { cldRaw } from '../data/cloudinary';
 import { track, EVENTS } from '../lib/analytics';
 import { useConsent, openCookiePreferences } from '../components/CookieConsent';
 import { useRegion } from '../context/RegionContext';
@@ -64,6 +65,64 @@ const socials = [
 const TEAM = leadership.filter(
   (l) => l.role !== 'Chief Managing Director' && l.role !== 'Managing Director'
 );
+
+/**
+ * Per-portrait framing for the team grid, so every head sits at the same height.
+ *
+ * The photographs were taken at different times by different people. They arrive in three
+ * different shapes (900x900, 900x1200, 900x1059) and each sitter is a different distance from
+ * the lens, so the top of the head lands anywhere between 2% and 14% of the way down the file.
+ * The card tiles are a fixed 3:4, and `object-fit: cover` on a source that is already wider
+ * than 3:4 trims the SIDES and shows the full height, so whatever headroom the photographer
+ * left is exactly what the card shows. That is why the row of heads stepped up and down.
+ *
+ * Rather than nudge the cards, each portrait is cut to 3:4 by Cloudinary on delivery, with the
+ * window placed so the top of the head lands at the SAME 7% of the tile in every card. The
+ * windows were measured off the actual pixels (subject bounding box per file), not guessed.
+ *
+ * The window is always the largest 3:4 rectangle that still fits, so the scale stays between
+ * 0.95x and 1.08x: nobody is stretched, squashed or noticeably blown up. Two sitters were
+ * photographed with their head almost touching the top edge and have no headroom to give, so
+ * those two get a strip of their OWN measured background colour added above (`c_pad,g_south`)
+ * rather than being zoomed into. The backgrounds are flat near-white, so the join is invisible.
+ *
+ * Keyed by Cloudinary public_id. A portrait with no entry here is delivered unframed, so a new
+ * joiner still renders; re-measure and add an entry when their photograph is swapped in.
+ */
+const PORTRAIT_FRAME = {
+  Bhupesh_Gautam_sh5j0f: 'c_crop,g_north_west,x_0.14306,y_0.02151,w_0.73387,h_0.97849',
+  Jaskamal_Keaa_nr05tj: 'c_crop,g_north_west,x_0.03142,y_0.07616,w_0.92384,h_0.92384',
+  ChatGPT_Image_22_Sept_2026_15_38_28_nta0bu:
+    'c_pad,ar_900:1235,g_south,b_rgb:fefefe/c_crop,g_north_west,x_0,y_0.00081,w_0.9999,h_0.97166',
+  Ajay_RAna_Keaa_tn10ww: 'c_crop,g_north_west,x_0.15765,y_0.0693,w_0.69803,h_0.9307',
+  sumit_Dogra_keaa_enpham: 'c_crop,g_north_west,x_0.13642,y_0.02748,w_0.72939,h_0.97252',
+  ChatGPT_Image_19_Sept_2026_16_13_24_r2nb0b:
+    'c_crop,g_north_west,x_0.04584,y_0.01104,w_0.87276,h_0.98896',
+  Amarjot_keaa_m3uucm:
+    'c_pad,ar_900:944,g_south,b_rgb:fdfcf8/c_crop,g_north_west,x_0.12486,y_0.00105,w_0.78584,h_0.99895',
+  ChatGPT_Image_24_Sept_2026_14_20_33_rqqwzu:
+    'c_pad,ar_900:938,g_south,b_rgb:fefefe/c_crop,g_north_west,x_0.07154,y_0.00039,w_0.78136,h_0.99961',
+  ChatGPT_Image_24_Sept_2026_14_23_40_bv5tdn:
+    'c_pad,ar_900:926,g_south,b_rgb:fefefe/c_crop,g_north_west,x_0.09869,y_0.00021,w_0.77151,h_0.99979',
+};
+
+/** Widths the framed portrait is offered at, matching the tile's `sizes` below. */
+const PORTRAIT_WIDTHS = [320, 480, 640, 900];
+
+/**
+ * `src`/`srcSet` props for a framed portrait, or `null` when this portrait has no measured
+ * window yet. The crop runs BEFORE the resize in the chain, so every width is cut identically.
+ */
+function framedPortrait(cloudinaryId) {
+  const frame = PORTRAIT_FRAME[cloudinaryId?.trim()];
+  if (!frame) return null;
+  return {
+    src: cldRaw(cloudinaryId, `${frame}/f_auto,q_auto,w_640`),
+    srcSet: PORTRAIT_WIDTHS.map(
+      (w) => `${cldRaw(cloudinaryId, `${frame}/f_auto,q_auto,w_${w}`)} ${w}w`
+    ).join(', '),
+  };
+}
 
 /**
  * The map, gated on consent.
@@ -725,21 +784,51 @@ export default function Contact() {
             </h3>
           </Reveal>
 
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {/* Each card fades in place and never rises: `y={0}` on the Reveal below.
+              The cards keep their staggered entrance, but a STAGGERED VERTICAL move is what made
+              the row's top edge look wavy. Every card was offset downwards by 24px and each one
+              started 50ms after the card before it, so for the half second the row was animating,
+              four cards of identical height sat at four different heights. On a first page load it
+              never showed, because entry animation is skipped there to protect hydration, which is
+              why it only appeared after clicking through to this page from elsewhere on the site.
+              Fading without the rise keeps the stagger and holds every card's top and bottom edge
+              on the same line in every frame. */}
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 deck:grid-cols-4 xl:grid-cols-5">
             {TEAM.map((l, i) => (
-              <Reveal key={l.name} delay={Math.min(i, 3) * 0.05}>
-                <article className="group flex h-full flex-col overflow-hidden rounded-card ring-1 ring-text/[0.08] transition-all duration-300 hover:-translate-y-1 hover:ring-text/[0.16]">
+              <Reveal key={l.name} delay={Math.min(i, 3) * 0.05} y={0}>
+                {/*
+                  PHOTOGRAPH-FIRST. The card is the portrait; the name, the role and the ways to
+                  reach the person sit ON it rather than in a panel underneath. The old card
+                  stacked a 3:4 photograph above a filled block of text, so four cards in a row
+                  were half photograph and half pale blue, and the row was twice as tall as the
+                  faces in it.
+
+                  The name goes TOP-LEFT and the contacts BOTTOM-LEFT, which is what makes this
+                  safe over a photograph: the Cloudinary window behind it centres every head
+                  horizontally (see PORTRAIT_FRAME), so the corners are background, not face.
+                  Each block carries its own scrim — these are white-background studio shots, and
+                  white type needs something behind it. Navy at 88% over white lands about 7:1,
+                  so the name stays legible on the palest portrait in the set.
+                */}
+                <article className="group relative h-full overflow-hidden rounded-card ring-1 ring-text/[0.08] transition-all duration-300 hover:-translate-y-1 hover:ring-text/[0.16]">
                   {/* Same photo-or-initials fallback the About rail used, so a missing
                       portrait leaves a branded tile rather than a hole in the grid. */}
                   {l.photo || l.cloudinaryId ? (
                     <Photo
-                      src={l.photo}
-                      cloudinaryId={l.cloudinaryId}
+                      /* A measured 3:4 window when we have one for this portrait, so the head
+                         lands at the same height as every other card; otherwise the photograph
+                         as uploaded. See PORTRAIT_FRAME above. */
+                      {...(framedPortrait(l.cloudinaryId) ?? {
+                        src: l.photo,
+                        cloudinaryId: l.cloudinaryId,
+                      })}
                       alt={l.name}
                       /* A portrait tile, never full width: one column on a phone, then two,
-                         three and four as the grid widens. Telling the browser that is what
-                         stops it fetching a desktop rendition for a 360px screen. */
-                      sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+                         three, four and five as the grid widens. Telling the browser that is
+                         what stops it fetching a desktop rendition for a 360px screen — and it
+                         has to be kept in step with the column count above, or every card asks
+                         for a rendition wider than it displays. */
+                      sizes="(min-width: 1280px) 18vw, (min-width: 1152px) 23vw, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
                       width={640}
                       className="aspect-[3/4] w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                     />
@@ -752,51 +841,56 @@ export default function Contact() {
                     </span>
                   )}
 
-                  <div className="flex flex-1 flex-col bg-navy-50 p-5">
-                    <h4 className="font-display text-lg font-bold leading-snug text-text">{l.name}</h4>
-                    <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-darker">
+                  {/* NAME AND ROLE. `pointer-events-none` so the block never intercepts a tap
+                      meant for the photograph, and `pr-10` keeps a long role off the right edge
+                      where the head is. */}
+                  <div className="pointer-events-none absolute inset-x-0 top-0 bg-gradient-to-b from-navy-950/90 via-navy-950/30 to-transparent p-4 pb-6 pr-10">
+                    <h4 className="font-display text-base font-bold leading-tight text-white">
+                      {l.name}
+                    </h4>
+                    <p className="mt-0.5 text-[11px] font-medium leading-snug text-white/85">
                       {lt(`team.${i}.role`, l.role)}
                     </p>
-                    <p className="mt-3 text-body-compact leading-relaxed text-ink">
-                      {lt(`team.${i}.bio`, l.bio)}
-                    </p>
+                  </div>
 
-                    <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 pt-4">
-                      {waLink(l.whatsapp) && (
-                        <a
-                          href={waLink(l.whatsapp)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-sm font-medium text-text transition-opacity hover:opacity-70"
-                          aria-label={lt('team.whatsappLabel', 'Message {name} on WhatsApp', { name: l.name })}
-                        >
-                          <WhatsAppColor className="h-5 w-5" />
-                          {lt('team.whatsapp', 'WhatsApp')}
-                        </a>
-                      )}
-                      {l.email && (
-                        <a
-                          href={`mailto:${l.email.trim()}`}
-                          className="inline-flex items-center gap-1.5 text-sm font-medium text-text transition-opacity hover:opacity-70"
-                          aria-label={lt('team.emailLabel', 'Email {name}', { name: l.name })}
-                        >
-                          <Mail className="h-5 w-5 text-navy-700" />
-                          {lt('team.email', 'Email')}
-                        </a>
-                      )}
-                      {l.linkedin && (
-                        <a
-                          href={l.linkedin}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-sm font-medium text-text transition-opacity hover:opacity-70"
-                          aria-label={lt('team.linkedinLabel', '{name} on LinkedIn', { name: l.name })}
-                        >
-                          <LinkedinColor className="h-5 w-5" />
-                          {lt('team.linkedin', 'LinkedIn')}
-                        </a>
-                      )}
-                    </div>
+                  {/* THE REASON THE SECTION EXISTS. The heading above it says "Talk to Our Sales
+                      Team Directly", so the ways to do that stay on the card; the reference this
+                      layout came from had none, and a wall of faces you cannot contact is a
+                      staff page, not a sales one. Icon-only, because a label per channel would
+                      not fit the card width — each carries the person's name in `aria-label`, so
+                      a screen reader still hears who it writes to. */}
+                  <div className="absolute inset-x-0 bottom-0 flex items-center gap-4 bg-gradient-to-t from-navy-950/90 via-navy-950/40 to-transparent px-4 pb-4 pt-10">
+                    {waLink(l.whatsapp) && (
+                      <a
+                        href={waLink(l.whatsapp)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white transition-opacity hover:opacity-70"
+                        aria-label={lt('team.whatsappLabel', 'Message {name} on WhatsApp', { name: l.name })}
+                      >
+                        <WhatsAppColor className="h-5 w-5" />
+                      </a>
+                    )}
+                    {l.email && (
+                      <a
+                        href={`mailto:${l.email.trim()}`}
+                        className="text-white transition-opacity hover:opacity-70"
+                        aria-label={lt('team.emailLabel', 'Email {name}', { name: l.name })}
+                      >
+                        <Mail className="h-5 w-5" strokeWidth={2} />
+                      </a>
+                    )}
+                    {l.linkedin && (
+                      <a
+                        href={l.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white transition-opacity hover:opacity-70"
+                        aria-label={lt('team.linkedinLabel', '{name} on LinkedIn', { name: l.name })}
+                      >
+                        <LinkedinColor className="h-5 w-5" />
+                      </a>
+                    )}
                   </div>
                 </article>
               </Reveal>

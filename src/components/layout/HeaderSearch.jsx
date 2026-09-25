@@ -373,7 +373,13 @@ export default function HeaderSearch({ onOpenChange }) {
           Pinning the box to the field's own height keeps the input on the header line and
           lets the results hang below it (`top-full` on the list).
         */
-        <div className="absolute right-0 top-1/2 z-50 h-10 w-[min(32rem,72vw)] -translate-y-1/2">
+        /* `calc(100vw-1.5rem)` is the cap that matters on a phone: the field is anchored to the
+           RIGHT of this wrapper and grows leftwards, so a width in `vw` alone walked its left
+           edge off the screen and clipped the search icon and the first characters of the
+           placeholder. 1.5rem is the row's two 0.75rem gutters. The controls to the right of
+           this wrapper are taken out of the flow while the field is open (see Header.jsx), so
+           the wrapper's right edge is the row's right gutter and this arithmetic holds. */
+        <div className="absolute right-0 top-1/2 z-50 h-10 w-[min(32rem,calc(100vw-1.5rem))] -translate-y-1/2">
           {/*
             The focus affordance lives HERE, not on the input. The global
             `input:focus-visible { outline: 2px solid primary }` in index.css has
