@@ -20,9 +20,10 @@ const WEBSITE = company.website.replace(/^www\./, '');
 
 const content = {
   /*
-   * This policy is written to the GDPR Art. 13 checklist because KEAA sells into the EU
-   * through Runi Industries B.V. in Eindhoven, which makes that establishment the anchor
-   * for EU visitors. It previously ran to four short paragraphs with no controller
+   * This policy is written to the GDPR Art. 13 checklist because KEAA offers goods and
+   * services to buyers in the EU, which brings EU visitors into scope under Art. 3(2)
+   * regardless of where KEAA is established. It previously ran to four short paragraphs
+   * with no controller
    * identity, no legal basis, no retention period, no data-subject rights, no named
    * recipients, and — although the consent bar linked here as its only reference — nothing
    * whatsoever about cookies or local storage.
@@ -35,7 +36,7 @@ const content = {
     sections: [
       {
         h: 'Who We Are',
-        p: `${company.name} (${company.manufacturing.line1}, ${company.manufacturing.line2}) is the controller of personal data collected through this website. For visitors in the European Union, our EU establishment is our sales office and warehouse at ${company.salesOffice.line1}, ${company.salesOffice.line2}. You can reach us about any privacy matter at ${company.emails[0]}.`,
+        p: `${company.name} (${company.manufacturing.line1}, ${company.manufacturing.line2}) is the controller of personal data collected through this website. You can reach us about any privacy matter at ${company.emails[0]}.`,
       },
       {
         h: 'Information We Collect',
@@ -59,7 +60,7 @@ const content = {
       },
       {
         h: 'Your Rights',
-        p: `If you are in the EU or UK you have the right to access, correct, erase, restrict or object to our processing of your personal data, the right to data portability, and the right to withdraw consent at any time without affecting processing already carried out. To exercise any of these, write to ${company.emails[0]}. You also have the right to complain to your supervisory authority, which for visitors in the Netherlands is the Autoriteit Persoonsgegevens.`,
+        p: `If you are in the EU or UK you have the right to access, correct, erase, restrict or object to our processing of your personal data, the right to data portability, and the right to withdraw consent at any time without affecting processing already carried out. To exercise any of these, write to ${company.emails[0]}. You also have the right to complain to the supervisory authority in your country of residence.`,
       },
       {
         h: 'Contact',

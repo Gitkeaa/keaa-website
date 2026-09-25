@@ -1,13 +1,13 @@
 /**
  * Sales regions and the KEAA office that actually serves each one.
  *
- * KEAA runs two real places of business (see `company` in ./company.js): the manufacturing
- * plant and export desk in Ludhiana, India, and Runi Industries B.V. — the group's sales
- * office and warehouse — in Eindhoven, the Netherlands. Europe is served out of Eindhoven;
- * every other market is served direct from Ludhiana.
+ * KEAA runs ONE place of business (see `company` in ./company.js): the manufacturing plant
+ * and global export desk in Ludhiana, India. Every market is served from there. The European
+ * sales office this file used to carry was closed, so `offices` holds a single record and
+ * every region points at it.
  *
  * Contact details are READ FROM `company`, never retyped here, so a number changed in one
- * place changes everywhere. If a third office opens, add it to `offices` and point the
+ * place changes everywhere. If a second office opens, add it to `offices` and point the
  * relevant regions at its key — no component needs editing.
  */
 import { company } from './company';
@@ -46,7 +46,7 @@ export const regions = [
     label: 'Europe & UK',
     blurb: 'Served from our Ludhiana export desk',
     /* `hq`, not the `europe` record — that office was removed from `offices` above when the
-       Eindhoven sales office closed. Europe is now served from the global export desk like
+       European sales office closed. Europe is now served from the global export desk like
        every other market. Leaving this pointing at the deleted key made
        getOfficeForRegion('europe') return undefined, and because DEFAULT_REGION is 'europe'
        that took out `office.name` in the RFQ submit handler (pages/Contact.jsx) for every

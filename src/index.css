@@ -11,8 +11,10 @@
    consent bar can exist — so every visitor's IP was disclosed to a font CDN on every
    page load with no consent and no way to gate it. For Google Fonts that exact pattern
    drew damages in LG München I 3 O 17493/20; Fontshare is operated from India, which has
-   no EU adequacy decision, so it was also an undisclosed Chapter V transfer. KEAA sells
-   into the EU through the Eindhoven office, so EU visitors are in scope.
+   no EU adequacy decision, so it was also an undisclosed Chapter V transfer. KEAA offers
+   goods and services to buyers in the EU, so EU visitors are in scope under Art. 3(2).
+   That does not depend on KEAA having an establishment in the EU, and so it did not
+   change when the European sales office closed.
 
    Serving the files ourselves removes the transfer entirely rather than gating it, and
    drops two third-party round trips from the critical render path.

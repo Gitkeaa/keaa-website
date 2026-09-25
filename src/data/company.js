@@ -3,7 +3,6 @@ export const company = {
   shortName: 'KEAA',
   tagline: 'Built for Safety. Built to Last.',
   founded: 2003,
-  group: 'Runi Industries B.V.',
   description:
     'Keaa Established in 2003, KEAA International Pvt. Ltd. is a trusted manufacturing and export company delivering quality products and reliable solutions to customers worldwide. We manufacture and export scaffolding systems, formwork accessories, safety products, livestock housing solutions and garden hardware from 100,000+ sq. m of in-house manufacturing facilities in Ludhiana, India.',
 
@@ -13,14 +12,6 @@ export const company = {
     line2: 'Ludhiana – 141120, Punjab, India',
     country: 'India',
   },
-  salesOffice: {
-    label: 'Sales Office & Warehouse, Europe',
-    line1: 'Park Forum 1005',
-    line2: '5657 HJ Eindhoven, The Netherlands',
-    country: 'Netherlands',
-    phone: '+31 655 282 244',
-  },
-
   phones: ['+91 98767 01926', '+91 98729 84707'],
 
   /* The number behind `social.whatsapp` below, in the form it should be SHOWN. A wa.me link
@@ -132,7 +123,7 @@ export const company = {
   timeline: [
     { year: '2003', title: 'The Beginning', desc: 'KEAA International was established with a vision to deliver quality scaffolding and construction hardware.' },
     { year: '2008', title: 'Expanding Capabilities', desc: 'Added livestock housing and garden hardware lines alongside scaffolding and formwork.' },
-    { year: '2014', title: 'Going Global', desc: 'Opened a European sales office in Eindhoven, the Netherlands, to better serve European clients.' },
+    { year: '2014', title: 'Going Global', desc: 'Grew into European markets, supplying buyers across the EU and UK direct from Ludhiana.' },
     { year: '2018', title: 'Excellence Recognised', desc: 'Achieved ISO 9001:2015, SLV welding certification and Sigma Karlsruhe Ü-mark conformity.' },
     { year: '2026', title: 'Future Forward', desc: 'Continuing to invest in automation, sustainability and new product development.' },
   ],
@@ -162,8 +153,8 @@ export const company = {
  * WhatsApp. Everything is reduced to digits here so the data can stay human-readable.
  *
  * A value with no '+' that is exactly 10 digits is treated as Indian and given a 91 prefix;
- * every KEAA number is either an Indian mobile or carries its own '+', as the Eindhoven
- * desk's +31 one does. An already-complete URL passes straight through.
+ * every KEAA number is either an Indian mobile or carries its own '+'. An already-complete
+ * URL passes straight through.
  */
 export const waLink = (value) => {
   if (!value) return '';

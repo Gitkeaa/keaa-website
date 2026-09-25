@@ -299,8 +299,8 @@ export default function Export() {
           {/* The European sales office card was removed on the owner's instruction, so this is
               the manufacturing address alone. `sm:grid-cols-2` went with it: a lone card in a
               two-column grid sits in the left half with an empty right half beside it.
-              `company.salesOffice` is still in data/company.js and is still named in the
-              privacy policy, which has to state the EU establishment. */}
+              The `salesOffice` record it read from is gone from data/company.js entirely, and
+              the privacy policy no longer claims an EU establishment. */}
           <div className="mt-8 grid max-w-xl gap-5">
             {[company.manufacturing].map((o) => (
               <address key={o.label} className="rounded-card border border-navy-100 bg-white p-5 not-italic shadow-card">

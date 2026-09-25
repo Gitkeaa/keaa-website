@@ -43,7 +43,7 @@ const args = Object.fromEntries(
  * "happens to be fine" is a translation gap, not an allowance.
  */
 const ALLOW_EXACT = new Set([
-  'KEAA', 'KEAA International', 'KEAA International Pvt. Ltd.', 'Runi Industries B.V.',
+  'KEAA', 'KEAA International', 'KEAA International Pvt. Ltd.',
   'TÜV Rheinland', 'MSME Sustainable (ZED), Govt. of India', 'SLV Germany', 'Sigma Karlsruhe',
   'LinkedIn', 'WhatsApp', 'YouTube', 'Facebook', 'Instagram', 'X', 'Uber', 'Ola', 'Rapido',
   'Ringlock', 'Cuplock', 'Haki', 'Plettac', 'Dywidag', 'Kwikstage',
@@ -59,7 +59,6 @@ const ALLOW_EXACT = new Set([
   'keaa',
   'Village Bhagwanpura, Dehlon Road', 'Ludhiana – 141120, Punjab, India', 'Ludhiana, India',
   'Village Bhagwanpura, Dehlon Road, Ludhiana – 141120, Punjab, India',
-  'Park Forum 1005', '5657 HJ Eindhoven, The Netherlands',
   'Riverside Residences',
 ]);
 const ALLOW_PATTERNS = [

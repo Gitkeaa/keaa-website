@@ -221,22 +221,6 @@ export default function Header({ onOpenDrawer }) {
           {/* Search opens in place — see HeaderSearch. It owns its own ⌘K binding. */}
           <HeaderSearch onOpenChange={setSearchOpen} />
 
-          {/* The market/language control and the staff sign-in, moved here from the utility
-              bar above (layout/TopBar.jsx) when the quote button left this row. They are the
-              two controls a visitor reaches for on arrival — read this in my language, and
-              get me into the portal — so they belong in the row they are looked for in
-              rather than in a slim strip above it. The country and language the site is
-              currently showing are spelled out on the trigger ("INDIA (EN)"), so the control
-              names the market it is set to rather than being an unlabelled glyph.
-
-              `md` and up, which is exactly where the utility bar used to reveal them, so no
-              width loses them: below it the drawer carries language and sign-in, and the bar
-              was hidden there anyway. Keeping them out of the phone row also leaves the
-              search and the hamburger uncrowded on a 390px screen.
-
-              The quote call to action that used to sit here is NOT lost: it is in the drawer,
-              in the footer's Resources column, in the mobile Resources section, and on every
-              product, category and contact page. */}
           {/* The market and language control and the staff sign-in are NOT here: they sit in the
               utility bar above (layout/TopBar.jsx), which shows from `md` up. This row carries
               the one commercial action instead.

@@ -310,8 +310,10 @@ export default function CookieConsent() {
    * The reference design this bar is modelled on offers only "Accept" and "Settings" —
    * burying refusal one dialog deeper. Under GDPR/ePrivacy that is a recognised dark
    * pattern (the EDPB and CNIL have both ruled on it, and CNIL has fined for it), and it
-   * matters here specifically: KEAA sells into the EU through the Eindhoven office, so EU
-   * visitors are squarely in scope. Hence the third button.
+   * matters here specifically: KEAA offers goods and services to buyers in the EU, so EU
+   * visitors are squarely in scope under Art. 3(2) — which does not depend on an EU
+   * establishment and so did not change when the European sales office closed. Hence the
+   * third button.
    */
   const rejectAll = useCallback(() => decide({ embeds: false }), [decide]);
 

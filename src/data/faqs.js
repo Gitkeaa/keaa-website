@@ -66,7 +66,7 @@ export const faqs = [
     items: [
       {
         q: 'Which countries do you export to?',
-        a: 'We export to 42+ countries across the Middle East, Europe, Africa, Asia and the Americas. European customers are served through our sales office and warehouse in Eindhoven, the Netherlands; every other market is handled directly from our head office in India.',
+        a: 'We export to 42+ countries across the Middle East, Europe, Africa, Asia and the Americas. Every market is served directly from our head office and manufacturing plant in Ludhiana, India.',
         // Not a commercial commitment — just where we already ship.
       },
       {
@@ -99,7 +99,7 @@ export const faqs = [
     items: [
       // {
       //   q: 'Who do I contact for my region?',
-      //   a: 'Europe is served from our sales office in Eindhoven, the Netherlands. All other regions are served from our head office in Ludhiana, India. Use the region selector in the site header to see the right contact details for your market.',
+      //   a: 'Every region is served from our head office in Ludhiana, India. Use the region selector in the site header to see the right contact details for your market.',
       // },
       {
         q: 'Do you supply to distributors and resellers?',

@@ -36,7 +36,7 @@ export const heroSlides = {
     { id: 'IMG_2508_kmskzh', title: 'Join Our', accent: 'Team.', desc: 'Build your career with a global manufacturer.' },
     { id: 'IMG_0430_bnfi0v', title: 'Grow', accent: 'With Us.', desc: 'Learn, lead and build alongside skilled people.' },
     { id: 'IMG_9471_rxoaxo', title: 'Work That', accent: 'Matters.', desc: 'Help deliver excellence in manufacturing, every day.' },
-    { id: 'DJI_0082_p2qmld', title: 'One Team,', accent: 'One Mission.', desc: 'Across our plants in India and office in the Netherlands.' },
+    { id: 'DJI_0082_p2qmld', title: 'One Team,', accent: 'One Mission.', desc: 'Across our manufacturing plants in Ludhiana, India.' },
   ]),
 
   certifications: build([
